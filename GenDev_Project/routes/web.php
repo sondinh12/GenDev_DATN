@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryMiniController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('admin.index');
+// });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
     return view('client.pages.home');
@@ -55,6 +57,16 @@ Route::get('/track-order', function () {
     return view('client.checkout.track-order');
 })->name('track-order');
 
+// ================= ADMIN =================
+
+Route::prefix('admin')->group(function () {
+    Route::view('/', 'admin.index')->name('dashboard');
+    Route::resource('categories',CategoryController::class);
+    Route::get('categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('categories_minis.index');
+    // Route::resource('categories_minis',CategoryMiniController::class);
+    Route::view('/products', 'products.index')->name('products.index');
+    Route::view('/users', 'users.index')->name('users.index');
+});
 
 // ================= TÀI KHOẢN =================
 Route::get('/login', function () {
