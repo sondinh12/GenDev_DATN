@@ -1,0 +1,6 @@
+1/ router web sẽ được viết trong file router/web.php
+2/ controller sẽ được viết trong các file app/Http/Controllers/
+3/ model sẽ đựov viết trong các file app/models/
+    (Thường mỗi bảng sẽ là 1 model)
+4/ view sẽ đượcviết trong các file blade resources/views/
+    (beeb chia folder nhỏ phân vùng view để quản lý)
