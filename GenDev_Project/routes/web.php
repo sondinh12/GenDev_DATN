@@ -1,10 +1,16 @@
 <?php
+session_start();
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Admin\UserController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+// Route::get('/', function () {
+//     return view('admin.index');
+// });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
     return view('client.pages.home');
@@ -55,8 +61,27 @@ Route::get('/track-order', function () {
     return view('client.checkout.track-order');
 })->name('track-order');
 
+// ================= ADMIN =================
+
+Route::prefix('admin')->group(function () {
+    Route::view('/', 'admin.index')->name('admin.dashboard');
+    Route::view('/products', 'admin.products.index')->name('admin.products.index');
+    Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+});
 
 // ================= TÀI KHOẢN =================
-Route::get('/login', function () {
-    return view('client.auth.login-and-register');
-})->name('login');
+
+Auth::routes();
+
+
+// Email Verification Routes
+Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+// ================= PROFILE =================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+});
