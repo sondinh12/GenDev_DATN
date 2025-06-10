@@ -69,8 +69,10 @@ Route::prefix('admin')->group(function () {
     Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
+    Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+    Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
 });
-
 // ================= TÀI KHOẢN =================
 
 Auth::routes();
