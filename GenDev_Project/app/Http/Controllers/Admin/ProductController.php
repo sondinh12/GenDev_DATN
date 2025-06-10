@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->orderBy('id','DESC')->get();
+        $products = Product::with('category')->orderBy('id','DESC')->paginate(5);
         return view('Admin.products.index',compact('products'));
     }
 
@@ -48,7 +48,7 @@ class ProductController extends Controller
         ]);
 
         // Nếu không có biến thể thì bắt buộc nhập giá
-        if (!$request->has('variant_combinations')) {
+        if (!$request->has('variant_combinations') || count($request->input('variant_combinations', [])) === 0) {
             $validator->addRules([
                 'price' => 'required|numeric|min:0',
                 'sale_price' => 'nullable|numeric|min:0',
@@ -71,8 +71,8 @@ class ProductController extends Controller
         ]);
 
         // 4. Lưu ảnh gallery nếu có
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $galleryImg) {
+        if ($request->hasFile('galleries')) {
+            foreach ($request->file('galleries') as $galleryImg) {
                 $galleryPath = $galleryImg->store('products/gallery', 'public');
                 ProductGallery::create([
                     'product_id' => $product->id,
@@ -88,7 +88,7 @@ class ProductController extends Controller
                 $variantModel = ProductVariant::create([
                     'product_id' => $product->id,
                     'price' => $variant['price'],
-                    'sale_price' => $variant['sale_price'] ?? null,
+                    'sale_price' => $variant['sale_price'] ?? 0,
                     'quantity' => $variant['quantity'] ?? 0,
                     'status' => $variant['status'] ?? 1,
                 ]);

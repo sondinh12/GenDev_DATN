@@ -29,7 +29,7 @@
     <h4>Thư viện ảnh</h4>
     <div style="display: flex; gap: 10px;">
         @foreach ($product->galleries as $gallery)
-            <img src="{{ asset('storage/' . $gallery->image_path) }}" width="100">
+            <img src="{{ asset('storage/' . $gallery->image) }}" width="100" alt="Ảnh liên quan">
         @endforeach
     </div>
 

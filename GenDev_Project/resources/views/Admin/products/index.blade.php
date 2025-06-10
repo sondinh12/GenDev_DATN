@@ -21,7 +21,6 @@
             <th>Tên danh mục</th>
             <th>Giá</th>
             <th>Giá Sale</th>
-            <th>Mô tả</th>
             <th>Trạng thái</th>
             <th>Ngày tạo</th>       
             <th>Ngày cập nhật</th>
@@ -31,11 +30,12 @@
             <tr>
                 <td>{{$pro->id}}</td>
                 <td>{{$pro->name}}</td>
-                <td>{{$pro->image}}</td>
+                <td>
+                    <img src="{{asset('storage/'.$pro->image)}}" alt="Ảnh" width="100px">
+                </td>
                 <td>{{$pro->category->name}}</td>
                 <td>{{$pro->price}}</td>
                 <td>{{$pro->sale_price}}</td>
-                <td>{{$pro->description}}</td>
                 <th>{{$pro->status == 1 ? 'Hiển thị' : 'Ẩn'}}</th>
                 <td>{{$pro->created_at}}</td>
                 <td>{{$pro->updated_at}}</td>
@@ -47,6 +47,7 @@
             </tr>
         @endforeach
     </table>
+    {{$products->links()}}
 @endsection
 
 @section('scripts')
