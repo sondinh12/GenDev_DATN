@@ -8,3 +8,4 @@ class Attribute extends Model
 {
     protected $table = 'attributes';
 }
+//day file
