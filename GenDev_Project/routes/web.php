@@ -10,9 +10,9 @@ Route::get('/', function () {
 
 Route::resource('/products',ProductController::class);
 
-Route::get('/products', function () {
-    return view('products.index');
-});
+// Route::get('/products', function () {
+//     return view('admin.products.index');
+// });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
     return view('client.pages.home');
