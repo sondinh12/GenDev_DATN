@@ -11,7 +11,9 @@ Route::get('/', function () {
 Route::resource('/products',ProductController::class);
 
 // Route::get('/products', function () {
+
 //     return view('products.index');
+
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {

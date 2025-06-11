@@ -29,8 +29,12 @@ class ProductRequest extends FormRequest
     {
         $rules=  [
             'name'=>'required|max:255|string',
-            // 'price'=>'required|integer|min:1',
-            // 'quantity'=>'required|integer|min:1',
+
+
+            'price'=>'required|integer|min:1',
+            'quantity'=>'required|integer|min:1',
+            'description'=>'required|string',
+
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
             'category_id'=>'required|exists:categories,id', 
@@ -69,6 +73,7 @@ class ProductRequest extends FormRequest
             'image.max'=>'Dung lượng không vượt quá 2MB',
             'category_id.required'=>'Danh mục không được bỏ trống',
             'status.required'=>'Trạng thái không được bỏ trống',
+            'description.required'=>'Mô tả không được bỏ trống',
         ];
     }
 }

@@ -22,7 +22,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('category')->orderBy('id','DESC')->paginate(5);
-        return view('Admin.products.index',compact('products'));
+        return view('admin.products.index',compact('products'));
     }
 
     /**
@@ -32,7 +32,7 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.create',compact('categories','attributes'));
+        return view('admin.products.create',compact('categories','attributes'));
     }
 
     /**
