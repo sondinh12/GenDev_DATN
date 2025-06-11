@@ -111,12 +111,22 @@ Products
             @enderror
         </div>
         <div class="form-group">
+
+            <label>Mô tả</label>
+            <textarea name="description" class="form-control" rows="5">{{old('description')}}</textarea>
+        </div>
+        @error('description')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+
+
             <label>Giá khuyến mãi</label>
             <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror" value="{{ old('sale_price') }}" step="0.01">
             @error('sale_price')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+
         <div class="form-group">
             <label>Số lượng</label>
             <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}">

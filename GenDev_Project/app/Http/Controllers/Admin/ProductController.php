@@ -40,6 +40,9 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        // dd(session('errors')?->all(), $request->all());
+
+
         $imagePath = $request->file('image')->store('products', 'public');
 
         $product = Product::create([
