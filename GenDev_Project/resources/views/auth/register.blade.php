@@ -1,6 +1,36 @@
 @extends('client.layout.master')
 
 @section('content')
+<style>
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        background-color: #fff8f8;
+    }
+
+    .form-select.is-invalid {
+        border-color: #dc3545;
+        background-color: #fff8f8;
+    }
+
+    .toggle-password {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        color: #6c757d;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .toggle-password:hover {
+        background-color: #e9ecef;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+    }
+</style>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -30,10 +60,10 @@
                                         <input type="text" class="form-control @error('name') is-invalid @enderror"
                                             id="name" name="name" value="{{ old('name') }}" placeholder="Nhập họ và tên"
                                             required>
-                                        @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -45,10 +75,10 @@
                                         <input type="email" class="form-control @error('email') is-invalid @enderror"
                                             id="email" name="email" value="{{ old('email') }}"
                                             placeholder="Nhập email của bạn" required>
-                                        @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -60,13 +90,14 @@
                                         <input type="password"
                                             class="form-control @error('password') is-invalid @enderror" id="password"
                                             name="password" placeholder="Nhập mật khẩu" required>
-                                        <span class="input-group-text toggle-password" style="cursor: pointer; margin-top: 5px;">
-                                            <i class="fa fa-eye"></i>
+                                        <span class="toggle-password"
+                                            style="cursor: pointer; padding: 0.375rem 0.75rem;">
+                                            Hiện
                                         </span>
-                                        @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -77,8 +108,9 @@
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="password-confirm"
                                             name="password_confirmation" placeholder="Nhập lại mật khẩu" required>
-                                        <span class="input-group-text toggle-password" style="cursor: pointer; margin-top: 5px;">
-                                            <i class="fa fa-eye"></i>
+                                        <span class="toggle-password"
+                                            style="cursor: pointer; padding: 0.375rem 0.75rem;">
+                                            Hiện
                                         </span>
                                     </div>
                                 </div>
@@ -92,10 +124,10 @@
                                         <input type="tel" class="form-control @error('phone') is-invalid @enderror"
                                             id="phone" name="phone" value="{{ old('phone') }}"
                                             placeholder="Nhập số điện thoại" required>
-                                        @error('phone')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -113,10 +145,10 @@
                                             <option value="Khác" {{ old('gender')=='Khác' ? 'selected' : '' }}>Khác
                                             </option>
                                         </select>
-                                        @error('gender')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('gender')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -128,10 +160,10 @@
                                         <input type="text" class="form-control @error('address') is-invalid @enderror"
                                             id="address" name="address" value="{{ old('address') }}"
                                             placeholder="Nhập địa chỉ của bạn" required>
-                                        @error('address')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -142,10 +174,10 @@
                                     <div class="input-group">
                                         <input type="file" class="form-control @error('avatar') is-invalid @enderror"
                                             id="avatar" name="avatar" accept="image/*">
-                                        @error('avatar')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
                                     </div>
+                                    @error('avatar')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                     <div class="form-text">Chọn ảnh đại diện của bạn (tối đa 2MB)</div>
                                 </div>
                             </div>
@@ -156,8 +188,7 @@
                                     <input class="form-check-input" type="checkbox" id="terms" required>
                                     <label class="form-check-label" for="terms">
                                         Tôi đồng ý với <a href="#" class="text-primary">điều khoản sử dụng</a> và <a
-                                            href="#" class="text-primary">chính sách bảo
-                                            mật</a>
+                                            href="#" class="text-primary">chính sách bảo mật</a>
                                     </label>
                                 </div>
                             </div>
@@ -187,16 +218,12 @@
     document.querySelectorAll('.toggle-password').forEach(function(toggle) {
         toggle.addEventListener('click', function() {
             const passwordInput = this.parentElement.querySelector('input');
-            const icon = this.querySelector('i');
-            
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+                this.textContent = 'Ẩn';
             } else {
                 passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                this.textContent = 'Hiện';
             }
         });
     });
