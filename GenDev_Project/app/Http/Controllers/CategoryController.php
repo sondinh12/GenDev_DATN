@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,12 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
          $query = Category::query();
+         if($request->has('search')){
+            $query->where('name','like','%' . $request->search . '%');
+    }
          $categories = $query->orderBy('id','desc')->paginate(5);
          return view('admin.categories.index',compact('categories'));
     }
@@ -22,15 +26,20 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $data = $request->validated();
+        if($request->hasFile('image')){
+           $data['image'] = $request->file('image')->store('categories','public');
+        }
+        Category::create($data);
+        return redirect()->route('categories.index')->with('success', 'Them thanh cong');
     }
 
     /**

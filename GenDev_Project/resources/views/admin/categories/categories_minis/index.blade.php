@@ -10,7 +10,7 @@
                 <i class="fas fa-arrow-left"></i> Quay lại danh mục
             </a>
         </div>
-        <a href="#" class="btn btn-success">
+        <a href="{{ route('categories_minis.create',$categories->id) }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Thêm danh mục con
         </a>
     </div>
@@ -38,7 +38,7 @@
                                 <td>{{ $mini->id }}</td>
                                 <td>{{ $mini->name }}</td>
                                 <td>
-                                    <img src="{{ $mini->image }}" alt="{{ $mini->name }}" width="60" class="rounded border">
+                                    <img src="{{asset('storage/'.$mini->image)}}" alt="{{ $mini->name }}" width="60" class="rounded border">
                                 </td>
                                 <td>
                                     @if ($mini->status)

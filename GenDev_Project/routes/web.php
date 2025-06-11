@@ -63,6 +63,8 @@ Route::prefix('admin')->group(function () {
     Route::view('/', 'admin.index')->name('dashboard');
     Route::resource('categories',CategoryController::class);
     Route::get('categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('categories_minis.index');
+    Route::get('categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('categories_minis.create');
+    Route::post('categories/{id}/minis/store',[CategoryMiniController::class, 'store'])->name('categories_minis.store');
     // Route::resource('categories_minis',CategoryMiniController::class);
     Route::view('/products', 'products.index')->name('products.index');
     Route::view('/users', 'users.index')->name('users.index');
