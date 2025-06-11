@@ -5,11 +5,14 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+
 class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
+
+    
     public function authorize(): bool
     {
         return true;
@@ -20,21 +23,31 @@ class ProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+
     public function rules(): array
     {
         $rules=  [
             'name'=>'required|max:255|string',
-            'price'=>'required|integer|min:1',
-            'quantity'=>'required|integer|min:1',
+            // 'price'=>'required|integer|min:1',
+            // 'quantity'=>'required|integer|min:1',
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
             'category_id'=>'required|exists:categories,id', 
             'status'=>'required',
+            'variant_combinations' => 'nullable|array',
         ];  
 
-        if (!$this->has('variant_combinations') ||count($this->input('variant_combinations', [])) === 0) {
+        if ($this->input('product_type') === 'simple') {
             $rules['price'] = 'required|numeric|min:0';
             $rules['sale_price'] = 'nullable|numeric|min:0';
+            $rules['quantity'] = 'required|integer|min:0';
+        } elseif ($this->input('product_type') === 'variable') {
+            $rules['variant_combinations'] = 'required|array|min:1';
+            $rules['variant_combinations.*.price'] = 'required|numeric|min:0';
+            $rules['variant_combinations.*.sale_price'] = 'nullable|numeric|min:0';
+            $rules['variant_combinations.*.quantity'] = 'required|integer|min:0';
+            $rules['variant_combinations.*.value_ids'] = 'required|string';
         }
 
         return $rules;

@@ -74,8 +74,11 @@
 
         <div class="form-group">
             <label>Mô tả</label>
-            <textarea name="description" class="form-control" rows="5" value="{{old('description')}}"></textarea>
+            <textarea name="description" class="form-control" rows="5">{{old('description')}}</textarea>
         </div>
+        @error('description')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
 
 
         <div class="form-group">

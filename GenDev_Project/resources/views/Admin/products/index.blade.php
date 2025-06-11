@@ -12,6 +12,13 @@
 @endsection
 
 @section('content')
+    
+@if (session('success'))
+    <div class="alert alert-success">
+        {{session('success')}}
+    </div>
+@endif
+
 <a href="{{route('products.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
     <table border=1 class="table">
         <tr>
