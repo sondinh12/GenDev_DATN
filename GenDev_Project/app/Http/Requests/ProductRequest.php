@@ -31,9 +31,9 @@ class ProductRequest extends FormRequest
             'name'=>'required|max:255|string',
 
 
-            'price'=>'required|integer|min:1',
-            'quantity'=>'required|integer|min:1',
-            'description'=>'required|string',
+            // 'price'=>'required|integer|min:1',
+            // 'quantity'=>'required|integer|min:1',
+            'description'=>'required',
 
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
