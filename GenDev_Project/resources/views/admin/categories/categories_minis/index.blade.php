@@ -19,6 +19,14 @@
         📁 Danh mục con của: <strong class="text-primary">{{ $categories->name }}</strong>
     </h4>
 
+    <form method="GET" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..."
+            value="{{ $_GET['search'] ?? '' }}">
+        <button type="submit" class="btn btn-outline-secondary">Tìm kiếm</button>
+    </div>
+    </form>
+
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
