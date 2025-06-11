@@ -20,7 +20,7 @@
             <th>Ảnh</th>
             <th>Tên danh mục</th>
             <th>Giá</th>
-            <th>Giá Sale</th>
+            <th>Số lượng</th>
             <th>Trạng thái</th>
             <th>Ngày tạo</th>       
             <th>Ngày cập nhật</th>
@@ -35,7 +35,7 @@
                 </td>
                 <td>{{$pro->category->name}}</td>
                 <td>{{$pro->price}}</td>
-                <td>{{$pro->sale_price}}</td>
+                <td>{{$pro->quantity}}</td>
                 <th>{{$pro->status == 1 ? 'Hiển thị' : 'Ẩn'}}</th>
                 <td>{{$pro->created_at}}</td>
                 <td>{{$pro->updated_at}}</td>

@@ -17,6 +17,10 @@ class ProductSeeder extends Seeder
             'id' => 1,
             'name' => 'Iphone 14',
             'image' => 'tshirt.jpg',
+            // có thể bật nếu sản phẩm 0 biến thể
+            // 'sale_price'=>3000,
+            // 'price'=>4000,
+            // 'quantity'=>3,
             'status' => 1,
             'description' => 'A stylish sports t-shirt',
             'category_id' => 1

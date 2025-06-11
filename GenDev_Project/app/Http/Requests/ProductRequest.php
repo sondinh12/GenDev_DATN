@@ -22,17 +22,22 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules=  [
             'name'=>'required|max:255|string',
             'price'=>'required|integer|min:1',
             'quantity'=>'required|integer|min:1',
-            'image' => 'file|mimes:jpg,png|max:2048',
-            'category_id'=>[
-                'required',
-                Rule::exists('categories','id')->where('status',1)
-            ],
+            'image' => 'file|image',
+            'galleries.*'=>'nullable|image',
+            'category_id'=>'required|exists:categories,id', 
             'status'=>'required',
-        ];
+        ];  
+
+        if (!$this->has('variant_combinations') ||count($this->input('variant_combinations', [])) === 0) {
+            $rules['price'] = 'required|numeric|min:0';
+            $rules['sale_price'] = 'nullable|numeric|min:0';
+        }
+
+        return $rules;
     }
 
     public function messages(){
