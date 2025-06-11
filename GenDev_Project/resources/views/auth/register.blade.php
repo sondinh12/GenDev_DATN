@@ -7,7 +7,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold">Tạo tài khoản</h3>
+                        <h3 class="fw-bold text-primary">Tạo tài khoản</h3>
                         <p class="text-muted">Tham gia cùng chúng tôi để có trải nghiệm mua sắm tốt nhất</p>
                     </div>
 
@@ -24,103 +24,129 @@
                         <div class="row g-3">
                             <!-- Họ và tên -->
                             <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                        id="name" name="name" value="{{ old('name') }}" placeholder="Họ và tên"
-                                        required>
-                                    <label for="name">Họ và tên</label>
-                                    @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-group">
+                                    <label for="name" class="form-label">Họ và tên</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                            id="name" name="name" value="{{ old('name') }}" placeholder="Nhập họ và tên"
+                                            required>
+                                        @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Email -->
                             <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                        id="email" name="email" value="{{ old('email') }}" placeholder="Email" required>
-                                    <label for="email">Email</label>
-                                    @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email</label>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                            id="email" name="email" value="{{ old('email') }}"
+                                            placeholder="Nhập email của bạn" required>
+                                        @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Mật khẩu -->
                             <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                        id="password" name="password" placeholder="Mật khẩu" required>
-                                    <label for="password">Mật khẩu</label>
-                                    @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-group">
+                                    <label for="password" class="form-label">Mật khẩu</label>
+                                    <div class="input-group">
+                                        <input type="password"
+                                            class="form-control @error('password') is-invalid @enderror" id="password"
+                                            name="password" placeholder="Nhập mật khẩu" required>
+                                        <span class="input-group-text toggle-password" style="cursor: pointer; margin-top: 5px;">
+                                            <i class="fa fa-eye"></i>
+                                        </span>
+                                        @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Xác nhận mật khẩu -->
                             <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="password-confirm"
-                                        name="password_confirmation" placeholder="Xác nhận mật khẩu" required>
-                                    <label for="password-confirm">Xác nhận mật khẩu</label>
+                                <div class="form-group">
+                                    <label for="password-confirm" class="form-label">Xác nhận mật khẩu</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="password-confirm"
+                                            name="password_confirmation" placeholder="Nhập lại mật khẩu" required>
+                                        <span class="input-group-text toggle-password" style="cursor: pointer; margin-top: 5px;">
+                                            <i class="fa fa-eye"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Số điện thoại -->
                             <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control @error('phone') is-invalid @enderror"
-                                        id="phone" name="phone" value="{{ old('phone') }}" placeholder="Số điện thoại"
-                                        required>
-                                    <label for="phone">Số điện thoại</label>
-                                    @error('phone')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Số điện thoại</label>
+                                    <div class="input-group">
+                                        <input type="tel" class="form-control @error('phone') is-invalid @enderror"
+                                            id="phone" name="phone" value="{{ old('phone') }}"
+                                            placeholder="Nhập số điện thoại" required>
+                                        @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Giới tính -->
                             <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select @error('gender') is-invalid @enderror" id="gender"
-                                        name="gender" required>
-                                        <option value="">-- Chọn giới tính --</option>
-                                        <option value="Nam" {{ old('gender')=='Nam' ? 'selected' : '' }}>Nam</option>
-                                        <option value="Nữ" {{ old('gender')=='Nữ' ? 'selected' : '' }}>Nữ</option>
-                                        <option value="Khác" {{ old('gender')=='Khác' ? 'selected' : '' }}>Khác</option>
-                                    </select>
-                                    <label for="gender">Giới tính</label>
-                                    @error('gender')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-group">
+                                    <label for="gender" class="form-label">Giới tính</label>
+                                    <div class="input-group">
+                                        <select class="form-select @error('gender') is-invalid @enderror" id="gender"
+                                            name="gender" required>
+                                            <option value="">-- Chọn giới tính --</option>
+                                            <option value="Nam" {{ old('gender')=='Nam' ? 'selected' : '' }}>Nam
+                                            </option>
+                                            <option value="Nữ" {{ old('gender')=='Nữ' ? 'selected' : '' }}>Nữ</option>
+                                            <option value="Khác" {{ old('gender')=='Khác' ? 'selected' : '' }}>Khác
+                                            </option>
+                                        </select>
+                                        @error('gender')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Địa chỉ -->
                             <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control @error('address') is-invalid @enderror"
-                                        id="address" name="address" value="{{ old('address') }}" placeholder="Địa chỉ"
-                                        required>
-                                    <label for="address">Địa chỉ</label>
-                                    @error('address')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-group">
+                                    <label for="address" class="form-label">Địa chỉ</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                            id="address" name="address" value="{{ old('address') }}"
+                                            placeholder="Nhập địa chỉ của bạn" required>
+                                        @error('address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Avatar -->
                             <div class="col-12">
-                                <div class="mb-3">
+                                <div class="form-group">
                                     <label for="avatar" class="form-label">Ảnh đại diện</label>
-                                    <input type="file" class="form-control @error('avatar') is-invalid @enderror"
-                                        id="avatar" name="avatar" accept="image/*">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control @error('avatar') is-invalid @enderror"
+                                            id="avatar" name="avatar" accept="image/*">
+                                        @error('avatar')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                     <div class="form-text">Chọn ảnh đại diện của bạn (tối đa 2MB)</div>
-                                    @error('avatar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
                                 </div>
                             </div>
 
@@ -129,7 +155,8 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="terms" required>
                                     <label class="form-check-label" for="terms">
-                                        Tôi đồng ý với <a href="#">điều khoản sử dụng</a> và <a href="#">chính sách bảo
+                                        Tôi đồng ý với <a href="#" class="text-primary">điều khoản sử dụng</a> và <a
+                                            href="#" class="text-primary">chính sách bảo
                                             mật</a>
                                     </label>
                                 </div>
@@ -138,7 +165,7 @@
                             <!-- Nút đăng ký -->
                             <div class="col-12 text-center">
                                 <button type="submit" class="btn btn-primary btn-lg px-5">
-                                    <i class="fas fa-user-plus me-2"></i>Đăng ký
+                                    Đăng ký
                                 </button>
                             </div>
                         </div>
@@ -154,41 +181,26 @@
     </div>
 </div>
 
-<style>
-    .form-floating>.form-control,
-    .form-floating>.form-select {
-        height: calc(3.5rem + 2px);
-        line-height: 1.25;
-    }
-
-    .form-floating>label {
-        padding: 1rem 0.75rem;
-    }
-
-    .form-floating>.form-control:focus~label,
-    .form-floating>.form-control:not(:placeholder-shown)~label {
-        transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
-    }
-
-    .btn-primary {
-        background: linear-gradient(45deg, #2196F3, #1976D2);
-        border: none;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
-    }
-
-    .card {
-        border-radius: 15px;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        box-shadow: 0 0 0 0.25rem rgba(33, 150, 243, 0.25);
-    }
-</style>
+@push('scripts')
+<script>
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            const passwordInput = this.parentElement.querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+</script>
+@endpush
 
 @endsection
