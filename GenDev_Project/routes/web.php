@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('apps-chat');
+    return view('admin.apps-chat');
 });
+
+
+Route::resource('/products',ProductController::class);
 
 Route::get('/products', function () {
     return view('products.index');
@@ -64,3 +68,4 @@ Route::get('/track-order', function () {
 Route::get('/login', function () {
     return view('client.auth.login-and-register');
 })->name('login');
+
