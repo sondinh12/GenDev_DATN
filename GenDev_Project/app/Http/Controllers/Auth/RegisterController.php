@@ -56,7 +56,7 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
-            'gender' => ['required', 'in:Nam,Nữ,Khác'],
+            'gender' => ['required', 'in:male,female,other'],
         ];
         // Nếu có file avatar thì validate là file ảnh, không phải string
         if (request()->hasFile('avatar')) {
@@ -84,7 +84,7 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'gender' => $data['gender'],
             'status' => 1,
-            'role' => 1,
+            'role' => 2,
         ]);
     }
 
