@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string("name",255);
             $table->string("avatar",255);
             $table->string("address",255);
+<<<<<<< HEAD
             $table->string("email",255);
+=======
+>>>>>>> 45c005b5a31bda1b557009ed654c2df9b9979443
             $table->dateTime("email_verified_at");
             $table->string("phone",20);
             $table->string("password",255);
