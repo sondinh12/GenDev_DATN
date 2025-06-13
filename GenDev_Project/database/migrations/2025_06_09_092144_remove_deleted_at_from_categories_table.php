@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('categories', function (Blueprint $table) {
             Schema::table('categories', function (Blueprint $table) {
-                $table->dropColumn('deleted_at');
+                // $table->dropColumn('deleted_at');
             });
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
     {
         Schema::table('categories', function (Blueprint $table) {
             Schema::table('categories', function (Blueprint $table) {
-                $table->softDeletes(); // Nếu cần rollback
+                // $table->softDeletes(); // Nếu cần rollback
             });
         });
     }

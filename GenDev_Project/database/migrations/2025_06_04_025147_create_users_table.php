@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("address",255);
             $table->string("email",255);
             $table->dateTime("email_verified_at");
+            $table->rememberToken();
             $table->string("phone",20);
             $table->string("password",255);
             $table->enum("gender",["Nam","Nữ","Khác"]);

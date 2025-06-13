@@ -1,11 +1,23 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CategoryMiniController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CategoryMiniController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ProductController;
 
-// Route::get('/', function () {
-//     return view('admin.index');
+Route::get('/', function () {
+    return view('admin.apps-chat');
+});
+
+
+Route::resource('/products',ProductController::class);
+Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+
+// Route::get('/products', function () {
+
+//     return view('products.index');
+
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
@@ -59,18 +71,46 @@ Route::get('/track-order', function () {
 
 // ================= ADMIN =================
 
-Route::prefix('admin')->group(function () {
-    Route::view('/', 'admin.index')->name('dashboard');
-    Route::resource('categories',CategoryController::class);
-    Route::get('categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('categories_minis.index');
-    Route::get('categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('categories_minis.create');
-    Route::post('categories/{id}/minis/store',[CategoryMiniController::class, 'store'])->name('categories_minis.store');
-    // Route::resource('categories_minis',CategoryMiniController::class);
-    Route::view('/products', 'products.index')->name('products.index');
-    Route::view('/users', 'users.index')->name('users.index');
+// Route::prefix('admin')->group(function () {
+//     Route::view('/', 'admin.index')->name('dashboard');
+//     Route::resource('categories',CategoryController::class);
+//     Route::get('categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('categories_minis.index');
+//     Route::get('categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('categories_minis.create');
+//     Route::post('categories/{id}/minis/store',[CategoryMiniController::class, 'store'])->name('categories_minis.store');
+    
+// });
+
+// ================= ADMIN =================
+
+
+Route::prefix('/admin')->group(function () {
+    Route::view('/', 'admin.index')->name('admin.dashboard');
+    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+    Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
+    Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
+    Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
+    
+    Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
+    Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
+    Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+
+    Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
+    Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+    Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+    
+    Route::resource('/categories',CategoryController::class);
+    Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
+    Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
+    Route::post('/categories/{id}/minis/store',[CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
+    
+
+    // Route::view('/users', 'admin.users.index')->name('admin.users.index');
 });
+
 
 // ================= TÀI KHOẢN =================
 Route::get('/login', function () {
     return view('client.auth.login-and-register');
 })->name('login');
+

@@ -50,7 +50,7 @@
                                     <a href="#" class="btn btn-sm btn-danger me-1">
                                         <i class="fas fa-trash-alt"></i> Xoá
                                     </a>
-                                    <a href="{{ route('categories_minis.index',['id'=>$cate->id]) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('admin.categories_minis.index',['id'=>$cate->id]) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-sitemap"></i> Danh mục con
                                     </a>
                                 </td>
@@ -67,4 +67,5 @@
     </div>
 </div>
 @endsection
+
 

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string("name",255);
             $table->string("image",255);
+            // $table->decimal('sale_price', 10, 2)->nullable();
+            // $table->
             $table->text("description");
             $table->tinyInteger("status")->default(1)->nullable();
             $table->bigInteger("category_id");  

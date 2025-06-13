@@ -21,7 +21,6 @@
         @include('admin.layouts.topbar')
         <!-- sidebar components -->
         @include('admin.layouts.sidebar')
-        
         <!-- ============================================================== -->
         <!-- Start right Content here -->
         <!-- ============================================================== -->

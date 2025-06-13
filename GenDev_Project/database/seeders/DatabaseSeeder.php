@@ -13,10 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-       $this->call([
-        CategorySeed::class,
-        CategoryMiniSeed::class,
-       ]);
+
+        $this->call([
+            // CategorySeed::class,
+            // CategoryMiniSeed::class,
+            ProductSeeder::class,
+            ProductGallerySeeder::class,
+            ProductVariantSeeder::class,
+            // AttributeSeeder::class,
+            // AttributeValueSeeder::class,
+            ProductVariantAttributeSeeder::class,
+        ]);
     }
 }

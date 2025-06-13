@@ -10,7 +10,7 @@
                 <i class="fas fa-arrow-left"></i> Quay lại danh mục
             </a>
         </div>
-        <a href="{{ route('categories_minis.create',$categories->id) }}" class="btn btn-success">
+        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Thêm danh mục con
         </a>
     </div>

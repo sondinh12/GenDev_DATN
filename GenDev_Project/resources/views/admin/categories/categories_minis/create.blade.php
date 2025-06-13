@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">➕ Thêm danh mục con mới cho {{ $categories->name }}</h4>
-        <a href="{{ route('categories_minis.index',$categories->id) }}" class="btn btn-secondary">
+        <a href="{{ route('admin.categories_minis.index',$categories->id) }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Quay lại danh sách
         </a>
     </div>
@@ -31,7 +31,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('categories_minis.store',['id' => $categories->id]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.categories_minis.store',['id' => $categories->id]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Danh mục cha (hiển thị tên và lưu ID trong input ẩn) --}}
@@ -57,7 +57,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Thêm mới
                 </button>
-                <a href="{{ route('categories_minis.index',['id'=> $categories->id]) }}" class="btn btn-secondary">
+                <a href="{{ route('admin.categories_minis.index',['id'=> $categories->id]) }}" class="btn btn-secondary">
                     <i class="fas fa-times"></i> Huỷ
                 </a>
             </form>

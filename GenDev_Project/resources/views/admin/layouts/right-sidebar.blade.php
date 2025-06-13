@@ -149,15 +149,17 @@
                                 <span>Meeting with</span>
                                 <div class="avatar-group ms-2">
                                     <div class="avatar avatar-circle">
-                                        <img src="{{ URL::asset('build/images/users/avatar-1.png') }}"
+
+                                        <img src="{{ URL::asset('images/users/avatar-1.png') }}"
                                             alt="Avatar image" class="avatar-2xs" />
                                     </div>
                                     <div class="avatar avatar-circle">
-                                        <img src="{{ URL::asset('build/images/users/avatar-2.png') }}"
+                                        <img src="{{ URL::asset('images/users/avatar-2.png') }}"
                                             alt="Avatar image" class="avatar-2xs" />
                                     </div>
                                     <div class="avatar avatar-circle">
-                                        <img src="{{ URL::asset('build/images/users/avatar-3.png') }}"
+                                        <img src="{{ URL::asset('images/users/avatar-3.png') }}"
+
                                             alt="Avatar image" class="avatar-2xs" />
                                     </div>
                                 </div>
