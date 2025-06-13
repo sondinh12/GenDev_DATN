@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             // ProductVariantSeeder::class,
             // ProductVariantAttributeSeeder::class,
             CategoryMiniSeeder::class,
+
         ]);
     }
 }

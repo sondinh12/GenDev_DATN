@@ -10,12 +10,13 @@
 
 @section('css')
     <style>
-        .hidden { display: none !important; }
+        .hidden {
+            display: none !important;
+        }
     </style>
 @endsection
 
 @section('content')
-
     @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -26,7 +27,7 @@
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif  
+    @endif
 
     @php
         $groupedMini = [];
@@ -46,7 +47,8 @@
 
         <div class="form-group">
             <label>Tên sản phẩm</label>
-            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
+            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                value="{{ old('name') }}">
             @error('name')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -55,7 +57,7 @@
 
         <div class="form-group">
             <label>Danh mục</label>
-            <select name="category_id" id="category_id" class="form-control">
+            <select name="category_id" id=category_id class="form-control">
                 <option value="">-- Chọn danh mục --</option>
                 @foreach($categories as $cate)
                     <option value="{{ $cate->id }}">{{ $cate->name }}</option>
@@ -63,7 +65,7 @@
             </select>
         </div>
         @error('category_id')
-                <div class="text-danger">{{ $message }}</div>
+            <div class="text-danger">{{ $message }}</div>
         @enderror
 
         <div class="form-group">
@@ -73,7 +75,7 @@
             </select>
         </div>
         @error('category_mini_id')
-                <div class="text-danger">{{ $message }}</div>
+            <div class="text-danger">{{ $message }}</div>
         @enderror
 
         <div class="form-group">
@@ -81,7 +83,7 @@
             <input type="file" name="image" class="form-control-file" accept="image/*">
         </div>
         @error('image')
-                <div class="text-danger">{{ $message }}</div>
+            <div class="text-danger">{{ $message }}</div>
         @enderror
 
 
@@ -96,11 +98,11 @@
 
         <div class="form-group">
             <label>Mô tả</label>
-            <textarea name="description" class="form-control" rows="5">{{old('description')}}</textarea>
+            <textarea name="description" class="form-control" rows="5" value="{{old('description')}}"></textarea>
+            @error('description')
+                <div class="text-danger">{{ $messxage }}</div>
+            @enderror
         </div>
-        @error('description')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
 
 
         <div class="form-group">
@@ -113,9 +115,12 @@
 
         <div class="form-group">
             <label>Loại sản phẩm</label>
-            <select name="product_type" id="product-type" class="form-control @error('product_type') is-invalid @enderror" onchange="toggleProductType()">
-                <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến thể</option>
-                <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể</option>
+            <select name="product_type" id="product-type" class="form-control @error('product_type') is-invalid @enderror"
+                onchange="toggleProductType()">
+                <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến
+                    thể</option>
+                <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể
+                </option>
             </select>
             @error('product_type')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -125,21 +130,26 @@
         <div id="simple-product-fields" class="{{ old('product_type', 'simple') == 'variable' ? 'hidden' : '' }}">
             <div class="form-group">
                 <label>Giá</label>
-                <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" step="0.01">
+                <input type="number" name="price" class="form-control @error('price') is-invalid @enderror"
+                    value="{{ old('price') }}" step="0.01">
                 @error('price')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
+
             <div class="form-group">
                 <label>Giá khuyến mãi</label>
-                <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror" value="{{ old('sale_price') }}" step="0.01">
+                <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror"
+                    value="{{ old('sale_price') }}" step="0.01">
                 @error('sale_price')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+
             <div class="form-group">
                 <label>Số lượng</label>
-                <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}">
+                <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
+                    value="{{ old('quantity') }}">
                 @error('quantity')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -196,8 +206,8 @@
     </script>
 
 
-<script>
-    function toggleProductType() {
+    <script>
+        function toggleProductType() {
             const productType = document.getElementById('product-type').value;
             const simpleFields = document.getElementById('simple-product-fields');
             const variantForm = document.getElementById('variant-form');
@@ -255,7 +265,9 @@
             });
 
             function cartesian(arr) {
-                return arr.reduce((a, b) => a.flatMap(d => b.map(e => [].concat(d, e))), [[]]);
+                return arr.reduce((a, b) => a.flatMap(d => b.map(e => [].concat(d, e))), [
+                    []
+                ]);
             }
 
             let combos = cartesian(selected);
@@ -271,47 +283,46 @@
                 const valueIds = combo.map(c => c.valueId).join(',');
 
                 tbody += `<tr>
-                    <td>
-                        ${label}
-                        <input type="hidden" name="variant_combinations[${index}][value_ids]" value="${valueIds}">
-                    </td>
-                    <td><input name="variant_combinations[${index}][price]" class="form-control" type="number" step="0.01" required></td>
-                    <td><input name="variant_combinations[${index}][sale_price]" class="form-control" type="number" step="0.01"></td>
-                    <td><input name="variant_combinations[${index}][quantity]" class="form-control" type="number" required></td>
-                    <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">❌</button></td>
-                </tr>`;
+                        <td>
+                            ${label}
+                            <input type="hidden" name="variant_combinations[${index}][value_ids]" value="${valueIds}">
+                        </td>
+                        <td><input name="variant_combinations[${index}][price]" class="form-control" type="number" step="0.01" required></td>
+                        <td><input name="variant_combinations[${index}][sale_price]" class="form-control" type="number" step="0.01"></td>
+                        <td><input name="variant_combinations[${index}][quantity]" class="form-control" type="number" required></td>
+                        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">❌</button></td>
+                    </tr>`;
             });
-
             table.innerHTML = `<thead>${thead}</thead><tbody>${tbody}</tbody>`;
             document.getElementById('variant-table').innerHTML = '';
             document.getElementById('variant-table').appendChild(table);
         });
 
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const miniCategories = @json($groupedMini ?? []);
-    const categorySelect = document.getElementById('category_id');
-    const miniSelect = document.getElementById('category_mini_id');
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const miniCategories = @json($groupedMini ?? []);
+            const categorySelect = document.getElementById('category_id');
+            const miniSelect = document.getElementById('category_mini_id');
 
-    if (!categorySelect || !miniSelect) {
-        console.error('Không tìm thấy category_id hoặc category_mini_id');
-        return;
-    }
+            if (!categorySelect || !miniSelect) {
+                console.error('Không tìm thấy category_id hoặc category_mini_id');
+                return;
+            }
 
-    categorySelect.addEventListener('change', function () {
-        const selected = this.value;
-        miniSelect.innerHTML = '<option value="">-- Chọn danh mục con --</option>';
+            categorySelect.addEventListener('change', function () {
+                const selected = this.value;
+                miniSelect.innerHTML = '<option value="">-- Chọn danh mục con --</option>';
 
-        if (selected && miniCategories[selected]) {
-            miniCategories[selected].forEach(mini => {
-                const opt = document.createElement('option');
-                opt.value = mini.id;
-                opt.textContent = mini.name;
-                miniSelect.appendChild(opt);
+                if (selected && miniCategories[selected]) {
+                    miniCategories[selected].forEach(mini => {
+                        const opt = document.createElement('option');
+                        opt.value = mini.id;
+                        opt.textContent = mini.name;
+                        miniSelect.appendChild(opt);
+                    });
+                }
             });
-        }
-    });
-});
-</script>
+        });
+    </script>
 @endsection
