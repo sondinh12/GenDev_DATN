@@ -26,8 +26,7 @@
             <th>Tên</th>
             <th>Ảnh</th>
             <th>Tên danh mục</th>
-            <th>Giá</th>
-            <th>Số lượng</th>
+            <th>Danh mục con</th>
             <th>Trạng thái</th>
             <th>Ngày tạo</th>       
             <th>Ngày cập nhật</th>
@@ -41,8 +40,7 @@
                     <img src="{{asset('storage/'.$pro->image)}}" alt="Ảnh" width="100px">
                 </td>
                 <td>{{$pro->category->name}}</td>
-                <td>{{$pro->price}}</td>
-                <td>{{$pro->quantity}}</td>
+                <td>{{$pro->categoryMini?->name}}</td>
                 <th>{{$pro->status == 1 ? 'Hiển thị' : 'Ẩn'}}</th>
                 <td>{{$pro->created_at}}</td>
                 <td>{{$pro->updated_at}}</td>

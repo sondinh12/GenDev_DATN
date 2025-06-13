@@ -34,6 +34,7 @@ class ProductRequest extends FormRequest
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
             'category_id'=>'required|exists:categories,id', 
+            'category_mini_id'=>'required',
             'status'=>'required',
             'variant_combinations' => 'nullable|array',
         ];  
@@ -68,6 +69,7 @@ class ProductRequest extends FormRequest
             'image.file'=>'Tệp tải lên phải là 1 file hợp lệ',
             'image.max'=>'Dung lượng không vượt quá 2MB',
             'category_id.required'=>'Danh mục không được bỏ trống',
+            'category_mini_id.required'=>'Danh mục con không được bỏ trống',
             'status.required'=>'Trạng thái không được bỏ trống',
         ];
     }

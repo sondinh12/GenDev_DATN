@@ -16,7 +16,7 @@
 
 @section('content')
 
-@if (session('error'))
+    @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
@@ -27,6 +27,18 @@
             {{ session('success') }}
         </div>
     @endif  
+
+    @php
+        $groupedMini = [];
+        foreach ($categories_mini as $mini) {
+            $groupedMini[$mini->category_id][] = [
+                'id' => $mini->id,
+                'name' => $mini->name,
+            ];
+        }
+    @endphp
+
+
     <h2>Thêm sản phẩm mới</h2>
 
     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
@@ -43,7 +55,7 @@
 
         <div class="form-group">
             <label>Danh mục</label>
-            <select name="category_id" class="form-control">
+            <select name="category_id" id="category_id" class="form-control">
                 <option value="">-- Chọn danh mục --</option>
                 @foreach($categories as $cate)
                     <option value="{{ $cate->id }}">{{ $cate->name }}</option>
@@ -51,6 +63,16 @@
             </select>
         </div>
         @error('category_id')
+                <div class="text-danger">{{ $message }}</div>
+        @enderror
+
+        <div class="form-group">
+            <label>Danh mục con</label>
+            <select name="category_mini_id" id="category_mini_id" class="form-control">
+                <option value="">-- Chọn danh mục con --</option>
+            </select>
+        </div>
+        @error('category_mini_id')
                 <div class="text-danger">{{ $message }}</div>
         @enderror
 
@@ -264,5 +286,32 @@
             document.getElementById('variant-table').innerHTML = '';
             document.getElementById('variant-table').appendChild(table);
         });
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const miniCategories = @json($groupedMini ?? []);
+    const categorySelect = document.getElementById('category_id');
+    const miniSelect = document.getElementById('category_mini_id');
+
+    if (!categorySelect || !miniSelect) {
+        console.error('Không tìm thấy category_id hoặc category_mini_id');
+        return;
+    }
+
+    categorySelect.addEventListener('change', function () {
+        const selected = this.value;
+        miniSelect.innerHTML = '<option value="">-- Chọn danh mục con --</option>';
+
+        if (selected && miniCategories[selected]) {
+            miniCategories[selected].forEach(mini => {
+                const opt = document.createElement('option');
+                opt.value = mini.id;
+                opt.textContent = mini.name;
+                miniSelect.appendChild(opt);
+            });
+        }
+    });
+});
 </script>
 @endsection

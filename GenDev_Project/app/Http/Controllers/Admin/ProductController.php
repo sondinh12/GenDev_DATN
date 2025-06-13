@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\AttributeValue;
 use App\Models\Category;
+use App\Models\CategoryMini;
 use App\Models\Product;
 use App\Models\Attribute;
 use App\Models\ProductGallery;
@@ -21,7 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->orderBy('id','DESC')->paginate(5);
+        $products = Product::with(['category','categoryMini'])->orderBy('id','DESC')->paginate(5);
         return view('Admin.products.index',compact('products'));
     }
 
@@ -31,8 +32,9 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.create',compact('categories','attributes'));
+        return view('Admin.products.create',compact('categories','attributes','categories_mini'));
     }
 
     /**
@@ -49,6 +51,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category_id,
+            'category_mini_id'=>$request->category_mini_id,
             'image' => $imagePath,
             'price' => $request->price,
             'quantity'=>$request->quantity,
@@ -100,6 +103,7 @@ class ProductController extends Controller
     {   
         $product = Product::with([
             'category',
+            'categoryMini',
             'galleries',
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
