@@ -130,13 +130,15 @@ class ProductController extends Controller
     {
         // Lấy thông tin sản phẩm, danh mục, thuộc tính và các giá trị liên quan
         $product = Product::with([
+            
             'galleries',
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
         ])->findOrFail($id);
         $categories = Category::all();
+        $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.edit', compact('product', 'categories', 'attributes'));
+        return view('Admin.products.edit', compact('product', 'categories', 'attributes', 'categories_mini'));
     }
 
     /**

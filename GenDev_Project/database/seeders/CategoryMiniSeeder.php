@@ -14,14 +14,14 @@ class CategoryMiniSeeder extends Seeder
     public function run(): void
     {
         DB::table('categories_mini')->insert([
-        'category_id'=>1,
-        'name'=>"Iphone",
-        'status'=>1,
-        'image'=>'anh.jpg'
         // 'category_id'=>1,
-        // 'name'=>"Samsung",
+        // 'name'=>"Iphone",
         // 'status'=>1,
-        // 'image'=>'anh2.jpg'
+        // 'image'=>'anh.jpg',
+        'category_id'=>1,
+        'name'=>"Samsung",
+        'status'=>1,
+        'image'=>'anh2.jpg'
         ]);
     }
 }
