@@ -14,11 +14,16 @@ class Product extends Model
         'quantity',
         'description',
         'status',
-        'category_id'
+        'category_id',
+        'category_mini_id'
     ];
 
     public function category(){
         return $this->belongsTo(Category::class,'category_id');
+    }
+
+    public function categoryMini(){
+        return $this->belongsTo(CategoryMini::class,'category_mini_id');
     }
 
     public function galleries(){
