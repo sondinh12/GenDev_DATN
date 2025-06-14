@@ -40,7 +40,7 @@ Products
     </div>
     <div class="form-group">
         <label>Danh mục</label>
-        <select name="category_id" class="form-control">
+        <select name="category_id" id="category_id" class="form-control">
             <option value="">-- Chọn danh mục --</option>
             @foreach($categories as $cate)
             <option value="{{ $cate->id }}" {{ $product->category_id == $cate->id ? 'selected' : '' }}>{{ $cate->name }}</option>
@@ -48,6 +48,20 @@ Products
         </select>
     </div>
     @error('category_id')
+    <div class="text-danger">{{ $message }}</div>
+    @enderror
+    <div class="form-group">
+        <label>Danh mục con</label>
+        <select name="category_mini_id" id="category_mini_id" class="form-control">
+            <option value="">-- Chọn danh mục con --</option>
+            @if(isset($categories_mini))
+                @foreach($categories_mini as $mini)
+                    <option value="{{ $mini->id }}" {{ $product->category_mini_id == $mini->id ? 'selected' : '' }}>{{ $mini->name }}</option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    @error('category_mini_id')
     <div class="text-danger">{{ $message }}</div>
     @enderror
     <div class="form-group">

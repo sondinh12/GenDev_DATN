@@ -28,6 +28,7 @@ Manage
         <th>Tên danh mục</th>
         <th>Giá</th>
         <th>Số lượng</th>
+        <th>Danh mục con</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
         <th>Ngày cập nhật</th>
@@ -43,6 +44,7 @@ Manage
         <td>{{$pro->category->name}}</td>
         <td>{{$pro->price}}</td>
         <td>{{$pro->quantity}}</td>
+        <td>{{$pro->categoryMini?->name}}</td>
         <th>
             @if($pro->status == 1)
                 Hiển thị
@@ -76,13 +78,11 @@ Manage
                 </form>
             @endif
         </td>
-
     </tr>
     @endforeach
 </table>
 {{$products->links()}}
 @endsection
-
 @section('scripts')
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection

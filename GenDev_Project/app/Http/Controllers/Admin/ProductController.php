@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Models\AttributeValue;
 use App\Models\Category;
+use App\Models\CategoryMini;
 use App\Models\Attribute;
 use App\Models\Product;
 use App\Models\ProductGallery;
@@ -22,8 +23,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->orderBy('id','DESC')->paginate(5);
-        return view('admin.products.index',compact('products'));
+        $products = Product::with(['category','categoryMini'])->orderBy('id','DESC')->paginate(5);
+        return view('Admin.products.index',compact('products'));
     }
 
     /**
@@ -32,8 +33,9 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('admin.products.create',compact('categories','attributes'));
+        return view('Admin.products.create',compact('categories','attributes','categories_mini'));
     }
 
     /**
@@ -53,6 +55,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category_id,
+            'category_mini_id'=>$request->category_mini_id,
             'image' => $imagePath,
             'price' => $request->price,
             'quantity'=>$request->quantity,
@@ -109,6 +112,7 @@ class ProductController extends Controller
     {   
         $product = Product::with([
             'category',
+            'categoryMini',
             'galleries',
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
@@ -123,13 +127,15 @@ class ProductController extends Controller
     {
         // Lấy thông tin sản phẩm, danh mục, thuộc tính và các giá trị liên quan
         $product = Product::with([
+            
             'galleries',
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
         ])->findOrFail($id);
         $categories = Category::all();
+        $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('admin.products.edit', compact('product', 'categories', 'attributes'));
+        return view('Admin.products.edit', compact('product', 'categories', 'attributes', 'categories_mini'));
     }
 
     /**
@@ -150,6 +156,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->description = $request->description;
         $product->category_id = $request->category_id;
+        $product->category_mini_id = $request->category_mini_id;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;

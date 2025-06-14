@@ -1,15 +1,20 @@
 <?php
+session_start();
 
 
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('admin.apps-chat');
 });
 
 
-Route::resource('/products',ProductController::class);
+Route::resource('/products', ProductController::class);
 Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
 Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
@@ -68,10 +73,7 @@ Route::get('/track-order', function () {
     return view('client.checkout.track-order');
 })->name('track-order');
 
-
 // ================= ADMIN =================
-
-
 Route::prefix('/admin')->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
@@ -89,12 +91,25 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
 
     Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
-    Route::view('/users', 'admin.users.index')->name('admin.users.index');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
+    Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+    Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
 });
 
 
 // ================= TÀI KHOẢN =================
-Route::get('/login', function () {
-    return view('client.auth.login-and-register');
-})->name('login');
 
+Auth::routes();
+
+
+// Email Verification Routes
+Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+// ================= PROFILE =================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+});

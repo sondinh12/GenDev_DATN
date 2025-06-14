@@ -22,6 +22,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
+
                             <a href="{{ url('/products') }}">
                                 <i class="mdi mdi-checkbox-blank-circle align-middle"></i>Products
                             </a>

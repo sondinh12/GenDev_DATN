@@ -1,17 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 
-import fs from 'fs-extra';
-
-import path from 'path';
-
-const folder = {
-    src: "resources/", // source files
-    src_assets: "resources/", // source assets files
-    dist: "public/", // build files
-    dist_assets: "public/build" //build assets files
-};
-
 export default defineConfig({
     build: {
         manifest: true,
@@ -84,8 +73,5 @@ export default defineConfig({
             },
         },
     ],
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 45c005b5a31bda1b557009ed654c2df9b9979443
+
