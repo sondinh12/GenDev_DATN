@@ -38,8 +38,6 @@
             ];
         }
     @endphp
-
-
     <h2>Thêm sản phẩm mới</h2>
 
     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
@@ -79,6 +77,7 @@
         @enderror
 
         <div class="form-group">
+
             <label>Ảnh đại diện</label>
             <input type="file" name="image" class="form-control-file" accept="image/*">
         </div>
@@ -101,6 +100,7 @@
             <textarea name="description" class="form-control" rows="5" value="{{old('description')}}"></textarea>
             @error('description')
                 <div class="text-danger">{{ $messxage }}</div>
+
             @enderror
         </div>
 

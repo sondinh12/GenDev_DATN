@@ -1,22 +1,22 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Products
+Products
 @endsection
 
 @section('topbar-title')
-    Manage
+Manage
 @endsection
 
 @section('css')
 @endsection
 
 @section('content')
-    
+
 @if (session('success'))
-    <div class="alert alert-success">
-        {{session('success')}}
-    </div>
+<div class="alert alert-success">
+    {{session('success')}}
+</div>
 @endif
 
 <a href="{{route('products.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
@@ -42,19 +42,19 @@
                 <td>{{$pro->category->name}}</td>
                 <td>{{$pro->categoryMini?->name}}</td>
                 <th>{{$pro->status == 1 ? 'Hiển thị' : 'Ẩn'}}</th>
-                <td>{{$pro->created_at}}</td>
-                <td>{{$pro->updated_at}}</td>
-                <td>
-                    <a href="" class="btn btn-primary">Sửa</a>
-                    <a href="{{route('products.show',$pro->id)}}" class="btn btn-info">Xem</a>
-                    <a href="" class="btn btn-danger">Xóa</a>
-                </td>
-            </tr>
+                  <td>{{$pro->created_at}}</td>
+                  <td>{{$pro->updated_at}}</td>
+                  <td>
+                      <a href="" class="btn btn-primary">Sửa</a>
+                      <a href="{{route('products.show',$pro->id)}}" class="btn btn-info">Xem</a>
+                      <a href="" class="btn btn-danger">Xóa</a>
+                  </td>
+              </tr>
         @endforeach
     </table>
     {{$products->links()}}
 @endsection
 
 @section('scripts')
-    <script src="{{ URL::asset('build/js/app.js') }}"></script>
+<script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection

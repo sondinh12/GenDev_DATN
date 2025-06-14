@@ -9,6 +9,8 @@ Route::get('/', function () {
 
 
 Route::resource('/products',ProductController::class);
+Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
 // Route::get('/products', function () {
 
