@@ -1,0 +1,29 @@
+1. Migration - dùng để tạo bảng trong cơ sở dữ liệu 
+- Thực hiện migration bằng lệnh : php artisan migrate
+- Tạo migration cho bảng mới: php artisan make:migration create_ten_bang_table
+- để rollback lại câu lệnh vừa thực hiện: php artisan migrate:rollback
+- Để rollback lại nhiều câu lệnh: php artisan migrate:rollback --step=**
+- Để rollback lại toàn bộ cơ sở dữ liệu sau đó migration  lại từ đầu(reset db)
+    php artisan migrate:refresh
+
+- tao model: php artisan make:model TenModel
+2. Seeder
+- Để tạo file seeder: php artisan make:seeder TenfileSeeder
+3. Factory
+- Để tạo file Factory: php artisan make:factory TenfileFactory
+
+
+* Để tạo bảng và dữ liệu mãu theo quy trình nhanh nhất
+
+1/ tạo model bằng lệnh php artisan make:model TenBang -mfs
+2/ Chỉnh sửa file migration TenBang( thêm trường dữ liệu )
+        Sau đó chạy lệnh php artisan migrate
+3/ Thêm dữ liệu cần tạo vào TenBangSeeder Hoặc TenBangFactory
+        'TenBangdb'->$this->faker->tendulieubangphuhop(cái này bên factory)
+        Sau đó gọi vào file DatabaseSeeder (đây là migrate)
+            Chạy lệnh php artisan db:seed
+
+- khởi tạo controller với 7 cn cơ bản 
+php artisan make:controller  TenBangController --resource 
+php artisan storage:link
+ chạy lệnh này để load ảnh  
