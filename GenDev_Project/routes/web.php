@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -73,10 +74,22 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
-
-Route::prefix('admin')->group(function () {
+Route::prefix('/admin')->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
-    Route::view('/products', 'admin.products.index')->name('admin.products.index');
+    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+    Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
+    Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
+    Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
+    
+    Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
+    Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
+    Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+
+    Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
+    Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+    Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+
     Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
@@ -84,6 +97,8 @@ Route::prefix('admin')->group(function () {
     Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
     Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
 });
+
+
 // ================= TÀI KHOẢN =================
 
 Auth::routes();
