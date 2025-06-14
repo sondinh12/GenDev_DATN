@@ -1,15 +1,26 @@
 <?php
 session_start();
 
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
 
+Route::get('/', function () {
+    return view('admin.apps-chat');
+});
 
-// Route::get('/', function () {
-//     return view('admin.index');
+
+Route::resource('/products', ProductController::class);
+Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+
+// Route::get('/products', function () {
+
+//     return view('products.index');
+
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
