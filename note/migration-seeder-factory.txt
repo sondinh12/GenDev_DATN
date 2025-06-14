@@ -24,4 +24,6 @@
             Chạy lệnh php artisan db:seed
 
 - khởi tạo controller với 7 cn cơ bản 
-php artisan make:controller  TenBangController --resource   
+php artisan make:controller  TenBangController --resource 
+php artisan storage:link
+ chạy lệnh này để load ảnh  
