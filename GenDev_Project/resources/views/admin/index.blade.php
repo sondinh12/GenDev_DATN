@@ -1,19 +1,24 @@
-<<<<<<< HEAD
+
 
 @extends('admin.layouts.master-without-page-title')
 
 @section('title', 'Trang Quản Trị')
 
 @section('css')
-    Thêm CSS tùy chọn nếu cần
- @endsection 
+
+@endsection 
+
 
 @section('content')
 <div class="container-fluid">
     <h4 class="mb-4">Chào mừng bạn đến với Trang Quản Trị</h4>
     <div class="row">
         <div class="col-md-4">
+
             <a href="{{ route('products.index') }}" class="text-decoration-none">
+
+            <a href="{{ route('admin.products.index') }}" class="text-decoration-none">
+
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Quản lý Sản phẩm</h5>
@@ -22,7 +27,11 @@
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{{ route('categories.index') }}" class="text-decoration-none">
+
+            {{-- <a href="{{ route('categories.index') }}" class="text-decoration-none"> --}}
+
+            <a href="{{ route('admin.categories.index') }}" class="text-decoration-none">
+
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Quản lý Danh mục</h5>
@@ -31,7 +40,11 @@
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{{ route('users.index') }}" class="text-decoration-none">
+
+            {{-- <a href="{{ route('users.index') }}" class="text-decoration-none"> --}}
+
+            <a href="{{ route('admin.users.index') }}" class="text-decoration-none">
+
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Quản lý Người dùng</h5>
@@ -44,10 +57,10 @@
 @endsection
 
 @section('scripts')
-    JS riêng nếu cần
+
 @endsection 
-=======
-@extends('layouts.master-without-page-title')
+
+@extends('admin.layouts.master-without-page-title')
 
 @section('title')
     Dashboard
@@ -1223,4 +1236,5 @@
     <script src="{{ URL::asset('build/js/pages/dashboard.init.js') }}"></script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
->>>>>>> 15f62da15f3bcb50eb5ef170d914fc577247b798
+
+

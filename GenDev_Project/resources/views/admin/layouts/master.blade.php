@@ -12,7 +12,9 @@
 
     <!-- include head css -->
 
+
     @include('admin.layouts.head-css')
+
 </head>
 
 <body>
@@ -23,6 +25,7 @@
         @include('admin.layouts.topbar')
         <!-- sidebar components -->
         @include('admin.layouts.sidebar')
+
 
 
         <!-- ============================================================== -->
@@ -61,7 +64,9 @@
             <!-- footer -->
 
 
+
             @include('admin.layouts.footer')
+
 
 
         </div>
@@ -70,6 +75,7 @@
     <!-- END layout-wrapper -->
 
     <!-- customizer -->
+
 
     @include('admin.layouts.right-sidebar')
 

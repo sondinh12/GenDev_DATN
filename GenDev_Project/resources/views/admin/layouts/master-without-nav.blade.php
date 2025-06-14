@@ -12,7 +12,9 @@
 
     <!-- include head css -->
 
+
     @include('admin.layouts.head-css')
+
 
 </head>
 
@@ -26,6 +28,7 @@
 
     <!-- vendor-scripts -->
     @include('admin.layouts.vendor-scripts')
+
 
 
 </body>

@@ -12,6 +12,7 @@ const folder = {
     dist_assets: "public/build" //build assets files
 };
 
+
 export default defineConfig({
     build: {
         manifest: true,
@@ -34,6 +35,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+
                 'resources/scss/app.scss',
                 'resources/scss/bootstrap.scss',
                 'resources/scss/icons.scss',
@@ -83,6 +85,12 @@ export default defineConfig({
                 }
             },
         },
-    ],
-});
+
+                'resources/sass/app.scss',
+                'resources/js/app.js',
+            ],
+            refresh: true,
+})
+
+
 

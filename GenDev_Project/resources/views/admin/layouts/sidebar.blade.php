@@ -1,6 +1,5 @@
 <!-- ========== Left Sidebar Start ========== -->
 <div class="sidebar-left">
-
     <div data-simplebar class="h-100">
         <!-- Sidebar menu -->
         <div id="sidebar-menu">
@@ -12,6 +11,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+
                 <li class="menu-title">Products</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow ">
@@ -32,12 +32,25 @@
                     </ul>
                 <li>
 
-                 <li>
-                    <a href="{{ route('categories.index') }}">
+
+
+                <li class="menu-title">Quản lý</li>
+
+                <li>
+                    <a href="{{ route('admin.products.index') }}">
+                        <i class="fas fa-boxes"></i>
+                        <span>Sản phẩm</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.categories.index') }}">
+
                         <i class="fas fa-tags"></i>
                         <span>Danh mục</span>
                     </a>
                 </li>
+
 
                 <li class="menu-title">Elements</li>
 
@@ -385,11 +398,16 @@
                     <a href="{{ url('apps-chat') }}" class="">
                         <i class="fas fa-comment"></i>
                         <span>Chat</span>
+
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        <i class="fas fa-users"></i>
+                        <span>Người dùng</span>
+
                     </a>
                 </li>
 
                 <li>
-            
 
                     <a href="{{ url('apps-kanban') }}" class="">
                         <i class="fas fa-grip-horizontal"></i>
@@ -399,6 +417,7 @@
                 </li>
 
                 <li>
+
 <!-- ========== Left Sidebar End ========== -->
 
                     <a href="{{ url('apps-contact') }}" class="">

@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">➕ Thêm danh mục mới</h4>
-        <a href="{{ route('categories.index') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Quay lại danh sách
         </a>
     </div>
@@ -50,7 +50,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Thêm mới
                 </button>
-                <a href="{{ route('categories.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">
                     <i class="fas fa-times"></i> Huỷ
                 </a>
             </form> 

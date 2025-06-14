@@ -1,22 +1,33 @@
 <?php
+session_start();
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProductController;
 
-Route::get('/', function () {
-    return view('admin.apps-chat');
-});
+// Route::get('/', function () {
+//     return view('admin.apps-chat')->name('admin.categories.index');
+// });
 
 
 Route::resource('/products',ProductController::class);
 Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
 Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
-
 // Route::get('/products', function () {
 
 //     return view('products.index');
+
+
+
+
+
+// Route::get('/', function () {
+//     return view('admin.index');
 
 // });
 // ================= TRANG CHÍNH =================
@@ -71,6 +82,7 @@ Route::get('/track-order', function () {
 
 // ================= ADMIN =================
 
+
 // Route::prefix('admin')->group(function () {
 //     Route::view('/', 'admin.index')->name('dashboard');
 //     Route::resource('categories',CategoryController::class);
@@ -104,13 +116,34 @@ Route::prefix('/admin')->group(function () {
     Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
     Route::post('/categories/{id}/minis/store',[CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
     
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
+    Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+    Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
 
     // Route::view('/users', 'admin.users.index')->name('admin.users.index');
 });
 
 
 // ================= TÀI KHOẢN =================
+
 Route::get('/login', function () {
     return view('client.auth.login-and-register');
 })->name('login');
+
+
+
+Auth::routes();
+
+
+// Email Verification Routes
+Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+// ================= PROFILE =================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+});
 
