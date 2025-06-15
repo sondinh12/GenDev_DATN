@@ -65,7 +65,7 @@ Route::get('/track-order', function () {
 
 Route::prefix('/admin')->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
-    Route::resource('/products', ProductController::class);
+    Route::resource('/products',ProductController::class);
     Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
     Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
