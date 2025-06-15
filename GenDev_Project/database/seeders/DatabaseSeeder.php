@@ -15,15 +15,29 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'), // Ensure the password is hashed
+            'email_verified_at' => now(), // Set email verification timestamp
+            'remember_token' => null, // Set remember token to null
+            'phone' => '1234567890',
+            'avatar' => null,
+            'address' => null,
+            'gender' => 'Nam',
+            'status' => 1,
+            'role' => 0,
+        ]);
         $this->call([
-            // CategorySeeder::class,
-            // AttributeSeeder::class,
-            // AttributeValueSeeder::class,
-            // ProductSeeder::class,
-            // ProductGallerySeeder::class,
-            // ProductVariantSeeder::class,
-            // ProductVariantAttributeSeeder::class,
+            CategorySeeder::class,
             CategoryMiniSeeder::class,
+            AttributeSeeder::class,
+            AttributeValueSeeder::class,
+            ProductSeeder::class,
+            ProductGallerySeeder::class,
+            ProductVariantSeeder::class,
+            ProductVariantAttributeSeeder::class,
 
         ]);
     }

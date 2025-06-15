@@ -1,14 +1,17 @@
 <?php
-
+session_start();
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('admin.apps-chat');
 });
 
 
-Route::resource('/products',ProductController::class);
+Route::resource('/products', ProductController::class);
 Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
 Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
@@ -67,9 +70,38 @@ Route::get('/track-order', function () {
     return view('client.checkout.track-order');
 })->name('track-order');
 
+// ================= ADMIN =================
+Route::prefix('/admin')->group(function () {
+    Route::view('/', 'admin.index')->name('admin.dashboard');
+    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+    Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
+    Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
+    Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
+    
+    Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
+    Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
+    Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+
+    Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
+    Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+    Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+
+    Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
+    Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+    Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+});
+
 
 // ================= TÀI KHOẢN =================
-Route::get('/login', function () {
-    return view('client.auth.login-and-register');
-})->name('login');
 
+Auth::routes(['verify' => true]);
+
+
+// ================= PROFILE =================
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+});
