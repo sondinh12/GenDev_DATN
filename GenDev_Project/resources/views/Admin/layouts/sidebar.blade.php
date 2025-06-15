@@ -35,6 +35,23 @@
                 <li>
 
                 </li>
+                
+                <li class="menu-title">Categories</li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow ">
+                        <i class="fa fa-palette"></i>
+                        <span>Categories</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ url('admin/categories') }}">
+                                <i class="mdi mdi-checkbox-blank-circle align-middle"></i>Categories
+                            </a>
+                        </li>
+                    </ul>
+                <li>
+
+                </li>
 
                 <li class="menu-title">User</li>
                 <li>
