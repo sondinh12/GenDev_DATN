@@ -71,7 +71,7 @@
                                     <a title="Wishlist" href="{{ asset('wishlist.html') }}">Wishlist</a>
                                 </li>
                                 <li class="menu-item animate-dropdown">
-                                    <a title="Add to compare" href="{{ asset('compare.html') }}">Add to compare</a>
+                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Add to compare</a>
                                 </li>
                                 <li class="menu-item animate-dropdown">
                                     <a title="About Us" href="{{ asset('about.html') }}">About Us</a>

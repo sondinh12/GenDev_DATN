@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_favorites', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("user_id");
             $table->unsignedBigInteger("product_id");
-            $table->integer("quantity");
+            $table->text("content");
             $table->timestamps();
 
             // fk
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_favorites');
+        Schema::dropIfExists('order_reviews');
     }
 };
