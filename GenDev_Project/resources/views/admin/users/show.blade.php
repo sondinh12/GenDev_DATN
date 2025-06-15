@@ -48,7 +48,7 @@
                             <p class="text-muted mb-0">
                                 @if($user->role == 1)
                                 <span class="badge bg-primary">Người dùng</span>
-                                @elseif($user->role == 2)
+                                @elseif($user->role == 0)
                                 <span class="badge bg-success">Admin</span>
                                 @endif
                             </p>

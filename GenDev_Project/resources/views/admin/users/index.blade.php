@@ -65,8 +65,8 @@
                                         @php
                                             $roleLabel = match($user->role) {
                                                 0 => ['label' => 'Admin', 'class' => 'success'],
-                                                1 => ['label' => 'Nhân viên', 'class' => 'primary'],
-                                                2 => ['label' => 'Người dùng', 'class' => 'secondary'],
+                                                1 => ['label' => 'Người dùng', 'class' => 'primary'],
+                                                2 => ['label' => 'Nhân viên', 'class' => 'secondary'],
                                                 default => ['label' => 'Không rõ', 'class' => 'dark'],
                                             };
                                         @endphp
@@ -129,8 +129,8 @@
                                             <label for="role-{{ $user->id }}">Vai trò</label>
                                             <select name="role" id="role-{{ $user->id }}" class="form-control">
                                               <option value="0" {{ $user->role == 0 ? 'selected' : '' }}>Admin</option>
-                                              <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>Nhân viên</option>
-                                              <option value="2" {{ $user->role == 2 ? 'selected' : '' }}>Người dùng</option>
+                                              <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>Người dùng</option>
+                                              <option value="2" {{ $user->role == 2 ? 'selected' : '' }}>Nhân viên</option>
                                             </select>
                                           </div>
                                         </div>
