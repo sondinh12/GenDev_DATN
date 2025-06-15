@@ -26,6 +26,11 @@
                                 <i class="mdi mdi-checkbox-blank-circle align-middle"></i>Products
                             </a>
                         </li>
+                                                <li>
+                            <a href="{{ url('/admin/attributes') }}">
+                                <i class="mdi mdi-checkbox-blank-circle align-middle"></i>Products Atttribute
+                            </a>
+                        </li>
                     </ul>
                 <li>
 
