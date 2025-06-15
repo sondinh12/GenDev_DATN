@@ -23,3 +23,5 @@
 <!-- Demo Purpose Only. Should be removed in production : END -->
 <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,900" rel="stylesheet">
 <link rel="shortcut icon" href="{{ asset('assets/images/fav-icon.png') }}">
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
