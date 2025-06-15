@@ -9,20 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
 
-Route::get('/', function () {
-    return view('admin.apps-chat');
-});
-
-
-Route::resource('/products', ProductController::class);
-Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
-Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
-
-// Route::get('/products', function () {
-
-//     return view('products.index');
-
-// });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
     return view('client.pages.home');
@@ -76,8 +62,9 @@ Route::get('/track-order', function () {
 // ================= ADMIN =================
 Route::prefix('/admin')->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
-    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+    Route::resource('/products', ProductController::class);
+    Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+    Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
     Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
     Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
@@ -101,7 +88,7 @@ Route::prefix('/admin')->group(function () {
 
 // ================= TÀI KHOẢN =================
 
-Auth::routes();
+// Auth::routes();
 
 
 // Email Verification Routes
