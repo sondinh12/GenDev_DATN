@@ -11,16 +11,16 @@
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico') }}">
 
     <!-- include head css -->
-    @include('admin.layouts.head-css')
+    @include('Admin.layouts.head-css')
 </head>
 
 <body>
     <!-- Begin page -->
     <div id="layout-wrapper">
         <!-- topbar -->
-        @include('admin.layouts.topbar')
+        @include('Admin.layouts.topbar')
         <!-- sidebar components -->
-        @include('admin.layouts.sidebar')
+        @include('Admin.layouts.sidebar')
 
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -37,7 +37,7 @@
             <!-- End Page-content -->
 
             <!-- footer -->
-            @include('admin.layouts.footer')
+            @include('Admin.layouts.footer')
 
         </div>
         <!-- end main content-->
@@ -45,10 +45,10 @@
     <!-- END layout-wrapper -->
 
     <!-- customizer -->
-    @include('admin.layouts.right-sidebar')
+    @include('Admin.layouts.right-sidebar')
 
     <!-- vendor-scripts -->
-    @include('admin.layouts.vendor-scripts')
+    @include('Admin.layouts.vendor-scripts')
 
 </body>
 
