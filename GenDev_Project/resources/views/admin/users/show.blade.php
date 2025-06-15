@@ -53,10 +53,12 @@
                                 <tr>
                                     <th>Vai trò</th>
                                     <td>
-                                        @if($user->role == 1)
-                                        <span class="badge badge-primary">Người dùng</span>
+                                        @if($user->role == 0)
+                                        <span class="badge badge-primary">Admin</span>
+                                        @elseif($user->role == 1)
+                                        <span class="badge badge-success">Staff</span>
                                         @elseif($user->role == 2)
-                                        <span class="badge badge-success">Admin</span>
+                                        <span class="badge badge-success">Người dùng</span>
                                         @endif
                                     </td>
                                 </tr>
