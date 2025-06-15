@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AttributeRequest;
@@ -23,8 +23,10 @@ class ProductController extends Controller
      */
     public function index()
     {
+
         $products = Product::with(['category','categoryMini'])->orderBy('id','DESC')->paginate(5);
         return view('Admin.products.index',compact('products'));
+
     }
 
     /**
@@ -35,7 +37,9 @@ class ProductController extends Controller
         $categories = Category::all();
         $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
+
         return view('Admin.products.create',compact('categories','attributes','categories_mini'));
+
     }
 
     /**
@@ -135,7 +139,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.edit', compact('product', 'categories', 'attributes', 'categories_mini'));
+        return view('admin.products.edit', compact('product', 'categories', 'attributes', 'categories_mini'));
     }
 
     /**
