@@ -19,11 +19,9 @@
         "rtlcss": "^4.3.0",
         "sass": "^1.56.1",
         "sass-embedded": "^1.83.0",
-        "vite": "^6.0"
-    },
-    "dependencies": {
-        "@chenfengyuan/datepicker": "^1.0.10",
-        "@curiosityx/bootstrap-session-timeout": "^1.0.0",
+        "sass-embedded": "^1.83.0",
+        "rtlcss": "^4.3.0",
+        "rimraf": "^5.0.1",
         "apexcharts": "^3.54.1",
         "autosize": "^6.0.1",
         "block-ui": "^2.70.1",
@@ -109,4 +107,8 @@
         "twitter-bootstrap-wizard": "^1.2.0",
         "typeahead.js": "^0.11.1"
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 45c005b5a31bda1b557009ed654c2df9b9979443
