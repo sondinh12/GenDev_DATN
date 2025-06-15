@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -74,15 +76,20 @@ Route::get('/track-order', function () {
 
 // ================= ADMIN =================
 
-Route::prefix('admin')->group(function () {
+Route::prefix('/admin')->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     Route::view('/products', 'admin.products.index')->name('admin.products.index');
-    Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
+
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
     Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
     Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
     Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+
+    Route::resource('categories',CategoryController::class);
+    Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
+    Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
+    Route::post('/categories/{id}/minis/store', [CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
 });
 // ================= TÀI KHOẢN =================
 
