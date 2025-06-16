@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AttributeRequest;
+use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Models\AttributeValue;
 use App\Models\Category;
 use App\Models\CategoryMini;
-use App\Models\Product;
 use App\Models\Attribute;
+use App\Models\Product;
 use App\Models\ProductGallery;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantAttribute;
-use Illuminate\Http\Request;
 use Validator;
 
 class ProductController extends Controller
