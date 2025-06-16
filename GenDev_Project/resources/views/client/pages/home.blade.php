@@ -8,13 +8,7 @@
         };
 </script>
 @endif
-@if (session('login_success'))
-<script>
-    window.onload = function() {
-            alert(@json(session('login_success')));
-        };
-</script>
-@endif
+
 <div id="content" class="site-content" tabindex="-1">
     <div class="col-full">
         <div class="row">

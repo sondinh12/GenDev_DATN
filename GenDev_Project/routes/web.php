@@ -95,7 +95,7 @@ Route::prefix('/admin')->group(function () {
 
 // ================= TÀI KHOẢN =================
 
-// Auth::routes();
+Auth::routes();
 
 
 // Email Verification Routes
@@ -107,3 +107,4 @@ Route::post('email/resend', [VerificationController::class, 'resend'])->name('ve
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 });
+
