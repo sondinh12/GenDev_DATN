@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
-    return view('admin.apps-chat');
+    return view('admin.index');
 });
 
 
