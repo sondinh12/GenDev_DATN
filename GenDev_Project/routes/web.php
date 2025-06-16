@@ -1,25 +1,15 @@
 <?php
 session_start();
+
+
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 
-Route::get('/', function () {
-    return view('admin.index');
-});
-
-
-Route::resource('/products', ProductController::class);
-Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
-Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
-
-// Route::get('/products', function () {
-
-//     return view('products.index');
-
-// });
 // ================= TRANG CHÍNH =================
 Route::get('/home', function () {
     return view('client.pages.home');
@@ -71,10 +61,12 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
+
 Route::prefix('/admin')->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
-    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+    Route::resource('/products',ProductController::class);
+    Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+    Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
     Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
     Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
@@ -87,12 +79,16 @@ Route::prefix('/admin')->group(function () {
     Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
     Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
 
-    Route::view('/categories', 'admin.categories.index')->name('admin.categories.index');
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
     Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
     Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
     Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+
+    Route::resource('categories',CategoryController::class);
+    Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
+    Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
+    Route::post('/categories/{id}/minis/store', [CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
 });
 
 

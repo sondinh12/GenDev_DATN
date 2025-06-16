@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico') }}">
 
     <!-- include head css -->
-    @include('admin.layouts.head-css')
+    @include('Admin.layouts.head-css')
 </head>
 
 <body>
@@ -19,10 +19,10 @@
     @yield('content')
 
     <!-- customizer -->
-    @include('admin.layouts.right-sidebar')
+    @include('Admin.layouts.right-sidebar')
 
     <!-- vendor-scripts -->
-    @include('admin.layouts.vendor-scripts')
+    @include('Admin.layouts.vendor-scripts')
 
 </body>
 

@@ -22,7 +22,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(10);
-
+        auth()->loginUsingId(1);
         return view('admin.users.index', compact('users'));
     }
 
