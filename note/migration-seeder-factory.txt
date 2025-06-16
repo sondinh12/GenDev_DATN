@@ -27,3 +27,6 @@
 php artisan make:controller  TenBangController --resource 
 php artisan storage:link
  chạy lệnh này để load ảnh  
+
+
+ a
