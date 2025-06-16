@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
 
 // ================= TRANG CHÍNH =================
@@ -95,16 +94,10 @@ Route::prefix('/admin')->group(function () {
 
 // ================= TÀI KHOẢN =================
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-
-// Email Verification Routes
-Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 // ================= PROFILE =================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 });
-

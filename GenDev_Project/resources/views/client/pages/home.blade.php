@@ -1,14 +1,6 @@
 @extends('client.layout.master')
 
 @section('content')
-@if (session('register_success'))
-<script>
-    window.onload = function() {
-            alert(@json(session('register_success')));
-        };
-</script>
-@endif
-
 <div id="content" class="site-content" tabindex="-1">
     <div class="col-full">
         <div class="row">
