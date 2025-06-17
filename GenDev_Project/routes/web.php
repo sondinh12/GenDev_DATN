@@ -95,7 +95,7 @@ Route::prefix('/admin')->group(function () {
 
 // ================= TÀI KHOẢN =================
 
-// Auth::routes();
+Auth::routes();
 
 
 // Email Verification Routes
