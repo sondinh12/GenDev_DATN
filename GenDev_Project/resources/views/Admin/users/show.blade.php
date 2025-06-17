@@ -46,10 +46,12 @@
                             </div>
                             <h4 class="mt-3 mb-1">{{ $user->name }}</h4>
                             <p class="text-muted mb-0">
-                                @if($user->role == 1)
-                                <span class="badge bg-primary">Người dùng</span>
-                                @elseif($user->role == 0)
-                                <span class="badge bg-success">Admin</span>
+                                @if($user->role == 0)
+                                <span class="badge bg-primary">Admin</span>
+                                @elseif($user->role == 1)
+                                <span class="badge bg-success">Nhân viên</span>
+                                @elseif($user->role == 2)
+                                <span class="badge bg-success">Người dùng</span>
                                 @endif
                             </p>
                         </div>
