@@ -1,4 +1,4 @@
-@extends('admin.layouts.master-without-page-title')
+@extends('Admin.layouts.master-without-page-title')
 
 @section('title', 'Danh mục con')
 
@@ -56,8 +56,16 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i> Sửa</a>
-                                    <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> Xoá</a>
+                                    <a href="{{ route('categories_minis.edit', ['category_id' => $categories->id, 'id' => $mini->id]) }}" class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i> Sửa</a>
+
+                                   <form action="{{ route('categories_minis.destroy', ['category_id' => $categories->id, 'id' => $mini->id]) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash-alt"></i> Xoá
+                                        </button>
+                                    </form>
+                                    
                                 </td>
                             </tr>
                         @endforeach
