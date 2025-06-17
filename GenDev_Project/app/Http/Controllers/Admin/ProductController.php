@@ -63,6 +63,7 @@ class ProductController extends Controller
             'image' => $imagePath,
             'price' => $request->price,
             'quantity'=>$request->quantity,
+            'status'=>$request->status,
             'sale_price' => $request->sale_price,
         ]);
 
@@ -86,11 +87,13 @@ class ProductController extends Controller
                     'price' => $variant['price'],
                     'sale_price' => $variant['sale_price'] ?? 0,
                     'quantity' => $variant['quantity'] ?? 0,
-                    'status' => $variant['status'] ?? 1,
+                    'status' => $variant['status']  ?? 1,
                 ]);
 
                 // Lấy danh sách value_id của các thuộc tính (màu, size, ...)
-                $valueIds = isset($variant['value_ids']) ? explode(',', $variant['value_ids'][0]) : [];
+                // $valueIds = isset($variant['value_ids']) ? $variant['value_ids'] : [];
+                $valueRaw = $variant['value_ids'] ?? [];  // có thể là chuỗi hoặc mảng
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
 
                 // Lưu từng thuộc tính của biến thể vào bảng product_variant_attributes
                 foreach ($valueIds as $valueId) {

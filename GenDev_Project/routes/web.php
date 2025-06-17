@@ -95,6 +95,7 @@ Route::prefix('/admin')->group(function () {
 
 
 
+
 Route::resource('/product', ClientProductController::class);
 
 // ================= TÀI KHOẢN =================

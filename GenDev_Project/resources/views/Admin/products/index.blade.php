@@ -53,7 +53,7 @@ Manage
         <td>{{$pro->created_at}}</td>
         <td>{{$pro->updated_at}}</td>
         <td>
-            @if($pro->status == 1)
+            @if($pro->status == 1 || $pro->status == 0)
                 <a href="{{ route('products.edit', $pro->id) }}" class="btn btn-primary">Sửa</a>
                 <a href="{{route('products.show',$pro->id)}}" class="btn btn-info">Xem</a>
                 <form action="{{ route('products.trash', $pro->id) }}" method="POST" style="display:inline-block;">
