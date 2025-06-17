@@ -1,4 +1,4 @@
-@extends('admin.layouts.master-without-page-title')
+@extends('Admin.layouts.master-without-page-title')
 
 @section('title', 'Quản lý Danh mục')
 
@@ -44,12 +44,18 @@
                                     <img src="{{asset('storage/'.$cate->image)}}" alt="{{ $cate->name }}" width="60" class="rounded border">
                                 </td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-warning me-1">
+                                    <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-warning me-1">
                                         <i class="fas fa-edit"></i> Sửa
                                     </a>
-                                    <a href="#" class="btn btn-sm btn-danger me-1">
-                                        <i class="fas fa-trash-alt"></i> Xoá
-                                    </a>
+                                    
+                                    <form action="{{ route('categories.destroy', $cate->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash-alt"></i> Xoá
+                                        </button>
+                                    </form>
+
                                     <a href="{{ route('admin.categories_minis.index',['id'=>$cate->id]) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-sitemap"></i> Danh mục con
                                     </a>
