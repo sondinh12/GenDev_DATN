@@ -164,7 +164,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->category_mini_id = $request->category_mini_id;
-        $product->status = $request->status; // Cập nhật trạng thái sản phẩm
+        $product->status = $request->status;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
@@ -201,7 +201,8 @@ class ProductController extends Controller
                     'quantity' => $variant['quantity'] ?? 0,
                     'status' => $variant['status'] ?? 1,
                 ]);
-                $valueIds = isset($variant['value_ids']) ? explode(',', $variant['value_ids'][0]) : [];
+                $valueRaw = $variant['value_ids'] ?? [];
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
                 foreach ($valueIds as $valueId) {
                     $attributeId = AttributeValue::find($valueId)?->attribute_id;
                     ProductVariantAttribute::create([
