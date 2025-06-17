@@ -161,6 +161,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->category_mini_id = $request->category_mini_id;
+        $product->status = $request->status; // Cập nhật trạng thái sản phẩm
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
