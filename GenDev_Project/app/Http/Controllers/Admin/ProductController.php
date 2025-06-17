@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AttributeRequest;
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
-use App\Models\AttributeValue;
-use App\Models\Category;
-use App\Models\CategoryMini;
-use App\Models\Attribute;
-use App\Models\Product;
-use App\Models\ProductGallery;
-use App\Models\ProductVariant;
-use App\Models\ProductVariantAttribute;
-use Validator;
+    use App\Http\Controllers\Controller;
+    use App\Http\Requests\AttributeRequest;
+    use Illuminate\Http\Request;
+    use App\Http\Requests\ProductRequest;
+    use App\Models\AttributeValue;
+    use App\Models\Category;
+    use App\Models\CategoryMini;
+    use App\Models\Attribute;
+    use App\Models\Product;
+    use App\Models\ProductGallery;
+    use App\Models\ProductVariant;
+    use App\Models\ProductVariantAttribute;
+    use Validator;
 
 class ProductController extends Controller
 {
@@ -124,7 +124,7 @@ class ProductController extends Controller
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
         ])->findOrFail($id);
-        return view('admin.products.show',compact('product'));
+        return view('Admin.products.show',compact('product'));
     }
 
     /**
@@ -142,7 +142,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('admin.products.edit', compact('product', 'categories', 'attributes', 'categories_mini'));
+        return view('Admin.products.edit', compact('product', 'categories', 'attributes', 'categories_mini'));
     }
 
     /**
@@ -164,6 +164,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->category_mini_id = $request->category_mini_id;
+        $product->status = $request->status; // Cập nhật trạng thái sản phẩm
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
@@ -258,13 +259,13 @@ class ProductController extends Controller
 public function allAttributes()
 {
     $attributes = Attribute::with('values')->get();
-    return view('admin.products.ProductsAttribute', compact('attributes'));
+    return view('Admin.products.ProductsAttribute', compact('attributes'));
 }
 
 // Hiển thị form thêm thuộc tính
 public function createAttribute()
 {
-    return view('admin.products.create_attribute');
+    return view('Admin.products.create_attribute');
 }
 
 // Lưu thuộc tính mới + các value mới
@@ -287,14 +288,14 @@ public function storeAttribute(AttributeRequest $request)
         }
     }
 
-    return redirect()->route('admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
+    return redirect()->route('Admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
 }
 
 // Hiển thị form sửa thuộc tính + tất cả value con
 public function editAttribute($id)
 {
     $attribute = Attribute::with('values')->findOrFail($id);
-    return view('admin.products.edit_attribute', compact('attribute'));
+    return view('Admin.products.edit_attribute', compact('attribute'));
 }
 
 // Cập nhật thuộc tính + value con cũ và thêm value con mới
@@ -337,7 +338,7 @@ public function updateAttribute(Request $request, $id)
         }
     }
 
-    return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
+    return redirect()->route('Admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
 }
 
 // Xóa thuộc tính + tất cả value con
@@ -346,7 +347,7 @@ public function destroyAttribute($id)
     $attribute = Attribute::findOrFail($id);
     $attribute->values()->delete();
     $attribute->delete();
-    return redirect()->route('admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
+    return redirect()->route('Admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
 }
 
 // Xóa value con đơn lẻ (redirect về lại trang trước)

@@ -5,16 +5,18 @@ session_start();
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\ProductController as ClientProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
+use Illuminate\Routing\Route as RoutingRoute;
 
 // ================= TRANG CHÍNH =================
-Route::get('/home', function () {
-    return view('client.pages.home');
-})->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
@@ -37,12 +39,11 @@ Route::get('/blog-single', function () {
 Route::get('/categories', function () {
     return view('client.product.categories');
 })->name('categories');
-Route::get('/shop', function () {
-    return view('client.product.shop');
-})->name('shop');
+Route::get('/shop', [ClientProductController::class, 'shop'])->name('shop');
 Route::get('/product', function () {
     return view('client.product.product');
 })->name('product');
+Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.products.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 Route::get('/cart', function () {
@@ -71,7 +72,7 @@ Route::prefix('/admin')->group(function () {
     Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
     Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
     Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
-    
+
     Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
     Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
     Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
@@ -86,24 +87,23 @@ Route::prefix('/admin')->group(function () {
     Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
     Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
 
-    Route::resource('categories',CategoryController::class);
+    Route::resource('categories', CategoryController::class);
     Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
     Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
     Route::post('/categories/{id}/minis/store', [CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
 });
 
 
+
+
+Route::resource('/product', ClientProductController::class);
+
 // ================= TÀI KHOẢN =================
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-
-// Email Verification Routes
-Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 // ================= PROFILE =================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 });
