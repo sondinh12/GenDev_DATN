@@ -12,3 +12,4 @@
 <script type="text/javascript" src="{{ asset('assets/js/pace.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/scripts.js') }}"></script>
+@stack('scripts')

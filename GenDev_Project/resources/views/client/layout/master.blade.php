@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+<html lang="en-US" itemscope itemtype="http://schema.org/WebPage">
 
 <!-- Mirrored from transvelo.github.io/techmarket-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 May 2025 14:25:19 GMT -->
 <!-- Added by HTTrack -->
@@ -11,31 +11,26 @@
 @php
 $route = Route::currentRouteName();
 $bodyClass = match($route) {
-'home' => 'woocommerce-active page-template-template-homepage-v2 can-uppercase',
-'blog' => 'right-sidebar blog-list',
-'blog-single' => 'right-sidebar single single-post',
-'shop', 'categories' => 'woocommerce-active left-sidebar',
-'product' => 'woocommerce-active single-product full-width normal',
-'order' => 'page-template-default woocommerce-checkout woocommerce-page woocommerce-order-received can-uppercase
-woocommerce-active',
-'wishlist' => 'page-template-default page woocommerce-wishlist can-uppercase',
-default => 'page home page-template-default'
+    'home' => 'woocommerce-active page-template-template-homepage-v2',
+    'blog' => 'right-sidebar blog-list',
+    'blog-single' => 'right-sidebar single single-post',
+    'shop', 'categories' => 'woocommerce-active left-sidebar',
+    'product' => 'woocommerce-active single-product full-width normal',
+    'order' => 'woocommerce-active woocommerce-checkout woocommerce-order-received',
+    'wishlist' => 'woocommerce-active woocommerce-wishlist',
+    default => 'page home'
 };
 @endphp
 
 <body class="{{ $bodyClass }}">
-    <div id="page" class="hfeed site">
+    <div id="page" class="site">
         @include('client.layout.partials.topbar')
-        <!-- .top-bar-v1 -->
         @include('client.layout.partials.header')
-        <!-- .header-v1 -->
-        <!-- ============================================================= Header End ============================================================= -->
         @yield('content')
-        <!-- #content -->
         @include('client.layout.partials.footer')
-        <!-- .site-footer -->
     </div>
     @include('client.layout.partials.script')
+    @yield('scripts')
 </body>
 
 <!-- Mirrored from transvelo.github.io/techmarket-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 May 2025 14:26:03 GMT -->
