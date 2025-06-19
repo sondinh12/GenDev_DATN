@@ -313,7 +313,7 @@
                                                     </div>
                                                 </form>
                                                 <!-- .wc-proceed-to-checkout -->
-                                                <a class="checkout-button button alt wc-forward" href="checkout.html">
+                                                <a class="checkout-button button alt wc-forward" href="{{route('checkout')}}">
                                                     Proceed to checkout</a>
                                                 <a class="back-to-shopping" href="shop.html">Back to Shopping</a>
                                             </div>
