@@ -1,4 +1,4 @@
-@extends('admin.layouts.master-without-page-title')
+@extends('Admin.layouts.master-without-page-title')
 
 @section('title', 'Chi tiết người dùng')
 
