@@ -1,6 +1,17 @@
 @extends('client.layout.master')
 
 @section('content')
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 <div id="content" class="site-content">
     <div class="col-full">
         <div class="row">
@@ -20,7 +31,7 @@
                                 <div class="woocommerce-info">Returning customer? <a data-toggle="collapse" href="#login-form" aria-expanded="false" aria-controls="login-form" class="showlogin">Click here to login</a>
                                 </div>
                                 <div class="collapse" id="login-form">
-                                    <form method="post" class="woocomerce-form woocommerce-form-login login">
+                                    {{-- <form method="post" class="woocomerce-form woocommerce-form-login login">
                                         <p class="before-login-text">
                                             Vestibulum lacus magna, faucibus vitae dui eget, aliquam fringilla. In et commodo elit. Class aptent taciti sociosqu ad litora.
                                         </p>
@@ -49,7 +60,7 @@
                                             <a href="#">Lost your password?</a>
                                         </p>
                                         <div class="clear"></div>
-                                    </form>
+                                    </form> --}}
                                 </div>
                                 <!-- .collapse -->
                                 <div class="woocommerce-info">Have a coupon?
@@ -58,7 +69,8 @@
                                     </a>
                                 </div>
                                 <div class="collapse" id="checkoutCouponForm">
-                                    <form method="post" class="checkout_coupon">
+                                    {{-- coupon --}}
+                                    {{-- <form method="post" class="checkout_coupon">
                                         <p class="form-row form-row-first">
                                             <input type="text" value="" id="coupon_code" placeholder="Coupon code" class="input-text" name="coupon_code">
                                         </p>
@@ -66,10 +78,11 @@
                                             <input type="submit" value="Apply coupon" name="apply_coupon" class="button">
                                         </p>
                                         <div class="clear"></div>
-                                    </form>
+                                    </form> --}}
                                 </div>
                                 <!-- .collapse -->
-                                <form action="#" class="checkout woocommerce-checkout" method="post" name="checkout">
+                                <form action="{{route('checkout.submit')}}" class="checkout woocommerce-checkout" method="post" name="checkout">
+                                    @csrf
                                     <div id="customer_details" class="col2-set">
                                         <div class="col-1">
                                             <div class="woocommerce-billing-fields">
@@ -81,43 +94,69 @@
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
                                                             <input type="text" value="" placeholder="" id="billing_first_name" name="name" class="input-text ">
+                                                            @error('name')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </p>
+                                                        
                                                         <div class="clear"></div>                      
                                                         <p id="billing_city_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row form-row-wide address-field validate-required">
                                                             <label class="" for="billing_city">Thành phố
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
                                                             <input type="text" value="" placeholder="" id="billing_city" name="city" class="input-text ">
+                                                            @error('city')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </p>
                                                         <p id="billing_state_field" class="form-row form-row-wide validate-required validate-email">
-                                                            <label class="" for="billing_state">Xã, Phường
+                                                            <label class="" for="billing_ward">Xã, Phường
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="text" value="" placeholder="" id="billing_city" name="ward" class="input-text ">
+                                                            <input type="text" value="" placeholder="" id="billing_ward" name="ward" class="input-text ">
+                                                            @error('ward')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </p>
                                                         <p id="billing_address_1_field" class="form-row form-row-wide address-field validate-required">
                                                             <label class="" for="billing_address_1">Địa chỉ cụ thể
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
                                                             <input type="text" value="" placeholder="Address" id="billing_address_1" name="address" class="input-text ">
+                                                            @error('address')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </p>
                                                         <p id="billing_postcode_field" class="form-row form-row-wide address-field validate-postcode validate-required" data-o_class="form-row form-row form-row-last address-field validate-required validate-postcode">
                                                             <label class="" for="billing_postcode">Postcode / ZIP
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
                                                             <input type="text" value="" placeholder="" id="billing_postcode" name="postcode" class="input-text ">
+                                                            @error('postcode')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </p>
                                                         <p id="billing_phone_field" class="form-row form-row-last validate-required validate-phone">
                                                             <label class="" for="billing_phone">Phone
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="tel" value="" placeholder="" id="phone" name="billing_phone" class="input-text ">
+                                                            <input type="tel" value="" placeholder="" id="phone" name="phone" class="input-text ">
+                                                            @error('phone')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
                                                         </p>
                                                         <p id="billing_email_field" class="form-row form-row-first validate-required validate-email">
                                                             <label class="" for="billing_email">Email Address
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="email" value="" placeholder="" id="email" name="billing_email" class="input-text ">
+                                                            <input type="email" value="" placeholder="" id="email" name="email" class="input-text ">
+                                                            @error('email')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
+                                                        </p>
+                                                        <p id="billing_note_field" class="form-row form-row-wide address-field validate-postcode validate-required" data-o_class="form-row form-row form-row-last address-field">
+                                                            <label class="" for="billing_note">Ghi chú</label>
+                                                            <textarea name="note" placeholder="Nhập ghi chú của bạn" rows="4" cols="50"></textarea>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -248,7 +287,7 @@
                                                         <th class="product-total">Total</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                {{-- <tbody>
                                                     <tr class="cart_item">
                                                         <td class="product-name">
                                                             <strong class="product-quantity">1 ×</strong> 55" KU6470 6 Series UHD Crystal Colour HDR Smart TV&nbsp;
@@ -285,6 +324,27 @@
                                                                 <span class="woocommerce-Price-currencySymbol">£</span>17.00</span>
                                                         </td>
                                                     </tr>
+                                                </tbody> --}}
+                                                <tbody>
+                                                    @php
+                                                        $cart = session('cart', []);
+                                                    @endphp
+
+                                                    @foreach ($cart as $item)
+                                                    <tr>
+                                                        <td>
+                                                        <div>
+                                                            <strong>{{ $item['product_name'] }}</strong> - {{ $item['variant_name'] }}<br>
+                                                            Số lượng: {{ $item['quantity'] }} <br>
+                                                            Giá: {{ number_format($item['price']) }} VNĐ <br>
+                                                            @foreach ($item['attributes'] as $att)
+                                                                {{ $att['attribute_name'] }}: {{ $att['value'] }} <br>
+                                                            @endforeach
+                                                            <hr>
+                                                        </div>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
                                                 </tbody>
                                                 <tfoot>
                                                     <tr class="cart-subtotal">
@@ -309,18 +369,25 @@
                                             <div class="woocommerce-checkout-payment" id="payment">
                                                 <ul class="wc_payment_methods payment_methods methods">
                                                     <li class="wc_payment_method payment_method_bacs">
-                                                        <input type="radio" data-order_button_text="" checked="checked" value="bacs" name="payment_method" class="input-radio" id="payment_method_bacs">
+                                                        <input type="radio" data-order_button_text="" checked="checked" value="1" name="payment" class="input-radio" id="payment_method_bacs">
                                                         <label for="payment_method_bacs">Direct bank transfer</label>
                                                     </li>
                                                     <li class="wc_payment_method payment_method_cheque">
-                                                        <input type="radio" data-order_button_text="" value="cheque" name="payment_method" class="input-radio" id="payment_method_cheque">
+                                                        <input type="radio" data-order_button_text="" value="2" name="payment" class="input-radio" id="payment_method_cheque">
                                                         <label for="payment_method_cheque">Check payments </label>
                                                     </li>
                                                     <li class="wc_payment_method payment_method_cod">
-                                                        <input type="radio" data-order_button_text="" value="cod" name="payment_method" class="input-radio" id="payment_method_cod">
+                                                        <input type="radio" data-order_button_text="" value="3" name="payment" class="input-radio" id="payment_method_cod">
                                                         <label for="payment_method_cod">Cash on delivery </label>
                                                     </li>
                                                 </ul>
+                                                @foreach($ships as $ship)
+                                                    <label>
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}">
+                                                        {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
+                                                    </label><br>
+                                                @endforeach
+                                                </select>
                                                 <div class="form-row place-order">
                                                     <p class="form-row terms wc-terms-and-conditions woocommerce-validated">
                                                         <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
@@ -330,7 +397,7 @@
                                                         </label>
                                                         <input type="hidden" value="1" name="terms-field">
                                                     </p>
-                                                    <a href="order-received.html" class="button wc-forward text-center">Place order</a>
+                                                    <button type="submit" class="button wc-forward text-center">Place order</button>
                                                 </div>
                                             </div>
                                             <!-- /.woocommerce-checkout-payment -->

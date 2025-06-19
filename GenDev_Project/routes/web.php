@@ -1,4 +1,8 @@
 <?php
+
+use App\Http\Controllers\CartController;
+
+
 session_start();
 
 
@@ -10,8 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CheckoutController;
 
-// ================= TRANG CHÍNH =================
+// ================= TRANG CHÍNH =================  
 Route::get('/home', function () {
     return view('client.pages.home');
 })->name('home');
@@ -51,9 +56,10 @@ Route::get('/cart', function () {
 Route::get('/wishlist', function () {
     return view('client.cart.wishlist');
 })->name('wishlist');
-Route::get('/checkout', function () {
-    return view('client.checkout.checkout');
-})->name('checkout');
+Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout');
+Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.submit');
+Route::get('/mock-cart', [CartController::class, 'mockCart'])->name('cart.mock');
+
 Route::get('/order', function () {
     return view('client.checkout.order');
 })->name('order');
