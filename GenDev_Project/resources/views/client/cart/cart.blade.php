@@ -5,7 +5,7 @@
     <div class="col-full">
         <div class="row">
             <nav class="woocommerce-breadcrumb">
-                <a href="home-v1.html">Home</a>
+                <a href="{{route('home')}}">Home</a>
                 <span class="delimiter">
                     <i class="tm tm-breadcrumbs-arrow-right"></i>
                 </span>
@@ -17,13 +17,14 @@
                     <div class="type-page hentry">
                         <div class="entry-content">
                             <div class="woocommerce">
-                                <div class="cart-wrapper">
-                                    <form method="post" action="#" class="woocommerce-cart-form">
+                                <div class="cart-wrapper row align-items-start">
+                                    <div class="woocommerce-cart-form col-md-8 col-sm-12 mb-4">
+                                    {{-- <form method="post" action="#" class="woocommerce-cart-form"> --}}
                                         <table class="shop_table shop_table_responsive cart">
                                             <thead>
                                                 <tr>
                                                     <th class="product-remove">&nbsp;</th>
-                                                    <th class="product-thumbnail">&nbsp;</th>
+                                                    <th class="product-thumbnail">Image</th>
                                                     <th class="product-name">Product</th>
                                                     <th class="product-price">Price</th>
                                                     <th class="product-quantity">Quantity</th>
@@ -31,53 +32,76 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @foreach ($cart->details as $item)
                                                 <tr>
-                                                    <td class="product-remove">
-                                                        <a class="remove" href="#">×</a>
-                                                    </td>
+
+                                                    <!-- Thumbnail (ảnh phụ nhỏ) -->
                                                     <td class="product-thumbnail">
-                                                        <a href="single-product-fullwidth.html">
+                                                        <a href="#">
                                                             <img width="180" height="180" alt="" class="wp-post-image"
-                                                                src="single-product-fullwidth.html">
+                                                                src="{{ asset('storage/' . ($item->product->image ?? 'default.jpg')) }}">
                                                         </a>
                                                     </td>
+
+                                                    <!-- Tên sản phẩm + thuộc tính biến thể -->
                                                     <td data-title="Product" class="product-name">
                                                         <div class="media cart-item-product-detail">
-                                                            <a href="single-product-fullwidth.html">
+                                                            <a href="#">
                                                                 <img width="180" height="180" alt=""
                                                                     class="wp-post-image"
-                                                                    src="assets/images/products/cart-1.jpg">
+                                                                    src="{{ asset('storage/' . ($item->product->image ?? 'default.jpg')) }}">
                                                             </a>
                                                             <div class="media-body align-self-center">
-                                                                <a href="single-product-fullwidth.html">55" KU6470 6
-                                                                    Series UHD Crystal Colour HDR Smart TV</a>
+                                                                <a href="#">{{ $item->product->name }}</a><br>
+                                                                @if ($item->variant && $item->variant->variantAttributes)
+                                                                    @foreach ($item->variant->variantAttributes as $attr)
+                                                                        <small>{{ $attr->attribute->name }}: {{ $attr->value->value }}</small><br>
+                                                                    @endforeach
+                                                                @else
+                                                                    <small>Không có biến thể</small>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </td>
+
+                                                    <!-- Giá -->
                                                     <td data-title="Price" class="product-price">
                                                         <span class="woocommerce-Price-amount amount">
-                                                            <span
-                                                                class="woocommerce-Price-currencySymbol">£</span>627.99
+                                                            <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($item->price) }}
                                                         </span>
                                                     </td>
+
+                                                    <!-- Số lượng -->
                                                     <td class="product-quantity" data-title="Quantity">
-                                                        <div class="quantity">
-                                                            <label for="quantity-input-1">Quantity</label>
-                                                            <input id="quantity-input-1" type="number"
-                                                                name="cart[e2230b853516e7b05d79744fbd4c9c13][qty]"
-                                                                value="1" title="Qty" class="input-text qty text"
-                                                                size="4">
-                                                        </div>
+                                                        <form method="POST" action="#">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="quantity">
+                                                                <label for="quantity-input-{{ $item->id }}">Quantity</label>
+                                                                <input id="quantity-input-{{ $item->id }}" type="number"
+                                                                    name="quantity"
+                                                                    value="{{ $item->quantity }}"
+                                                                    title="Qty" class="input-text qty text"
+                                                                    size="4" min="1">
+                                                            </div>
+                                                        </form>
                                                     </td>
+
+                                                    <!-- Tổng giá sản phẩm -->
                                                     <td data-title="Total" class="product-subtotal">
                                                         <span class="woocommerce-Price-amount amount">
-                                                            <span
-                                                                class="woocommerce-Price-currencySymbol">£</span>627.99
+                                                            <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($item->price * $item->quantity) }}
                                                         </span>
-                                                        <a title="Remove this item" class="remove" href="#">×</a>
+                                                        <form method="POST" action="#" style="display: inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="remove" title="Remove this item">×</button>
+                                                        </form>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                @endforeach
+                                                
+                                                {{-- <tr>
                                                     <td class="product-remove">
                                                         <a class="remove" href="#">×</a>
                                                     </td>
@@ -169,7 +193,7 @@
                                                         <a title="Remove this item" class="remove" href="#">×</a>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr> --}}
                                                     <td class="actions" colspan="6">
                                                         <div class="coupon">
                                                             <label for="coupon_code">Coupon:</label>
@@ -185,10 +209,11 @@
                                             </tbody>
                                         </table>
                                         <!-- .shop_table shop_table_responsive -->
-                                    </form>
+                                    {{-- </form> --}}
+                                    </div>
                                     <!-- .woocommerce-cart-form -->
-                                    <div class="cart-collaterals">
-                                        <div class="cart_totals">
+                                    <div class="cart-collaterals col-md-4 col-sm-12">
+                                        <div class="cart_totals ">
                                             <h2>Cart totals</h2>
                                             <table class="shop_table shop_table_responsive">
                                                 <tbody>

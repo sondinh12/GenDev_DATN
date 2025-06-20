@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 
 // ================= TRANG CHÍNH =================
@@ -46,21 +48,24 @@ Route::get('/product', function () {
 Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.products.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-Route::get('/cart', function () {
-    return view('client.cart.cart');
-})->name('cart');
-Route::get('/wishlist', function () {
-    return view('client.cart.wishlist');
-})->name('wishlist');
-Route::get('/checkout', function () {
-    return view('client.checkout.checkout');
-})->name('checkout');
-Route::get('/order', function () {
-    return view('client.checkout.order');
-})->name('order');
-Route::get('/track-order', function () {
-    return view('client.checkout.track-order');
-})->name('track-order');
+
+Route::get('/cart', [CartController::class, 'index'])->name('index')->middleware('auth');  
+Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
+// Route::get('/cart', function () {
+//     return view('client.cart.cart');
+// })->name('cart');
+// Route::get('/wishlist', function () {
+//     return view('client.cart.wishlist');
+// })->name('wishlist');
+// Route::get('/checkout', function () {
+//     return view('client.checkout.checkout');
+// })->name('checkout');
+// Route::get('/order', function () {
+//     return view('client.checkout.order');
+// })->name('order');
+// Route::get('/track-order', function () {
+//     return view('client.checkout.track-order');
+// })->name('track-order');
 
 // ================= ADMIN =================
 
