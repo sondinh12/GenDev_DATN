@@ -69,16 +69,25 @@
                                     </a>
                                 </div>
                                 <div class="collapse" id="checkoutCouponForm">
-                                    {{-- coupon --}}
-                                    {{-- <form method="post" class="checkout_coupon">
-                                        <p class="form-row form-row-first">
-                                            <input type="text" value="" id="coupon_code" placeholder="Coupon code" class="input-text" name="coupon_code">
-                                        </p>
-                                        <p class="form-row form-row-last">
-                                            <input type="submit" value="Apply coupon" name="apply_coupon" class="button">
-                                        </p>
-                                        <div class="clear"></div>
-                                    </form> --}}
+                                        @if(session('applied_coupon'))
+                                            <p>Đã áp dụng mã: <strong>{{ session('applied_coupon.code') }}</strong> – giảm {{ number_format(session('applied_coupon.discount')) }}đ</p>
+                                        @else
+                                            {{-- coupon --}}
+                                            <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
+                                                @csrf
+                                                <p class="form-row form-row-first">
+                                                    <input type="text" id="coupon_code" placeholder="Coupon code" class="input-text" name="coupon_code">
+                                                    <input type="hidden" name="subtotal" value="{{$subtotal}}">
+                                                </p>
+                                                <p class="form-row form-row-last">
+                                                    <button type="submit" class="button">Apply</button>
+                                                </p>
+                                                <div class="clear"></div>
+                                            </form>
+                                        @endif
+
+                                    @if(session('error')) <p style="color: red">{{ session('error') }}</p> @endif
+                                    @if(session('success')) <p style="color: green">{{ session('success') }}</p> @endif
                                 </div>
                                 <!-- .collapse -->
                                 <form action="{{route('checkout.submit')}}" class="checkout woocommerce-checkout" method="post" name="checkout">
@@ -351,7 +360,7 @@
                                                         <th>Subtotal</th>
                                                         <td>
                                                             <span class="woocommerce-Price-amount amount">
-                                                                <span class="woocommerce-Price-currencySymbol">£</span>963.94</span>
+                                                                <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
                                                         </td>
                                                     </tr>
                                                     <tr class="order-total">

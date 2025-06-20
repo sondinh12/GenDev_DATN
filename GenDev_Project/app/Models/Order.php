@@ -8,13 +8,18 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
-        'product_id',
-        'variant_id',
         'coupon_id',
+        'shipping_id',
         'name',
         'email',
         'phone',
         'address',
+        'city',
+        'ward',
+        'postcode',
+        'payment',
+        'total',
+        'shipping_fee',
         'status',
     ];
 
@@ -29,5 +34,9 @@ class Order extends Model
     public function coupon(){
         return $this->belongsTo(Coupon::class,'coupon_id');
     }
+    public function ship(){
+        return $this->belongsTo(Ship::class);
+    }
+
 
 }

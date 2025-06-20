@@ -11,7 +11,7 @@ class Ship extends Model
         'shipping_price'
     ];
 
-    public function orderDetail(){
-        return $this->belongsTo(OrderDetail::class,'shipping_id');
+    public function order(){
+        return $this->belongsTo(Order::class,'shipping_id');
     }
 }

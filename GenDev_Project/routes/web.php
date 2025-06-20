@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CouponController;
 
 
 session_start();
@@ -59,6 +60,7 @@ Route::get('/wishlist', function () {
 Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout');
 Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.submit');
 Route::get('/mock-cart', [CartController::class, 'mockCart'])->name('cart.mock');
+Route::post('/apply_coupon',[CouponController::class,'apply'])->name('apply_coupon');
 
 Route::get('/order', function () {
     return view('client.checkout.order');

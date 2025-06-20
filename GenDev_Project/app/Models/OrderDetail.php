@@ -7,16 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
     protected $fillable = [
-        'amount',
-        'note',
+        'order_id',
         'price',
-        'user_id',
-        'shipping_id',
+        'quantity',
+        'note',
+        'product_id',
+        'variant_id',
     ];
-
-    public function ship(){
-        return $this->belongsTo(Ship::class);
-    }
 
     public function attributes(){
         return $this->hasMany(OrderDetailAttribute::class,'order_detail_id');
