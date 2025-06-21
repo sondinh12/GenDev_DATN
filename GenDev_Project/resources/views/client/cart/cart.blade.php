@@ -19,7 +19,9 @@
                             <div class="woocommerce">
                                 <div class="cart-wrapper row align-items-start">
                                     <div class="woocommerce-cart-form col-md-8 col-sm-12 mb-4">
-                                    {{-- <form method="post" action="#" class="woocommerce-cart-form"> --}}
+                                    <form method="POST" action="{{route('update')}}" class="woocommerce-cart-form">
+                                        @csrf
+                                        @method('PUT')
                                         <table class="shop_table shop_table_responsive cart">
                                             <thead>
                                                 <tr>
@@ -73,18 +75,18 @@
 
                                                     <!-- Số lượng -->
                                                     <td class="product-quantity" data-title="Quantity">
-                                                        <form method="POST" action="#">
+                                                        {{-- <form method="POST" action="{{route('update')}}">
                                                             @csrf
-                                                            @method('PUT')
+                                                            @method('PUT') --}}
                                                             <div class="quantity">
                                                                 <label for="quantity-input-{{ $item->id }}">Quantity</label>
                                                                 <input id="quantity-input-{{ $item->id }}" type="number"
-                                                                    name="quantity"
+                                                                    name="quantities[{{ $item->id }}]"
                                                                     value="{{ $item->quantity }}"
                                                                     title="Qty" class="input-text qty text"
                                                                     size="4" min="1">
                                                             </div>
-                                                        </form>
+    
                                                     </td>
 
                                                     <!-- Tổng giá sản phẩm -->
@@ -92,11 +94,14 @@
                                                         <span class="woocommerce-Price-amount amount">
                                                             <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($item->price * $item->quantity) }}
                                                         </span>
-                                                        <form method="POST" action="#" style="display: inline;">
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        {{-- <form method="POST" action="#" style="display: inline;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="remove" title="Remove this item">×</button>
-                                                        </form>
+                                                        </form> --}}
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -192,8 +197,8 @@
                                                         </span>
                                                         <a title="Remove this item" class="remove" href="#">×</a>
                                                     </td>
-                                                </tr>
-                                                <tr> --}}
+                                                </tr>--}}
+                                                <tr> 
                                                     <td class="actions" colspan="6">
                                                         <div class="coupon">
                                                             <label for="coupon_code">Coupon:</label>
@@ -202,14 +207,16 @@
                                                             <input type="submit" value="Apply coupon"
                                                                 name="apply_coupon" class="button">
                                                         </div>
+                                        
                                                         <input type="submit" value="Update cart" name="update_cart"
                                                             class="button">
+                                                        {{-- </form>     --}}
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         <!-- .shop_table shop_table_responsive -->
-                                    {{-- </form> --}}
+                                    </form>
                                     </div>
                                     <!-- .woocommerce-cart-form -->
                                     <div class="cart-collaterals col-md-4 col-sm-12">

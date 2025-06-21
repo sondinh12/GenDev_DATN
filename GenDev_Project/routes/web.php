@@ -51,6 +51,8 @@ Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::cla
 
 Route::get('/cart', [CartController::class, 'index'])->name('index')->middleware('auth');  
 Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
+Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
+Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
 // Route::get('/cart', function () {
 //     return view('client.cart.cart');
 // })->name('cart');

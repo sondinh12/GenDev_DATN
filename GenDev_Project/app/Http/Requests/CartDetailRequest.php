@@ -21,11 +21,22 @@ class CartDetailRequest extends FormRequest
      */
     public function rules(): array
     {
+       if ($this->isMethod('post')) {
         return [
             'product_id' => 'required|exists:products,id',
             'variant_id' => 'required|exists:product_variants,id',
-            'quantity' => 'required|integer|min:1'
+            'quantity'   => 'required|integer|min:1',
         ];
+    }
+
+    if ($this->isMethod('put')) {
+        return [
+            'quantities' => 'required|array',
+            'quantities.*' => 'required|integer|min:1',
+        ];
+    }
+
+    return [];
     }
 
     public function massages()
@@ -39,7 +50,11 @@ class CartDetailRequest extends FormRequest
 
             'quantity.required' => 'Vui lòng nhập số lượng.',
             'quantity.integer' => 'Số lượng phải là một số nguyên.',
-            'quantity.min' => 'Số lượng tối thiểu là 1.'
+            'quantity.min' => 'Số lượng tối thiểu là 1.',
+
+            'quantities.required' => 'Không có dữ liệu cập nhật.',
+            'quantities.*.integer' => 'Số lượng phải là số.',
+            'quantities.*.min' => 'Số lượng ít nhất là 1.'
         ];
     }
 }
