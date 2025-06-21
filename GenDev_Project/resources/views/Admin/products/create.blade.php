@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('Admin.layouts.master')
 
 @section('title')
     Add
@@ -99,7 +99,7 @@
             <label>Mô tả</label>
             <textarea name="description" class="form-control" rows="5" value="{{old('description')}}"></textarea>
             @error('description')
-                <div class="text-danger">{{ $messxage }}</div>
+                <div class="text-danger">{{ $message }}</div>
 
             @enderror
         </div>

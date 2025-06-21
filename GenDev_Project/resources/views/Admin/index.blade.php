@@ -1,4 +1,4 @@
-@extends('layouts.master-without-page-title')
+@extends('Admin.layouts.master-without-page-title')
 
 @section('title')
     Dashboard

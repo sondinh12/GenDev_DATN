@@ -250,3 +250,5 @@
     init();
 
 })(jQuery)
+import './bootstrap';
+
