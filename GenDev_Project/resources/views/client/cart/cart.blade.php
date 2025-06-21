@@ -75,9 +75,7 @@
 
                                                     <!-- Số lượng -->
                                                     <td class="product-quantity" data-title="Quantity">
-                                                        {{-- <form method="POST" action="{{route('update')}}">
-                                                            @csrf
-                                                            @method('PUT') --}}
+
                                                             <div class="quantity">
                                                                 <label for="quantity-input-{{ $item->id }}">Quantity</label>
                                                                 <input id="quantity-input-{{ $item->id }}" type="number"
@@ -102,6 +100,11 @@
                                                             @method('DELETE')
                                                             <button type="submit" class="remove" title="Remove this item">×</button>
                                                         </form> --}}
+                                                        <button type="button" class="remove" title="Remove this item"
+                                                                onclick="deleteCartItem(this)"
+                                                                data-action="{{ route('destroy', $item->id) }}">
+                                                            ×
+                                                        </button>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -210,7 +213,7 @@
                                         
                                                         <input type="submit" value="Update cart" name="update_cart"
                                                             class="button">
-                                                        {{-- </form>     --}}
+                    
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -372,3 +375,16 @@
     <!-- .col-full -->
 </div>
 @endsection
+<form id="delete-cart-item-form" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+<script>
+    function deleteCartItem(button) {
+        if (confirm("Bạn có chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng không?")) {
+            const form = document.getElementById('delete-cart-item-form');
+            form.action = button.getAttribute('data-action');
+            form.submit();
+        }
+    }
+</script>
