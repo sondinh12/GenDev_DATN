@@ -74,7 +74,7 @@ class RegisterController extends Controller
         $avatarPath = $data['avatar']->store('images', 'public');
         // Cập nhật đường dẫn ảnh đại diện trong dữ liệu người dùng
         $data['avatar'] = $avatarPath;
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -85,5 +85,7 @@ class RegisterController extends Controller
             'status' => 1,
             'role' => 2,
         ]);
+        $user->assignRole('user');
+        return $user;
     }
 }

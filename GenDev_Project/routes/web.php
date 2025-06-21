@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Routing\Route as RoutingRoute;
 
 // ================= TRANG CHÍNH =================
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
@@ -64,7 +65,7 @@ Route::get('/track-order', function () {
 
 // ================= ADMIN =================
 
-Route::prefix('/admin')->group(function () {
+Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     Route::resource('/products', ProductController::class);
     Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');

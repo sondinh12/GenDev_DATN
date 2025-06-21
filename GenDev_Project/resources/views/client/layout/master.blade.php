@@ -16,9 +16,10 @@ $bodyClass = match($route) {
     'blog-single' => 'right-sidebar single single-post',
     'shop', 'categories' => 'woocommerce-active left-sidebar',
     'product' => 'woocommerce-active single-product full-width normal',
-    'order' => 'woocommerce-active woocommerce-checkout woocommerce-order-received',
-    'wishlist' => 'woocommerce-active woocommerce-wishlist',
-    default => 'page home'
+    'order' => 'page-template-default woocommerce-checkout woocommerce-page woocommerce-order-received can-uppercase
+    woocommerce-active',
+    'wishlist' => 'page-template-default page woocommerce-wishlist can-uppercase',
+    default => 'page home page-template-default'
 };
 @endphp
 
