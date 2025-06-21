@@ -50,6 +50,3 @@ Quản lý Thuộc tính
     <a href="{{ route('products.index') }}" class="btn btn-secondary mt-3">← Quay lại danh sách sản phẩm</a>
 </div>
 @endsection
-
-
-

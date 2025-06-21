@@ -90,5 +90,6 @@ class ForgotPasswordController extends Controller
         DB::table('tokens')->where('email', $request->email)->delete();
 
         return redirect()->route('home')->with('success', 'Bạn đã đặt lại mật khẩu và đăng nhập thành công!');
+
     }
 }
