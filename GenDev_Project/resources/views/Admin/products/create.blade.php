@@ -51,7 +51,7 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-
+{{-- code tạm được --}}
 
         <div class="form-group">
             <label>Danh mục</label>
