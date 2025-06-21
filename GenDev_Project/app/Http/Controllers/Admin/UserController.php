@@ -20,7 +20,7 @@ class UserController extends Controller
             $search = $request->get('search');
             $query->where('name', 'like', "%{$search}%");
         }
-
+        auth()->loginUsingId(3);
         $users = $query->paginate(10);
         return view('admin.users.index', compact('users'));
     }
