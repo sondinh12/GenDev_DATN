@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('Admin.layouts.master')
 
 @section('title')
 Danh sách Thuộc Tính
@@ -50,6 +50,3 @@ Quản lý Thuộc tính
     <a href="{{ route('products.index') }}" class="btn btn-secondary mt-3">← Quay lại danh sách sản phẩm</a>
 </div>
 @endsection
-
-
-

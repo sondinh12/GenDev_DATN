@@ -8,32 +8,37 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center p-4">
                     <div class="position-relative d-inline-block mb-3">
-                        <img src="{{ asset($user->avatar ?? 'images/default-avatar.png') }}" alt="Avatar"
+                        @if($user->avatar)
+                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar"
                             class="rounded-circle border border-3 border-primary shadow" width="150" height="150">
+                        @else
+                        <img src="{{ asset('storage/images/default-avatar.png') }}" alt="Default Avatar"
+                            class="rounded-circle border border-3 border-primary shadow" width="150" height="150">
+                        @endif
                         <div class="position-absolute bottom-0 end-0">
                             <button class="btn btn-light btn-sm rounded-circle shadow-sm" data-bs-toggle="tooltip"
                                 title="Thay đổi ảnh">
-                                <i class="fas fa-camera"></i>
+                                <i class="fa fa-camera"></i>
                             </button>
                         </div>
                     </div>
                     <h4 class="mb-1">{{ $user->name }}</h4>
                     <div class="d-flex justify-content-center gap-2 mb-3">
                         <span class="badge bg-{{ $user->status == 1 ? 'success' : 'danger' }}">
-                            <i class="fas fa-circle me-1"></i>
+                            <i class="fa fa-circle me-1"></i>
                             {{ $user->status == 1 ? 'Hoạt động' : 'Khóa' }}
                         </span>
                         <span class="badge bg-info">
-                            <i class="fas fa-user-shield me-1"></i>
+                            <i class="fa fa-user me-1"></i>
                             {{ $user->role == 1 ? 'Người dùng' : 'Quản trị' }}
                         </span>
                     </div>
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
+                            <i class="fa fa-edit me-2"></i>Chỉnh sửa thông tin
                         </button>
                         <button class="btn btn-outline-primary">
-                            <i class="fas fa-key me-2"></i>Đổi mật khẩu
+                            <i class="fa fa-key me-2"></i>Đổi mật khẩu
                         </button>
                     </div>
                 </div>
@@ -65,17 +70,17 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-user-circle text-primary me-2"></i>
+                            <i class="fa fa-user text-primary me-2"></i>
                             Thông tin cá nhân
                         </h5>
                         <div class="dropdown">
                             <button class="btn btn-light btn-sm" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Tải thông
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-download me-2"></i>Tải thông
                                         tin</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i>In thông tin</a>
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-print me-2"></i>In thông tin</a>
                                 </li>
                             </ul>
                         </div>
@@ -85,20 +90,20 @@
                         <div class="col-md-6">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-envelope text-primary me-2"></i>
+                                    <i class="fa fa-envelope text-primary me-2"></i>
                                     <span class="fw-bold">Email:</span>
                                 </div>
                                 <p class="mb-0 ms-4">{{ $user->email }}</p>
                                 @if(!$user->email_verified_at)
                                 <div class="ms-4 mt-2">
                                     <button class="btn btn-sm btn-outline-warning">
-                                        <i class="fas fa-envelope me-1"></i>Xác thực email
+                                        <i class="fa fa-envelope me-1"></i>Xác thực email
                                     </button>
                                 </div>
                                 @else
                                 <div class="ms-4 mt-2">
                                     <span class="badge bg-success">
-                                        <i class="fas fa-check-circle me-1"></i>Đã xác thực
+                                        <i class="fa fa-check-circle me-1"></i>Đã xác thực
                                     </span>
                                 </div>
                                 @endif
@@ -108,7 +113,7 @@
                         <div class="col-md-6">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-phone text-primary me-2"></i>
+                                    <i class="fa fa-phone text-primary me-2"></i>
                                     <span class="fw-bold">Số điện thoại:</span>
                                 </div>
                                 <p class="mb-0 ms-4">{{ $user->phone }}</p>
@@ -118,7 +123,7 @@
                         <div class="col-md-6">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <i class="fa fa-map-marker text-primary me-2"></i>
                                     <span class="fw-bold">Địa chỉ:</span>
                                 </div>
                                 <p class="mb-0 ms-4">{{ $user->address ?? 'Chưa cập nhật' }}</p>
@@ -128,7 +133,7 @@
                         <div class="col-md-6">
                             <div class="bg-light rounded p-3">
                                 <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-venus-mars text-primary me-2"></i>
+                                    <i class="fa fa-venus-mars text-primary me-2"></i>
                                     <span class="fw-bold">Giới tính:</span>
                                 </div>
                                 <p class="mb-0 ms-4">{{ $user->gender }}</p>

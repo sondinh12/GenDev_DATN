@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+<html lang="en-US" itemscope itemtype="http://schema.org/WebPage">
 
 <!-- Mirrored from transvelo.github.io/techmarket-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 May 2025 14:25:19 GMT -->
 <!-- Added by HTTrack -->
@@ -24,18 +24,14 @@ default => 'page home page-template-default'
 @endphp
 
 <body class="{{ $bodyClass }}">
-    <div id="page" class="hfeed site">
+    <div id="page" class="site">
         @include('client.layout.partials.topbar')
-        <!-- .top-bar-v1 -->
         @include('client.layout.partials.header')
-        <!-- .header-v1 -->
-        <!-- ============================================================= Header End ============================================================= -->
         @yield('content')
-        <!-- #content -->
         @include('client.layout.partials.footer')
-        <!-- .site-footer -->
     </div>
     @include('client.layout.partials.script')
+    @yield('scripts')
 </body>
 
 <!-- Mirrored from transvelo.github.io/techmarket-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 May 2025 14:26:03 GMT -->
