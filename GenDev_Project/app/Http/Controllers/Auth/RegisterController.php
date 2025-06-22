@@ -30,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/email/verify';
 
     /**
      * Create a new controller instance.
@@ -56,14 +56,9 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
-            'gender' => ['required', 'in:male,female,other'],
+            'gender' => ['required', 'in:Nam,Nữ,Khác'],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
-        // Nếu có file avatar thì validate là file ảnh, không phải string
-        if (request()->hasFile('avatar')) {
-            $rules['avatar'] = ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'];
-        } else {
-            $rules['avatar'] = ['required', 'string', 'max:255'];
-        }
         return Validator::make($data, $rules);
     }
 
@@ -75,6 +70,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // Lưu trữ ảnh đại diện vào thư mục storage/app/public/images
+        $avatarPath = $data['avatar']->store('images', 'public');
+        // Cập nhật đường dẫn ảnh đại diện trong dữ liệu người dùng
+        $data['avatar'] = $avatarPath;
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -86,28 +85,5 @@ class RegisterController extends Controller
             'status' => 1,
             'role' => 2,
         ]);
-    }
-
-    /**
-     * Register a new user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function register(\Illuminate\Http\Request $request)
-    {
-        $this->validator($request->all())->validate();
-        $data = $request->all();
-        // Xử lý upload avatar nếu có file
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
-            $data['avatar'] = 'images/' . $filename;
-        }
-        $user = $this->create($data);
-        event(new \Illuminate\Auth\Events\Registered($user));
-        $this->guard()->login($user);
-        return redirect('/home')->with('register_success', 'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.');
     }
 }
