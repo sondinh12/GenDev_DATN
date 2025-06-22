@@ -11,8 +11,26 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 
+// Route::get('/', function () {
+//     return view('admin.apps-chat');
+// });
+
+
+Route::resource('/products', ProductController::class);
+Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+
+// Route::get('/products', function () {
+
+//     return view('products.index');
+
+// });
 // ================= TRANG CHÍNH =================
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -47,21 +65,26 @@ Route::get('/product', function () {
 Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.products.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-Route::get('/cart', function () {
-    return view('client.cart.cart');
-})->name('cart');
-Route::get('/wishlist', function () {
-    return view('client.cart.wishlist');
-})->name('wishlist');
-Route::get('/checkout', function () {
-    return view('client.checkout.checkout');
-})->name('checkout');
-Route::get('/order', function () {
-    return view('client.checkout.order');
-})->name('order');
-Route::get('/track-order', function () {
-    return view('client.checkout.track-order');
-})->name('track-order');
+
+Route::get('/cart', [CartController::class, 'index'])->name('index')->middleware('auth');  
+Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
+Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
+Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
+// Route::get('/cart', function () {
+//     return view('client.cart.cart');
+// })->name('cart');
+// Route::get('/wishlist', function () {
+//     return view('client.cart.wishlist');
+// })->name('wishlist');
+// Route::get('/checkout', function () {
+//     return view('client.checkout.checkout');
+// })->name('checkout');
+// Route::get('/order', function () {
+//     return view('client.checkout.order');
+// })->name('order');
+// Route::get('/track-order', function () {
+//     return view('client.checkout.track-order');
+// })->name('track-order');
 
 // ================= ADMIN =================
 
@@ -102,6 +125,42 @@ Route::resource('/product', ClientProductController::class);
 // ================= TÀI KHOẢN =================
 
 Auth::routes(['verify' => true]);
+
+
+
+// Email Verification Routes
+Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+// Giao diện nhập email để gửi OTP
+Route::get('/forgot-password', function () {
+    return view('auth.passwords.reset'); // form gửi OTP
+})->name('password.request');
+
+// Gửi OTP
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'])->name('password.email');
+
+// Hiển thị form nhập email để gửi OTP
+Route::get('/forgot-password', function () {
+    return view('auth.passwords.forgot_password');
+})->middleware('guest')->name('password.request');
+
+// Xử lý gửi OTP qua email
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'])
+    ->middleware('guest')
+    ->name('password.email');
+
+// Hiển thị form nhập OTP + mật khẩu mới
+Route::get('/reset-password', function () {
+    return view('auth.passwords.reset_password');
+})->middleware('guest')->name('password.reset');
+
+// Xử lý xác minh OTP và cập nhật mật khẩu mới
+Route::post('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp'])
+    ->middleware('guest')
+    ->name('password.update');
+
+Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyResetOtp'])->name('password.verify');
 
 
 // ================= PROFILE =================

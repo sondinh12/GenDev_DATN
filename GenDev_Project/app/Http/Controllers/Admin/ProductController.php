@@ -287,7 +287,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('Admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
+        return redirect()->route('admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
     }
 
     // Hiển thị form sửa thuộc tính + tất cả value con
@@ -337,7 +337,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('Admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
+        return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
     }
 
     // Xóa thuộc tính + tất cả value con
@@ -346,7 +346,7 @@ class ProductController extends Controller
         $attribute = Attribute::findOrFail($id);
         $attribute->values()->delete();
         $attribute->delete();
-        return redirect()->route('Admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
+        return redirect()->route('admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
     }
 
     // Xóa value con đơn lẻ (redirect về lại trang trước)

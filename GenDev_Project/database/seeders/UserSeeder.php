@@ -59,7 +59,6 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
-
         // Gán role Spatie cho từng user
         $admin = User::where('email', 'admin@example.com')->first();
         if ($admin) $admin->assignRole('admin');

@@ -354,8 +354,16 @@
                                                             <a href="{{ route('product.show', $product->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
                                                                 <i class="fas fa-eye text-info"></i>
                                                             </a>
-                                                            <a href="" class="btn btn-gradient btn-sm rounded-pill ms-auto px-3 fw-semibold">Mua ngay</a>
                                                         </div>
+                                                            <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
+                                                                @csrf
+                                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                                <input type="hidden" name="variant_id" value="{{ $product->variants->first()->id }}">
+                                                                <input type="hidden" name="quantity" value="1">
+                                                                <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
+                                                                    Mua ngay
+                                                                </button>
+                                                            </form>
                                                     </div>
                                                 </div>
                                             </div>
