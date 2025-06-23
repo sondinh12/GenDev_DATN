@@ -28,7 +28,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-         return view('admin.categories.create');
+        return view('admin.categories.create');
     }
 
     /**
@@ -38,7 +38,7 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         if($request->hasFile('image')){
-           $data['image'] = $request->file('image')->store('categories','public');
+        $data['image'] = $request->file('image')->store('categories','public');
         }
         Category::create($data);
         return redirect()->route('categories.index')->with('success', 'Them thanh cong');
