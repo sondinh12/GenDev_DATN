@@ -52,14 +52,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    // public function coupons()
-    // {
-    //     return $this->belongsToMany(Coupon::class, 'coupon_user', 'user_id', 'coupon_id')
-    //                 ->using(CouponUser::class) // Sử dụng model pivot tùy chỉnh
-    //                 ->withPivot('times_used')
-    //                 ->withTimestamps();
-    // }
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'coupon_user')

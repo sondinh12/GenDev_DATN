@@ -38,5 +38,14 @@ class Order extends Model
         return $this->belongsTo(Ship::class);
     }
 
-
-}
+    public function getStatusTextAttribute(){
+        return match ($this->status) {
+        1 => 'Đang chờ duyệt',
+        2 => 'Đã xác nhận',
+        3 => 'Đang giao hàng',
+        4 => 'Đã giao',
+        5 => 'Đã huỷ',
+        default => 'Không xác định',
+    };
+    }
+}   

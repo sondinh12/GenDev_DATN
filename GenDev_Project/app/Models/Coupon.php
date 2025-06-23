@@ -26,13 +26,6 @@ class Coupon extends Model
         return $this->hasMany(Order::class,'coupon_id');
     }
 
-    // public function users()
-    // {
-    //     return $this->belongsToMany(User::class, 'coupon_user', 'coupon_id', 'user_id')
-    //                 ->using(CouponUser::class) // Sử dụng model pivot tùy chỉnh
-    //                 ->withPivot('times_used')
-    //                 ->withTimestamps();
-    // }
     public function users()
     {
         return $this->belongsToMany(User::class, 'coupon_user')

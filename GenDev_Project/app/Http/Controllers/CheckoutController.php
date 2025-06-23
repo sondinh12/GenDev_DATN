@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
+use App\Mail\OrderConfirmation;
 use App\Models\Coupon;
 use App\Models\CouponUser;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use App\Models\OrderDetailAttribute;
 use App\Models\Ship;
 use DB;
 use Illuminate\Http\Request;
+use Mail;
 
 class CheckoutController extends Controller
 {
@@ -33,9 +35,6 @@ class CheckoutController extends Controller
         auth()->loginUsingId(1);
         try {
             // Tính tổng tiền sản phẩm
-            // $totalProduct = collect($cart)->sum(function ($item) {
-            //     return $item['price'] * $item['quantity'];
-            // });
             $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
@@ -48,32 +47,26 @@ class CheckoutController extends Controller
                 $discount = $applied['discount'];
                 $couponId = $applied['id'];
                 $userIdFromSession = $applied['user_id'];
-                // Coupon::where('id', $couponId)->decrement('usage_limit');
                 if ($userIdFromSession) {
                     $coupon = Coupon::find($couponId);
                     $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
 
-        if ($couponUser) {
-            $currentTimesUsed = $couponUser->pivot->times_used;
-            $coupon->users()->updateExistingPivot($userIdFromSession, [
-                'times_used' => $currentTimesUsed + 1
-            ]);
-        } else {
-            $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
-        }
-                    $coupon->decrement('usage_limit'); // Giảm usage_limit
+                    if ($couponUser) {
+                        $currentTimesUsed = $couponUser->pivot->times_used;
+                        $coupon->users()->updateExistingPivot($userIdFromSession, [
+                            'times_used' => $currentTimesUsed + 1
+                        ]);
+                    } else {
+                        $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
+                    }
+                    $coupon->decrement('usage_limit');
+                    $coupon->increment('total_used');
                 }
             }
 
             $total = $subtotal - $discount + $shippingFee;
             if ($total < 0)
                 $total = 0;
-
-            // Lấy phí vận chuyển
-
-
-            // Tổng tiền cuối cùng
-            // $finalTotal = $totalProduct + $shippingFee;
 
             // Tạo đơn hàng
             $order = Order::create([
@@ -115,6 +108,8 @@ class CheckoutController extends Controller
                     }
                 }
             }
+
+            Mail::to($order->email)->send(new OrderConfirmation($order));
 
             session()->forget('applied_coupon');
             // Xoá giỏ hàng sau khi đặt hàng
