@@ -1732,8 +1732,7 @@
                         <div class="widget woocommerce widget_product_search">
                             <form role="search" method="get" class="woocommerce-product-search"
                                 action="https://transvelo.github.io/techmarket-html/home-v1.html">
-                                <label class="screen-reader-text" for="woocommerce-product-search-field-0">Search
-                                    for:</label>
+                                <label class="screen-reader-text" for="woocommerce-product-search-field-0">Tìm kiếm...</label>
                                 <input type="search" id="woocommerce-product-search-field-0" class="search-field"
                                     placeholder="Search products&hellip;" value="" name="s" />
                                 <input type="submit" value="Search" />
@@ -1743,7 +1742,7 @@
                         <!-- .widget -->
                     </div>
                     <!-- .site-search -->
-                    <a class="handheld-header-cart-link has-icon" href="{{ asset('cart.html') }}"
+                    <a class="handheld-header-cart-link has-icon" href="{{ asset('/cart') }}"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">2</span>
