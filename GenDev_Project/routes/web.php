@@ -125,8 +125,6 @@ Route::resource('/product', ClientProductController::class);
 
 Auth::routes(['verify' => true]);
 
-
-
 // Email Verification Routes
 Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');

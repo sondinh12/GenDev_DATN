@@ -21,7 +21,7 @@ class CartDetailRequest extends FormRequest
      */
     public function rules(): array
     {
-       if ($this->isMethod('post')) {
+        if ($this->isMethod('post')) {
         return [
             'product_id' => 'required|exists:products,id',
             'variant_id' => 'required|exists:product_variants,id',
