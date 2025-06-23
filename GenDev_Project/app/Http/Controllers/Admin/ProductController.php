@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AttributeRequest;
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
-use App\Models\AttributeValue;
-use App\Models\Category;
-use App\Models\CategoryMini;
-use App\Models\Attribute;
-use App\Models\Product;
-use App\Models\ProductGallery;
-use App\Models\ProductVariant;
-use App\Models\ProductVariantAttribute;
-use Validator;
+    use App\Http\Controllers\Controller;
+    use App\Http\Requests\AttributeRequest;
+    use Illuminate\Http\Request;
+    use App\Http\Requests\ProductRequest;
+    use App\Models\AttributeValue;
+    use App\Models\Category;
+    use App\Models\CategoryMini;
+    use App\Models\Attribute;
+    use App\Models\Product;
+    use App\Models\ProductGallery;
+    use App\Models\ProductVariant;
+    use App\Models\ProductVariantAttribute;
+    use Validator;
 
 class ProductController extends Controller
 {
@@ -23,8 +23,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category','categoryMini'])->orderBy('id','DESC')->paginate(5);
-        return view('Admin.products.index',compact('products'));
+
+        $products = Product::with(['category', 'categoryMini'])->orderBy('id', 'DESC')->paginate(5);
+        return view('Admin.products.index', compact('products'));
     }
 
     /**
@@ -35,7 +36,8 @@ class ProductController extends Controller
         $categories = Category::all();
         $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.create',compact('categories','attributes','categories_mini'));
+
+        return view('Admin.products.create', compact('categories', 'attributes', 'categories_mini'));
     }
 
     /**
@@ -55,10 +57,11 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category_id,
-            'category_mini_id'=>$request->category_mini_id,
+            'category_mini_id' => $request->category_mini_id,
             'image' => $imagePath,
             'price' => $request->price,
             'quantity'=>$request->quantity,
+            'status'=>$request->status,
             'sale_price' => $request->sale_price,
         ]);
 
@@ -82,11 +85,13 @@ class ProductController extends Controller
                     'price' => $variant['price'],
                     'sale_price' => $variant['sale_price'] ?? 0,
                     'quantity' => $variant['quantity'] ?? 0,
-                    'status' => $variant['status'] ?? 1,
+                    'status' => $variant['status']  ?? 1,
                 ]);
 
                 // Lấy danh sách value_id của các thuộc tính (màu, size, ...)
-                $valueIds = isset($variant['value_ids']) ? explode(',', $variant['value_ids'][0]) : [];
+                // $valueIds = isset($variant['value_ids']) ? $variant['value_ids'] : [];
+                $valueRaw = $variant['value_ids'] ?? [];  // có thể là chuỗi hoặc mảng
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
 
                 // Lưu từng thuộc tính của biến thể vào bảng product_variant_attributes
                 foreach ($valueIds as $valueId) {
@@ -109,7 +114,7 @@ class ProductController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {   
+    {
         $product = Product::with([
             'category',
             'categoryMini',
@@ -117,7 +122,7 @@ class ProductController extends Controller
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
         ])->findOrFail($id);
-        return view('admin.products.show',compact('product'));
+        return view('Admin.products.show', compact('product'));
     }
 
     /**
@@ -127,7 +132,7 @@ class ProductController extends Controller
     {
         // Lấy thông tin sản phẩm, danh mục, thuộc tính và các giá trị liên quan
         $product = Product::with([
-            
+
             'galleries',
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
@@ -157,6 +162,7 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->category_mini_id = $request->category_mini_id;
+        $product->status = $request->status;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
@@ -193,7 +199,8 @@ class ProductController extends Controller
                     'quantity' => $variant['quantity'] ?? 0,
                     'status' => $variant['status'] ?? 1,
                 ]);
-                $valueIds = isset($variant['value_ids']) ? explode(',', $variant['value_ids'][0]) : [];
+                $valueRaw = $variant['value_ids'] ?? [];
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
                 foreach ($valueIds as $valueId) {
                     $attributeId = AttributeValue::find($valueId)?->attribute_id;
                     ProductVariantAttribute::create([
@@ -247,109 +254,106 @@ class ProductController extends Controller
 
 
 
-  // Hiển thị danh sách thuộc tính
-public function allAttributes()
-{
-    $attributes = Attribute::with('values')->get();
-    return view('admin.products.ProductsAttribute', compact('attributes'));
-}
-
-// Hiển thị form thêm thuộc tính
-public function createAttribute()
-{
-    return view('admin.products.create_attribute');
-}
-
-// Lưu thuộc tính mới + các value mới
-public function storeAttribute(AttributeRequest $request)
-{
-    $attribute = Attribute::create([
-        'name' => $request->name
-    ]);
-
-    if ($request->filled('values')) {
-        $valueArr = explode(',', $request->values);
-        foreach ($valueArr as $val) {
-            $trimmed = trim($val);
-            if (!empty($trimmed)) {
-                AttributeValue::create([
-                    'attribute_id' => $attribute->id,
-                    'value' => $trimmed
-                ]);
-            }
-        }
+    // Hiển thị danh sách thuộc tính
+    public function allAttributes()
+    {
+        $attributes = Attribute::with('values')->get();
+        return view('Admin.attributes.ProductsAttribute', compact('attributes'));
     }
 
-    return redirect()->route('admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
-}
-
-// Hiển thị form sửa thuộc tính + tất cả value con
-public function editAttribute($id)
-{
-    $attribute = Attribute::with('values')->findOrFail($id);
-    return view('admin.products.edit_attribute', compact('attribute'));
-}
-
-// Cập nhật thuộc tính + value con cũ và thêm value con mới
-public function updateAttribute(Request $request, $id)
-{
-    // Validate đầu vào
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'values' => 'nullable|array',
-        'values.*' => 'required|string|max:255',
-        'new_values' => 'nullable|array',
-        'new_values.*' => 'required|string|max:255',
-    ]);
-
-    // 1. Update tên thuộc tính cha
-    $attribute = Attribute::findOrFail($id);
-    $attribute->name = $request->name;
-    $attribute->save();
-
-    // 2. Update các giá trị con cũ
-    if ($request->has('values')) {
-        foreach ($request->values as $valueId => $val) {
-            $valueModel = AttributeValue::find($valueId);
-            if ($valueModel) {
-                $valueModel->value = $val;
-                $valueModel->save();
-            }
-        }
+    // Hiển thị form thêm thuộc tính
+    public function createAttribute()
+    {
+        return view('Admin.attributes.create_attribute');
     }
 
-    // 3. Thêm giá trị con mới nếu có
-    if ($request->has('new_values')) {
-        foreach ($request->new_values as $val) {
-            if (trim($val)) {
-                AttributeValue::create([
-                    'attribute_id' => $attribute->id,
-                    'value' => $val,
-                ]);
+    // Lưu thuộc tính mới + các value mới
+    public function storeAttribute(AttributeRequest $request)
+    {
+        $attribute = Attribute::create([
+            'name' => $request->name
+        ]);
+
+        if ($request->filled('values')) {
+            $valueArr = explode(',', $request->values);
+            foreach ($valueArr as $val) {
+                $trimmed = trim($val);
+                if (!empty($trimmed)) {
+                    AttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $trimmed
+                    ]);
+                }
             }
         }
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
     }
 
-    return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
-}
+    // Hiển thị form sửa thuộc tính + tất cả value con
+    public function editAttribute($id)
+    {
+        $attribute = Attribute::with('values')->findOrFail($id);
+        return view('Admin.attributes.edit_attribute', compact('attribute'));
+    }
 
-// Xóa thuộc tính + tất cả value con
-public function destroyAttribute($id)
-{
-    $attribute = Attribute::findOrFail($id);
-    $attribute->values()->delete();
-    $attribute->delete();
-    return redirect()->route('admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
-}
+    // Cập nhật thuộc tính + value con cũ và thêm value con mới
+    public function updateAttribute(Request $request, $id)
+    {
+        // Validate đầu vào
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'values' => 'nullable|array',
+            'values.*' => 'required|string|max:255',
+            'new_values' => 'nullable|array',
+            'new_values.*' => 'required|string|max:255',
+        ]);
 
-// Xóa value con đơn lẻ (redirect về lại trang trước)
-public function destroyAttributeValue($id)
-{
-    $value = AttributeValue::findOrFail($id);
-    $value->delete();
-    return redirect()->back()->with('success', 'Xóa giá trị thành công!');
-}
+        // 1. Update tên thuộc tính cha
+        $attribute = Attribute::findOrFail($id);
+        $attribute->name = $request->name;
+        $attribute->save();
 
+        // 2. Update các giá trị con cũ
+        if ($request->has('values')) {
+            foreach ($request->values as $valueId => $val) {
+                $valueModel = AttributeValue::find($valueId);
+                if ($valueModel) {
+                    $valueModel->value = $val;
+                    $valueModel->save();
+                }
+            }
+        }
 
-    
+        // 3. Thêm giá trị con mới nếu có
+        if ($request->has('new_values')) {
+            foreach ($request->new_values as $val) {
+                if (trim($val)) {
+                    AttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $val,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
+    }
+
+    // Xóa thuộc tính + tất cả value con
+    public function destroyAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->values()->delete();
+        $attribute->delete();
+        return redirect()->route('admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
+    }
+
+    // Xóa value con đơn lẻ (redirect về lại trang trước)
+    public function destroyAttributeValue($id)
+    {
+        $value = AttributeValue::findOrFail($id);
+        $value->delete();
+        return redirect()->back()->with('success', 'Xóa giá trị thành công!');
+    }
 }

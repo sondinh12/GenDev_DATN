@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/*
+/*!
 Template Name:  Techmarket HTML
 Template URI:   https://transvelo.github.io/techmarket-html/
 Author:         madrasthemes
@@ -42,6 +42,7 @@ We use the excellent modular scale tool built by Tim Brown to calculate this. ht
  * pagination
  * Post formats
  * Widgets
+ */
 /**
  * Global styles
  */
