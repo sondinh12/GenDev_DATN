@@ -71,7 +71,7 @@ class CategoryMiniController extends Controller
      */
     public function update(CategoryMiniRequest $request, $category_id ,$id)
     {
-         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
+        $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -98,7 +98,7 @@ class CategoryMiniController extends Controller
      */
     public function destroy($category_id,$id)
     {
-         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
+        $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
         // Xóa ảnh nếu có
         if ($categoryMini->image) {
             Storage::disk('public')->delete($categoryMini->image);

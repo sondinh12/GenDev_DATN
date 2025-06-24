@@ -127,8 +127,10 @@ Route::resource('/product', ClientProductController::class);
 Auth::routes(['verify' => true]); // Xác thực email
 
 
-
-
+// Email Verification Routes
+Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 // Giao diện nhập email để gửi OTP
 Route::get('/forgot-password', function () {
     return view('auth.passwords.reset'); // form gửi OTP

@@ -6,6 +6,8 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     @include('client.layout.partials.head')
 </head>
 @php
@@ -28,7 +30,7 @@ $bodyClass = match($route) {
         @include('client.layout.partials.topbar')
         @include('client.layout.partials.header')
         @yield('content')
-        @include('client.layout.partials.footer')
+        {{-- @include('client.layout.partials.footer') --}}
     </div>
     @include('client.layout.partials.script')
     @yield('scripts')
