@@ -209,7 +209,10 @@
                                                         <a href="#">Trang thương mại điện tử</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('cart.html') }}">Giỏ hàng</a>
+                                                        <a href="{{ asset('/cart') }}" class="cart-contents" title="View your shopping cart">
+                                                            <i class="tm tm-shopping-bag"></i>
+                                                            <span class="count">2</span>
+                                                        </a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="{{ asset('checkout.html') }}">Thanh toán</a>
@@ -961,7 +964,7 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
+                    <a href="{{ asset('/cart') }}" class="cart-contents" data-toggle="dropdown"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">2</span>
@@ -1006,7 +1009,7 @@
                                             <span class="woocommerce-Price-currencySymbol">$</span>136.99</span>
                                     </p>
                                     <p class="woocommerce-mini-cart__buttons buttons">
-                                        <a href="{{ asset('cart.html') }}" class="button wc-forward">Xem giỏ hàng</a>
+                                        <a href="{{ asset('/cart') }}" class="button wc-forward">Xem giỏ hàng</a>
                                         <a href="{{ asset('checkout.html') }}"
                                             class="button checkout wc-forward">Thanh toán</a>
                                     </p>
