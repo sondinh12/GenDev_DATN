@@ -13,15 +13,15 @@
 @php
 $route = Route::currentRouteName();
 $bodyClass = match($route) {
-'home' => 'woocommerce-active page-template-template-homepage-v2 can-uppercase',
-'blog' => 'right-sidebar blog-list',
-'blog-single' => 'right-sidebar single single-post',
-'shop', 'categories' => 'woocommerce-active left-sidebar',
-'product' => 'woocommerce-active single-product full-width normal',
-'order' => 'page-template-default woocommerce-checkout woocommerce-page woocommerce-order-received can-uppercase
-woocommerce-active',
-'wishlist' => 'page-template-default page woocommerce-wishlist can-uppercase',
-default => 'page home page-template-default'
+    'home' => 'woocommerce-active page-template-template-homepage-v2',
+    'blog' => 'right-sidebar blog-list',
+    'blog-single' => 'right-sidebar single single-post',
+    'shop', 'categories' => 'woocommerce-active left-sidebar',
+    'product' => 'woocommerce-active single-product full-width normal',
+    'order' => 'page-template-default woocommerce-checkout woocommerce-page woocommerce-order-received can-uppercase
+    woocommerce-active',
+    'wishlist' => 'page-template-default page woocommerce-wishlist can-uppercase',
+    default => 'page home page-template-default'
 };
 @endphp
 
