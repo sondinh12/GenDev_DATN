@@ -57,7 +57,6 @@ class RegisterController extends Controller
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
             'gender' => ['required', 'in:Nam,Nữ,Khác'],
-            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
         return Validator::make($data, $rules);
     }
@@ -70,15 +69,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // Lưu trữ ảnh đại diện vào thư mục storage/app/public/images
-        $avatarPath = $data['avatar']->store('images', 'public');
-        // Cập nhật đường dẫn ảnh đại diện trong dữ liệu người dùng
-        $data['avatar'] = $avatarPath;
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' => $data['avatar'],
+            'avatar' => null,
             'address' => $data['address'],
             'phone' => $data['phone'],
             'gender' => $data['gender'],

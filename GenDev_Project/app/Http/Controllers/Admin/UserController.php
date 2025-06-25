@@ -22,7 +22,7 @@ class UserController extends Controller
         if ($request->has('search')) {
             $search = $request->get('search');
             $query->where('name', 'like', "%{$search}%");
-        };
+        }
         $users = $query->paginate(10);
         return view('admin.users.index', compact('users'));
     }

@@ -167,21 +167,6 @@
                                 </div>
                             </div>
 
-                            <!-- Avatar -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="avatar" class="form-label">Ảnh đại diện</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control @error('avatar') is-invalid @enderror"
-                                            id="avatar" name="avatar" accept="image/*">
-                                    </div>
-                                    @error('avatar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div class="form-text">Chọn ảnh đại diện của bạn (tối đa 2MB)</div>
-                                </div>
-                            </div>
-
                             <!-- Điều khoản -->
                             <div class="col-12">
                                 <div class="form-check">

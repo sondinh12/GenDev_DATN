@@ -35,7 +35,7 @@
                 <li>
 
                 </li>
-                
+
                 <li class="menu-title">Categories</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow ">
@@ -68,6 +68,14 @@
                     </ul>
                 <li>
 
+                </li>
+
+                <li class="menu-title">Orders</li>
+                <li>
+                    <a href="{{ url('admin/orders') }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Danh sách đơn hàng</span>
+                    </a>
                 </li>
             </ul>
         </div>
