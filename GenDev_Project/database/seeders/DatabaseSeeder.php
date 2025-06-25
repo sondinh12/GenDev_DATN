@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             // ProductVariantAttributeSeeder::class,
             RoleAndPermissionSeeder::class,
             UserSeeder::class,
+            ShipSeeder::class,
+            CouponSeeder::class,
+            OrderSeeder::class,
+            OrderDetailAttributeSeeder::class,
         ]);
     }
 }
