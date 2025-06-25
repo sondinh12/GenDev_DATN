@@ -21,6 +21,9 @@
                             <th>Email</th>
                             <th>Điện thoại</th>
                             <th>Địa chỉ</th>
+                            <th>Mã giảm giá</th>
+                            <th>Phí ship</th>
+                            <th>Tổng tiền</th>
                             <th>Trạng thái</th>
                             <th>Ngày tạo</th>
                             <th class="text-center">Hành động</th>
@@ -30,21 +33,15 @@
                         @forelse($orders as $order)
                         <tr>
                             <td>{{ $order->id }}</td>
-                            <td>{{ $order->name }}</td>
+                            <td>{{ $order->user->name ?? $order->name }}</td>
                             <td>{{ $order->email }}</td>
                             <td>{{ $order->phone }}</td>
                             <td>{{ $order->address }}</td>
+                            <td>{{ $order->coupon->coupon_code ?? '-' }}</td>
+                            <td>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</td>
+                            <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                             <td>
-                                <span
-                                    class="badge {{ $order->status == 1 ? 'bg-success' : ($order->status == 2 ? 'bg-danger' : 'bg-secondary') }}">
-                                    @if($order->status == 1)
-                                    Đang xử lý
-                                    @elseif($order->status == 2)
-                                    Đã hủy
-                                    @else
-                                    Hoàn thành
-                                    @endif
-                                </span>
+                                <span class="badge bg-info">{{ $order->status_text }}</span>
                             </td>
                             <td>{{ $order->created_at }}</td>
                             <td class="text-center">
@@ -55,7 +52,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">
+                            <td colspan="11" class="text-center py-4 text-muted">
                                 <i class="fas fa-file-invoice fa-2x mb-2"></i>
                                 <p>Không có đơn hàng nào.</p>
                             </td>

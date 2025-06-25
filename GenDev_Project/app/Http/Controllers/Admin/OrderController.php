@@ -17,14 +17,14 @@ class OrderController extends Controller
     // Hiển thị danh sách đơn hàng
     public function index()
     {
-        $orders = Order::with(['user', 'product', 'variant', 'orderDetail', 'coupon'])->orderBy('id', 'desc')->paginate(10);
-        return view('admin.orders.index', compact('orders'));
+        $orders = Order::with(['user', 'coupon', 'ship'])->orderBy('id', 'desc')->paginate(10);
+        return view('Admin.orders.index', compact('orders'));
     }
 
     // Xem chi tiết đơn hàng
     public function show($id)
     {
-        $order = Order::with(['user', 'product', 'variant', 'orderDetail.attributes', 'coupon'])->findOrFail($id);
-        return view('admin.orders.show', compact('order'));
+        $order = Order::with(['user', 'coupon', 'ship', 'orderDetails.product', 'orderDetails.variant', 'orderDetails.attributes'])->findOrFail($id);
+        return view('Admin.orders.show', compact('order'));
     }
 }

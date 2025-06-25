@@ -33,25 +33,32 @@ class OrderSeeder extends Seeder
             $product = $products->random();
             $variant = $variants->where('product_id', $product->id)->first() ?? $variants->random();
             $coupon = $coupons->random();
+            $ship = $ships->random();
 
-            $orderDetail = OrderDetail::create([
-                'amount' => rand(100000, 1000000),
-                'note' => 'Ghi chú đơn hàng ' . $i,
+            $order = Order::create([
                 'user_id' => $user->id,
-                'shipping_id' => $ships->random()->id,
-            ]);
-
-            Order::create([
-                'user_id' => $user->id,
-                'product_id' => $product->id,
-                'variant_id' => $variant->id,
-                'order_detail_id' => $orderDetail->id,
                 'coupon_id' => $coupon->id,
+                'shipping_id' => $ship->id,
+                'shipping_fee' => $ship->shipping_price,
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => '09' . rand(10000000, 99999999),
                 'address' => 'Địa chỉ mẫu ' . $i,
-                'status' => rand(1, 3),
+                'city' => 'Thành phố ' . $i,
+                'ward' => 'Phường ' . $i,
+                'postcode' => '70000',
+                'payment' => 1,
+                'total' => rand(100000, 1000000),
+                'status' => rand(1, 5),
+            ]);
+
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'price' => rand(10000, 500000),
+                'quantity' => rand(1, 5),
+                'note' => 'Ghi chú đơn hàng ' . $i,
+                'product_id' => $product->id,
+                'variant_id' => $variant->id,
             ]);
         }
     }
