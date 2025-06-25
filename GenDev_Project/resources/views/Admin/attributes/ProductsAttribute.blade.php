@@ -47,9 +47,6 @@ Quản lý Thuộc tính
         @endforeach
     </div>
 
-    <a href="{{ route('products.index') }}" class="btn btn-secondary mt-3">← Quay lại danh sách sản phẩm</a>
+    {{-- <a href="{{ route('products.index') }}" class="btn btn-secondary mt-3">← Quay lại danh sách sản phẩm</a> --}}
 </div>
 @endsection
-
-
-

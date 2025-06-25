@@ -26,6 +26,8 @@ Manage
         <th>Tên</th>
         <th>Ảnh</th>
         <th>Tên danh mục</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
         <th>Danh mục con</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
@@ -40,6 +42,8 @@ Manage
             <img src="{{asset('storage/'.$pro->image)}}" alt="Ảnh" width="100px">
         </td>
         <td>{{$pro->category->name}}</td>
+        <td>{{$pro->price}}</td>
+        <td>{{$pro->quantity}}</td>
         <td>{{$pro->categoryMini?->name}}</td>
         <th>
             @if($pro->status == 1)
@@ -72,14 +76,20 @@ Manage
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa vĩnh viễn sản phẩm này?')">Xóa vĩnh viễn</button>
                 </form>
+                            @else
+                                            <form action="{{ route('products.restore', $pro->id) }}" method="POST" style="display:inline-block;">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <button type="submit" class="btn btn-success" onclick="return confirm('Bạn có chắc muốn hiển thị sản phẩm này?')">Hiển thị</button>
+                                            </form>
             @endif
+
         </td>
     </tr>
     @endforeach
 </table>
 {{$products->links()}}
 @endsection
-
 @section('scripts')
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection

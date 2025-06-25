@@ -1,13 +1,44 @@
 @extends('client.layout.master')
 
 @section('content')
+<style>
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        background-color: #fff8f8;
+    }
+
+    .form-select.is-invalid {
+        border-color: #dc3545;
+        background-color: #fff8f8;
+    }
+
+    .toggle-password {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        color: #6c757d;
+        cursor: pointer;
+        user-select: none;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .toggle-password:hover {
+        background-color: #e9ecef;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        display: block !important;
+    }
+</style>
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold">Đăng nhập</h3>
+                        <h3 class="fw-bold text-primary">Đăng nhập</h3>
                         <p class="text-muted">Chào mừng bạn quay trở lại!</p>
                     </div>
 
@@ -15,20 +46,26 @@
                         @csrf
 
                         <!-- Email -->
-                        <div class="form-floating mb-3">
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                                name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>
-                            <label for="email">Email</label>
+                                name="email" value="{{ old('email') }}" placeholder="Nhập email của bạn" required
+                                autofocus>
                             @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <!-- Mật khẩu -->
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                id="password" name="password" placeholder="Mật khẩu" required>
-                            <label for="password">Mật khẩu</label>
+                        <div class="form-group mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
+                                <span class="toggle-password">
+                                    Hiện
+                                </span>
+                            </div>
                             @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -51,28 +88,28 @@
                         </div>
 
                         <!-- Login Button -->
-                        <div class="d-grid">
+                        <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                                Đăng nhập
                             </button>
+
+                            <!-- Social Login -->
+                            <div class="text-center my-3">
+                                <p class="text-muted">Hoặc đăng nhập với</p>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="#" class="btn btn-outline-primary">
+                                        Facebook
+                                    </a>
+                                    <a href="#" class="btn btn-outline-danger">
+                                        Google
+                                    </a>
+                                    <a href="#" class="btn btn-outline-info">
+                                        Twitter
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </form>
-
-                    <!-- Social Login -->
-                    <div class="text-center mt-4">
-                        <p class="text-muted">Hoặc đăng nhập với</p>
-                        <div class="d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-danger">
-                                <i class="fab fa-google"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-dark">
-                                <i class="fab fa-apple"></i>
-                            </a>
-                        </div>
-                    </div>
 
                     <!-- Register Link -->
                     <div class="text-center mt-4">
@@ -85,56 +122,21 @@
     </div>
 </div>
 
-<style>
-    .form-floating>.form-control {
-        height: calc(3.5rem + 2px);
-        line-height: 1.25;
-    }
-
-    .form-floating>label {
-        padding: 1rem 0.75rem;
-    }
-
-    .form-floating>.form-control:focus~label,
-    .form-floating>.form-control:not(:placeholder-shown)~label {
-        transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
-    }
-
-    .btn-primary {
-        background: linear-gradient(45deg, #2196F3, #1976D2);
-        border: none;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
-    }
-
-    .btn-outline-primary,
-    .btn-outline-danger,
-    .btn-outline-dark {
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        line-height: 40px;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-primary:hover,
-    .btn-outline-danger:hover,
-    .btn-outline-dark:hover {
-        transform: translateY(-2px);
-    }
-
-    .card {
-        border-radius: 15px;
-    }
-
-    .form-control:focus {
-        box-shadow: 0 0 0 0.25rem rgba(33, 150, 243, 0.25);
-    }
-</style>
+@push('scripts')
+<script>
+    // Toggle password visibility
+    document.querySelector('.toggle-password').addEventListener('click', function() {
+        const passwordInput = document.querySelector('#password');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            this.textContent = 'Ẩn';
+        } else {
+            passwordInput.type = 'password';
+            this.textContent = 'Hiện';
+        }
+    });
+</script>
+@endpush
 
 @endsection

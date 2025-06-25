@@ -10,15 +10,13 @@
         "@popperjs/core": "^2.11.6",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
-        
         "concurrently": "^9.0.1",
         "fs-extra": "^11.2.0",
         "laravel-vite-plugin": "^1.0.5",
         "postcss": "^8.4.47",
-        
-        "sass": "^1.56.1",
-       
         "rtlcss": "^4.3.0",
+        "sass": "^1.56.1",
+        "sass-embedded": "^1.83.0",
         "rimraf": "^5.0.1",
         "apexcharts": "^3.54.1",
         "autosize": "^6.0.1",
@@ -106,3 +104,5 @@
         "typeahead.js": "^0.11.1"
     }
 }
+
+

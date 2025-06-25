@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
 use App\Mail\OrderConfirmation;
+use App\Models\Cartdetail;
 use App\Models\Coupon;
 use App\Models\CouponUser;
 use App\Models\Order;
@@ -12,30 +13,57 @@ use App\Models\OrderDetailAttribute;
 use App\Models\Ship;
 use DB;
 use Illuminate\Http\Request;
+use Log;
 use Mail;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cart = session('cart', []);
-        $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
         $ships = Ship::all();
-        return view('client.checkout.checkout', compact('ships', 'subtotal'));
+        $selectedItemIds = $request->input('selected_items');
+
+        if (empty($selectedItemIds) && $request->isMethod('post') || count($selectedItemIds) === 0) {
+            return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        }
+        if (is_string($selectedItemIds)) {
+            parse_str($selectedItemIds, $output);
+            $selectedItemIds = $output['selected_items'] ?? [];
+        }
+
+        $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute','variant.variantAttributes.value')
+                    ->whereIn('id', $selectedItemIds)
+                    ->get();
+        $subtotal = $cartItems->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds'));
     }
 
     public function store(CheckoutRequest $request)
     {
-        $cart = session('cart', []);
-        if (empty($cart)) {
+        $selectedItemIds = $request->input('selected_items', []);
+
+        if (empty($selectedItemIds)) {
             return back()->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
+        // Truy vấn cart_details với quan hệ product và variant
+        $cartItems = Cartdetail::with('product','cart','variant.variantAttributes.attribute','variant.variantAttributes.value')
+            ->whereIn('id', $selectedItemIds)
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
+        }
+
         DB::beginTransaction();
-        auth()->loginUsingId(1);
+        
         try {
             // Tính tổng tiền sản phẩm
-            $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+            $subtotal = $cartItems->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
             // Áp dụng mã giảm giá nếu có
@@ -87,7 +115,7 @@ class CheckoutController extends Controller
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng
-            foreach ($cart as $item) {
+            foreach ($cartItems as $item) {
                 $detail = OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
@@ -109,13 +137,18 @@ class CheckoutController extends Controller
                 }
             }
 
-            Mail::to($order->email)->send(new OrderConfirmation($order));
+            
 
             session()->forget('applied_coupon');
-            // Xoá giỏ hàng sau khi đặt hàng
-            session()->forget('cart');
-
+            $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
+                ->whereHas('cart', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                })
+                ->delete();
+                Log::info('CheckoutController::store - Deleted cart items:', ['deleted_rows' => $deletedRows]);
             DB::commit();
+
+            Mail::to($order->email)->send(new OrderConfirmation($order));
             return redirect()->route('home')->with('success', 'Đặt hàng thành công!');
         } catch (\Exception $e) {
             DB::rollBack();

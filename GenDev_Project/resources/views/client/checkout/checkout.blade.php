@@ -68,6 +68,8 @@
                                         Click here to enter your code
                                     </a>
                                 </div>
+
+                                {{-- coupon đổi thành select --}}
                                 <div class="collapse" id="checkoutCouponForm">
                                         @if(session('applied_coupon'))
                                             <p>Đã áp dụng mã: <strong>{{ session('applied_coupon.code') }}</strong> – giảm {{ number_format(session('applied_coupon.discount')) }}đ</p>
@@ -335,20 +337,23 @@
                                                     </tr>
                                                 </tbody> --}}
                                                 <tbody>
-                                                    @php
-                                                        $cart = session('cart', []);
-                                                    @endphp
+                                                    @foreach ($selectedItemIds as $id)
+                                                        <input type="hidden" name="selected_items[]" value="{{ $id }}">
+                                                    @endforeach
 
-                                                    @foreach ($cart as $item)
+                                                    @foreach ($cartItems as $item)
                                                     <tr>
                                                         <td>
                                                         <div>
-                                                            <strong>{{ $item['product_name'] }}</strong> - {{ $item['variant_name'] }}<br>
+                                                            <input type="hidden" name="product_id" value="{{$item->product_id}}">
+                                                            <strong>{{ $item->product->name }}</strong><br>
                                                             Số lượng: {{ $item['quantity'] }} <br>
                                                             Giá: {{ number_format($item['price']) }} VNĐ <br>
-                                                            @foreach ($item['attributes'] as $att)
-                                                                {{ $att['attribute_name'] }}: {{ $att['value'] }} <br>
-                                                            @endforeach
+                                                            @if ($item->variant && $item->variant->variantAttributes)
+                                                                @foreach ($item->variant->variantAttributes as $att)
+                                                                    {{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }} <br>
+                                                                @endforeach
+                                                            @endif
                                                             <hr>
                                                         </div>
                                                         </td>
@@ -368,7 +373,7 @@
                                                         <td>
                                                             <strong>
                                                                 <span class="woocommerce-Price-amount amount">
-                                                                    <span class="woocommerce-Price-currencySymbol">£</span>963.94</span>
+                                                                    <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
                                                             </strong>
                                                         </td>
                                                     </tr>
