@@ -61,7 +61,7 @@ Route::get('/shop', [ClientProductController::class, 'shop'])->name('shop');
 Route::get('/product', function () {
     return view('client.product.product');
 })->name('product');
-Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.products.show');
+Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 

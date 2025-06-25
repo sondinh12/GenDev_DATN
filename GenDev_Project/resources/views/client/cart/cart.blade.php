@@ -34,6 +34,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @if($cart->details->isEmpty())
+                                                      <tr>
+                                                            <td colspan="6" style="text-align: center; padding: 50px;">
+                                                                <p><strong>Chưa có sản phẩm nào trong giỏ hàng.</strong></p>
+                                                                <a href="{{ route('home') }}" class="button">Mua ngay</a>
+                                                            </td>
+                                                        </tr>
+                                                    @else
                                                 @foreach ($cart->details as $item)
                                                 <tr>
 
@@ -216,6 +224,7 @@
                     
                                                     </td>
                                                 </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                         <!-- .shop_table shop_table_responsive -->
