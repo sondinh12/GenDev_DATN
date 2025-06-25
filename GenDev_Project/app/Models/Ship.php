@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Ship extends Model
 {
     protected $fillable = [
-        // Thêm các trường cần thiết nếu có
+        'name',
+        'shipping_price'
     ];
+
+    public function order(){
+        return $this->belongsTo(Order::class,'shipping_id');
+    }
 }

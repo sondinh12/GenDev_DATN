@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetailAttribute extends Model
 {
     protected $fillable = [
-        // Thêm các trường cần thiết nếu có
+        'order_detail_id',
+        'attribute_name',
+        'attribute_value',
     ];
+
+    public function orderDetail(){
+        return $this->belongsTo(OrderDetail::class);
+    }
 }

@@ -6,14 +6,14 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">📂 Danh sách danh mục</h4>
-        <a href="{{route('categories.create')}}" class="btn btn-success"><i class="fas fa-plus"></i> Thêm danh mục</a>
+        <a href="{{route('categories.create')}}" class="btn btn-success"><i class="fas fa-plus"></i>Thêm danh mục</a>
     </div>
     
     <form method="GET" class="mb-3">
         <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Tim kiem...."
+            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm...."
             value="{{request('search')}}">
-            <button type="submit" class="btn btn-outline-secondary">Tim kiem</button>
+            <button type="submit" class="btn btn-outline-secondary">Tìm kiếm</button>
         </div>
     </form>
 
@@ -23,9 +23,9 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col">#ID</th>
+                            <th scope="col">ID</th>
                             <th scope="col">Tên danh mục</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Trạng thái</th>
                             <th scope="col">Ảnh</th>
                             <th scope="col" class="text-center">Hành động</th>
                         </tr>

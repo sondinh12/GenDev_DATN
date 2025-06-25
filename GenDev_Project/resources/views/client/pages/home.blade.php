@@ -358,7 +358,7 @@
                                                             <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
                                                                 @csrf
                                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                                <input type="hidden" name="variant_id" value="{{ $product->variants->first()->id }}">
+                                                                <input type="hidden" name="variant_id" value="{{ $product->variants->first()?->id }}">
                                                                 <input type="hidden" name="quantity" value="1">
                                                                 <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
                                                                     Mua ngay

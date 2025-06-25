@@ -7,29 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
     protected $fillable = [
-        'amount',
+        'order_id',
+        'price',
+        'quantity',
         'note',
-        'user_id',
-        'shipping_id',
+        'product_id',
+        'variant_id',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+    public function attributes(){
+        return $this->hasMany(OrderDetailAttribute::class,'order_detail_id');
     }
 
-    public function ship()
-    {
-        return $this->belongsTo(Ship::class, 'shipping_id');
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
     }
 
-    public function attributes()
-    {
-        return $this->hasMany(OrderDetailAttribute::class);
+    public function order(){
+        return $this->belongsTo(Order::class);
     }
 
-    public function order()
-    {
-        return $this->hasOne(Order::class, 'order_detail_id');
+    public function product(){
+        return $this->belongsTo(Product::class,'product_id');
+    }
+
+    public function variants(){
+        return $this->hasMany(ProductVariant::class,'variant_id');
     }
 }

@@ -52,4 +52,11 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'coupon_user')
+                    ->withPivot('times_used')
+                    ->withTimestamps();
+    }
 }
