@@ -4,6 +4,7 @@ session_start();
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use Illuminate\Support\Facades\Route;
@@ -66,7 +67,7 @@ Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::cla
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
-Route::get('/cart', [CartController::class, 'index'])->name('index')->middleware('auth');  
+Route::get('/cart', [CartController::class, 'index'])->name('index')->middleware('auth');
 Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
 Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
 Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
@@ -118,6 +119,9 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::get('admin/categories/{category_id}/minis/{id}/edit', [CategoryMiniController::class, 'edit'])->name('categories_minis.edit');
     Route::put('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'update'])->name('categories_minis.update');
     Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
+
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::put('admin/orders/{order}/update-both', [OrderController::class, 'updateBoth'])->name('admin.orders.update-both');
 });
 
 Route::resource('/product', ClientProductController::class);
