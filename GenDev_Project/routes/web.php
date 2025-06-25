@@ -1,7 +1,13 @@
 <?php
+
+use App\Http\Controllers\Client\CartController;
+
+
+
+
 session_start();
 
-
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\ProductController;
@@ -11,7 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Client\CartController;
+
+use App\Http\Controllers\CheckoutController;
+
 use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -66,7 +74,16 @@ Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::cla
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
-Route::get('/cart', [CartController::class, 'index'])->name('index')->middleware('auth');  
+Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class,'index'])->name('checkout');
+Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.submit');
+Route::post('/apply_coupon',[CouponController::class,'apply'])->name('apply_coupon');
+
+// hành dộng trang cart
+Route::match(['post','put'],'/handleaction',[CartDetailController::class,'handleAction'])->name('cart.handleaction'); 
+
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');  
 Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
 Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
 Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');

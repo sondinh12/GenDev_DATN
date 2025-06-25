@@ -1006,9 +1006,9 @@
                                             <span class="woocommerce-Price-currencySymbol">$</span>136.99</span>
                                     </p>
                                     <p class="woocommerce-mini-cart__buttons buttons">
-                                        <a href="{{ asset('cart.html') }}" class="button wc-forward">Xem giỏ hàng</a>
-                                        <a href="{{ asset('checkout.html') }}"
-                                            class="button checkout wc-forward">Thanh toán</a>
+                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
+                                        <a href="{{ route('checkout') }}"
+                                            class="button checkout wc-forward">Checkout</a>
                                     </p>
                                 </div>
                                 <!-- .widget_shopping_cart_content -->
