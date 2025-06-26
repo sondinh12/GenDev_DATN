@@ -26,14 +26,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\OrderController;
 
-// Route::get('/', function () {
-//     return view('admin.apps-chat');
-// });
-
-
-Route::resource('/products', ProductController::class);
-Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
-Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
 // Route::get('/products', function () {
 
