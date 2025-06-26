@@ -258,13 +258,13 @@ class ProductController extends Controller
     public function allAttributes()
     {
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.ProductsAttribute', compact('attributes'));
+        return view('Admin.attributes.ProductsAttribute', compact('attributes'));
     }
 
     // Hiển thị form thêm thuộc tính
     public function createAttribute()
     {
-        return view('Admin.products.create_attribute');
+        return view('Admin.attributes.create_attribute');
     }
 
     // Lưu thuộc tính mới + các value mới
@@ -294,7 +294,7 @@ class ProductController extends Controller
     public function editAttribute($id)
     {
         $attribute = Attribute::with('values')->findOrFail($id);
-        return view('Admin.products.edit_attribute', compact('attribute'));
+        return view('Admin.attributes.edit_attribute', compact('attribute'));
     }
 
     // Cập nhật thuộc tính + value con cũ và thêm value con mới

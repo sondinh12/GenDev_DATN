@@ -61,23 +61,23 @@
                     data-nav="flex-menu">
                     <ul id="menu-primary-menu" class="nav yamm">
                         <li class="sale-clr yamm-fw menu-item animate-dropdown">
-                            <a title="Super deals" href="{{ asset('product-category.html') }}">Super deals</a>
+                            <a title="Super deals" href="{{ asset('product-category.html') }}">Siêu ưu đãi</a>
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Mother`s Day" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
                                 href="#">Mother`s Day <span class="caret"></span></a>
                             <ul role="menu" class=" dropdown-menu">
                                 <li class="menu-item animate-dropdown">
-                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Wishlist</a>
+                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
                                 </li>
                                 <li class="menu-item animate-dropdown">
-                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Add to compare</a>
+                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
                                 </li>
                                 <li class="menu-item animate-dropdown">
-                                    <a title="About Us" href="{{ asset('about.html') }}">About Us</a>
+                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
                                 </li>
                                 <li class="menu-item animate-dropdown">
-                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Track Order</a>
+                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
                                 </li>
                             </ul>
                             <!-- .dropdown-menu -->
@@ -92,7 +92,7 @@
                                             <div class="widget widget_nav_menu">
                                                 <ul class="menu">
                                                     <li class="nav-title menu-item">
-                                                        <a href="#">Home Pages</a>
+                                                        <a href="#">Trang chủ</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="{{ asset('home-v1.html') }}">Home v1</a>
@@ -143,7 +143,7 @@
                                             <div class="widget widget_nav_menu">
                                                 <ul class="menu">
                                                     <li class="nav-title menu-item">
-                                                        <a href="#">Landing Pages</a>
+                                                        <a href="#">Trang đích</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="{{ asset('landing-page-v1.html') }}">Landing v1</a>
@@ -152,7 +152,7 @@
                                                         <a href="{{ asset('landing-page-v2.html') }}">Landing v2</a>
                                                     </li>
                                                     <li class="nav-title menu-item">
-                                                        <a href="#">Shop Pages</a>
+                                                        <a href="#">Trang cửa hàng</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="{{ asset('shop.html') }}">Shop</a>
@@ -206,29 +206,29 @@
                                                             Extended</a>
                                                     </li>
                                                     <li class="nav-title menu-item">
-                                                        <a href="#">Ecommerce Pages</a>
+                                                        <a href="#">Trang thương mại điện tử</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('cart.html') }}">Cart</a>
+                                                        <a href="{{ asset('cart.html') }}">Giỏ hàng</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('checkout.html') }}">Checkout</a>
+                                                        <a href="{{ asset('checkout.html') }}">Thanh toán</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('login-and-register.html') }}">My Account</a>
+                                                        <a href="{{ asset('login-and-register.html') }}">Tài khoản của tôi</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('compare.html') }}">Compare</a>
+                                                        <a href="{{ asset('compare.html') }}">So sánh</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('wishlist.html') }}">Wishlist</a>
+                                                        <a href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('track-your-order.html') }}">Track Order</a>
+                                                        <a href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
                                                     </li>
                                                     <li class="menu-item">
-                                                        <a href="{{ asset('terms-and-conditions.html') }}">Terms and
-                                                            Conditions</a>
+                                                        <a href="{{ asset('terms-and-conditions.html') }}">Điều khoản và
+                                                            Điều kiện</a>
                                                     </li>
                                                 </ul>
                                                 <!-- .menu -->
@@ -237,7 +237,7 @@
                                             <div class="widget widget_nav_menu">
                                                 <ul class="menu">
                                                     <li class="nav-title menu-item">
-                                                        <a href="#">Blog Pages</a>
+                                                        <a href="#">Trang blog</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="{{ asset('blog-v1.html') }}">Blog v1</a>
@@ -255,7 +255,7 @@
                                                         <a href="{{ asset('blog-single.html') }}">Single Blog Post</a>
                                                     </li>
                                                     <li class="nav-title menu-item">
-                                                        <a href="#">Other Pages</a>
+                                                        <a href="#">Trang khác</a>
                                                     </li>
                                                     <li class="menu-item">
                                                         <a href="{{ asset('about.html') }}">About Us</a>
@@ -286,7 +286,7 @@
                             <!-- .dropdown-menu -->
                         </li>
                         <li class="menu-item animate-dropdown">
-                            <a title="Logitech Sale" href="{{ asset('product-category.html') }}">Logitech Sale</a>
+                            <a title="Logitech Sale" href="{{ asset('product-category.html') }}">Giảm giá Logitech</a>
                         </li>
                         <li class="menu-item animate-dropdown">
                             <a title="Headphones Sale" href="{{ asset('product-category.html') }}">Headphones Sale</a>
@@ -306,7 +306,7 @@
                         <li
                             class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2802 animate-dropdown">
                             <a title="Track Your Order" href="{{ asset('track-your-order.html') }}">
-                                <i class="tm tm-order-tracking"></i>Track Your Order</a>
+                                <i class="tm tm-order-tracking"></i>Theo dõi đơn hàng của bạn</a>
                         </li>
                         <li
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-487 animate-dropdown dropdown">
@@ -906,23 +906,17 @@
             </div>
             <!-- .departments-menu -->
             <form class="navbar-search" method="get" action="https://transvelo.github.io/techmarket-html/home-v1.html">
-                <label class="sr-only screen-reader-text" for="search">Search for:</label>
+                <label class="sr-only screen-reader-text" for="search">Tìm kiếm:</label>
                 <div class="input-group">
                     <input type="text" id="search" class="form-control search-field product-search-field" dir="ltr"
-                        value="" name="s" placeholder="Search for products" />
+                        value="" name="s" placeholder="Tìm kiếm sản phẩm" />
                     <div class="input-group-addon search-categories">
                         <select name='product_cat' id='product_cat' class='postform resizeselect'>
-                            <option value='0' selected='selected'>All Categories</option>
+                            <option value='0' selected='selected'>Danh sách danh mục</option>
                             <option class="level-0" value="television">Televisions</option>
-                            <option class="level-0" value="home-theater-audio">Home Theater &amp; Audio</option>
                             <option class="level-0" value="headphones">Headphones</option>
-                            <option class="level-0" value="digital-cameras">Digital Cameras</option>
                             <option class="level-0" value="cells-tablets">Cells &amp; Tablets</option>
-                            <option class="level-0" value="smartwatches">Smartwatches</option>
-                            <option class="level-0" value="games-consoles">Games &amp; Consoles</option>
                             <option class="level-0" value="printer">Printer</option>
-                            <option class="level-0" value="tv-video">TV &amp; Video</option>
-                            <option class="level-0" value="home-entertainment">Home Entertainment</option>
                             <option class="level-0" value="tvs">TVs</option>
                             <option class="level-0" value="speakers">Speakers</option>
                             <option class="level-0" value="computers-laptops">Computers &amp; Laptops</option>
@@ -931,8 +925,6 @@
                             <option class="level-0" value="notebooks">Notebooks</option>
                             <option class="level-0" value="desktop-pcs">Desktop PCs</option>
                             <option class="level-0" value="mac-computers">Mac Computers</option>
-                            <option class="level-0" value="all-in-one-pc">All in One PC</option>
-                            <option class="level-0" value="audio-music">Audio &amp; Music</option>
                             <option class="level-0" value="pc-components">PC Components</option>
                         </select>
                     </div>
@@ -975,6 +967,7 @@
                         <span class="count">{{ $cartCount }}</span>
                         <span class="amount">
                             <span class="price-label">Your Cart</span>&#036;136.99</span>
+
                     </a>
                     <ul class="dropdown-menu dropdown-menu-mini-cart">
                         <li>
@@ -1017,6 +1010,7 @@
                                     <p class="woocommerce-mini-cart__buttons buttons">
                                         <a href="{{ route('index') }}" class="button wc-forward">View cart</a>
                                         <a href="{{ asset('checkout.html') }}"
+
                                             class="button checkout wc-forward">Checkout</a>
                                     </p>
                                 </div>
@@ -1741,8 +1735,7 @@
                         <div class="widget woocommerce widget_product_search">
                             <form role="search" method="get" class="woocommerce-product-search"
                                 action="https://transvelo.github.io/techmarket-html/home-v1.html">
-                                <label class="screen-reader-text" for="woocommerce-product-search-field-0">Search
-                                    for:</label>
+                                <label class="screen-reader-text" for="woocommerce-product-search-field-0">Tìm kiếm...</label>
                                 <input type="search" id="woocommerce-product-search-field-0" class="search-field"
                                     placeholder="Search products&hellip;" value="" name="s" />
                                 <input type="submit" value="Search" />
@@ -1752,7 +1745,7 @@
                         <!-- .widget -->
                     </div>
                     <!-- .site-search -->
-                    <a class="handheld-header-cart-link has-icon" href="{{ asset('cart.html') }}"
+                    <a class="handheld-header-cart-link has-icon" href="{{ asset('/cart') }}"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">2</span>

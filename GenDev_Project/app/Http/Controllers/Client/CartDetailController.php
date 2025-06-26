@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CartDetailRequest;
 use App\Models\Cart;
@@ -188,7 +189,7 @@ class CartDetailController extends Controller
             ]);
         }
 
-        return redirect()->route('index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+        return redirect()->route('home')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
     }
 
     /**
@@ -227,7 +228,7 @@ class CartDetailController extends Controller
                 $cartDetail->save();
             }
         }
-        return redirect()->route('index')->with('success', 'Cập nhật giỏ hàng thành công!');
+        return redirect()->route('cart')->with('success', 'Cập nhật giỏ hàng thành công!');
     }
 
     /**
@@ -243,5 +244,21 @@ class CartDetailController extends Controller
         return back()->with('error', 'Không thể xóa sản phẩm.');
     }
 
-    
+    public function handleAction(Request $request){
+        if ($request->has('btn_checkout')) {
+            $selectedItems = $request->input('selected_items', []);
+
+            if (empty($selectedItems)) {
+                return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+            }
+
+            return redirect()->route('checkout', ['selected_items' => $selectedItems]);
+        } elseif ($request->has('update_cart')) {
+            $cartDetailRequest = app(CartDetailRequest::class);
+            $validatedData = $cartDetailRequest->validated();
+            $selectedItems = $validatedData['selected_items'] ?? [];
+
+            return $this->update($cartDetailRequest);
+        }
+    }
 }

@@ -22,8 +22,7 @@ Tạo thuộc tính mới
         </div>
     @endif
 
-   <form action="{{ route('admin.attributes.store') }}" method="POST">
-
+    <form action="{{ route('admin.attributes.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">Tên thuộc tính</label>
