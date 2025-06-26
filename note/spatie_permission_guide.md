@@ -9,18 +9,40 @@ Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/
 | Bảng                    | Ý nghĩa                                                                          |
 | ----------------------- | -------------------------------------------------------------------------------- |
 | `roles`                 | Lưu thông tin các vai trò (role) như admin, staff, user...                       |
-| `permissions`           | Lưu thông tin các quyền (permission) như edit product, view order...             |
+| `permissions`           | Lưu thông tin các quyền (permission) như manage products, manage orders...       |
 | `model_has_roles`       | Liên kết user (hoặc model khác) với role (user nào có role nào)                  |
 | `model_has_permissions` | Liên kết user (hoặc model khác) với permission (user nào có quyền nào trực tiếp) |
 | `role_has_permissions`  | Liên kết role với permission (role nào có những quyền nào)                       |
 
 **Lưu ý:** Không thao tác trực tiếp với các bảng này bằng SQL, hãy dùng các hàm của Spatie để đảm bảo đồng bộ cache và logic.
 
-## 3. Các vai trò mặc định trong dự án
+## 3. Các vai trò và quyền trong dự án
+
+### Vai trò (Role)
 
 - **admin**: Quản trị viên toàn quyền
-- **staff**: Nhân viên quản lý sản phẩm, đơn hàng, v.v.
+- **staff**: Nhân viên quản lý sản phẩm, đơn hàng, bình luận, banner
 - **user**: Người dùng thông thường
+
+### Quyền (Permission)
+
+- `manage products` : Quản lý sản phẩm
+- `manage comments` : Quản lý bình luận
+- `manage orders` : Quản lý đơn hàng
+- `manage banners` : Quản lý banner
+- `manage posts` : Quản lý bài viết
+- `manage categories` : Quản lý danh mục
+- `manage coupons` : Quản lý mã giảm giá
+- `manage users` : Quản lý người dùng
+- `view statistics` : Xem thống kê
+
+### Phân quyền mặc định
+
+| Role  | Quyền được gán                                                           |
+| ----- | ------------------------------------------------------------------------ |
+| admin | Tất cả các quyền trên                                                    |
+| staff | manage products, manage comments, manage orders, manage banners          |
+| user  | Không có quyền đặc biệt (chỉ thao tác chức năng người dùng thông thường) |
 
 ## 4. Quy trình phân quyền chuẩn
 
@@ -32,12 +54,12 @@ Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/
 2. **Tạo permission** (ghi vào bảng `permissions`):
    ```php
    use Spatie\Permission\Models\Permission;
-   Permission::create(['name' => 'edit product']);
+   Permission::create(['name' => 'manage products']);
    ```
 3. **Gán permission cho role** (ghi vào bảng `role_has_permissions`):
    ```php
    $role = Role::findByName('admin');
-   $role->givePermissionTo('edit product');
+   $role->givePermissionTo('manage products');
    ```
 4. **Gán role cho user** (ghi vào bảng `model_has_roles`):
    ```php
@@ -47,12 +69,12 @@ Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/
    ```
 5. **Gán permission trực tiếp cho user** (ghi vào bảng `model_has_permissions`):
    ```php
-   $user->givePermissionTo('edit product');
+   $user->givePermissionTo('manage products');
    ```
 
 ## 5. Gán vai trò cho user (thực tế)
 
-- Đã có seeder mẫu (`RoleAndPermissionSeeder`) để tạo role và gán cho user id 0, 1, 2.
+- Đã có seeder mẫu (`RoleAndPermissionSeeder`) để tạo role và gán quyền cho từng role.
 - Để gán role cho user khác, dùng code sau (ví dụ trong controller, tinker, hoặc seeder):
   ```php
   use App\Models\User;
@@ -76,7 +98,7 @@ Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/
   ```
 - Kiểm tra quyền (qua role hoặc trực tiếp):
   ```php
-  if (auth()->user()->can('edit product')) {
+  if (auth()->user()->can('manage orders')) {
       // ...
   }
   ```
@@ -101,8 +123,8 @@ Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/
 
 - Chặn route theo quyền cụ thể:
   ```php
-  Route::middleware(['permission:edit product'])->group(function () {
-      // Route chỉ user có quyền 'edit product' mới truy cập được
+  Route::middleware(['permission:manage orders'])->group(function () {
+      // Route chỉ user có quyền 'manage orders' mới truy cập được
   });
   ```
 
@@ -116,7 +138,7 @@ Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/
 
 ## 9. Chạy lại seeder nếu cần
 
-- Để tạo lại role và gán cho user mẫu:
+- Để tạo lại role và gán quyền cho role:
   ```bash
   php artisan db:seed --class=Database\Seeders\RoleAndPermissionSeeder
   ```
@@ -141,7 +163,7 @@ $user->assignRole('user');
 
 ```php
 $role = Role::create(['name' => 'manager']);
-$role->givePermissionTo(['edit product', 'view order']);
+$role->givePermissionTo(['manage products', 'manage orders']);
 ```
 
 ### Kiểm tra trong blade
@@ -151,7 +173,7 @@ $role->givePermissionTo(['edit product', 'view order']);
     <a href="/admin">Quản trị</a>
 @endrole
 
-@can('edit product')
+@can('manage products')
     <button>Sửa sản phẩm</button>
 @endcan
 ```

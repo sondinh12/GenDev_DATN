@@ -42,6 +42,15 @@
                         <span>Tài khoản</span>
                     </a>
                 <li>
+
+                </li>
+
+                <li>
+                    <a href="{{ url('admin/orders') }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Danh sách đơn hàng</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

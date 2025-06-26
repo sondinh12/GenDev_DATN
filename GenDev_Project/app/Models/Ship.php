@@ -8,10 +8,11 @@ class Ship extends Model
 {
     protected $fillable = [
         'name',
-        'shipping_price'
+        'shipping_price',
     ];
 
-    public function order(){
-        return $this->belongsTo(Order::class,'shipping_id');
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'shipping_id');
     }
 }
