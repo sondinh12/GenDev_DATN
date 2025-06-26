@@ -242,4 +242,6 @@ class CartDetailController extends Controller
         }
         return back()->with('error', 'Không thể xóa sản phẩm.');
     }
+
+    
 }
