@@ -83,6 +83,7 @@ Manage
 </table>
 {{$products->links()}}
 @endsection
+
 @section('scripts')
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
