@@ -21,7 +21,7 @@ class CartDetailRequest extends FormRequest
      */
     public function rules(): array
 
-    {   
+    {
         $rules = [];
         if ($this->isMethod('post')) {
             $rules = [
@@ -29,16 +29,13 @@ class CartDetailRequest extends FormRequest
                 'quantity'   => 'required|integer|min:1',
             ];
 
-    {
-
 
             if ($this->has('attribute')) {
-            $rules['attribute'] = 'nullable|array';
-            $rules['attribute.*'] = 'exists:attribute_values,id';
-        }
+                $rules['attribute'] = 'nullable|array';
+                $rules['attribute.*'] = 'exists:attribute_values,id';
+            }
 
-        return $rules;
-
+            return $rules;
         }
 
         if ($this->isMethod('put')) {
