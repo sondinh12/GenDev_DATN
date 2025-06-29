@@ -1,12 +1,7 @@
 <?php
 
-use App\Http\Controllers\Client\CartController;
-
-
-
-
 session_start();
-
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;

@@ -1008,7 +1008,7 @@
                                             <span class="woocommerce-Price-currencySymbol">$</span>136.99</span>
                                     </p> --}}
                                     <p class="woocommerce-mini-cart__buttons buttons">
-                                        <a href="{{ route('index') }}" class="button wc-forward">View cart</a>
+                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
                                         <a href="{{ asset('checkout.html') }}"
 
                                             class="button checkout wc-forward">Checkout</a>

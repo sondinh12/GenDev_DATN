@@ -189,7 +189,7 @@ class CartDetailController extends Controller
             ]);
         }
 
-        return redirect()->route('home')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+        return redirect()->route('cart')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
     }
 
     /**
