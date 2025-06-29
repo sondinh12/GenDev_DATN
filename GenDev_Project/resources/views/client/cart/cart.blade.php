@@ -324,7 +324,8 @@
     @method('DELETE')
 </form>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+
+    document.addEventListener('DOMContentLoaded', function () {
         const selectAllCheckbox = document.getElementById('select-all-checkbox');
         const itemCheckboxes = document.querySelectorAll('.cart-item-checkbox');
         const subtotalElement = document.getElementById('cart-subtotal-value');

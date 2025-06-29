@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserBanned;
 use App\Mail\UserUnbanned;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Traits\HasRoles;
 
 class UserController extends Controller
 {
@@ -20,8 +23,11 @@ class UserController extends Controller
             $search = $request->get('search');
             $query->where('name', 'like', "%{$search}%");
         }
-        auth()->loginUsingIdv(3);
+
         $users = $query->paginate(10);
+
+        // auth()->loginUsingId(1);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -32,10 +38,13 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $currentUser = Auth::user();
-
-        // Chỉ admin mới được phép sửa role
-        if ($currentUser->role !== 0) {
-            abort(403, 'Bạn không có quyền thay đổi vai trò người dùng.');
+        // Đảm bảo $currentUser là instance của User có trait HasRoles
+        if (method_exists($currentUser, 'hasRole')) {
+            if (!$currentUser->hasRole('admin')) {
+                abort(403, 'Bạn không có quyền thay đổi vai trò người dùng.');
+            }
+        } else {
+            abort(403, 'Không xác định được quyền người dùng.');
         }
 
         // Không cho phép admin sửa chính mình
@@ -48,7 +57,15 @@ class UserController extends Controller
             'role' => 'required|in:0,1,2',
         ]);
 
-        $user->role = $request->role;
+        // Map giá trị role số sang tên role Spatie
+        $roleMap = [
+            '0' => 'admin',
+            '1' => 'staff',
+            '2' => 'user',
+        ];
+        $roleName = $roleMap[$request->role];
+        $user->syncRoles($roleName);
+        $user->role = $request->role; // Đồng bộ trường role số
         $user->save();
 
         return redirect()->route('admin.users.index')->with('success', 'Đã cập nhật vai trò người dùng.');
