@@ -41,9 +41,10 @@
                         <i class="fa-regular fa-user"></i>
                         <span>Tài khoản</span>
                     </a>
-                <li>                <li>
-                    <a href="{{ url('/admin/coupon') }}" class="">
-                        <i class="fa-regular fa-user"></i>
+                <li>
+                <li>
+                    <a href="{{ url('/admin/coupons') }}" class="">
+                      <i class="fa-solid fa-tag"></i>
                         <span>Mã Giảm Giá</span>
                     </a>
                 <li>

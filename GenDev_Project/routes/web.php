@@ -8,6 +8,7 @@ use App\Http\Controllers\Client\CartController;
 session_start();
 
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\ProductController;
@@ -24,6 +25,10 @@ use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+
+
+
+
 
 // Route::get('/', function () {
 //     return view('admin.apps-chat');
@@ -136,8 +141,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::put('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'update'])->name('categories_minis.update');
     Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
     
-    Route::resource('/coupons', CouponController::class);
-    
+    Route::resource('coupons', CouponsController::class);
 });
 
 Route::resource('/product', ClientProductController::class);
