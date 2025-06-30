@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
 use App\Mail\OrderConfirmation;
-use App\Models\Cartdetail;
+use App\Models\CartDetail;
 use App\Models\Coupon;
 use App\Models\CouponUser;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderDetailAttribute;
 use App\Models\Ship;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Log;
-use Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
@@ -23,15 +23,22 @@ class CheckoutController extends Controller
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');
 
-        if (empty($selectedItemIds) && $request->isMethod('post') || count($selectedItemIds) === 0) {
-            return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
-        }
         if (is_string($selectedItemIds)) {
             parse_str($selectedItemIds, $output);
             $selectedItemIds = $output['selected_items'] ?? [];
         }
 
-        $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute','variant.variantAttributes.value')
+        // Ép về mảng để tránh lỗi whereIn
+        $selectedItemIds = (array) $selectedItemIds;
+
+        // Nếu không có selected_items, truyền subtotal = 0 và cartItems rỗng
+        if (empty($selectedItemIds)) {
+            $cartItems = collect();
+            $subtotal = 0;
+            return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds'));
+        }
+
+        $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute','variant.variantAttributes.value')
                     ->whereIn('id', $selectedItemIds)
                     ->get();
         $subtotal = $cartItems->sum(function ($item) {
@@ -49,7 +56,7 @@ class CheckoutController extends Controller
         }
 
         // Truy vấn cart_details với quan hệ product và variant
-        $cartItems = Cartdetail::with('product','cart','variant.variantAttributes.attribute','variant.variantAttributes.value')
+        $cartItems = CartDetail::with('product','cart','variant.variantAttributes.attribute','variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
 
