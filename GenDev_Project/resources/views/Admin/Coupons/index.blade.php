@@ -10,7 +10,20 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('coupons.create') }}" class="btn btn-primary mb-3">+ Thêm mã mới</a>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ route('coupons.create') }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Thêm mã mới
+        </a>
+
+        <a href="{{ route('coupons.trashed') }}" class="btn btn-outline-danger position-relative">
+            <i class="fa fa-trash"></i> Thùng rác
+            @if(isset($trashedCount) && $trashedCount > 0)
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ $trashedCount }}
+                </span>
+            @endif
+        </a>
+    </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
@@ -58,13 +71,13 @@
                             <span class="badge bg-secondary">Ngưng</span>
                         @endif
                     </td>
-                    <td>
-                        <a href="{{ route('coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">Sửa</a>
+                    <td class="d-flex gap-1">
+                        {{-- <a href="{{ route('admin.coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">Sửa</a> --}}
 
-                        <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')">
+                        <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger">Xóa</button>
+                            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
                         </form>
                     </td>
                 </tr>

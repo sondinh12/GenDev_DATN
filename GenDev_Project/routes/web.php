@@ -142,6 +142,12 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
     
     Route::resource('coupons', CouponsController::class);
+
+    // ==== Thùng rác mã giảm giá ====
+    Route::get('/coupons/trashed', [CouponsController::class, 'trashed'])->name('coupons.trashed');
+    Route::put('/coupons/{id}/restore', [CouponsController::class, 'restore'])->name('admin.coupons.restore');
+    Route::delete('/coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('admin.coupons.forceDelete');
+
 });
 
 Route::resource('/product', ClientProductController::class);

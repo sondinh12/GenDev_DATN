@@ -15,20 +15,20 @@ class CouponsController extends Controller
     public function index()
     {
         $coupons = Coupon::with('creator')
-                    ->orderByDesc('created_at')
-                    ->whereNull('deleted_at') // chỉ lấy bản ghi chưa bị xoá
+                    ->latest()
                     ->paginate(10);
 
-        return view('admin.coupons.index', compact('coupons'));
-    }
+        $trashedCount = Coupon::onlyTrashed()->count();
 
+        return view('admin.coupons.index', compact('coupons', 'trashedCount'));
+    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.coupons.create'); // Blade form tạo mới
+        return view('admin.coupons.create');
     }
 
     /**
@@ -38,7 +38,6 @@ class CouponsController extends Controller
     {
         $data = $request->validated();
 
-        // Gắn thêm user_id nếu cần (giả định bạn muốn lưu người tạo)
         $data['user_id'] = Auth::id();
         $data['total_used'] = 0;
         $data['status'] = $request->has('status') ? 1 : 0;
@@ -49,38 +48,63 @@ class CouponsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Remove the specified resource from storage (soft delete).
+     */
+    public function destroy(string $id)
+    {
+        $coupon = Coupon::findOrFail($id);
+        $coupon->delete();
+
+        return redirect()->route('admin.coupons.index')->with('success', 'Mã giảm giá đã được đưa vào thùng rác.');
+    }
+
+    /**
+     * Hiển thị danh sách thùng rác.
+     */
+    public function trashed()
+    {
+        $coupons = Coupon::onlyTrashed()->paginate(10);
+        return view('admin.coupons.trashed', compact('coupons'));
+    }
+
+
+    /**
+     * Khôi phục coupon đã bị xóa mềm.
+     */
+    public function restore($id)
+    {
+        $coupon = Coupon::onlyTrashed()->findOrFail($id);
+        $coupon->restore();
+
+        return redirect()->route('admin.coupons.trashed')->with('success', 'Khôi phục mã giảm giá thành công.');
+    }
+
+    /**
+     * Xóa vĩnh viễn coupon.
+     */
+    public function forceDelete($id)
+    {
+        $coupon = Coupon::onlyTrashed()->findOrFail($id);
+        $coupon->forceDelete();
+
+        return redirect()->route('admin.coupons.trashed')->with('success', 'Đã xoá vĩnh viễn mã giảm giá.');
+    }
+
+    /**
+     * (Chưa triển khai) Show/Edit/Update
      */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update( $request, string $id)
+    public function update($request, string $id)
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $coupon = Coupon::findOrFail($id);
-        $coupon->delete(); // Đây là soft delete
-
-        return redirect()->route('admin.coupons.index')->with('success', 'Mã giảm giá đã được đưa vào thùng rác.');
-    }
-
 }
