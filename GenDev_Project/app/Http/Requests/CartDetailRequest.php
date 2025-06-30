@@ -20,13 +20,14 @@ class CartDetailRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
+
     {
+        $rules = [];
         if ($this->isMethod('post')) {
             $rules = [
                 'product_id' => 'required|exists:products,id',
                 'quantity'   => 'required|integer|min:1',
             ];
-
             if ($this->has('attribute')) {
                 $rules['attribute'] = 'nullable|array';
                 $rules['attribute.*'] = 'exists:attribute_values,id';
