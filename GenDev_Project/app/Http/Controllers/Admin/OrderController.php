@@ -67,12 +67,12 @@ class OrderController extends Controller
         $current = $order->status;
         $new = $request->status;
 
-        // Không thể thay đổi nếu đã hoàn tất hoặc đã hủy
+        // Không thể cập nhật nếu đã hoàn tất hoặc bị hủy
         if (in_array($current, ['completed', 'cancelled'])) {
             return back()->with('error', 'Đơn hàng đã hoàn tất hoặc đã hủy, không thể cập nhật.');
         }
 
-        // Trạng thái được phép cập nhật tiếp theo
+        // Quy định chuyển trạng thái
         $allowedTransitions = [
             'pending' => ['processing', 'cancelled'],
             'processing' => ['shipped', 'cancelled'],
@@ -83,41 +83,60 @@ class OrderController extends Controller
             return back()->with('error', 'Chỉ được chuyển sang trạng thái kế tiếp hoặc hủy.');
         }
 
-        // Nếu chuyển sang 'processing': kiểm tra thanh toán nếu banking/momo, đồng thời trừ kho
+        // Khi chuyển sang "processing" → kiểm tra thanh toán và trừ kho
         if ($new === 'processing') {
             if (in_array($order->payment, ['banking', 'momo']) && $order->payment_status !== 'paid') {
                 return back()->with('error', 'Vui lòng thanh toán trước khi xử lý đơn hàng.');
             }
 
             foreach ($order->orderDetails as $detail) {
-                $variant = $detail->variant;
-                if ($variant && $variant->quantity >= $detail->quantity) {
-                    $variant->quantity -= $detail->quantity;
-                    $variant->save();
+                if ($detail->variant_id) {
+                    $variant = $detail->variant;
+                    if ($variant && $variant->quantity >= $detail->quantity) {
+                        $variant->quantity -= $detail->quantity;
+                        $variant->save();
+                    } else {
+                        return back()->with('error', 'Không đủ hàng trong biến thể để xử lý.');
+                    }
                 } else {
-                    return back()->with('error', 'Không đủ hàng trong kho để xử lý đơn hàng.');
+                    $product = $detail->product;
+                    if ($product && $product->quantity >= $detail->quantity) {
+                        $product->quantity -= $detail->quantity;
+                        $product->save();
+                    } else {
+                        return back()->with('error', 'Không đủ hàng trong sản phẩm để xử lý.');
+                    }
                 }
             }
         }
 
-        // Nếu chuyển sang cancelled: cộng lại hàng
+        // Khi hủy → cộng lại kho
         if ($new === 'cancelled') {
             foreach ($order->orderDetails as $detail) {
-                $variant = $detail->variant;
-                if ($variant) {
-                    $variant->quantity += $detail->quantity;
-                    $variant->save();
+                if ($detail->variant_id) {
+                    $variant = $detail->variant;
+                    if ($variant) {
+                        $variant->quantity += $detail->quantity;
+                        $variant->save();
+                    }
+                } else {
+                    $product = $detail->product;
+                    if ($product) {
+                        $product->quantity += $detail->quantity;
+                        $product->save();
+                    }
                 }
             }
         }
 
-        // Nếu chuyển sang completed: bắt buộc phải đã thanh toán
+        // Khi hoàn tất → bắt buộc phải thanh toán
         if ($new === 'completed') {
             if ($order->payment_status !== 'paid') {
                 return back()->with('error', 'Đơn hàng phải được thanh toán trước khi hoàn tất.');
             }
         }
 
+        // Cập nhật trạng thái
         $order->status = $new;
         $order->save();
 
