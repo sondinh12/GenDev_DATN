@@ -2,31 +2,58 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Coupon;
-use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class CouponSeeder extends Seeder
 {
     public function run(): void
     {
-        for ($i = 1; $i <= 5; $i++) {
-            Coupon::create([
-                'user_id' => -1,
-                'name' => 'Coupon ' . $i,
-                'coupon_code' => 'CODE' . $i,
-                'discount_type' => 'percent', // hoặc 'fixed'
-                'discount_amount' => rand(5, 20),
-                'start_date' => Carbon::now()->subDays(5),
+        $coupons = [
+            [
+                'name' => 'Giảm 50K đơn từ 200K',
+                'coupon_code' => 'GIAM50K',
+                'discount_type' => 'fixed', // hoặc 'percent' tùy loại mã
+                'discount_amount' => 50000, // hoặc phần trăm nếu là percent
+                'start_date' => Carbon::now()->subDays(1),
                 'end_date' => Carbon::now()->addDays(30),
-                'quantity' => rand(10, 100),
+                'quantity' => 100,
                 'status' => 1,
-                'max_coupon' => rand(50000, 200000),
-                'min_coupon' => rand(10000, 40000),
-                'usage_limit' => rand(1, 10),
-                'per_use_limit' => 1,
-                'total_used' => 0,
-            ]);
+                'max_coupon' => 50000,
+                'min_coupon' => 200000,
+                'usage_limit' => 1, // hoặc số lần bạn muốn
+            ],
+            [
+                'name' => 'Giảm 20K toàn bộ đơn hàng',
+                'coupon_code' => 'SALE20K',
+                'discount_type' => 'fixed', // hoặc 'percent' tùy loại mã
+                'discount_amount' => 50000, // hoặc phần trăm nếu là percent
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays(15),
+                'quantity' => 50,
+                'status' => 1,
+                'max_coupon' => 20000,
+                'min_coupon' => 0,
+                'usage_limit' => 1, // hoặc số lần bạn muốn
+            ],
+            [
+                'name' => 'Giảm 10%',
+                'coupon_code' => 'GIAM10',
+                'discount_type' => 'fixed', // hoặc 'percent' tùy loại mã
+                'discount_amount' => 50000, // hoặc phần trăm nếu là percent
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addWeek(),
+                'quantity' => 200,
+                'status' => 1,
+                'max_coupon' => 100000,
+                'min_coupon' => 50000,
+                'usage_limit' => 1, // hoặc số lần bạn muốn
+            ]
+        ];
+
+        foreach ($coupons as $coupon) {
+            Coupon::create($coupon);
         }
     }
 }

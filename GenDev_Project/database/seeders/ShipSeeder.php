@@ -7,13 +7,12 @@ use App\Models\Ship;
 
 class ShipSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        for ($i = 1; $i <= 5; $i++) {
-            Ship::create([
-                'name' => 'Giao hàng ' . $i,
-                'shipping_price' => rand(20000, 50000),
-            ]);
-        }
+        Ship::insert([
+            ['name' => 'Giao hàng tiêu chuẩn', 'shipping_price' => 20000],
+            ['name' => 'Giao hàng nhanh', 'shipping_price' => 30000],
+            ['name' => 'Giao hàng tiết kiệm', 'shipping_price' => 25000],
+        ]);
     }
 }
