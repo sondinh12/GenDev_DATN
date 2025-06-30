@@ -292,7 +292,7 @@
                                                         </div>
                                                     </form>
                                                     <!-- .wc-proceed-to-checkout -->
-                                                    <a class="checkout-button button alt wc-forward" href="checkout.html">
+                                                    <a class="checkout-button button alt wc-forward" href="/checkout">
                                                         Tiến hành thanh toán</a>
                                                     <a class="back-to-shopping" href="shop.html">Quay lại mua sắm</a>
                                                 </div>

@@ -91,15 +91,15 @@ Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy
 //     return view('client.cart.wishlist');
 // })->name('wishlist');
 
-// Route::get('/checkout', function () {
-//     return view('client.checkout.checkout');
-// })->name('checkout');
-// Route::get('/order', function () {
-//     return view('client.checkout.order');
-// })->name('order');
-// Route::get('/track-order', function () {
-//     return view('client.checkout.track-order');
-// })->name('track-order');
+Route::get('/checkout', function () {
+    return view('client.checkout.checkout');
+})->name('checkout');
+Route::get('/order', function () {
+    return view('client.checkout.order');
+})->name('order');
+Route::get('/track-order', function () {
+    return view('client.checkout.track-order');
+})->name('track-order');
 
 // ================= ADMIN =================
 
