@@ -34,4 +34,9 @@ class Coupon extends Model
             ->withPivot('times_used')
             ->withTimestamps();
     }
+        public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }
