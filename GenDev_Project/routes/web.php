@@ -5,6 +5,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,6 @@ use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Admin\OrderController;
 
 // Route::get('/', function () {
 //     return view('admin.apps-chat');
@@ -123,6 +123,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     // Đơn hàng
     Route::middleware(['permission:manage orders'])->group(function () {
         Route::resource('/orders', OrderController::class);
+        Route::put('admin/orders/{order}/update-both', [OrderController::class, 'updateBoth'])->name('admin.orders.update-both');
     });
 
     // Danh mục

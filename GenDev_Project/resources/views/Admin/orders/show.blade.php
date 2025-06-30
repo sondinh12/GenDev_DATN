@@ -1,6 +1,6 @@
 @extends('Admin.layouts.master-without-page-title')
 
-@section('title', 'Chi tiết Đơn hàng')
+@section('title', 'Chi tiết đơn hàng')
 
 @section('content')
 <div class="container-fluid">
@@ -13,7 +13,7 @@
                 <h5 class="fw-bold mb-2">Thông tin khách hàng</h5>
                 <table class="table table-borderless mb-0">
                     <tr>
-                        <th class="w-25">Tên:</th>
+                        <th class="w-25">Họ và tên:</th>
                         <td>{{ $order->user->name ?? $order->name }}</td>
                     </tr>
                     <tr>
@@ -21,15 +21,15 @@
                         <td>{{ $order->email }}</td>
                     </tr>
                     <tr>
-                        <th>Điện thoại:</th>
+                        <th>Số điện thoại:</th>
                         <td>{{ $order->phone }}</td>
                     </tr>
                     <tr>
-                        <th>Địa chỉ:</th>
+                        <th>Địa chỉ nhận hàng:</th>
                         <td>{{ $order->address }}</td>
                     </tr>
                     <tr>
-                        <th>Thành phố:</th>
+                        <th>Tỉnh/Thành phố:</th>
                         <td>{{ $order->city }}</td>
                     </tr>
                     <tr>
@@ -37,24 +37,24 @@
                         <td>{{ $order->ward }}</td>
                     </tr>
                     <tr>
-                        <th>Mã bưu điện:</th>
+                        <th>Mã bưu chính:</th>
                         <td>{{ $order->postcode }}</td>
                     </tr>
                 </table>
             </section>
             <section class="mb-4">
-                <h5 class="fw-bold mb-2">Thông tin vận chuyển & thanh toán</h5>
+                <h5 class="fw-bold mb-2">Thông tin giao hàng & thanh toán</h5>
                 <table class="table table-borderless mb-0">
                     <tr>
                         <th class="w-25">Phương thức thanh toán:</th>
                         <td>{{ $order->payment }}</td>
                     </tr>
                     <tr>
-                        <th>Đơn vị vận chuyển:</th>
+                        <th>Đơn vị giao hàng:</th>
                         <td>{{ $order->ship->name ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <th>Phí ship:</th>
+                        <th>Phí giao hàng:</th>
                         <td>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</td>
                     </tr>
                     <tr>
@@ -64,15 +64,15 @@
                 </table>
             </section>
             <section class="mb-4">
-                <h5 class="fw-bold mb-2">Danh sách sản phẩm</h5>
+                <h5 class="fw-bold mb-2">Danh sách sản phẩm trong đơn</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>STT</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Biến thể</th>
-                                <th>Giá</th>
+                                <th>Đơn giá</th>
                                 <th>Số lượng</th>
                                 <th>Ghi chú</th>
                                 <th>Thuộc tính</th>
@@ -105,14 +105,14 @@
                 </div>
             </section>
             <section class="mb-4">
-                <h5 class="fw-bold mb-2">Tổng kết</h5>
+                <h5 class="fw-bold mb-2">Tổng kết đơn hàng</h5>
                 <table class="table table-borderless mb-0">
                     <tr>
-                        <th class="w-25">Tổng tiền:</th>
+                        <th class="w-25">Tổng tiền hàng:</th>
                         <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                     </tr>
                     <tr>
-                        <th>Phí ship:</th>
+                        <th>Phí giao hàng:</th>
                         <td>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</td>
                     </tr>
                     <tr>
