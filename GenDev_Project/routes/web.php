@@ -20,7 +20,6 @@ use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Admin\OrderController;
 
 // Route::get('/', function () {
 //     return view('admin.apps-chat');

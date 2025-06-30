@@ -69,5 +69,39 @@ class OrderSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
         ]);
+
+        // Thêm seed cho order_details
+        \App\Models\OrderDetail::insert([
+            [
+                'order_id' => 1,
+                'product_id' => 1,
+                'variant_id' => 1,
+                'price' => 100000,
+                'quantity' => 1,
+                'note' => 'Giao nhanh',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'order_id' => 1,
+                'product_id' => 1,
+                'variant_id' => 2,
+                'price' => 50000,
+                'quantity' => 1,
+                'note' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'order_id' => 2,
+                'product_id' => 1,
+                'variant_id' => 3,
+                'price' => 150000,
+                'quantity' => 2,
+                'note' => 'Gói quà',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
     }
 }

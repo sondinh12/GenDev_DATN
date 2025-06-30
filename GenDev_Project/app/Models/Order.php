@@ -31,18 +31,18 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function coupon(): BelongsTo
-    // {
-    //     return $this->belongsTo(Coupon::class);
-    // }
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_id');
+    }
 
-    // public function shipping(): BelongsTo
-    // {
-    //     return $this->belongsTo(Shipping::class, 'shipping_id');
-    // }
+    public function ship()
+    {
+        return $this->belongsTo(Ship::class, 'shipping_id');
+    }
 
-    // public function orderDetails(): HasMany
-    // {
-    //     return $this->hasMany(OrderDetail::class);
-    // }
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id');
+    }
 }
