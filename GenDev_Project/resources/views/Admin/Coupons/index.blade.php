@@ -9,8 +9,8 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-{{-- 
-    <a href="{{ route('coupons.create') }}" class="btn btn-primary mb-3">+ Thêm mã mới</a> --}}
+
+    <a href="{{ route('coupons.create') }}" class="btn btn-primary mb-3">+ Thêm mã mới</a>
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover">

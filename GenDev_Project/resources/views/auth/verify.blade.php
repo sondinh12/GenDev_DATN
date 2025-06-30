@@ -7,14 +7,9 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        @if(session('register_success'))
                         <i class="fa fa-check-circle text-success fa-3x mb-3"></i>
                         <h3 class="fw-bold text-success">Đăng ký thành công!</h3>
                         <p class="text-muted">Cảm ơn bạn đã đăng ký tài khoản tại GenDev</p>
-                        @php session()->forget('register_success'); @endphp
-                        @else
-                        <i class="fa fa-user-plus text-primary fa-3x mb-3"></i>
-                        @endif
                     </div>
 
                     <div class="alert alert-info mb-4">

@@ -106,10 +106,8 @@
                         </span>
                     </div>
 
-                    <form method="POST" action="{{ route('cart-detail') }}" class="d-flex flex-column align-items-start gap-3 mt-3 flex-wrap"> 
-                          @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <input type="hidden" name="quantity" value="1">
+                    <form method="post" action="" class="d-flex flex-column align-items-start gap-3 mt-3 flex-wrap">
+                        @csrf
                         @php
                             // Gom nhóm các thuộc tính và giá trị từ các biến thể
                             $attributes = [];
@@ -136,24 +134,20 @@
                             }
                             // Lấy thêm 2 giá trị đầu tiên của $attributes (nếu có)
                             $attributes = array_slice($attributes, 0, 2, true);
-                            
                         @endphp
                         @foreach($attributes as $attrName => $attr)
                             <div class="mb-2 w-100">
                                 <label class="form-label fw-semibold">{{ $attrName }}</label>
                                 <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
-                                        {{-- OPTION mặc định không có giá trị, yêu cầu người dùng chọn --}}
-                                        <option value="" disabled selected>-- Chọn {{ $attrName }} --</option>
                                     @foreach($attr['values'] as $valId => $val)
                                         <option value="{{ $valId }}">{{ $val }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         @endforeach
-                    
-                        <div>    
+                        <div class="d-flex gap-4 mt-3 w-100">
                             <button class="btn btn-primary btn-lg rounded-pill px-4 fw-semibold shadow flex-grow-1" type="submit" style="margin-right: 10px;"><i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ</button>
-                            <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-semibold shadow-sm flex-grow-1">
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-semibold shadow-sm flex-grow-1">
                                 <i class="fas fa-arrow-left me-1"></i>Quay lại
                             </a>
                         </div>

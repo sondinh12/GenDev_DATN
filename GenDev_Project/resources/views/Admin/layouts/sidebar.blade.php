@@ -41,22 +41,12 @@
                         <i class="fa-regular fa-user"></i>
                         <span>Tài khoản</span>
                     </a>
-                <li>
-
-                </li>
-
-                <li>
-                    <a href="{{ url('admin/orders') }}">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Danh sách đơn hàng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url('admin/coupons') }}">
-                        <i class="fas fa-shopping-cart"></i>
+                <li>                <li>
+                    <a href="{{ url('/admin/coupon') }}" class="">
+                        <i class="fa-regular fa-user"></i>
                         <span>Mã Giảm Giá</span>
                     </a>
-                </li>
+                <li>
             </ul>
         </div>
         <!-- Sidebar -->
