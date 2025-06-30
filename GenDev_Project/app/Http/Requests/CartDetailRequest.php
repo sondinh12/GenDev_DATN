@@ -29,9 +29,6 @@ class CartDetailRequest extends FormRequest
             ];
         }
 
-
-
-
         if ($this->has('attribute')) {
             $rules['attribute'] = 'nullable|array';
             $rules['attribute.*'] = 'exists:attribute_values,id';
