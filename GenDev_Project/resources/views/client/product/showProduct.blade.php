@@ -70,21 +70,34 @@
                         </div>
                     </div>
                     <div class="mb-3 border-bottom pb-2">
-                        @if(count($product->variants))
-                            <span class="text-muted text-decoration-line-through ms-3" style="@if(!$product->variants[0]->sale_price || $product->variants[0]->sale_price == $product->variants[0]->price) display:none; @endif">
-                                {{ number_format($product->variants[0]->price) }}đ
-                            </span>
-                            <span class="fs-2 fw-bold text-danger">
-                                {{ number_format($product->variants[0]->sale_price ?? $product->variants[0]->price) }}đ
-                            </span>
-                        @else
-                            @if($product->sale_price)
-                                <span class="text-muted text-decoration-line-through ms-3">{{ number_format($product->price) }}đ</span>
-                                <span class="badge bg-danger ms-2">-{{ round((($product->price - $product->sale_price) / $product->price) * 100) }}%</span>
-                                <br>
+                        <span id="variant-origin-price" class="text-muted text-decoration-line-through ms-3" style="display:none; text-decoration: line-through;">
+                            {{-- Sẽ được cập nhật động bằng JS --}}
+                        </span>
+                        <span id="variant-sale-price" class="fs-2 fw-bold text-danger">
+                            @php
+                                $min = null; $max = null;
+                                if(count($product->variants)) {
+                                    foreach($product->variants as $v) {
+                                        $sale = $v->sale_price ?? $v->price;
+                                        if($min === null || $sale < $min) $min = $sale;
+                                        if($max === null || $sale > $max) $max = $sale;
+                                    }
+                                }
+                            @endphp
+                            @if(count($product->variants))
+                                @if($min == $max)
+                                    {{ number_format($min) }}đ
+                                @else
+                                    {{ number_format($min) }}đ - {{ number_format($max) }}đ
+                                @endif
+                            @else
+                                @if($product->sale_price)
+                                    {{ number_format($product->sale_price) }}đ
+                                @else
+                                    {{ number_format($product->price) }}đ
+                                @endif
                             @endif
-                            <span class="fs-2 fw-bold text-danger">@if($product->sale_price){{ number_format($product->sale_price) }}đ@else{{ number_format($product->price) }}đ@endif</span>
-                        @endif
+                        </span>
                     </div>
                     <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
                         <span class="fw-semibold">Mô tả:</span>
@@ -330,7 +343,6 @@ $(function() {
 
     // Variant price/quantity logic
     var variantMap = @json($variantMap);
-    var attrIds = @json(array_column($attributes, 'id'));
     function getSelectedKey() {
         var key = [];
         $('.variant-select').each(function() {
@@ -341,21 +353,28 @@ $(function() {
         key.sort();
         return key.join('-');
     }
-    function updateVariantInfo() {
-        var key = getSelectedKey();
-        var info = variantMap[key];
-        if(info) {
-            if(info.price != info.origin_price) {
-                $('#variant-origin-price').text(info.origin_price.toLocaleString('vi-VN') + 'đ').show();
-            } else {
-                $('#variant-origin-price').hide();
+    function allAttrSelected() {
+        var allSelected = true;
+        $('.variant-select').each(function() {
+            if (!$(this).val()) {
+                allSelected = false;
             }
-            $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
-            $('#variant-quantity').text(info.quantity);
-        } else {
-            $('#variant-origin-price').hide();
-            $('#variant-sale-price').text('');
-            $('#variant-quantity').text('');
+        });
+        return allSelected;
+    }
+    function updateVariantInfo() {
+        if (allAttrSelected()) {
+            var key = getSelectedKey();
+            var info = variantMap[key];
+            if(info) {
+                if(info.price != info.origin_price) {
+                    $('#variant-origin-price').text(info.origin_price.toLocaleString('vi-VN') + 'đ').show();
+                } else {
+                    $('#variant-origin-price').hide();
+                }
+                $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
+                $('#variant-quantity').text(info.quantity);
+            }
         }
     }
     $('.variant-select').on('change', updateVariantInfo);
