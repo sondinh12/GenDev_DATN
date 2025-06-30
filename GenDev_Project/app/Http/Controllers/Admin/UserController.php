@@ -23,7 +23,6 @@ class UserController extends Controller
             $search = $request->get('search');
             $query->where('name', 'like', "%{$search}%");
         }
-        // auth()->loginUsingIdv(3);
         $users = $query->paginate(10);
 
         // auth()->loginUsingId(1);
