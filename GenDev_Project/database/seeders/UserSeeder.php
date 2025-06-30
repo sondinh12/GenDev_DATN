@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -58,5 +59,12 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+        // Gán role Spatie cho từng user
+        $admin = User::where('email', 'admin@example.com')->first();
+        if ($admin) $admin->assignRole('admin');
+        $staff = User::where('email', 'staff@example.com')->first();
+        if ($staff) $staff->assignRole('staff');
+        $user = User::where('email', 'kenhoangkhoaghost@gmail.com')->first();
+        if ($user) $user->assignRole('user');
     }
 }
