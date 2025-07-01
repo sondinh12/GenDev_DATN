@@ -15,7 +15,7 @@
             <i class="fa fa-plus"></i> Thêm mã mới
         </a>
 
-        <a href="{{ route('coupons.trashed') }}" class="btn btn-outline-danger position-relative">
+        <a href="{{ route('admin.coupons.trashed') }}" class="btn btn-outline-danger position-relative">
             <i class="fa fa-trash"></i> Thùng rác
             @if(isset($trashedCount) && $trashedCount > 0)
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -57,7 +57,7 @@
                     </td>
                     <td>
                         @if($coupon->discount_type == 'percent')
-                            {{ $coupon->discount_amount }}%
+                            {{ (int)$coupon->discount_amount }}%
                         @else
                             {{ number_format($coupon->discount_amount, 0, ',', '.') }}₫
                         @endif
@@ -72,7 +72,7 @@
                         @endif
                     </td>
                     <td class="d-flex gap-1">
-                        {{-- <a href="{{ route('admin.coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">Sửa</a> --}}
+                        <a href="{{ route('coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">Sửa</a>
 
                         <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')" style="display:inline-block;">
                             @csrf

@@ -6,19 +6,20 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCouponRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true; // ✔ Cho phép thực hiện request
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    protected function prepareForValidation()
+    {
+        if ($this->input('discount_type') === 'fixed') {
+            $this->merge([
+                'max_coupon' => 0,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -40,7 +41,19 @@ class StoreCouponRequest extends FormRequest
             'quantity' => 'required|integer|min:1|max:10000',
             'status' => 'required|boolean',
             'min_coupon' => 'nullable|numeric|min:0',
-            'max_coupon' => 'nullable|numeric|min:0|gte:discount_amount',
+            'max_coupon' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    if (request('discount_type') === 'percent') {
+                        $discount = request('discount_amount');
+                        if (!is_null($value) && $value < $discount) {
+                            $fail('Giá trị giảm tối đa phải lớn hơn hoặc bằng giá trị giảm.');
+                        }
+                    }
+                }
+            ],
             'usage_limit' => 'nullable|integer|min:1',
             'per_use_limit' => 'nullable|integer|min:1|lte:usage_limit',
         ];
@@ -83,7 +96,6 @@ class StoreCouponRequest extends FormRequest
 
             'max_coupon.numeric' => 'Giá trị tối đa giảm phải là số.',
             'max_coupon.min' => 'Giá trị giảm tối đa không được âm.',
-            'max_coupon.gte' => 'Giá trị giảm tối đa phải lớn hơn hoặc bằng giá trị giảm.',
 
             'usage_limit.integer' => 'Giới hạn sử dụng phải là số nguyên.',
             'usage_limit.min' => 'Giới hạn sử dụng phải ít nhất là 1.',
@@ -93,5 +105,4 @@ class StoreCouponRequest extends FormRequest
             'per_use_limit.lte' => 'Giới hạn mỗi người dùng không được vượt quá tổng số lượt dùng.',
         ];
     }
-
 }

@@ -1,6 +1,6 @@
 @extends('Admin.layouts.master-without-page-title')
 
-@section('title', 'Thùng rác - Mã giảm giá')
+@section('title', 'Thùng rác mã giảm giá')
 
 @section('content')
 <div class="container mt-4">
@@ -10,33 +10,32 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('coupons.index') }}" class="btn btn-secondary mb-3">
-        <i class="fa fa-arrow-left"></i> Quay lại danh sách
-    </a>
-
-    @if($coupons->isEmpty())
-        <div class="alert alert-info">Không có mã nào trong thùng rác.</div>
-    @else
     <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-danger">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
                 <tr>
                     <th>#</th>
                     <th>Mã</th>
                     <th>Tên</th>
                     <th>Loại giảm</th>
                     <th>Giá trị</th>
-                    <th>Đã dùng</th>
-                    <th>Thao tác</th>
+                    <th>Hết hạn</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($coupons as $index => $coupon)
+                @foreach($trashedCoupons as $index => $coupon)
                 <tr>
-                    <td>{{ $index + $coupons->firstItem() }}</td>
+                    <td>{{ $index + 1 }}</td>
                     <td>{{ $coupon->coupon_code }}</td>
                     <td>{{ $coupon->name }}</td>
-                    <td>{{ $coupon->discount_type == 'percent' ? 'Phần trăm' : 'Cố định' }}</td>
+                    <td>
+                        @if($coupon->discount_type == 'percent')
+                            Phần trăm
+                        @else
+                            Cố định
+                        @endif
+                    </td>
                     <td>
                         @if($coupon->discount_type == 'percent')
                             {{ $coupon->discount_amount }}%
@@ -44,33 +43,28 @@
                             {{ number_format($coupon->discount_amount, 0, ',', '.') }}₫
                         @endif
                     </td>
-                    <td>{{ $coupon->total_used }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y') }}</td>
                     <td class="d-flex gap-1">
-                        <form action="{{ route('admin.coupons.restore', $coupon->id) }}" method="POST">
+                        <form action="{{ route('coupons.restore', $coupon->id) }}" method="POST" style="display:inline-block;">
                             @csrf
-                            @method('PUT')
-                            <button class="btn btn-success btn-sm" title="Khôi phục">
-                                <i class="fa fa-undo"></i>
-                            </button>
+                            <button type="submit" class="btn btn-sm btn-success">Khôi phục</button>
                         </form>
-
-                        <form action="{{ route('admin.coupons.forceDelete', $coupon->id) }}" method="POST" onsubmit="return confirm('Xoá vĩnh viễn mã này?')">
+                        <form action="{{ route('coupons.forceDelete', $coupon->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa vĩnh viễn?')" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" title="Xoá vĩnh viễn">
-                                <i class="fa fa-trash"></i>
-                            </button>
+                            <button type="submit" class="btn btn-sm btn-danger">Xóa vĩnh viễn</button>
                         </form>
                     </td>
                 </tr>
                 @endforeach
+
+                @if($trashedCoupons->isEmpty())
+                    <tr>
+                        <td colspan="7" class="text-center">Không có mã trong thùng rác</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     </div>
-
-    <div class="d-flex justify-content-end">
-        {{ $coupons->links() }}
-    </div>
-    @endif
 </div>
 @endsection

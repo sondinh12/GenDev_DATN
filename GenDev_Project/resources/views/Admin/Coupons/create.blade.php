@@ -23,7 +23,7 @@
 
         <div class="mb-3">
             <label for="discount_type">Loại giảm giá</label>
-            <select name="discount_type" class="form-control @error('discount_type') is-invalid @enderror">
+            <select name="discount_type" class="form-control @error('discount_type') is-invalid @enderror" id="discount_type">
                 <option value="">-- Chọn loại giảm --</option>
                 <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>Phần trăm</option>
                 <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Cố định</option>
@@ -83,9 +83,10 @@
             @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        <div class="mb-3">
+        <!-- Trường hiện khi chọn 'percent' -->
+        <div class="mb-3" id="maxCouponWrapper">
             <label for="max_coupon">Giảm tối đa</label>
-            <input type="number" name="max_coupon" class="form-control @error('max_coupon') is-invalid @enderror" value="{{ old('max_coupon') }}">
+            <input type="number" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" value="{{ old('max_coupon', 0) }}">
             @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
@@ -93,4 +94,25 @@
         <a href="{{ route('coupons.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>
 </div>
+
+<!-- Script ẩn/hiện và xử lý max_coupon -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const discountTypeSelect = document.getElementById('discount_type');
+        const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+        const maxCouponInput = document.getElementById('max_coupon_input');
+
+        function toggleMaxCouponField() {
+            if (discountTypeSelect.value === 'fixed') {
+                maxCouponWrapper.style.display = 'none';
+                maxCouponInput.value = 0;
+            } else {
+                maxCouponWrapper.style.display = '';
+            }
+        }
+
+        toggleMaxCouponField();
+        discountTypeSelect.addEventListener('change', toggleMaxCouponField);
+    });
+</script>
 @endsection

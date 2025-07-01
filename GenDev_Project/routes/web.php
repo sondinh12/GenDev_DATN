@@ -143,10 +143,12 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     
     Route::resource('coupons', CouponsController::class);
 
-    // ==== Thùng rác mã giảm giá ====
-    Route::get('/coupons/trashed', [CouponsController::class, 'trashed'])->name('coupons.trashed');
-    Route::put('/coupons/{id}/restore', [CouponsController::class, 'restore'])->name('admin.coupons.restore');
-    Route::delete('/coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('admin.coupons.forceDelete');
+    Route::get('coupons/trashed', [CouponController::class, 'trashed'])->name('admin.coupons.trashed');
+    Route::post('/coupons/{id}/restore', [CouponController::class, 'restore'])->name('coupons.restore');
+    Route::delete('/coupons/{id}/force-delete', [CouponController::class, 'forceDelete'])->name('coupons.forceDelete');
+    // Route::get('/coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
+    // Route::put('/coupons/{id}/restore', [CouponsController::class, 'restore'])->name('admin.coupons.restore');
+    // Route::delete('/coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('admin.coupons.forceDelete');
 
 });
 
