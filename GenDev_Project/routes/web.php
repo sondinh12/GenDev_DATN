@@ -141,15 +141,20 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::put('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'update'])->name('categories_minis.update');
     Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
     
-    Route::resource('coupons', CouponsController::class);
+    Route::resource('coupons', CouponsController::class)->names([
+        'index' => 'coupons.index',
+        'create' => 'coupons.create',
+        'store' => 'coupons.store',
+        'edit' => 'coupons.edit',
+        'update' => 'coupons.update',
+        'destroy' => 'coupons.destroy',
+        'show' => 'coupons.show',
+    ]);
 
-    Route::get('coupons/trashed', [CouponController::class, 'trashed'])->name('admin.coupons.trashed');
-    Route::post('/coupons/{id}/restore', [CouponController::class, 'restore'])->name('coupons.restore');
-    Route::delete('/coupons/{id}/force-delete', [CouponController::class, 'forceDelete'])->name('coupons.forceDelete');
-    // Route::get('/coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
-    // Route::put('/coupons/{id}/restore', [CouponsController::class, 'restore'])->name('admin.coupons.restore');
-    // Route::delete('/coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('admin.coupons.forceDelete');
-
+    // Thùng rác, khôi phục, xóa vĩnh viễn
+    Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
+    Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('admin.coupons.restore');
+    Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('admin.coupons.forceDelete');
 });
 
 Route::resource('/product', ClientProductController::class);
