@@ -110,8 +110,9 @@ class CheckoutController extends Controller
                 'ward' => $request->ward,
                 'postcode' => $request->postcode,
                 'payment' => $request->payment_method,
+                'payment_status'=>'paid',
                 'total' => $total,
-                'status' => 1,
+                'status' => 'pending',
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng

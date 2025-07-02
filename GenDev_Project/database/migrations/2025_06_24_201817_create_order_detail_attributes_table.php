@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('order_detail_attributes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("order_detail_id");
-            $table->string("attribute_name",255);
-            $table->string("attribute_value",255);
-            $table->timestamps();
+            $table->foreignId('order_detail_id')->constrained()->onDelete('cascade');
 
-            // fk
-            $table->foreign("order_detail_id")->references("id")->on("order_details");
+            $table->string('attribute_name');
+            $table->string('attribute_value');
+
+            $table->timestamps();
         });
     }
 

@@ -383,15 +383,15 @@
                                             <div class="woocommerce-checkout-payment" id="payment">
                                                 <ul class="wc_payment_methods payment_methods methods">
                                                     <li class="wc_payment_method payment_method_bacs">
-                                                        <input type="radio" data-order_button_text="" checked="checked" value="1" name="payment_method" class="input-radio">
+                                                        <input type="radio" data-order_button_text="" checked="checked" value="cod" name="payment_method" class="input-radio">
                                                         <label for="payment_method_bacs">Direct bank transfer</label>
                                                     </li>
                                                     <li class="wc_payment_method payment_method_cheque">
-                                                        <input type="radio" data-order_button_text="" value="2" name="payment_method" class="input-radio">
+                                                        <input type="radio" data-order_button_text="" value="banking" name="payment_method" class="input-radio">
                                                         <label for="payment_method_cheque">Check payments</label>
                                                     </li>
                                                     <li class="wc_payment_method payment_method_cod">
-                                                        <input type="radio" data-order_button_text="" value="3" name="payment_method" class="input-radio">
+                                                        <input type="radio" data-order_button_text="" value="momo" name="payment_method" class="input-radio">
                                                         <label for="payment_method_cod">Cash on deliver</label>
                                                     </li>
                                                 </ul>
