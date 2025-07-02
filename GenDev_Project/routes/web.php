@@ -1,12 +1,7 @@
 <?php
 
 
-session_start();
-
-
 use App\Http\Controllers\Client\CartController;
-
-
 
 
 session_start();
