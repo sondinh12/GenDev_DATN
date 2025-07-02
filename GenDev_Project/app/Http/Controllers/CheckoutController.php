@@ -109,7 +109,7 @@ class CheckoutController extends Controller
                 'city' => $request->city,
                 'ward' => $request->ward,
                 'postcode' => $request->postcode,
-                'payment' => $request->payment,
+                'payment' => $request->payment_method,
                 'total' => $total,
                 'status' => 1,
             ]);
