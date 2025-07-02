@@ -29,15 +29,12 @@ class Order extends Model
 
     public function orderDetails(){
         return $this->hasMany(OrderDetail::class,'order_id');
-
+    }
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
 
-    }
-
-    public function user(){
-        return $this->belongsTo(User::class);
     }
 
     public function coupon(){
@@ -60,5 +57,5 @@ class Order extends Model
     }
 }   
 
-}
+
 

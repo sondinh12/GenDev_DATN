@@ -56,7 +56,7 @@ class Coupon extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
-
+    }
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
@@ -65,9 +65,4 @@ class Coupon extends Model
         'status' => 'boolean',
     ];
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-
-    }
 }
