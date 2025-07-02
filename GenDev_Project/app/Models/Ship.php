@@ -13,12 +13,17 @@ class Ship extends Model
 
     protected $fillable = [
         'name',
-        'shipping_price',
+        'shipping_price'
     ];
+
+
+    public function order(){
+        return $this->belongsTo(Order::class,'shipping_id');
 
     // Một phương thức nếu bạn muốn quan hệ với Order
     public function orders()
     {
         return $this->hasMany(Order::class, 'shipping_id');
+
     }
 }

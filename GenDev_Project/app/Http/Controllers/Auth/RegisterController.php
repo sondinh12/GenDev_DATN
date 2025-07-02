@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -58,6 +57,7 @@ class RegisterController extends Controller
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
             'gender' => ['required', 'in:Nam,Nữ,Khác'],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
         return Validator::make($data, $rules);
     }
@@ -70,11 +70,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // Lưu trữ ảnh đại diện vào thư mục storage/app/public/images
+        $avatarPath = $data['avatar']->store('images', 'public');
+        // Cập nhật đường dẫn ảnh đại diện trong dữ liệu người dùng
+        $data['avatar'] = $avatarPath;
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' => null,
+            'avatar' => $data['avatar'],
             'address' => $data['address'],
             'phone' => $data['phone'],
             'gender' => $data['gender'],
@@ -83,13 +87,5 @@ class RegisterController extends Controller
         ]);
         $user->assignRole('user');
         return $user;
-    }
-
-    public function register(Request $request)
-    {
-        $response = $this->traitRegister($request);
-        // Sau khi đăng ký thành công, lưu session flash
-        session()->flash('register_success', true);
-        return $response;
     }
 }

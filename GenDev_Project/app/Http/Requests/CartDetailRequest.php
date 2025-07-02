@@ -21,8 +21,22 @@ class CartDetailRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
         if ($this->isMethod('post')) {
+
+        return [
+            'product_id' => 'required|exists:products,id',
+            'variant_id' => 'required|exists:product_variants,id',
+            'quantity'   => 'required|integer|min:1',
+        ];
+    }
+
+    if ($this->isMethod('put')) {
+        return [
+            'quantities' => 'required|array',
+            'quantities.*' => 'required|integer|min:1',
+        ];
+    }
+
             $rules = [
                 'product_id' => 'required|exists:products,id',
                 'quantity' => 'required|integer|min:1',
@@ -42,7 +56,8 @@ class CartDetailRequest extends FormRequest
             ];
         }
 
-        return $rules;
+
+    return [];
     }
 
     public function massages()
@@ -51,8 +66,8 @@ class CartDetailRequest extends FormRequest
             'product_id.required' => 'Vui lòng chọn sản phẩm.',
             'product_id.exists' => 'Sản phẩm không tồn tại trong hệ thống.',
 
-            // 'variant_id.required' => 'Vui lòng chọn biến thể sản phẩm.',
-            // 'variant_id.exists' => 'Biến thể sản phẩm không tồn tại trong hệ thống.',
+            'variant_id.required' => 'Vui lòng chọn biến thể sản phẩm.',
+            'variant_id.exists' => 'Biến thể sản phẩm không tồn tại trong hệ thống.',
 
             'quantity.required' => 'Vui lòng nhập số lượng.',
             'quantity.integer' => 'Số lượng phải là một số nguyên.',
@@ -60,13 +75,7 @@ class CartDetailRequest extends FormRequest
 
             'quantities.required' => 'Không có dữ liệu cập nhật.',
             'quantities.*.integer' => 'Số lượng phải là số.',
-            'quantities.*.min' => 'Số lượng ít nhất là 1.',
-
-            'attribute.array' => 'Dữ liệu thuộc tính không hợp lệ.',
-            'attribute.*.exists' => 'Giá trị thuộc tính không hợp lệ.',
-            'quantities.required' => 'Không có dữ liệu cập nhật.',
-            'quantities.*.integer' => 'Số lượng phải là số.',
-            'quantities.*.min' => 'Số lượng ít nhất là 1.',
+            'quantities.*.min' => 'Số lượng ít nhất là 1.'
         ];
     }
 }
