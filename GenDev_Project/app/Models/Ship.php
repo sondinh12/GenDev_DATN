@@ -19,6 +19,7 @@ class Ship extends Model
 
     public function order(){
         return $this->belongsTo(Order::class,'shipping_id');
+    }
 
     // Một phương thức nếu bạn muốn quan hệ với Order
     public function orders()
