@@ -1,5 +1,9 @@
 <?php
 
+
+session_start();
+
+
 use App\Http\Controllers\Client\CartController;
 
 
@@ -11,6 +15,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use Illuminate\Support\Facades\Route;
@@ -30,14 +35,13 @@ use App\Http\Controllers\Auth\VerificationController;
 
 
 
+
 // Route::get('/', function () {
 //     return view('admin.apps-chat');
 // });
 
 
-Route::resource('/products', ProductController::class);
-Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
-Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+
 
 // Route::get('/products', function () {
 
@@ -79,16 +83,16 @@ Route::get('/products/{id}', [App\Http\Controllers\Client\ProductController::cla
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
-Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class,'index'])->name('checkout');
-Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.submit');
-Route::post('/apply_coupon',[CouponController::class,'apply'])->name('apply_coupon');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
+Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
 
 // hành dộng trang cart
-Route::match(['post','put'],'/handleaction',[CartDetailController::class,'handleAction'])->name('cart.handleaction'); 
+Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');  
+Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
 Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
 Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
 Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
@@ -112,6 +116,7 @@ Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy
 
 Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
+
     Route::resource('/products', ProductController::class);
     Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
     Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
@@ -155,6 +160,53 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
     Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('admin.coupons.restore');
     Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('admin.coupons.forceDelete');
+
+
+    // Sản phẩm
+    Route::middleware(['permission:manage products'])->group(function () {
+        Route::resource('/products', ProductController::class);
+        Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+        Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+        Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
+        Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
+        Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
+        Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
+        Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
+        Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+        Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
+        Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+        Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+    });
+
+    // Đơn hàng
+    Route::middleware(['permission:manage orders'])->group(function () {
+        Route::resource('/orders', OrderController::class);
+        Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
+        Route::put('orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.update-payment-status');
+    });
+
+    // Danh mục
+    Route::middleware(['permission:manage categories'])->group(function () {
+        Route::resource('categories', CategoryController::class);
+        Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
+        Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
+        Route::post('/categories/{id}/minis/store', [CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
+        Route::get('admin/categories/{category_id}/minis/{id}/edit', [CategoryMiniController::class, 'edit'])->name('categories_minis.edit');
+        Route::put('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'update'])->name('categories_minis.update');
+        Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
+    });
+
+    // Người dùng
+    Route::middleware(['permission:manage users'])->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+        Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
+        Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+        Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+    });
+
+    // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
+
 });
 
 Route::resource('/product', ClientProductController::class);

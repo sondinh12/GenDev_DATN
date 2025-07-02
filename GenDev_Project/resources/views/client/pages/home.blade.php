@@ -329,11 +329,30 @@
                                                             <a href="" class="text-decoration-none text-dark">{{ $product->name }}</a>
                                                         </h6>
                                                         <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
-                                                            @if($product->sale_price)
-                                                            <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
-                                                            <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
+                                                            @if($product->variants && $product->variants->count())
+                                                                @php
+                                                                    $salePrices = $product->variants->pluck('sale_price')->filter(function($v) { return $v > 0; });
+                                                                    if ($salePrices->count()) {
+                                                                        $minPrice = $salePrices->min();
+                                                                        $maxPrice = $salePrices->max();
+                                                                    } else {
+                                                                        $prices = $product->variants->pluck('price')->filter();
+                                                                        $minPrice = $prices->min();
+                                                                        $maxPrice = $prices->max();
+                                                                    }
+                                                                @endphp
+                                                                @if($minPrice == $maxPrice)
+                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ</span>
+                                                                @else
+                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ - {{ number_format($maxPrice) }}đ</span>
+                                                                @endif
                                                             @else
-                                                            <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
+                                                                @if($product->sale_price)
+                                                                    <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
+                                                                    <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
+                                                                @else
+                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
+                                                                @endif
                                                             @endif
                                                         </div>
                                                         <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">

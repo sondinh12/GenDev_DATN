@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Order;
@@ -10,21 +11,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Coupon extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'user_id',
         'name',
         'coupon_code',
-        'discount_type',
-        'discount_amount',
         'start_date',
         'end_date',
         'quantity',
         'status',
         'max_coupon',
         'min_coupon',
-        'usage_limit',
-        'per_use_limit',
-        'total_used',
     ];
 
 
@@ -59,5 +56,18 @@ class Coupon extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'max_coupon' => 'decimal:2',
+        'min_coupon' => 'decimal:2',
+        'status' => 'boolean',
+    ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+
     }
 }
