@@ -68,10 +68,14 @@ Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::clas
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
 })->name('checkout.success');
+Route::get('/checkout-failed', function () {
+    return view('client.checkout.checkout-failed');
+})->name('checkout.failed');
 Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
 
 // hành dộng trang cart
