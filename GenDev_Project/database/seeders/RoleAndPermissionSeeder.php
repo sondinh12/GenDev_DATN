@@ -15,12 +15,19 @@ class RoleAndPermissionSeeder extends Seeder
         $staffRole = Role::firstOrCreate(['name' => 'staff']);
         $userRole = Role::firstOrCreate(['name' => 'user']);
 
-        // Tạo các permission mẫu
+        // Các quyền cho từng chức năng
         $permissions = [
-            'edit product',
-            'delete product',
-            'view order',
+            // Staff
+            'manage products',
+            'manage comments',
+            'manage orders',
+            'manage banners',
+            // Admin
+            'manage posts',
+            'manage categories',
+            'manage coupons',
             'manage users',
+            'view statistics',
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
@@ -28,7 +35,12 @@ class RoleAndPermissionSeeder extends Seeder
 
         // Gán permission cho role
         $adminRole->syncPermissions($permissions); // admin có tất cả quyền
-        $staffRole->syncPermissions(['edit product', 'view order']); // staff có quyền chỉnh sửa sản phẩm và xem đơn hàng
+        $staffRole->syncPermissions([
+            'manage products',
+            'manage comments',
+            'manage orders',
+            'manage banners',
+        ]); // staff chỉ có quyền quản lý sản phẩm, bình luận, đơn hàng, banner
         $userRole->syncPermissions([]); // user không có quyền đặc biệt
     }
 }

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('discount_amount', 10, 2);
             $table->dateTime("start_date");
             $table->dateTime("end_date");
-            // $table->integer("quantity");
+            $table->integer("quantity");
             $table->tinyInteger("status")->default(1);
             $table->decimal("max_coupon",10,2);
             $table->decimal("min_coupon",10,2);
