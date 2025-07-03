@@ -15,17 +15,24 @@ class HomeController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $newProducts = Product::orderBy('created_at', 'desc')->take(8)->get();
-        
-        // Lấy sản phẩm theo từng danh mục
+        // Lấy sản phẩm mới, kèm gallery, biến thể và thuộc tính biến thể
+        $newProducts = Product::with([
+            'galleries',
+            'variants.variantAttributes.attribute',
+            'variants.variantAttributes.value'
+        ])->orderBy('created_at', 'desc')->take(8)->get();
+        // Lấy sản phẩm theo từng danh mục, kèm gallery, biến thể và thuộc tính biến thể
         $categoryProducts = [];
         foreach ($categories as $category) {
-            $categoryProducts[$category->id] = Product::where('category_id', $category->id)
+            $categoryProducts[$category->id] = Product::with([
+                'galleries',
+                'variants.variantAttributes.attribute',
+                'variants.variantAttributes.value'
+            ])->where('category_id', $category->id)
                 ->orderBy('created_at', 'desc')
                 ->take(8)
                 ->get();
         }
-
         return view('client.pages.home', compact('categories', 'newProducts', 'categoryProducts'));
     }
 

@@ -78,77 +78,16 @@
                                     <i class="fas fa-eye"></i> Xem
                                 </a>
                             <!-- Nút cập nhật trạng thái -->
-                            @if($order->status !== 'completed' && $order->status !== 'cancelled')
+                            {{-- @if($order->status !== 'completed' && $order->status !== 'cancelled')
                             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#editStatusModal-{{ $order->id }}">
                                 <i class="fas fa-edit"></i> Sửa
                             </button>
-                            @endif
+                            @endif --}}
 
 
                         </td>
-                    </tr>
-                    <!-- Modal Cập Nhật Trạng Thái và Thanh Toán -->
-                    <div class="modal fade" id="editStatusModal-{{ $order->id }}" tabindex="-1"
-                        aria-labelledby="editStatusModalLabel-{{ $order->id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-
-                                <!-- Một form xử lý cả hai trạng thái -->
-                                <form action="{{ route('admin.orders.update-both', $order->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editStatusModalLabel-{{ $order->id }}">Cập nhật đơn
-                                            hàng #{{ $order->id }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Đóng"></button>
-                                    </div>
-
-                                    <div class="modal-body">
-                                        <!-- Trạng thái đơn hàng -->
-                                        <div class="form-group mb-3">
-                                            <label for="status-{{ $order->id }}">Trạng thái đơn hàng</label>
-                                            <select name="status" id="status-{{ $order->id }}" class="form-control">
-                                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : ''
-                                                    }}>Chờ xử lý</option>
-                                                <option value="processing" {{ $order->status == 'processing' ?
-                                                    'selected' : '' }}>Đang xử lý</option>
-                                                <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : ''
-                                                    }}>Đang giao</option>
-                                                <option value="completed" {{ $order->status == 'completed' ? 'selected'
-                                                    : '' }}>Hoàn tất</option>
-                                                <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected'
-                                                    : '' }}>Đã hủy</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Trạng thái thanh toán -->
-                                        <div class="form-group">
-                                            <label for="payment_status-{{ $order->id }}">Trạng thái thanh toán</label>
-                                            <select name="payment_status" id="payment_status-{{ $order->id }}"
-                                                class="form-control">
-                                                <option value="unpaid" {{ $order->payment_status == 'unpaid' ?
-                                                    'selected' : '' }}>Chưa thanh toán</option>
-                                                <option value="paid" {{ $order->payment_status == 'paid' ? 'selected' :
-                                                    '' }}>Đã thanh toán</option>
-                                                <option value="cancelled" {{ $order->payment_status == 'cancelled' ?
-                                                    'selected' : '' }}>Đã hủy</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Hủy</button>
-                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
+                    </tr
 
 
 

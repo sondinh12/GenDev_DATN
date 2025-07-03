@@ -12,8 +12,7 @@ class OrderDetailAttribute extends Model
         'attribute_value',
     ];
 
-    public function orderDetail()
-    {
-        return $this->belongsTo(OrderDetail::class, 'order_detail_id');
+    public function orderDetail(){
+        return $this->belongsTo(OrderDetail::class);
     }
 }
