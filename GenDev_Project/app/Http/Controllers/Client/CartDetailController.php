@@ -33,6 +33,7 @@ class CartDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     // public function store(CartDetailRequest $request)
     // {
 
@@ -96,6 +97,7 @@ class CartDetailController extends Controller
 
     //     return redirect()->route('index')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
     // }
+
 
     public function store(CartDetailRequest $request)
     {

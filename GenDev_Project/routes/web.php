@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -70,10 +71,12 @@ Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::clas
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
+
 Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class,'index'])->name('checkout');
 Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.submit');
 Route::post('/apply_coupon',[CouponController::class,'apply'])->name('apply_coupon');
+
 
 // hành dộng trang cart
 Route::match(['post','put'],'/handleaction',[CartDetailController::class,'handleAction'])->name('cart.handleaction'); 

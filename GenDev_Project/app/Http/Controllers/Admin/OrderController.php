@@ -37,40 +37,61 @@ class OrderController extends Controller
         $newStatus = $request->status;
         $newPayment = $request->payment_status;
 
-        // Không được thay đổi nếu đơn đã hoàn thành
-        if ($order->status === 'completed') {
-            return back()->with('error', 'Đơn hàng đã hoàn tất, không thể chỉnh sửa.');
+
+        // Không thể thay đổi nếu đã hoàn tất hoặc đã hủy
+        if (in_array($current, ['completed', 'cancelled'])) {
+            return back()->with('error', 'Đơn hàng đã hoàn tất hoặc đã hủy, không thể cập nhật.');
         }
 
-        // Nếu trạng thái thanh toán là cancelled thì đơn hàng cũng phải cancelled
-        if ($newPayment === 'cancelled' && $newStatus !== 'cancelled') {
-            return back()->with('error', 'Trạng thái đơn hàng phải là "Đã hủy" khi thanh toán bị hủy.');
+        // Trạng thái được phép cập nhật tiếp theo
+        $allowedTransitions = [
+            'pending' => ['processing', 'cancelled'],
+            'processing' => ['shipped', 'cancelled'],
+            'shipped' => ['completed', 'cancelled'],
+        ];
+
+        if (!in_array($new, $allowedTransitions[$current] ?? [])) {
+            return back()->with('error', 'Chỉ được chuyển sang trạng thái kế tiếp hoặc hủy.');
         }
 
-        // Nếu đơn hàng là cancelled thì trạng thái thanh toán phải là cancelled
-        if ($newStatus === 'cancelled' && $newPayment !== 'cancelled') {
-            return back()->with('error', 'Trạng thái thanh toán phải là "Đã hủy" khi đơn hàng bị hủy.');
+        // Nếu chuyển sang 'processing': kiểm tra thanh toán nếu banking/momo, đồng thời trừ kho
+        if ($new === 'processing') {
+            if (in_array($order->payment, ['banking', 'momo']) && $order->payment_status !== 'paid') {
+                return back()->with('error', 'Vui lòng thanh toán trước khi xử lý đơn hàng.');
+            }
+
+            foreach ($order->orderDetails as $detail) {
+                $variant = $detail->variant;
+                if ($variant && $variant->quantity >= $detail->quantity) {
+                    $variant->quantity -= $detail->quantity;
+                    $variant->save();
+                } else {
+                    return back()->with('error', 'Không đủ hàng trong kho để xử lý đơn hàng.');
+                }
+            }
         }
 
-        // Không thể hoàn tất nếu chưa thanh toán
-        if ($newStatus === 'completed' && $newPayment !== 'paid') {
-            return back()->with('error', 'Không thể hoàn tất đơn hàng nếu chưa thanh toán.');
+        // Nếu chuyển sang cancelled: cộng lại hàng
+        if ($new === 'cancelled') {
+            foreach ($order->orderDetails as $detail) {
+                $variant = $detail->variant;
+                if ($variant) {
+                    $variant->quantity += $detail->quantity;
+                    $variant->save();
+                }
+            }
         }
 
-        // Không thể quay lại trạng thái trước đó
-        $steps = ['pending' => 1, 'processing' => 2, 'shipped' => 3, 'completed' => 4];
-        if (
-            isset($steps[$newStatus], $steps[$order->status]) &&
-            $steps[$newStatus] < $steps[$order->status]
-        ) {
-            return back()->with('error', 'Không thể quay lại trạng thái trước đó.');
+        // Nếu chuyển sang completed: bắt buộc phải đã thanh toán
+        if ($new === 'completed') {
+            if ($order->payment_status !== 'paid') {
+                return back()->with('error', 'Đơn hàng phải được thanh toán trước khi hoàn tất.');
+            }
         }
 
-        // Nếu hợp lệ thì cập nhật
-        $order->update([
-            'status' => $newStatus,
-            'payment_status' => $newPayment,
-        ]);
+        $order->status = $new;
+        $order->save();
+
 
         return back()->with('success', 'Cập nhật đơn hàng thành công.');
     }
