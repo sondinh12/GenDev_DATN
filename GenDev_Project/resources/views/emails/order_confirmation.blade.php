@@ -39,7 +39,11 @@
                     </tr>
                     <tr>
                         <th>Trạng thái</th>
-                        <td>{{$order->status_text}}</td>
+                        <td>{{$order->status}}</td>
+                    </tr>
+                    <tr>
+                        <th>Trạng thái thanh toán</th>
+                        <td>{{$order->payment_status}}</td>
                     </tr>
                 </table>
 

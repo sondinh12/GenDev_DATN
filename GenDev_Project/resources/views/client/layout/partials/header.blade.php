@@ -964,17 +964,15 @@
                     <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
-                        <span class="count">{{ $cartCount }}</span>
-                        <span class="amount">
-                            <span class="price-label">Your Cart</span>&#036;136.99</span>
-
+                        <span class="count">2</span>
+                        {{-- <span class="amount"><span class="price-label">Giỏ hàng của bạn</span>&#036;136.99</span> --}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-mini-cart">
                         <li>
                             <div class="widget woocommerce widget_shopping_cart">
                                 <div class="widget_shopping_cart_content">
                                     <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-                                        {{-- <li class="woocommerce-mini-cart-item mini_cart_item">
+                                        <li class="woocommerce-mini-cart-item mini_cart_item">
                                             <a href="#" class="remove" aria-label="Remove this item"
                                                 data-product_id="65" data-product_sku="">×</a>
                                             <a href="{{ asset('single-product-sidebar.html') }}">
@@ -1006,11 +1004,10 @@
                                         <strong>Subtotal:</strong>
                                         <span class="woocommerce-Price-amount amount">
                                             <span class="woocommerce-Price-currencySymbol">$</span>136.99</span>
-                                    </p> --}}
+                                    </p>
                                     <p class="woocommerce-mini-cart__buttons buttons">
                                         <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
-                                        <a href="{{ asset('checkout.html') }}"
-
+                                        <a href="{{ route('checkout') }}"
                                             class="button checkout wc-forward">Checkout</a>
                                     </p>
                                 </div>
