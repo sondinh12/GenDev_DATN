@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('coupon_id');
             $table->unsignedInteger('times_used')->default(0); // 👈 số lần user đã dùng mã
-            
+
             $table->unique(['user_id', 'coupon_id']); // mỗi user dùng mã này chỉ có 1 dòng
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');

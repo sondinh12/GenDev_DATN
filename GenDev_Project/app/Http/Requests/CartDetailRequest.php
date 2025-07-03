@@ -21,8 +21,18 @@ class CartDetailRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
         if ($this->isMethod('post')) {
+            $rules = [
+                'product_id' => 'required|exists:products,id',
+                'variant_id' => 'required|exists:product_variants,id',
+                'quantity'   => 'required|integer|min:1',
+            ];
+        } elseif ($this->isMethod('put')) {
+            $rules = [
+                'quantities' => 'required|array',
+                'quantities.*' => 'required|integer|min:1',
+            ];
+        } else {
             $rules = [
                 'product_id' => 'required|exists:products,id',
                 'quantity' => 'required|integer|min:1',
@@ -34,39 +44,31 @@ class CartDetailRequest extends FormRequest
             $rules['attribute.*'] = 'exists:attribute_values,id';
         }
 
-
-        if ($this->isMethod('put')) {
-            $rules = [
-                'quantities' => 'required|array',
-                'quantities.*' => 'required|integer|min:1',
-            ];
-        }
-
         return $rules;
     }
 
-    public function massages()
+    /**
+     * Custom error messages for validation rules.
+     */
+    public function messages(): array
     {
         return [
             'product_id.required' => 'Vui lòng chọn sản phẩm.',
             'product_id.exists' => 'Sản phẩm không tồn tại trong hệ thống.',
 
-            // 'variant_id.required' => 'Vui lòng chọn biến thể sản phẩm.',
-            // 'variant_id.exists' => 'Biến thể sản phẩm không tồn tại trong hệ thống.',
+            'variant_id.required' => 'Vui lòng chọn biến thể sản phẩm.',
+            'variant_id.exists' => 'Biến thể sản phẩm không tồn tại trong hệ thống.',
 
             'quantity.required' => 'Vui lòng nhập số lượng.',
             'quantity.integer' => 'Số lượng phải là một số nguyên.',
             'quantity.min' => 'Số lượng tối thiểu là 1.',
 
             'quantities.required' => 'Không có dữ liệu cập nhật.',
+            'quantities.*.required' => 'Số lượng không được để trống.',
             'quantities.*.integer' => 'Số lượng phải là số.',
             'quantities.*.min' => 'Số lượng ít nhất là 1.',
 
-            'attribute.array' => 'Dữ liệu thuộc tính không hợp lệ.',
-            'attribute.*.exists' => 'Giá trị thuộc tính không hợp lệ.',
-            'quantities.required' => 'Không có dữ liệu cập nhật.',
-            'quantities.*.integer' => 'Số lượng phải là số.',
-            'quantities.*.min' => 'Số lượng ít nhất là 1.',
+            'attribute.*.exists' => 'Thuộc tính không hợp lệ.',
         ];
     }
 }
