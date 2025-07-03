@@ -109,14 +109,9 @@
                     </span>
                 </div>
                 <div class="d-flex gap-2">
-                    @if($order->payment === 'banking' && $order->status === 'cancelled' && $order->payment_status === 'unpaid')
+                    @if($order->status === 'cancelled' || ($order->status === 'pending' && $order->payment_status === 'unpaid' ))
                         <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại
-                        </a>
-                    @endif
-                    @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
-                        <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
                         </a>
                     @endif
                     <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
