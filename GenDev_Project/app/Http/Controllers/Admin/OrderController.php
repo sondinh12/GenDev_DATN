@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -28,44 +27,16 @@ class OrderController extends Controller
         return view('Admin.orders.index', compact('orders'));
     }
 
-    public function updatePaymentStatus(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-
-        // Không cho cập nhật nếu đã hoàn thành hoặc đã hủy
-        if (in_array($order->status, ['completed', 'cancelled']) || in_array($order->payment_status, ['paid', 'cancelled'])) {
-            return redirect()->back()->with('error', 'Không thể cập nhật trạng thái khi đơn hàng đã hoàn tất hoặc đã hủy.');
-        }
-
-        // Xác nhận trạng thái hợp lệ
-        $validator = Validator::make($request->all(), [
-            'payment_status' => 'required|in:paid,unpaid,cancelled',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $newStatus = $request->payment_status;
-
-        // Nếu cập nhật thành "cancelled" thì đơn hàng cũng bị hủy
-        if ($newStatus === 'cancelled') {
-            $order->status = 'cancelled';
-        }
-
-        $order->payment_status = $newStatus;
-        $order->save();
-
-        return redirect()->back()->with('success', 'Cập nhật trạng thái thanh toán thành công.');
-    }
-    public function updateStatus(Request $request, Order $order)
+    public function updateBoth(Request $request, Order $order)
     {
         $request->validate([
             'status' => 'required|in:pending,processing,shipped,completed,cancelled',
+            'payment_status' => 'required|in:unpaid,paid,cancelled',
         ]);
 
-        $current = $order->status;
-        $new = $request->status;
+        $newStatus = $request->status;
+        $newPayment = $request->payment_status;
+
 
         // Không thể thay đổi nếu đã hoàn tất hoặc đã hủy
         if (in_array($current, ['completed', 'cancelled'])) {
@@ -121,7 +92,8 @@ class OrderController extends Controller
         $order->status = $new;
         $order->save();
 
-        return back()->with('success', 'Cập nhật trạng thái thành công.');
+
+        return back()->with('success', 'Cập nhật đơn hàng thành công.');
     }
 
     // Xem chi tiết đơn hàng

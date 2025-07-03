@@ -71,16 +71,18 @@ Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::clas
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
+
+Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class,'index'])->name('checkout');
+Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.submit');
+Route::post('/apply_coupon',[CouponController::class,'apply'])->name('apply_coupon');
+
 
 // hành dộng trang cart
-Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
+Route::match(['post','put'],'/handleaction',[CartDetailController::class,'handleAction'])->name('cart.handleaction'); 
 
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
+Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');  
 Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
 Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
 Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
@@ -124,8 +126,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     // Đơn hàng
     Route::middleware(['permission:manage orders'])->group(function () {
         Route::resource('/orders', OrderController::class);
-        Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
-        Route::put('orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.update-payment-status');
+        Route::put('admin/orders/{order}/update-both', [OrderController::class, 'updateBoth'])->name('admin.orders.update-both');
     });
 
     // Danh mục
