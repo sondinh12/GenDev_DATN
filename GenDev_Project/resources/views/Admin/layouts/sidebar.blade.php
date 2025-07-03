@@ -42,12 +42,15 @@
                         <span>Tài khoản</span>
                     </a>
                 <li>
+
+                </li>
+
                 <li>
-                    <a href="{{ url('/admin/coupons') }}" class="">
-                      <i class="fa-solid fa-tag"></i>
-                        <span>Mã Giảm Giá</span>
+                    <a href="{{ url('admin/orders') }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Danh sách đơn hàng</span>
                     </a>
-                <li>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
