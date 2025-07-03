@@ -317,7 +317,7 @@
                                                         col-12 mb-3">
                                                 <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="min-width:0; min-height:unset;">
                                                     <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
-                                                        <a href="{{ route('client.products.show', $product->id) }}" class="d-block w-100 h-100">
+                                                        <a href="{{ route('client.product.show', $product->id) }}" class="d-block w-100 h-100">
                                                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
                                                         </a>
                                                         @if($product->sale_price)
@@ -329,30 +329,11 @@
                                                             <a href="" class="text-decoration-none text-dark">{{ $product->name }}</a>
                                                         </h6>
                                                         <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
-                                                            @if($product->variants && $product->variants->count())
-                                                                @php
-                                                                    $salePrices = $product->variants->pluck('sale_price')->filter(function($v) { return $v > 0; });
-                                                                    if ($salePrices->count()) {
-                                                                        $minPrice = $salePrices->min();
-                                                                        $maxPrice = $salePrices->max();
-                                                                    } else {
-                                                                        $prices = $product->variants->pluck('price')->filter();
-                                                                        $minPrice = $prices->min();
-                                                                        $maxPrice = $prices->max();
-                                                                    }
-                                                                @endphp
-                                                                @if($minPrice == $maxPrice)
-                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ</span>
-                                                                @else
-                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ - {{ number_format($maxPrice) }}đ</span>
-                                                                @endif
+                                                            @if($product->sale_price)
+                                                            <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
+                                                            <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
                                                             @else
-                                                                @if($product->sale_price)
-                                                                    <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
-                                                                    <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
-                                                                @else
-                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
-                                                                @endif
+                                                            <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
                                                             @endif
                                                         </div>
                                                         <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
@@ -377,8 +358,18 @@
                                                             <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
                                                                 @csrf
                                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                                <input type="hidden" name="variant_id" value="{{ $product->variants->first()?->id }}">
                                                                 <input type="hidden" name="quantity" value="1">
+                                                               {{-- @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $variantAttr->value_id }}">
+                                                                @endforeach --}}
+                                                                @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                                    @php
+                                                                        $valueId = $variantAttr->attribute_value_id 
+                                                                            ?? $variantAttr->value_id 
+                                                                            ?? optional($variantAttr->value)->id;
+                                                                    @endphp
+                                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
+                                                                @endforeach
                                                                 <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
                                                                     Mua ngay
                                                                 </button>

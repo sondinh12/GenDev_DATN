@@ -70,34 +70,21 @@
                         </div>
                     </div>
                     <div class="mb-3 border-bottom pb-2">
-                        <span id="variant-origin-price" class="text-muted text-decoration-line-through ms-3" style="display:none; text-decoration: line-through;">
-                            {{-- Sẽ được cập nhật động bằng JS --}}
-                        </span>
-                        <span id="variant-sale-price" class="fs-2 fw-bold text-danger">
-                            @php
-                                $min = null; $max = null;
-                                if(count($product->variants)) {
-                                    foreach($product->variants as $v) {
-                                        $sale = $v->sale_price ?? $v->price;
-                                        if($min === null || $sale < $min) $min = $sale;
-                                        if($max === null || $sale > $max) $max = $sale;
-                                    }
-                                }
-                            @endphp
-                            @if(count($product->variants))
-                                @if($min == $max)
-                                    {{ number_format($min) }}đ
-                                @else
-                                    {{ number_format($min) }}đ - {{ number_format($max) }}đ
-                                @endif
-                            @else
-                                @if($product->sale_price)
-                                    {{ number_format($product->sale_price) }}đ
-                                @else
-                                    {{ number_format($product->price) }}đ
-                                @endif
+                        @if(count($product->variants))
+                            <span class="text-muted text-decoration-line-through ms-3" style="@if(!$product->variants[0]->sale_price || $product->variants[0]->sale_price == $product->variants[0]->price) display:none; @endif">
+                                {{ number_format($product->variants[0]->price) }}đ
+                            </span>
+                            <span class="fs-2 fw-bold text-danger">
+                                {{ number_format($product->variants[0]->sale_price ?? $product->variants[0]->price) }}đ
+                            </span>
+                        @else
+                            @if($product->sale_price)
+                                <span class="text-muted text-decoration-line-through ms-3">{{ number_format($product->price) }}đ</span>
+                                <span class="badge bg-danger ms-2">-{{ round((($product->price - $product->sale_price) / $product->price) * 100) }}%</span>
+                                <br>
                             @endif
-                        </span>
+                            <span class="fs-2 fw-bold text-danger">@if($product->sale_price){{ number_format($product->sale_price) }}đ@else{{ number_format($product->price) }}đ@endif</span>
+                        @endif
                     </div>
                     <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
                         <span class="fw-semibold">Mô tả:</span>
@@ -119,8 +106,10 @@
                         </span>
                     </div>
 
-                    <form method="post" action="" class="d-flex flex-column align-items-start gap-3 mt-3 flex-wrap">
-                        @csrf
+                    <form method="POST" action="{{ route('cart-detail') }}" class="d-flex flex-column align-items-start gap-3 mt-3 flex-wrap"> 
+                          @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" value="1">
                         @php
                             // Gom nhóm các thuộc tính và giá trị từ các biến thể
                             $attributes = [];
@@ -147,20 +136,24 @@
                             }
                             // Lấy thêm 2 giá trị đầu tiên của $attributes (nếu có)
                             $attributes = array_slice($attributes, 0, 2, true);
+                            
                         @endphp
                         @foreach($attributes as $attrName => $attr)
                             <div class="mb-2 w-100">
                                 <label class="form-label fw-semibold">{{ $attrName }}</label>
                                 <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
+                                        {{-- OPTION mặc định không có giá trị, yêu cầu người dùng chọn --}}
+                                        <option value="" disabled selected>-- Chọn {{ $attrName }} --</option>
                                     @foreach($attr['values'] as $valId => $val)
                                         <option value="{{ $valId }}">{{ $val }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         @endforeach
-                        <div class="d-flex gap-4 mt-3 w-100">
+                    
+                        <div>    
                             <button class="btn btn-primary btn-lg rounded-pill px-4 fw-semibold shadow flex-grow-1" type="submit" style="margin-right: 10px;"><i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ</button>
-                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-semibold shadow-sm flex-grow-1">
+                            <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-semibold shadow-sm flex-grow-1">
                                 <i class="fas fa-arrow-left me-1"></i>Quay lại
                             </a>
                         </div>
@@ -337,6 +330,7 @@ $(function() {
 
     // Variant price/quantity logic
     var variantMap = @json($variantMap);
+    var attrIds = @json(array_column($attributes, 'id'));
     function getSelectedKey() {
         var key = [];
         $('.variant-select').each(function() {
@@ -347,28 +341,21 @@ $(function() {
         key.sort();
         return key.join('-');
     }
-    function allAttrSelected() {
-        var allSelected = true;
-        $('.variant-select').each(function() {
-            if (!$(this).val()) {
-                allSelected = false;
-            }
-        });
-        return allSelected;
-    }
     function updateVariantInfo() {
-        if (allAttrSelected()) {
-            var key = getSelectedKey();
-            var info = variantMap[key];
-            if(info) {
-                if(info.price != info.origin_price) {
-                    $('#variant-origin-price').text(info.origin_price.toLocaleString('vi-VN') + 'đ').show();
-                } else {
-                    $('#variant-origin-price').hide();
-                }
-                $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
-                $('#variant-quantity').text(info.quantity);
+        var key = getSelectedKey();
+        var info = variantMap[key];
+        if(info) {
+            if(info.price != info.origin_price) {
+                $('#variant-origin-price').text(info.origin_price.toLocaleString('vi-VN') + 'đ').show();
+            } else {
+                $('#variant-origin-price').hide();
             }
+            $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
+            $('#variant-quantity').text(info.quantity);
+        } else {
+            $('#variant-origin-price').hide();
+            $('#variant-sale-price').text('');
+            $('#variant-quantity').text('');
         }
     }
     $('.variant-select').on('change', updateVariantInfo);
