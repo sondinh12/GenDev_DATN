@@ -117,7 +117,7 @@
                     </tr>
                     <tr>
                         <th>Mã giảm giá:</th>
-                        <td>{{ $order->coupon->coupon_code ?? '-' }}</td>
+                        <td>{{ $order->coupon_code ?? '-' }}</td>
                     </tr>
                 </table>
             </section>
