@@ -156,7 +156,7 @@
                                 <label class="form-label fw-semibold">{{ $attrName }}</label>
                                 <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
                                         {{-- OPTION mặc định không có giá trị, yêu cầu người dùng chọn --}}
-                                        <option value="" disabled selected>-- Chọn {{ $attrName }} --</option>
+                                        {{-- <option value="" disabled selected>-- Chọn {{ $attrName }} --</option> --}}
                                     @foreach($attr['values'] as $valId => $val)
                                         <option value="{{ $valId }}">{{ $val }}</option>
                                     @endforeach
