@@ -49,12 +49,6 @@
             @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        {{-- <div class="mb-3">
-            <label for="quantity">Số lượng</label>
-            <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}">
-            @error('quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        </div> --}}
-
         <div class="mb-3">
             <label for="status">Trạng thái</label>
             <select name="status" class="form-control @error('status') is-invalid @enderror">
@@ -83,7 +77,6 @@
             @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        <!-- Trường hiện khi chọn 'percent' -->
         <div class="mb-3" id="maxCouponWrapper">
             <label for="max_coupon">Giảm tối đa</label>
             <input type="number" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" value="{{ old('max_coupon', 0) }}">
@@ -95,7 +88,7 @@
     </form>
 </div>
 
-<!-- Script ẩn/hiện và xử lý max_coupon -->
+<!-- Script xử lý max_coupon khi chọn loại giảm -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const discountTypeSelect = document.getElementById('discount_type');

@@ -35,8 +35,10 @@
                     <th>Người tạo</th>
                     <th>Loại giảm</th>
                     <th>Giá trị</th>
-                    <th>Hết hạn</th>
+                    <th>Ngày tạo</th> 
+                    <th>Hết hạn</th>   
                     <th>Đã dùng</th>
+                    <th>Số lượng</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
@@ -62,8 +64,16 @@
                             {{ number_format($coupon->discount_amount, 0, ',', '.') }}₫
                         @endif
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i:s') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>    
                     <td>{{ $coupon->total_used }}</td>
+                    <td>
+                        @if($coupon->usage_limit == -1)
+                            Không giới hạn
+                        @else
+                            {{ $coupon->usage_limit }}
+                        @endif
+                    </td>
                     <td>
                         @if($coupon->status)
                             <span class="badge bg-success">Hoạt động</span>
@@ -85,7 +95,7 @@
 
                 @if($coupons->isEmpty())
                     <tr>
-                        <td colspan="10" class="text-center">Không có mã nào</td>
+                        <td colspan="12" class="text-center">Không có mã nào</td>
                     </tr>
                 @endif
             </tbody>

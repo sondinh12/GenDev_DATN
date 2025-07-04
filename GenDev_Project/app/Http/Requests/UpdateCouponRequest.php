@@ -18,51 +18,52 @@ class UpdateCouponRequest extends FormRequest
         }
     }
 
-    public function rules(): array
-    {
-        $couponId = $this->route('coupon');
+public function rules(): array
+{
+    $couponId = $this->route('coupon');
 
-        return [
-            'name' => 'required|string|max:255',
-            'coupon_code' => 'required|string|max:50|unique:coupons,coupon_code,' . $couponId,
-            'discount_type' => 'required|in:percent,fixed',
-            'discount_amount' => [
-                'required',
-                'numeric',
-                'min:0.01',
-                function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent' && $value > 100) {
-                        $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
+    return [
+        'name' => 'required|string|max:255',
+        'coupon_code' => 'required|string|max:50|unique:coupons,coupon_code,' . $couponId,
+        'discount_type' => 'required|in:percent,fixed',
+        'discount_amount' => [
+            'required',
+            'numeric',
+            'min:0.01',
+            function ($attribute, $value, $fail) {
+                if (request('discount_type') === 'percent' && $value > 100) {
+                    $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
+                }
+            }
+        ],
+        'start_date' => 'required|date|before_or_equal:end_date',
+        'end_date' => 'required|date|after_or_equal:start_date',
+
+        'usage_limit' => 'nullable|integer|min:1',
+        'per_use_limit' => 'nullable|integer|min:-1',
+
+        'min_coupon' => 'nullable|numeric|min:0',
+        'max_coupon' => [
+            'nullable',
+            'numeric',
+            function ($attribute, $value, $fail) {
+                if (request('discount_type') === 'percent') {
+                    $discount = request('discount_amount');
+                    $min = request('min_coupon');
+
+                    if (!is_null($min) && $value < $min) {
+                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
+                    }
+
+                    if (!is_null($value) && $value < $discount) {
+                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị giảm.');
                     }
                 }
-            ],
-            'start_date' => 'required|date|before_or_equal:end_date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'quantity' => 'required|integer|min:1',
-            'usage_limit' => 'nullable|integer|min:1',
-            'per_use_limit' => 'nullable|integer|min:1',
-            'min_coupon' => 'nullable|numeric|min:0',
-            'max_coupon' => [
-                'nullable',
-                'numeric',
-                function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent') {
-                        $discount = request('discount_amount');
-                        $min = request('min_coupon');
-
-                        if (!is_null($min) && $value < $min) {
-                            $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
-                        }
-
-                        if (!is_null($value) && $value < $discount) {
-                            $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị giảm.');
-                        }
-                    }
-                }
-            ],
-            'status' => 'nullable|boolean',
-        ];
-    }
+            }
+        ],
+        'status' => 'required|in:0,1',
+    ];
+}
 
     public function messages(): array
     {
