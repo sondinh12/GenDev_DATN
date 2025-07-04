@@ -461,7 +461,7 @@
                                             <!-- .cart-wrapper -->
                                         </div>
                                         <!-- .woocommerce -->
-                                    </form>
+                                    <form>
                                 </div>
                                 <!-- .entry-content -->
                             </div>
