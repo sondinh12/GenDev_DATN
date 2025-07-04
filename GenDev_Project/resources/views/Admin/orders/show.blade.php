@@ -166,6 +166,7 @@
                             <tr>
                                 <th>STT</th>
                                 <th>Sản phẩm</th>
+                                <th>Ảnh sản phẩm</th>
                                 <th>Giá</th>
                                 <th>Số lượng</th>
                                 <th>Ghi chú</th>
@@ -177,6 +178,10 @@
                             <tr>
                                 <td>{{ $i+1 }}</td>
                                 <td>{{ $detail->product->name ?? '-' }}</td>
+                                <td>
+                                    <img src="{{asset('storage/'.$detail->product->image)}}"
+                                        alt="{{ $detail->product->name }}" width="100">
+                                </td>
                                 <td>{{ number_format($detail->price, 0, ',', '.') }} đ</td>
                                 <td>{{ $detail->quantity }}</td>
                                 <td>{{ $detail->note ?? '-' }}</td>
@@ -199,20 +204,46 @@
             </section>
 
             {{-- Tổng kết --}}
+            @php
+                $discount = 0;
+                if (isset($order->coupon)) {
+                    if ($order->coupon->discount_type === 'fixed') {
+                        $discount = $order->coupon->discount_amount;
+                    } elseif ($order->coupon->discount_type === 'percent') {
+                        $discount = $order->total * $order->coupon->discount_amount / 100;
+                        if ($order->coupon->max_coupon > 0) {
+                        $discount = min($discount, $order->coupon->max_coupon);
+                        }
+                    }
+                }
+            @endphp
+
             <section class="mb-4">
                 <h5 class="fw-bold mb-2">Tổng kết đơn hàng</h5>
                 <table class="table table-borderless mb-0">
                     <tr>
-                        <th class="w-25">Tổng tiền hàng:</th>
+                        <th class="w-25">Tổng phụ:</th>
                         <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
+                    </tr>
+                    <tr>
+                        <th>Giảm giá:</th>
+                        <td>
+                            @if($discount > 0)
+                            -{{ number_format($discount, 0, ',', '.') }} đ
+                            @else
+                            0 đ
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <th>Phí giao hàng:</th>
                         <td>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</td>
                     </tr>
                     <tr>
-                        <th>Mã giảm giá:</th>
-                        <td>{{ $order->coupon->coupon_code ?? '-' }}</td>
+                        <th class="w-25">Tổng tiền:</th>
+                        <td>
+                            {{ number_format(max(0, $order->total - $discount) + $order->shipping_fee, 0, ',', '.') }} đ
+                        </td>
                     </tr>
                 </table>
             </section>
