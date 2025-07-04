@@ -36,10 +36,11 @@ class StoreCouponRequest extends FormRequest
                     }
                 }
             ],
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'quantity' => 'required|integer|min:1|max:10000',
-            'status' => 'required|boolean',
+            'start_date' => 'required|date|before_or_equal:end_date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+
+            'status' => 'required|in:0,1',
+
             'min_coupon' => 'nullable|numeric|min:0',
             'max_coupon' => [
                 'nullable',
@@ -54,8 +55,9 @@ class StoreCouponRequest extends FormRequest
                     }
                 }
             ],
-            'usage_limit' => 'nullable|integer|min:1',
-            'per_use_limit' => 'nullable|integer|min:1|lte:usage_limit',
+
+            'usage_limit' => 'nullable|integer|min:-1',
+            'per_use_limit' => 'nullable|integer|min:-1|lte:usage_limit',
         ];
     }
 
@@ -78,18 +80,14 @@ class StoreCouponRequest extends FormRequest
 
             'start_date.required' => 'Vui lòng chọn ngày bắt đầu.',
             'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
+            'start_date.before_or_equal' => 'Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.',
 
             'end_date.required' => 'Vui lòng chọn ngày kết thúc.',
             'end_date.date' => 'Ngày kết thúc không hợp lệ.',
-            'end_date.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
-
-            // 'quantity.required' => 'Vui lòng nhập số lượng.',
-            // 'quantity.integer' => 'Số lượng phải là số nguyên.',
-            // 'quantity.min' => 'Số lượng tối thiểu là 1.',
-            // 'quantity.max' => 'Số lượng tối đa là 10000.',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
 
             'status.required' => 'Vui lòng chọn trạng thái.',
-            'status.boolean' => 'Trạng thái không hợp lệ.',
+            'status.in' => 'Trạng thái không hợp lệ.',
 
             'min_coupon.numeric' => 'Giá trị tối thiểu đơn hàng phải là số.',
             'min_coupon.min' => 'Giá trị tối thiểu đơn hàng không được âm.',
@@ -98,10 +96,10 @@ class StoreCouponRequest extends FormRequest
             'max_coupon.min' => 'Giá trị giảm tối đa không được âm.',
 
             'usage_limit.integer' => 'Giới hạn sử dụng phải là số nguyên.',
-            'usage_limit.min' => 'Giới hạn sử dụng phải ít nhất là 1.',
+            'usage_limit.min' => 'Giới hạn sử dụng không hợp lệ.',
 
             'per_use_limit.integer' => 'Giới hạn mỗi người dùng phải là số nguyên.',
-            'per_use_limit.min' => 'Giới hạn mỗi người dùng phải ít nhất là 1.',
+            'per_use_limit.min' => 'Giới hạn mỗi người dùng không hợp lệ.',
             'per_use_limit.lte' => 'Giới hạn mỗi người dùng không được vượt quá tổng số lượt dùng.',
         ];
     }

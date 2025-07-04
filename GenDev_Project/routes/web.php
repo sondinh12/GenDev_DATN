@@ -8,6 +8,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
+use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
@@ -150,6 +151,10 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
+    Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
+    Route::resource('coupons', CouponsController::class);
+    Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
+    Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
 });
