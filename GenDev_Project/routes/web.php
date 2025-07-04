@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
-
 session_start();
 
 use App\Http\Controllers\Client\CartController;
@@ -24,6 +22,14 @@ use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 
+// Route::get('/', function () {
+//     return view('admin.apps-chat');
+// });
+
+
+Route::resource('/products', ProductController::class);
+Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
+Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
 // Route::get('/products', function () {
 
@@ -68,10 +74,6 @@ Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::clas
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
-Route::get('/checkout-success', function () {
-    return view('client.checkout.checkout-success');
-})->name('checkout.success');
 Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
 
 // hành dộng trang cart

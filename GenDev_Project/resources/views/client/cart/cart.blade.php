@@ -13,6 +13,11 @@
                     Giỏ hàng
                 </nav>
                 <!-- .woocommerce-breadcrumb -->
+                @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                </div>
+                @endif
                 <div id="primary" class="content-area">
                     <main id="main" class="site-main">
                         <div class="type-page hentry">
