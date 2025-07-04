@@ -26,23 +26,36 @@ class Order extends Model
         'payment_status',
     ];
 
+
+    public function orderDetails(){
+        return $this->hasMany(OrderDetail::class,'order_id');
+    }
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+
     }
 
-    public function coupon()
-    {
-        return $this->belongsTo(Coupon::class, 'coupon_id');
+    public function coupon(){
+        return $this->belongsTo(Coupon::class,'coupon_id');
+    }
+    public function ship(){
+        return $this->belongsTo(Ship::class);
     }
 
-    public function ship()
-    {
-        return $this->belongsTo(Ship::class, 'shipping_id');
-    }
 
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class, 'order_id');
+    public function getStatusTextAttribute(){
+        return match ($this->status) {
+        1 => 'Đang chờ duyệt',
+        2 => 'Đã xác nhận',
+        3 => 'Đang giao hàng',
+        4 => 'Đã giao',
+        5 => 'Đã huỷ',
+        default => 'Không xác định',
+    };
     }
-}
+}   
+
+
+

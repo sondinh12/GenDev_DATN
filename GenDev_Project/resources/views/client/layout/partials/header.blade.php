@@ -964,7 +964,7 @@
                     <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
-                        <span class="count">{{ $cartCount }}</span>
+                        {{-- <span class="count">{{ $cartCount }}</span> --}}
                         <span class="amount">
                             <span class="price-label">Your Cart</span>&#036;136.99</span>
 
