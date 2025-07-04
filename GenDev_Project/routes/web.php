@@ -23,15 +23,8 @@ use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Client\ClientOrderController;
 
-// Route::get('/', function () {
-//     return view('admin.apps-chat');
-// });
-
-
-Route::resource('/products', ProductController::class);
-Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
-Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
 // Route::get('/products', function () {
 
@@ -162,6 +155,12 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
 });
 
 Route::resource('/product', ClientProductController::class);
+Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
+    Route::get('/', [ClientOrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
+    Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
+});
+
 
 // ================= TÀI KHOẢN =================
 
