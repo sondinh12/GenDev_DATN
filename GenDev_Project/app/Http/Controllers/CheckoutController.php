@@ -111,7 +111,7 @@ class CheckoutController extends Controller
                 'ward' => $request->ward,
                 'postcode' => $request->postcode,
                 'payment' => $request->payment_method,
-                'payment_status'=>'paid',
+                'payment_status'=>'unpaid',
                 'payment_expired_at'=>$request->payment_method === 'banking' ? now()->addMinutes(30) : null,
                 'total' => $total,
                 'status' => 'pending',

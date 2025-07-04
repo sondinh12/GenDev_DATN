@@ -28,7 +28,6 @@ return new class extends Migration
             $table->enum('payment', ['cod', 'banking', 'momo'])->default('cod');
 
             $table->enum('payment_status', ['paid', 'unpaid', 'cancelled'])->default('unpaid');
-            $table->timestamp('payment_expired_at')->nullable();
 
             $table->decimal('total', 10, 2);
             $table->decimal('shipping_fee', 10, 2)->default(0);

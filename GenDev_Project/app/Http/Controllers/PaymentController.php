@@ -9,32 +9,34 @@ use Mail;
 
 class PaymentController extends Controller
 {
-    public function vnpayReturn(Request $request){
-        $vnp_HashSecret = env('VNPAY_HASH_SECRET');
-        $vnp_SecureHash = $request->vnp_SecureHash;
-        $inputData = $request->except('vnp_SecureHash', 'vnp_SecureHashType');
+    public function vnpayReturn(Request $request)
+    {
+        $vnpData = $request->all();
+        $vnp_SecureHash = $vnpData['vnp_SecureHash'];
+        unset($vnpData['vnp_SecureHash'], $vnpData['vnp_SecureHashType']);
 
-        ksort($inputData);
+        ksort($vnpData);
+
         $hashData = "";
         $i = 0;
-        foreach ($inputData as $key => $value) {
+        foreach ($vnpData as $key => $value) {
             if ($i == 1) {
-                $hashData .= '&' . $key . "=" . $value;
+                $hashData .= '&' . urlencode($key) . "=" . urlencode($value);
             } else {
-                $hashData .= $key . "=" . $value;
+                $hashData .= urlencode($key) . "=" . urlencode($value);
                 $i = 1;
             }
         }
-        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+        $secureHash = hash_hmac('sha512', $hashData, env('VNPAY_HASH_SECRET'));
 
         if ($secureHash === $vnp_SecureHash) {
-            $orderId = intval($request->vnp_TxnRef);
-            $order = Order::find($orderId);
+            $order = Order::find($request->vnp_TxnRef);
+            // dd($order->email);
 
             if ($order) {
                 if ($request->vnp_ResponseCode == '00') {
                     $order->update([
-                        'status' => 'processing', // đã xác nhận
+                        'status' => 'pending', // đã xác nhận
                         'payment_status' => 'paid' // đã thanh toán
                     ]);
                     Mail::to($order->email)->send(new OrderConfirmation($order));
@@ -43,12 +45,11 @@ class PaymentController extends Controller
                     $order->update([
                         'payment_status' => 'cancelled' // thất bại
                     ]);
-                    return redirect()->route('checkout.success')->with('error', 'Thanh toán thất bại!');
+                    return redirect()->route('checkout.failed')->with('error', 'Thanh toán thất bại!');
                 }
             }
         }
-        // Mail::to($order->email)->send(new OrderConfirmation($order));
 
-        return redirect()->route('checkout.success')->with('error', 'Xác minh chữ ký thất bại!');
+        return redirect()->route('home')->with('error', 'Xác minh chữ ký thất bại!');
     }
 }
