@@ -34,7 +34,7 @@ use App\Http\Controllers\Client\ClientOrderController;
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/about', function () {
