@@ -2,6 +2,21 @@
 
 @section('content')
 <div class="container py-5">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+    </div>
+    @endif
+    @if($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-1"></i> Đã có lỗi xảy ra:<br>
+        <ul class="mb-0">
+            @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="row">
         <!-- Sidebar Profile -->
         <div class="col-lg-3 mb-4">
@@ -16,8 +31,8 @@
                             class="rounded-circle border border-3 border-primary shadow" width="150" height="150">
                         @endif
                         <div class="position-absolute bottom-0 end-0">
-                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" data-bs-toggle="tooltip"
-                                title="Thay đổi ảnh">
+                            <button type="button" class="btn btn-light btn-sm rounded-circle shadow-sm"
+                                data-toggle="modal" data-target="#editAvatarModal" title="Thay đổi ảnh">
                                 <i class="fa fa-camera"></i>
                             </button>
                         </div>
@@ -30,22 +45,23 @@
                         </span>
                         <span class="badge bg-info">
                             <i class="fa fa-user me-1"></i>
-                            {{ $user->role == 1 ? 'Người dùng' : 'Quản trị' }}
+                            {{ $user->role == 2 ? 'Người dùng' : ($user->role == 1 ? 'Nhân viên' : 'Quản trị') }}
                         </span>
                     </div>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#editProfileModal" id="openEditProfileModal">
                             <i class="fa fa-edit me-2"></i>Chỉnh sửa thông tin
                         </button>
-                        <button class="btn btn-outline-primary">
+                        <a href="{{ route('profile.change_password') }}" class="btn btn-outline-primary">
                             <i class="fa fa-key me-2"></i>Đổi mật khẩu
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
 
             <!-- Quick Stats -->
-            <div class="card border-0 shadow-sm mt-4">
+            {{-- <div class="card border-0 shadow-sm mt-4">
                 <div class="card-body p-4">
                     <h6 class="text-muted mb-3">Thống kê</h6>
                     <div class="d-flex justify-content-between mb-2">
@@ -61,7 +77,7 @@
                         <span class="fw-bold">0</span>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <!-- Main Content -->
@@ -95,11 +111,12 @@
                                 </div>
                                 <p class="mb-0 ms-4">{{ $user->email }}</p>
                                 @if(!$user->email_verified_at)
-                                <div class="ms-4 mt-2">
-                                    <button class="btn btn-sm btn-outline-warning">
-                                        <i class="fa fa-envelope me-1"></i>Xác thực email
+                                <form method="POST" action="{{ route('verification.resend') }}" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-warning">
+                                        <i class="fa fa-envelope me-1"></i> Xác thực email
                                     </button>
-                                </div>
+                                </form>
                                 @else
                                 <div class="ms-4 mt-2">
                                     <span class="badge bg-success">
@@ -139,6 +156,33 @@
                                 <p class="mb-0 ms-4">{{ $user->gender }}</p>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="bg-light rounded p-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa fa-building text-primary me-2"></i>
+                                    <span class="fw-bold">Thành phố:</span>
+                                </div>
+                                <p class="mb-0 ms-4">{{ $user->city ?? 'Chưa cập nhật' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-light rounded p-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa fa-map-signs text-primary me-2"></i>
+                                    <span class="fw-bold">Phường/Xã:</span>
+                                </div>
+                                <p class="mb-0 ms-4">{{ $user->ward ?? 'Chưa cập nhật' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-light rounded p-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa fa-envelope text-primary me-2"></i>
+                                    <span class="fw-bold">Mã bưu chính:</span>
+                                </div>
+                                <p class="mb-0 ms-4">{{ $user->postcode ?? 'Chưa cập nhật' }}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Recent Activity -->
@@ -176,35 +220,76 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Chỉnh sửa thông tin</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="editProfileForm">
+                <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}">
+                    @csrf
+                    @method('PUT')
                     <div class="mb-3">
                         <label class="form-label">Họ và tên</label>
-                        <input type="text" class="form-control" value="{{ $user->name }}">
+                        <input type="text" class="form-control" name="name" value="{{ $user->name }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Số điện thoại</label>
-                        <input type="tel" class="form-control" value="{{ $user->phone }}">
+                        <input type="tel" class="form-control" name="phone" value="{{ $user->phone }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Địa chỉ</label>
-                        <textarea class="form-control" rows="3">{{ $user->address }}</textarea>
+                        <input type="text" class="form-control" name="address" value="{{ $user->address }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thành phố</label>
+                        <input type="text" class="form-control" name="city" value="{{ $user->city }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phường/Xã</label>
+                        <input type="text" class="form-control" name="ward" value="{{ $user->ward }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mã bưu chính</label>
+                        <input type="text" class="form-control" name="postcode" value="{{ $user->postcode }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Giới tính</label>
-                        <select class="form-select">
+                        <select class="form-select" name="gender">
                             <option value="Nam" {{ $user->gender == 'Nam' ? 'selected' : '' }}>Nam</option>
                             <option value="Nữ" {{ $user->gender == 'Nữ' ? 'selected' : '' }}>Nữ</option>
                             <option value="Khác" {{ $user->gender == 'Khác' ? 'selected' : '' }}>Khác</option>
                         </select>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            aria-label="Close">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Avatar Modal -->
+<div class="modal fade" id="editAvatarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Đổi ảnh đại diện</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('profile.update_avatar') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Chọn ảnh mới</label>
+                        <input type="file" class="form-control" name="avatar" accept="image/*" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu ảnh</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -243,5 +328,20 @@
         background: #e9ecef;
     }
 </style>
+
+
+
+@section('scripts')
+<script>
+    // Nếu có lỗi validate, tự động mở modal chỉnh sửa
+    @if($errors->any())
+        $('#editProfileModal').modal('show');
+    @endif
+    // Reset form khi đóng modal (nếu cần)
+    $('#editProfileModal').on('hidden.bs.modal', function () {
+        document.getElementById('editProfileForm').reset();
+    });
+</script>
+@endsection
 
 @endsection
