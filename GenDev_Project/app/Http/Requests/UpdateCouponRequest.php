@@ -89,9 +89,9 @@ class UpdateCouponRequest extends FormRequest
             'end_date.date' => 'Ngày kết thúc không hợp lệ.',
             'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
 
-            'quantity.required' => 'Số lượng là bắt buộc.',
-            'quantity.integer' => 'Số lượng phải là số nguyên.',
-            'quantity.min' => 'Số lượng phải ít nhất là 1.',
+            // 'quantity.required' => 'Số lượng là bắt buộc.',
+            // 'quantity.integer' => 'Số lượng phải là số nguyên.',
+            // 'quantity.min' => 'Số lượng phải ít nhất là 1.',
 
             'usage_limit.integer' => 'Giới hạn tổng sử dụng phải là số nguyên.',
             'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn 0.',

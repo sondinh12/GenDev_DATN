@@ -83,10 +83,10 @@ class StoreCouponRequest extends FormRequest
             'end_date.date' => 'Ngày kết thúc không hợp lệ.',
             'end_date.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
 
-            'quantity.required' => 'Vui lòng nhập số lượng.',
-            'quantity.integer' => 'Số lượng phải là số nguyên.',
-            'quantity.min' => 'Số lượng tối thiểu là 1.',
-            'quantity.max' => 'Số lượng tối đa là 10000.',
+            // 'quantity.required' => 'Vui lòng nhập số lượng.',
+            // 'quantity.integer' => 'Số lượng phải là số nguyên.',
+            // 'quantity.min' => 'Số lượng tối thiểu là 1.',
+            // 'quantity.max' => 'Số lượng tối đa là 10000.',
 
             'status.required' => 'Vui lòng chọn trạng thái.',
             'status.boolean' => 'Trạng thái không hợp lệ.',

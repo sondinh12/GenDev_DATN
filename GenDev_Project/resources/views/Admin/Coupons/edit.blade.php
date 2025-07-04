@@ -57,12 +57,12 @@
             @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="quantity">Số lượng</label>
             <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
                 value="{{ old('quantity', $coupon->quantity ?? '') }}">
             @error('quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        </div>
+        </div> --}}
 
         <div class="mb-3">
             <label for="status">Trạng thái</label>
