@@ -15,15 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("cart_id");
             $table->unsignedBigInteger("product_id");
-<<<<<<< HEAD
             $table->unsignedBigInteger("variant_id");
 
             $table->decimal("price",10,2);
 
-=======
-            $table->unsignedBigInteger("variant_id")->nullable();
-            $table->decimal("price", 10, 2);
->>>>>>> 266cbd8d821eab05cfc9c8dfcfd09c3a3554d9dc
             $table->integer("quantity");
             $table->timestamps();
 

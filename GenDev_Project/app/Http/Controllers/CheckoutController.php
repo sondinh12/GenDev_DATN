@@ -11,7 +11,6 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderDetailAttribute;
 use App\Models\Ship;
-use App\Services\VnpayService;
 use DB;
 use Illuminate\Http\Request;
 use Log;
@@ -41,7 +40,7 @@ class CheckoutController extends Controller
         return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds'));
     }
 
-    public function store(CheckoutRequest $request, VnpayService $vnpayService)
+    public function store(CheckoutRequest $request)
     {
         $selectedItemIds = $request->input('selected_items', []);
 
@@ -110,11 +109,9 @@ class CheckoutController extends Controller
                 'city' => $request->city,
                 'ward' => $request->ward,
                 'postcode' => $request->postcode,
-                'payment' => $request->payment_method,
-                'payment_status'=>'unpaid',
-                'payment_expired_at'=>$request->payment_method === 'banking' ? now()->addMinutes(30) : null,
+                'payment' => $request->payment,
                 'total' => $total,
-                'status' => 'pending',
+                'status' => 1,
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng
@@ -151,13 +148,8 @@ class CheckoutController extends Controller
                 Log::info('CheckoutController::store - Deleted cart items:', ['deleted_rows' => $deletedRows]);
             DB::commit();
 
-            if ($request->payment_method === 'banking') {
-                $paymentUrl = $vnpayService->buildPaymentUrl($order);
-                return redirect($paymentUrl);
-            }
-
             Mail::to($order->email)->send(new OrderConfirmation($order));
-            return redirect()->route('checkout.success')->with('success', 'Đặt hàng thành công!');
+            return redirect()->route('home')->with('success', 'Đặt hàng thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Lỗi đặt hàng: ' . $e->getMessage());
