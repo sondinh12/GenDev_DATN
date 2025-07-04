@@ -53,9 +53,9 @@
                 </li>
 
                 <li>
-                    <a href="{{ url('/admin/users') }}" class="">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Tài khoản</span>
+                    <a href="{{ url('/admin/coupons') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Mã Giảm Giá</span>
                     </a>
                 <li>
             </ul>

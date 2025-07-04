@@ -11,7 +11,8 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderDetailAttribute;
 use App\Models\Ship;
-use Illuminate\Support\Facades\DB;
+use App\Services\VnpayService;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -47,7 +48,7 @@ class CheckoutController extends Controller
         return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds'));
     }
 
-    public function store(CheckoutRequest $request)
+    public function store(CheckoutRequest $request, VnpayService $vnpayService)
     {
         $selectedItemIds = $request->input('selected_items', []);
 
@@ -116,9 +117,11 @@ class CheckoutController extends Controller
                 'city' => $request->city,
                 'ward' => $request->ward,
                 'postcode' => $request->postcode,
-                'payment' => $request->payment,
+                'payment' => $request->payment_method,
+                'payment_status'=>'unpaid',
+                'payment_expired_at'=>$request->payment_method === 'banking' ? now()->addMinutes(30) : null,
                 'total' => $total,
-                'status' => 1,
+                'status' => 'pending',
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng
@@ -155,8 +158,13 @@ class CheckoutController extends Controller
                 Log::info('CheckoutController::store - Deleted cart items:', ['deleted_rows' => $deletedRows]);
             DB::commit();
 
+            if ($request->payment_method === 'banking') {
+                $paymentUrl = $vnpayService->buildPaymentUrl($order);
+                return redirect($paymentUrl);
+            }
+
             Mail::to($order->email)->send(new OrderConfirmation($order));
-            return redirect()->route('home')->with('success', 'Đặt hàng thành công!');
+            return redirect()->route('checkout.success')->with('success', 'Đặt hàng thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Lỗi đặt hàng: ' . $e->getMessage());

@@ -26,15 +26,16 @@ class CartDetailRequest extends FormRequest
         if ($this->isMethod('post')) {
             $rules = [
                 'product_id' => 'required|exists:products,id',
-                'quantity'   => 'required|integer|min:1',
+                'quantity' => 'required|integer|min:1',
             ];
-            if ($this->has('attribute')) {
-                $rules['attribute'] = 'nullable|array';
-                $rules['attribute.*'] = 'exists:attribute_values,id';
-            }
-
-            return $rules;
         }
+
+        if ($this->has('attribute')) {
+            $rules['attribute'] = 'nullable|array';
+            $rules['attribute.*'] = 'exists:attribute_values,id';
+
+        }
+
 
         if ($this->isMethod('put')) {
             return [
