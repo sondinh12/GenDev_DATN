@@ -10,6 +10,8 @@ use App\Models\CouponUser;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderDetailAttribute;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Ship;
 use App\Services\VnpayService;
 use DB;
@@ -38,7 +40,9 @@ class CheckoutController extends Controller
         $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds'));
+
+        $user = auth()->user();
+        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds','user'));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
@@ -97,7 +101,23 @@ class CheckoutController extends Controller
             if ($total < 0)
                 $total = 0;
 
+            //kiểm tra số lượng tồn khp ngay khi bấm mua
+            foreach ($cartItems as $item) {
+            if ($item->variant_id) {
+                $variant = ProductVariant::find($item->variant_id);
+                if (!$variant || $variant->quantity < $item->quantity) {
+                    return back()->with('error', "Biến thể sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                }
+            } else {
+                $product = Product::find($item->product_id);
+                if (!$product || $product->quantity < $item->quantity) {
+                    return back()->with('error', "Sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                }
+            }
+        }
+
             // Tạo đơn hàng
+            $txnCode = 'ORD' . strtoupper(uniqid());
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'coupon_id' => $couponId,
@@ -114,6 +134,7 @@ class CheckoutController extends Controller
                 'payment_status'=>'unpaid',
                 'payment_expired_at'=>$request->payment_method === 'banking' ? now()->addMinutes(30) : null,
                 'total' => $total,
+                'transaction_code' => $txnCode,
                 'status' => 'pending',
             ]);
             $note = $request->note ?? null;
@@ -138,17 +159,30 @@ class CheckoutController extends Controller
                         ]);
                     }
                 }
+
+                //trừ số lượng sau khi mua
+                if ($item->variant_id) {
+                    $variant = ProductVariant::find($item->variant_id);
+                    $variant->decrement('quantity', $item->quantity);
+                } else {
+                    $product = Product::find($item->product_id);
+                    $product->decrement('quantity', $item->quantity);
+                }
             }
 
             
 
-            session()->forget('applied_coupon');
-            $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
-                ->whereHas('cart', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                })
-                ->delete();
+            
+            if($request->payment_method==='cod'){
+                session()->forget('applied_coupon');
+            
+                $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
+                    ->whereHas('cart', function ($query) use ($userId) {
+                       $query->where('user_id', $userId);
+                    })
+                    ->delete();
                 Log::info('CheckoutController::store - Deleted cart items:', ['deleted_rows' => $deletedRows]);
+            }
             DB::commit();
 
             if ($request->payment_method === 'banking') {

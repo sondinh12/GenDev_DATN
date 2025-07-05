@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderConfirmation;
+use App\Models\Cartdetail;
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -30,11 +33,26 @@ class PaymentController extends Controller
         $secureHash = hash_hmac('sha512', $hashData, env('VNPAY_HASH_SECRET'));
 
         if ($secureHash === $vnp_SecureHash) {
-            $order = Order::find($request->vnp_TxnRef);
+            // cần sửa tnxRef
+            $order = Order::where('transaction_Code',$request->vnp_TxnRef)->first();
             // dd($order->email);
 
             if ($order) {
                 if ($request->vnp_ResponseCode == '00') {
+                    // trừ tồn kho nếu thanh toán thành công
+                    foreach ($order->details as $item) {
+                    if ($item->variant_id) {
+                        $variant = ProductVariant::find($item->variant_id);
+                        $variant->decrement('quantity', $item->quantity);
+                    } else {
+                        $product = Product::find($item->product_id);
+                        $product->decrement('quantity', $item->quantity);
+                    }
+                }
+
+                    Cartdetail::whereHas('cart', function ($q) use ($order) {
+                        $q->where('user_id', $order->user_id);
+                    })->delete();
                     $order->update([
                         'status' => 'pending', // đã xác nhận
                         'payment_status' => 'paid' // đã thanh toán
