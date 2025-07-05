@@ -26,6 +26,14 @@
 @endsection
 
 @section('content')
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show fixed-top m-3 shadow" role="alert" style="z-index: 1050;">
+    {{ session('error') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
 <div id="content" class="site-content py-4" tabindex="-1" style="background: linear-gradient(120deg, #f8fafc 60%, #e3f2fd 100%); min-height: 100vh;" data-gallery-images="{{ json_encode($galleryImageUrls) }}">
     <div class="container">
         <nav class="woocommerce-breadcrumb mb-4">

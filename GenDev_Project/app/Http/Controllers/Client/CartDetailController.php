@@ -223,6 +223,14 @@ class CartDetailController extends Controller
                 continue;
             }
             $cartDetail = Cartdetail::find($cartDetailId);
+            $maxQty = $cartDetail->variant
+                ? $cartDetail->variant->quantity
+                : $cartDetail->product->quantity;
+
+            if ($qty > $maxQty) {
+                return back()->with('error', 'Số lượng bạn yêu cầu cho sản phẩm "' . $cartDetail->product->name . '" vượt quá tồn kho.');   
+            }
+
             if ($cartDetail && $cartDetail->cart->user_id === Auth::id()) {
                 $cartDetail->quantity = $qty;
                 $cartDetail->save();
@@ -244,7 +252,8 @@ class CartDetailController extends Controller
         return back()->with('error', 'Không thể xóa sản phẩm.');
     }
 
-    public function handleAction(Request $request){
+    public function handleAction(Request $request)
+    {
         if ($request->has('btn_checkout')) {
             $selectedItems = $request->input('selected_items', []);
 
