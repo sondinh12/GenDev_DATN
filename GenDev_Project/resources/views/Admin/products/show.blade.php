@@ -28,8 +28,6 @@
                 <div class="col-md-7 fs-5">
                     <h5 class="mb-3 text-primary">Tên sản phẩm: {{ $product->name }}</h5>
                     <p><strong>Danh mục:</strong> {{ $product->category->name ?? 'Không có' }}</p>
-                    <p><strong>Giá gốc:</strong> <span class="text-danger">{{ number_format($product->price) }}đ</span></p>
-                    <p><strong>Giá KM:</strong> <span class="text-success">{{ number_format($product->sale_price) }}đ</span></p>
                     <p><strong>Mô tả:</strong><br>{{ $product->description }}</p>
                 </div>
             </div>

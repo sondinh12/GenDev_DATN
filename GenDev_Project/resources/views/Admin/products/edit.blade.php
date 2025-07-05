@@ -18,13 +18,27 @@ Products
 
 @section('content')
 @if (session('error'))
-<div class="alert alert-danger">
-    {{ session('error') }}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Lỗi!</strong> {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
 </div>
 @endif
 @if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Thành công!</strong> {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+</div>
+@endif
+
+@if ($errors->any())
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Lỗi!</strong> Vui lòng kiểm tra lại các trường bên dưới.<br>
+    <ul class="mb-0 mt-2">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
 </div>
 @endif
 <h2>Chỉnh sửa sản phẩm</h2>
@@ -255,24 +269,56 @@ Products
             ]);
         }
         let combos = cartesian(selected);
+
+        // Lấy các biến thể đã có trên bảng (nếu có)
+        let existingVariants = {};
+        document.querySelectorAll('#variant-table table tbody tr').forEach(tr => {
+            const valueIdsInput = tr.querySelector('input[type="hidden"][name*="[value_ids]"]');
+            if (valueIdsInput) {
+                const valueIds = valueIdsInput.value;
+                existingVariants[valueIds] = {
+                    price: tr.querySelector('input[name*="[price]"]').value,
+                    sale_price: tr.querySelector('input[name*="[sale_price]"]').value,
+                    quantity: tr.querySelector('input[name*="[quantity]"]').value
+                };
+            }
+        });
+
+        // Tạo danh sách mới, giữ lại các biến thể cũ và thêm mới
+        let allCombos = {};
+        combos.forEach(combo => {
+            const label = combo.map(c => c.valueLabel).join(' / ');
+            const valueIds = combo.map(c => c.valueId).join(',');
+            allCombos[valueIds] = {
+                label: label,
+                price: existingVariants[valueIds]?.price || '',
+                sale_price: existingVariants[valueIds]?.sale_price || '',
+                quantity: existingVariants[valueIds]?.quantity || ''
+            };
+        });
+        // Giữ lại các biến thể cũ không còn trong tổ hợp mới (nếu muốn giữ lại)
+        Object.assign(allCombos, existingVariants); // Nếu muốn giữ lại hoàn toàn
+
+        // Render lại bảng
         const table = document.createElement('table');
         table.className = 'table table-bordered';
         let thead = '<tr><th>Biến thể</th><th>Giá</th><th>Giá sale</th><th>Số lượng</th><th>Xóa</th></tr>';
         let tbody = '';
-        combos.forEach((combo, index) => {
-            const label = combo.map(c => c.valueLabel).join(' / ');
-            const valueIds = combo.map(c => c.valueId).join(',');
+        let idx = 0;
+        for (const valueIds in allCombos) {
+            const row = allCombos[valueIds];
             tbody += `<tr>
-                    <td>
-                        ${label}
-                        <input type="hidden" name="variant_combinations[${index}][value_ids]" value="${valueIds}">
-                    </td>
-                    <td><input name="variant_combinations[${index}][price]" class="form-control" type="number" step="0.01" required></td>
-                    <td><input name="variant_combinations[${index}][sale_price]" class="form-control" type="number" step="0.01"></td>
-                    <td><input name="variant_combinations[${index}][quantity]" class="form-control" type="number" required></td>
-                    <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">❌</button></td>
-                </tr>`;
-        });
+                <td>
+                    ${row.label}
+                    <input type="hidden" name="variant_combinations[${idx}][value_ids]" value="${valueIds}">
+                </td>
+                <td><input name="variant_combinations[${idx}][price]" class="form-control" type="number" step="0.01" value="${row.price}" required></td>
+                <td><input name="variant_combinations[${idx}][sale_price]" class="form-control" type="number" step="0.01" value="${row.sale_price}"></td>
+                <td><input name="variant_combinations[${idx}][quantity]" class="form-control" type="number" value="${row.quantity}" required></td>
+                <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">❌</button></td>
+            </tr>`;
+            idx++;
+        }
         table.innerHTML = `<thead>${thead}</thead><tbody>${tbody}</tbody>`;
         document.getElementById('variant-table').innerHTML = '';
         document.getElementById('variant-table').appendChild(table);
