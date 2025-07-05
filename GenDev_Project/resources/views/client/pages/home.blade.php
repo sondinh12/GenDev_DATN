@@ -1,6 +1,14 @@
 @extends('client.layout.master')
 
 @section('content')
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show fixed-top m-3 shadow" role="alert" style="z-index: 1050;">
+    {{ session('error') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
 <div id="content" class="site-content" tabindex="-1">
     <div class="col-full">
         <div class="row">
