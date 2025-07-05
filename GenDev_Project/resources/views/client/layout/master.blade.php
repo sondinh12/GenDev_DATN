@@ -24,7 +24,7 @@ $bodyClass = match($route) {
     default => 'page home page-template-default'
 };
 @endphp
-
+@stack('styles')
 <body class="{{ $bodyClass }}">
     <div id="page" class="site">
         @include('client.layout.partials.topbar')

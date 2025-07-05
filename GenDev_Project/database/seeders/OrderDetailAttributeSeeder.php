@@ -5,23 +5,23 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\OrderDetail;
 use App\Models\OrderDetailAttribute;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 
 class OrderDetailAttributeSeeder extends Seeder
 {
     public function run(): void
     {
         $orderDetails = OrderDetail::all();
-        $attributes = [
-            ['attribute_name' => 'Màu sắc', 'attribute_value' => 'Đỏ'],
-            ['attribute_name' => 'Kích thước', 'attribute_value' => 'L'],
-            ['attribute_name' => 'Chất liệu', 'attribute_value' => 'Cotton'],
-        ];
+        $attributes = Attribute::with('values')->get();
         foreach ($orderDetails as $orderDetail) {
-            foreach ($attributes as $attr) {
+            foreach ($attributes as $attribute) {
+                // Lấy ngẫu nhiên một giá trị cho mỗi thuộc tính
+                $value = $attribute->values->random();
                 OrderDetailAttribute::create([
                     'order_detail_id' => $orderDetail->id,
-                    'attribute_name' => $attr['attribute_name'],
-                    'attribute_value' => $attr['attribute_value'],
+                    'attribute_name' => $attribute->name,
+                    'attribute_value' => $value->value,
                 ]);
             }
         }

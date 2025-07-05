@@ -24,6 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'avatar',
         'address',
+        'city',
+        'ward',
+        'postcode',
         'phone',
         'gender',
         'status',
@@ -56,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function users()
     {
         return $this->belongsToMany(User::class, 'coupon_user')
-                    ->withPivot('times_used')
-                    ->withTimestamps();
+            ->withPivot('times_used')
+            ->withTimestamps();
     }
 }
