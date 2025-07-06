@@ -178,7 +178,6 @@ class ProductController extends Controller
         if ($request->quantity < $cartQuantity) {
             return back()->with('error', 'Không thể cập nhật số lượng nhỏ hơn tổng số lượng sản phẩm đã có trong giỏ hàng của khách!');
         }
-        
         $product->save();
 
         // Xử lý cập nhật gallery ảnh
@@ -197,30 +196,56 @@ class ProductController extends Controller
 
         // Xử lý cập nhật biến thể sản phẩm
         if ($request->has('variant_combinations')) {
-            // Xóa các biến thể cũ và thuộc tính liên quan
             $oldVariants = ProductVariant::where('product_id', $product->id)->get();
-            foreach ($oldVariants as $variant) {
-                ProductVariantAttribute::where('product_variant_id', $variant->id)->delete();
-                $variant->delete();
+            $oldVariantMap = [];
+            foreach ($oldVariants as $old) {
+                $key = $old->variantAttributes->pluck('attribute_value_id')->implode(',');
+                $oldVariantMap[$key] = $old;
             }
-            // Tạo lại các biến thể mới
+
+            $handledKeys = [];
             foreach ($request->variant_combinations as $variant) {
-                $variantModel = ProductVariant::create([
-                    'product_id' => $product->id,
-                    'price' => $variant['price'],
-                    'sale_price' => $variant['sale_price'] ?? 0,
-                    'quantity' => $variant['quantity'] ?? 0,
-                    'status' => $variant['status'] ?? 1,
-                ]);
                 $valueRaw = $variant['value_ids'] ?? [];
                 $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
-                foreach ($valueIds as $valueId) {
-                    $attributeId = AttributeValue::find($valueId)?->attribute_id;
-                    ProductVariantAttribute::create([
-                        'product_variant_id' => $variantModel->id,
-                        'attribute_value_id' => $valueId,
-                        'attribute_id' => $attributeId
+                $key = implode(',', $valueIds);
+                $handledKeys[] = $key;
+                if (isset($oldVariantMap[$key])) {
+                    // Check cart quantity for this variant
+                    $variantModel = $oldVariantMap[$key];
+                    $cartQuantity = $variantModel->cartdetails()->sum('quantity');
+                    if (($variant['quantity'] ?? 0) < $cartQuantity) {
+                        return back()->with('error', 'Không thể cập nhật số lượng biến thể nhỏ hơn tổng số lượng đã có trong giỏ hàng của khách!');
+                    }
+                    // Update variant
+                    $variantModel->price = $variant['price'];
+                    $variantModel->sale_price = $variant['sale_price'] ?? 0;
+                    $variantModel->quantity = $variant['quantity'] ?? 0;
+                    $variantModel->status = $variant['status'] ?? 1;
+                    $variantModel->save();
+                } else {
+                    // Create new variant
+                    $variantModel = ProductVariant::create([
+                        'product_id' => $product->id,
+                        'price' => $variant['price'],
+                        'sale_price' => $variant['sale_price'] ?? 0,
+                        'quantity' => $variant['quantity'] ?? 0,
+                        'status' => $variant['status'] ?? 1,
                     ]);
+                    foreach ($valueIds as $valueId) {
+                        $attributeId = AttributeValue::find($valueId)?->attribute_id;
+                        ProductVariantAttribute::create([
+                            'product_variant_id' => $variantModel->id,
+                            'attribute_value_id' => $valueId,
+                            'attribute_id' => $attributeId
+                        ]);
+                    }
+                }
+            }
+            // Xóa các biến thể không còn trong tổ hợp mới
+            foreach ($oldVariantMap as $key => $oldVariant) {
+                if (!in_array($key, $handledKeys)) {
+                    ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
+                    $oldVariant->delete();
                 }
             }
         }
