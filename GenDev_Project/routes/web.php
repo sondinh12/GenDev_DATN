@@ -123,6 +123,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
         Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
         Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+        Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
     });
 
     // Đơn hàng
