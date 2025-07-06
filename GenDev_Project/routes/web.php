@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
+
 
 session_start();
-
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -34,7 +34,7 @@ use App\Http\Controllers\Client\ClientOrderController;
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/about', function () {
@@ -173,6 +173,13 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
 Auth::routes(['verify' => true]); // Xác thực email
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
+Route::get('/profile/change-password', function () {
+    return view('auth.passwords.change_password');
+})->middleware('auth')->name('profile.change_password');
+
+Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->middleware('auth')->name('profile.change_password.update');
 
 
 // Giao diện nhập email để gửi OTP

@@ -26,7 +26,7 @@ class VnpayService
             "vnp_OrderInfo" => "Thanh toán đơn hàng #" . $order->id,
             "vnp_OrderType" => "billpayment",
             "vnp_ReturnUrl" => $vnp_Returnurl,
-            "vnp_TxnRef" =>'ORD' . uniqid(),
+            "vnp_TxnRef" => 'ORD' . uniqid(),
             "vnp_ExpireDate" => now()->addMinutes(30)->format('YmdHis'),
         ];
 
