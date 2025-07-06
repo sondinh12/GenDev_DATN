@@ -12,6 +12,11 @@ class CouponsController extends Controller
 {
     public function index()
     {
+       
+        Coupon::where('status', '!=', 2)
+            ->where('end_date', '<', now())
+            ->update(['status' => 2]);
+
         $coupons = Coupon::with('creator')
                     ->latest()
                     ->paginate(10);
@@ -31,7 +36,7 @@ class CouponsController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::id();
         $data['total_used'] = 0;
-        $data['status'] = $request->has('status') ? 1 : 0;
+        $data['status'] = $request->input('status', 1);
 
         Coupon::create($data);
 
@@ -50,8 +55,10 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::onlyTrashed()->findOrFail($id);
         $coupon->restore();
+        $coupon->status = 1;
+        $coupon->save();
 
-        return redirect()->route('admin.coupons.trashed')->with('success', 'Mã giảm giá đã được khôi phục.');
+        return redirect()->route('admin.coupons.trashed')->with('success', 'Mã giảm giá đã được khôi phục và hoạt động trở lại.');
     }
 
     public function forceDelete($id)
@@ -65,10 +72,18 @@ class CouponsController extends Controller
     public function destroy($id)
     {
         $coupon = Coupon::findOrFail($id);
+        if ($coupon->total_used > 0) {
+            return redirect()->route('coupons.index')
+                ->with('error', 'Không thể xóa mã giảm giá đã được sử dụng.');
+        }
+
+        $coupon->status = 0;
+        $coupon->save();
         $coupon->delete();
 
-        return redirect()->route('coupons.index')->with('success', 'Đã chuyển vào thùng rác');
+        return redirect()->route('coupons.index')->with('success', 'Đã chuyển vào thùng rác và dừng hoạt động');
     }
+
 
     public function show(string $id)
     {
@@ -86,7 +101,8 @@ class CouponsController extends Controller
         $coupon = Coupon::findOrFail($id);
         $data = $request->validated();
 
-        $data['status'] = $request->has('status') ? 1 : 0;
+
+        $data['status'] = $request->input('status', $coupon->status);
 
         $coupon->update($data);
 

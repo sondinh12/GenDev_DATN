@@ -24,7 +24,7 @@ return new class extends Migration
 
             // $table->integer("quantity"); <-- đã loại bỏ
 
-            $table->tinyInteger("status")->default(1);
+            $table->tinyInteger('status')->default(1)->comment('0: Tạm dừng, 1: Hoạt động, 2: Đã hết hạn');
             $table->decimal("max_coupon", 10, 2);
             $table->decimal("min_coupon", 10, 2);
 
