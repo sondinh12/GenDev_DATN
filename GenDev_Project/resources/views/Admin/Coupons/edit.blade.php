@@ -39,7 +39,7 @@
         <div class="mb-3">
             <label for="discount_amount">Giá trị giảm</label>
             <input type="number" name="discount_amount" id="discount_amount" class="form-control @error('discount_amount') is-invalid @enderror"
-                value="{{ old('discount_amount', $coupon->discount_amount ?? '') }}" step="1">
+                value="{{ old('discount_amount', isset($coupon->discount_amount) ? (int)$coupon->discount_amount : '') }}" step="1">
             @error('discount_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
@@ -57,19 +57,12 @@
             @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        {{-- <div class="mb-3">
-            <label for="quantity">Số lượng</label>
-            <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
-                value="{{ old('quantity', $coupon->quantity ?? '') }}">
-            @error('quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        </div> --}}
-
         <div class="mb-3">
             <label for="status">Trạng thái</label>
             <select name="status" class="form-control @error('status') is-invalid @enderror">
                 <option value="">-- Chọn trạng thái --</option>
                 <option value="1" {{ old('status', $coupon->status ?? '') == '1' ? 'selected' : '' }}>Hoạt động</option>
-                <option value="0" {{ old('status', $coupon->status ?? '') == '0' ? 'selected' : '' }}>Tắt</option>
+                <option value="0" {{ old('status', $coupon->status ?? '') == '0' ? 'selected' : '' }}>Tạm dừng</option>
             </select>
             @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
@@ -77,29 +70,28 @@
         <div class="mb-3">
             <label for="usage_limit">Giới hạn sử dụng (toàn hệ thống)</label>
             <input type="number" name="usage_limit" class="form-control @error('usage_limit') is-invalid @enderror"
-                value="{{ old('usage_limit', $coupon->usage_limit ?? '') }}">
+                value="{{ old('usage_limit', isset($coupon->usage_limit) ? (int)$coupon->usage_limit : '') }}">
             @error('usage_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">
             <label for="per_use_limit">Giới hạn mỗi người</label>
             <input type="number" name="per_use_limit" class="form-control @error('per_use_limit') is-invalid @enderror"
-                value="{{ old('per_use_limit', $coupon->per_use_limit ?? '') }}">
+                value="{{ old('per_use_limit', isset($coupon->per_use_limit) ? (int)$coupon->per_use_limit : '') }}">
             @error('per_use_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">
             <label for="min_coupon">Đơn tối thiểu áp dụng</label>
             <input type="number" name="min_coupon" class="form-control @error('min_coupon') is-invalid @enderror"
-                value="{{ old('min_coupon', $coupon->min_coupon ?? '') }}">
+                value="{{ old('min_coupon', isset($coupon->min_coupon) ? (int)$coupon->min_coupon : '') }}">
             @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        <!-- Giảm tối đa -->
         <div class="mb-3" id="maxCouponWrapper">
             <label for="max_coupon">Giảm tối đa</label>
             <input type="number" name="max_coupon" id="max_coupon" class="form-control @error('max_coupon') is-invalid @enderror"
-                value="{{ old('max_coupon', $coupon->max_coupon ?? 0) }}">
+                value="{{ old('max_coupon', isset($coupon->max_coupon) ? (int)$coupon->max_coupon : 0) }}">
             @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 

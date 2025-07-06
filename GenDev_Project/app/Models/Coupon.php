@@ -25,7 +25,8 @@ class Coupon extends Model
         'min_coupon',
         'usage_limit',
         'per_use_limit',
-        'total_used'
+        'total_used',
+        'user_id'
     ];
 
 

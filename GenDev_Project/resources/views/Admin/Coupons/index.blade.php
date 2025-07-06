@@ -6,10 +6,6 @@
 <div class="container mt-4">
     <h2 class="mb-4">Danh sách mã giảm giá</h2>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
     <div class="d-flex justify-content-between mb-3">
         <a href="{{ route('coupons.create') }}" class="btn btn-primary">
             <i class="fa fa-plus"></i> Thêm mã mới
@@ -35,8 +31,10 @@
                     <th>Người tạo</th>
                     <th>Loại giảm</th>
                     <th>Giá trị</th>
-                    <th>Hết hạn</th>
+                    <th>Ngày tạo</th> 
+                    <th>Hết hạn</th>   
                     <th>Đã dùng</th>
+                    <th>Số lượng</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
@@ -62,13 +60,23 @@
                             {{ number_format($coupon->discount_amount, 0, ',', '.') }}₫
                         @endif
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i:s') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>    
                     <td>{{ $coupon->total_used }}</td>
                     <td>
-                        @if($coupon->status)
-                            <span class="badge bg-success">Hoạt động</span>
+                        @if($coupon->usage_limit == -1)
+                            Không giới hạn
                         @else
-                            <span class="badge bg-secondary">Ngưng</span>
+                            {{ $coupon->usage_limit }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($coupon->status == 1)
+                            <span class="badge bg-success">Hoạt động</span>
+                        @elseif($coupon->status == 0)
+                            <span class="badge bg-secondary">Tạm dừng</span>
+                        @elseif($coupon->status == 2)
+                            <span class="badge bg-danger">Đã hết hạn</span>
                         @endif
                     </td>
                     <td class="d-flex gap-1">
@@ -85,7 +93,7 @@
 
                 @if($coupons->isEmpty())
                     <tr>
-                        <td colspan="10" class="text-center">Không có mã nào</td>
+                        <td colspan="12" class="text-center">Không có mã nào</td>
                     </tr>
                 @endif
             </tbody>
@@ -96,4 +104,37 @@
         {{ $coupons->links() }}
     </div>
 </div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('success') }}',
+                timer: 2500,
+                showConfirmButton: false,
+                timerProgressBar: true
+            }).then(() => {
+                window.location.href = window.location.href;
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại!',
+                text: '{{ session('error') }}',
+                timer: 3000,
+                showConfirmButton: false,
+                timerProgressBar: true
+            }).then(() => {
+                window.location.href = window.location.href;
+            });
+        @endif
+    });
+</script>
 @endsection

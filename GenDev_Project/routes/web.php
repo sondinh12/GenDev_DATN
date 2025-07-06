@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
+
 
 session_start();
-
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
+use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
@@ -23,15 +24,8 @@ use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Client\ClientOrderController;
 
-// Route::get('/', function () {
-//     return view('admin.apps-chat');
-// });
-
-
-Route::resource('/products', ProductController::class);
-Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
-Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
 
 // Route::get('/products', function () {
 
@@ -40,7 +34,7 @@ Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->n
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/about', function () {
@@ -125,10 +119,14 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
         Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
         Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
-        Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+        Route::post('attributes/trash/{id}', [ProductController::class, 'trashAttribute'])->name('admin.attributes.trash');
         Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
         Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+        Route::post('/admin/attributes/restore/{id}', [ProductController::class, 'restoreAttribute'])->name('admin.attributes.restore');
         Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+        Route::get('/attributes/trash', [ProductController::class, 'trashList'])->name('admin.attributes.trashList');
+        Route::delete('/attributes/force-delete/{id}', [ProductController::class, 'forceDeleteAttribute'])->name('admin.attributes.forceDelete');
+        Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
     });
 
     // Đơn hàng
@@ -157,17 +155,34 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
+    Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
+    Route::resource('coupons', CouponsController::class);
+    Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
+    Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
 });
 
 Route::resource('/product', ClientProductController::class);
+Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
+    Route::get('/', [ClientOrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
+    Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
+});
+
 
 // ================= TÀI KHOẢN =================
 
 Auth::routes(['verify' => true]); // Xác thực email
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
+Route::get('/profile/change-password', function () {
+    return view('auth.passwords.change_password');
+})->middleware('auth')->name('profile.change_password');
+
+Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->middleware('auth')->name('profile.change_password.update');
 
 
 // Giao diện nhập email để gửi OTP

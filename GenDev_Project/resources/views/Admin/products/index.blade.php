@@ -20,6 +20,14 @@ Manage
 @endif
 
 <a href="{{route('products.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
+    <a href="{{ route('products.trash.list') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
+        Thùng rác
+        @if(isset($trashedCount) && $trashedCount > 0)
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ $trashedCount }}
+            </span>
+        @endif
+    </a>
 <table border=1 class="table">
     <tr>
         <th>ID</th>
@@ -63,7 +71,7 @@ Manage
                 <form action="{{ route('products.trash', $pro->id) }}" method="POST" style="display:inline-block;">
                     @csrf
                     @method('PATCH')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn chuyển sản phẩm này vào thùng rác?')">Thùng rác</button>
                 </form>
             @elseif($pro->status == 2)
                 <form action="{{ route('products.restore', $pro->id) }}" method="POST" style="display:inline-block;">
