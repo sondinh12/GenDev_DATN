@@ -22,13 +22,15 @@ class Order extends Model
         'payment',
         'total',
         'shipping_fee',
+        'transaction_code',
         'status',
         'payment_status',
-    ];
+        'payment_expired_at'
+        ];
 
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
 
     public function coupon()

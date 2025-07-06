@@ -17,16 +17,16 @@ class VnpayService
         $inputData = [
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnp_TmnCode,
-            "vnp_Amount" => $order->total * 100,
+            "vnp_Amount" => (int)($order->total * 100),
             "vnp_Command" => "pay",
             "vnp_CreateDate" => now()->format('YmdHis'),
             "vnp_CurrCode" => "VND",
             "vnp_IpAddr" => request()->ip(),
             "vnp_Locale" => "vn",
-            "vnp_OrderInfo" => "Thanh toán đơn hàng #" . $order->id,
+            "vnp_OrderInfo" => "Thanh toán đơn hàng " . $order->id,
             "vnp_OrderType" => "billpayment",
             "vnp_ReturnUrl" => $vnp_Returnurl,
-            "vnp_TxnRef" => 'ORD' . uniqid(),
+            "vnp_TxnRef" => $order->transaction_code,
             "vnp_ExpireDate" => now()->addMinutes(30)->format('YmdHis'),
         ];
 

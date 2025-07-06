@@ -104,7 +104,7 @@
                                                             <label class="" for="billing_first_name">Họ và tên
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="text" value="" placeholder="" id="billing_first_name" name="name" class="input-text ">
+                                                            <input type="text" value="{{$user->name}}" placeholder="" id="billing_first_name" name="name" class="input-text ">
                                                             @error('name')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
@@ -115,7 +115,7 @@
                                                             <label class="" for="billing_city">Thành phố
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="text" value="" placeholder="" id="billing_city" name="city" class="input-text ">
+                                                            <input type="text" value="{{$user->city}}" placeholder="" id="billing_city" name="city" class="input-text ">
                                                             @error('city')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
@@ -124,7 +124,7 @@
                                                             <label class="" for="billing_ward">Xã, Phường
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="text" value="" placeholder="" id="billing_ward" name="ward" class="input-text ">
+                                                            <input type="text" value="{{$user->ward}}" placeholder="" id="billing_ward" name="ward" class="input-text ">
                                                             @error('ward')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
@@ -133,7 +133,7 @@
                                                             <label class="" for="billing_address_1">Địa chỉ cụ thể
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="text" value="" placeholder="Address" id="billing_address_1" name="address" class="input-text ">
+                                                            <input type="text" value="{{$user->address}}" placeholder="Address" id="billing_address_1" name="address" class="input-text ">
                                                             @error('address')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
@@ -151,7 +151,7 @@
                                                             <label class="" for="billing_phone">Phone
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="tel" value="" placeholder="" id="phone" name="phone" class="input-text ">
+                                                            <input type="tel" value="{{$user->phone}}" placeholder="" id="phone" name="phone" class="input-text ">
                                                             @error('phone')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
@@ -160,7 +160,7 @@
                                                             <label class="" for="billing_email">Email Address
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="email" value="" placeholder="" id="email" name="email" class="input-text ">
+                                                            <input type="email" value="{{$user->email}}" placeholder="" id="email" name="email" class="input-text ">
                                                             @error('email')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
