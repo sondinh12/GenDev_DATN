@@ -38,7 +38,7 @@ class CancelUnpaidOrders extends Command
 
         foreach ($expiredOrders as $order) {
             $order->update([
-                'status' => 'canceled'
+                'status' => 'cancelled'
             ]);
 
             $this->info("Đã hủy đơn hàng #{$order->id} (Mã giao dịch: {$order->transaction_code})");

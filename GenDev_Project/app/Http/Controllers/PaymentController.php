@@ -14,6 +14,7 @@ class PaymentController extends Controller
 {
     public function vnpayReturn(Request $request)
     {
+        
         $vnpData = $request->all();
         $vnp_SecureHash = $vnpData['vnp_SecureHash'];
         unset($vnpData['vnp_SecureHash'], $vnpData['vnp_SecureHashType']);
@@ -34,13 +35,13 @@ class PaymentController extends Controller
 
         if ($secureHash === $vnp_SecureHash) {
             // cần sửa tnxRef
-            $order = Order::where('transaction_Code',$request->vnp_TxnRef)->first();
-            // dd($order->email);
+            $order = Order::where('transaction_code',$request->vnp_TxnRef)->first();
+            // dd($request->all());
 
             if ($order) {
                 if ($request->vnp_ResponseCode == '00') {
                     // trừ tồn kho nếu thanh toán thành công
-                    foreach ($order->details as $item) {
+                    foreach ($order->orderDetails as $item) {
                     if ($item->variant_id) {
                         $variant = ProductVariant::find($item->variant_id);
                         $variant->decrement('quantity', $item->quantity);
