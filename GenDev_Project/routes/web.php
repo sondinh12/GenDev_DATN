@@ -119,10 +119,13 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
         Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
         Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
-        Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+        Route::post('attributes/trash/{id}', [ProductController::class, 'trashAttribute'])->name('admin.attributes.trash');
         Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
         Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+        Route::post('/admin/attributes/restore/{id}', [ProductController::class, 'restoreAttribute'])->name('admin.attributes.restore');
         Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+        Route::get('/attributes/trash', [ProductController::class, 'trashList'])->name('admin.attributes.trashList');
+        Route::delete('/attributes/force-delete/{id}', [ProductController::class, 'forceDeleteAttribute'])->name('admin.attributes.forceDelete');
         Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
     });
 

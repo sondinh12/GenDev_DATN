@@ -62,7 +62,7 @@
             <select name="status" class="form-control @error('status') is-invalid @enderror">
                 <option value="">-- Chọn trạng thái --</option>
                 <option value="1" {{ old('status', $coupon->status ?? '') == '1' ? 'selected' : '' }}>Hoạt động</option>
-                <option value="0" {{ old('status', $coupon->status ?? '') == '0' ? 'selected' : '' }}>Tắt</option>
+                <option value="0" {{ old('status', $coupon->status ?? '') == '0' ? 'selected' : '' }}>Tạm dừng</option>
             </select>
             @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
