@@ -178,7 +178,7 @@ class ProductController extends Controller
         if ($request->quantity < $cartQuantity) {
             return back()->with('error', 'Không thể cập nhật số lượng nhỏ hơn tổng số lượng sản phẩm đã có trong giỏ hàng của khách!');
         }
-
+        
         $product->save();
 
         // Xử lý cập nhật gallery ảnh
