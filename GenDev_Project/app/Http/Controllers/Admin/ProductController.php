@@ -173,13 +173,12 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
 
-        // Kiểm tra nếu sản phẩm đã có trong giỏ hàng thì không cho sửa số lượng nhỏ hơn tổng số lượng đã có trong giỏ
+        // Chỉ kiểm tra nếu số lượng thay đổi
         $cartQuantity = $product->cartdetails()->sum('quantity');
-        if ($request->quantity < $cartQuantity) {
+        if ($request->quantity != $product->quantity && $request->quantity < $cartQuantity) {
             return back()->with('error', 'Không thể cập nhật số lượng nhỏ hơn tổng số lượng sản phẩm đã có trong giỏ hàng của khách!');
         }
         $product->save();
-
         // Xử lý cập nhật gallery ảnh
         if ($request->hasFile('galleries')) {
             // Xóa ảnh gallery cũ
@@ -193,7 +192,6 @@ class ProductController extends Controller
                 ]);
             }
         }
-
         // Xử lý cập nhật biến thể sản phẩm
         if ($request->has('variant_combinations')) {
             $oldVariants = ProductVariant::where('product_id', $product->id)->get();
