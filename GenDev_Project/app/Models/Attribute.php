@@ -6,9 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attribute extends Model
 {
-    protected $fillable = [
-        'name'
-    ];
+    protected $fillable = ['name', 'status'];
+
+    public function scopeTrash($query)
+    {
+        return $query->where('status', 2);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 
     public function values(){
         return $this->hasMany(AttributeValue::class,'attribute_id');

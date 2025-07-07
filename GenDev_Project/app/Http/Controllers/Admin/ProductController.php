@@ -306,9 +306,11 @@ class ProductController extends Controller
     // Hiển thị danh sách thuộc tính
     public function allAttributes()
     {
-        $attributes = Attribute::with('values')->get();
-        return view('Admin.attributes.ProductsAttribute', compact('attributes'));
+        $attributes = Attribute::with('values')->where('status', 1)->get();
+        $trashCount = Attribute::where('status', 2)->count();
+        return view('Admin.attributes.ProductsAttribute', compact('attributes', 'trashCount'));
     }
+
 
     // Hiển thị form thêm thuộc tính
     public function createAttribute()
@@ -389,6 +391,33 @@ class ProductController extends Controller
         return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
     }
 
+            public function trashAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->status = 2; // đánh dấu là đã xóa
+        $attribute->save();
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Đã đưa thuộc tính vào thùng rác!');
+    }
+
+
+    public function restoreAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->status = 1; // khôi phục
+        $attribute->save();
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Đã khôi phục thuộc tính!');
+    }
+
+        public function trashList()
+    {
+        $attributes = Attribute::with('values')->where('status', 2)->get();
+        return view('Admin.attributes.trash', compact('attributes'));
+    }
+
+
+
     // Xóa thuộc tính + tất cả value con
     public function destroyAttribute($id)
     {
@@ -405,13 +434,13 @@ class ProductController extends Controller
         $value->delete();
         return redirect()->back()->with('success', 'Xóa giá trị thành công!');
     }
-
-    /**
-     * Hiển thị danh sách sản phẩm đã xoá mềm (thùng rác)
-     */
-    public function trashList()
+        public function forceDeleteAttribute($id)
     {
-        $products = Product::onlyTrashed()->with('category')->orderByDesc('deleted_at')->get();
-        return view('Admin.products.trash', compact('products'));
+        $attribute = Attribute::with('values')->findOrFail($id);
+        $attribute->values()->delete(); // Xóa các value con
+        $attribute->delete(); // Xóa chính nó
+
+        return redirect()->route('admin.attributes.trashList')->with('success', 'Đã xóa vĩnh viễn thuộc tính!');
     }
+
 }
