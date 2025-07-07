@@ -213,7 +213,7 @@ class ProductController extends Controller
                     // Check cart quantity for this variant
                     $variantModel = $oldVariantMap[$key];
                     $cartQuantity = $variantModel->cartdetails()->sum('quantity');
-                    if (($variant['quantity'] ?? 0) < $cartQuantity) {
+                    if ($request->quantity != $product->quantity && $request->quantity < $cartQuantity) {
                         return back()->with('error', 'Không thể cập nhật số lượng biến thể nhỏ hơn tổng số lượng đã có trong giỏ hàng của khách!');
                     }
                     // Update variant
