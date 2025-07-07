@@ -185,7 +185,7 @@ class CartDetailController extends Controller
                 'product_id' => $productId,
                 'variant_id' => $matchedVariant ? $matchedVariant->id : null,
                 'quantity' => $quantity,
-                'price' => $matchedVariant ? ($matchedVariant->sale_price ?? $matchedVariant->price) : ($product->sale_price ?? $product->price),
+                // 'price' => $matchedVariant ? ($matchedVariant->sale_price ?? $matchedVariant->price) : ($product->sale_price ?? $product->price),
             ]);
         }
 
