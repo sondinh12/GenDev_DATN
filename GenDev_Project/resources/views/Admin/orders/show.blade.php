@@ -31,51 +31,70 @@
                 </div>
                 <div class="card-body">
                     {{-- Trạng thái thanh toán & đơn hàng --}}
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5 class="fw-bold mb-2">Trạng thái thanh toán</h5>
-                            @php
-                            $paymentClass = match($order->payment_status) {
-                                'paid' => 'success',
-                                'unpaid' => 'warning',
-                                'cancelled' => 'danger',
-                                default => 'secondary',
-                            };
-                            @endphp
-                            <span class="badge bg-{{ $paymentClass }} p-2 mb-2">{{ ucfirst($order->payment_status) }}</span>
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
-                            @php
-                            $statusClass = match($order->status) {
-                                'pending' => 'secondary',
-                                'processing' => 'info',
-                                'shipped' => 'primary',
-                                'completed' => 'success',
-                                'cancelled' => 'danger',
-                                default => 'dark',
-                            };
-                            @endphp
-                            <span class="badge bg-{{ $statusClass }} p-2 mb-2">{{ ucfirst($order->status) }}</span>
-                            @if(!in_array($order->status, ['shipped', 'cancelled']))
-                           <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
-    @csrf
-    @method('PUT')
-    <div class="d-flex flex-column flex-md-row align-items-start gap-2">
-        <select name="status" class="form-select form-select-sm w-auto">
-            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
-            <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
-            <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Đã giao</option>
-            <option value="cancelled">Đã hủy</option>
-        </select>
-        <input type="text" name="note" class="form-control form-control-sm w-50" placeholder="Ghi chú (nếu có)">
-        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-sync"></i> Cập nhật</button>
-    </div>
-</form>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h5 class="fw-bold mb-2">Trạng thái thanh toán</h5>
+        @php
+            $paymentClass = match($order->payment_status) {
+                'paid' => 'success',
+                'unpaid' => 'warning',
+                'cancelled' => 'danger',
+                default => 'secondary',
+            };
 
-                            @endif
-                        </div>
-                    </div>
+            $paymentLabels = [
+                'paid' => 'Đã thanh toán',
+                'unpaid' => 'Chưa thanh toán',
+                'cancelled' => 'Đã hủy',
+            ];
+        @endphp
+        <span class="badge bg-{{ $paymentClass }} p-2 mb-2">
+            {{ $paymentLabels[$order->payment_status] ?? ucfirst($order->payment_status) }}
+        </span>
+    </div>
+
+    <div class="col-md-6">
+        <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
+        @php
+            $statusClass = match($order->status) {
+                'pending' => 'secondary',
+                'processing' => 'info',
+                'shipped' => 'primary',
+                'completed' => 'success',
+                'cancelled' => 'danger',
+                default => 'dark',
+            };
+
+            $statusLabels = [
+                'pending' => 'Chờ xử lý',
+                'processing' => 'Đang xử lý',
+                'shipped' => 'Đã giao',
+                'completed' => 'Hoàn thành',
+                'cancelled' => 'Đã hủy',
+            ];
+        @endphp
+        <span class="badge bg-{{ $statusClass }} p-2 mb-2">
+            {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
+        </span>
+
+        @if(!in_array($order->status, ['shipped', 'cancelled','completed']))
+        <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
+            @csrf
+            @method('PUT')
+            <div class="d-flex flex-column flex-md-row align-items-start gap-2">
+                <select name="status" class="form-select form-select-sm w-auto">
+                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
+                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
+                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Đã giao</option>
+                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                </select>
+                <input type="text" name="note" class="form-control form-control-sm w-50" placeholder="Ghi chú (nếu có)">
+                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-sync"></i> Cập nhật</button>
+            </div>
+        </form>
+        @endif
+    </div>
+</div>
 
                     {{-- Thông tin khách hàng --}}
                     <div class="card mb-4 border-start border-4 border-primary">
@@ -241,6 +260,14 @@
                 'completed' => 'success',
                 'cancelled' => 'danger',
             ];
+
+            $statusLabels = [
+                'pending' => 'Chờ xử lý',
+                'processing' => 'Đang xử lý',
+                'shipped' => 'Đã giao',
+                'completed' => 'Hoàn thành',
+                'cancelled' => 'Đã huỷ',
+            ];
         @endphp
 
         @if($order->orderStatusLogs && $order->orderStatusLogs->isNotEmpty())
@@ -261,13 +288,13 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>
-                            <span class="badge bg-{{ $badgeColors[$log->old_status] ?? 'secondary' }} text-capitalize">
-                                {{ $log->old_status }}
+                            <span class="badge bg-{{ $badgeColors[$log->old_status] ?? 'secondary' }}">
+                                {{ $statusLabels[$log->old_status] ?? ucfirst($log->old_status) }}
                             </span>
                         </td>
                         <td>
-                            <span class="badge bg-{{ $badgeColors[$log->new_status] ?? 'secondary' }} text-capitalize">
-                                {{ $log->new_status }}
+                            <span class="badge bg-{{ $badgeColors[$log->new_status] ?? 'secondary' }}">
+                                {{ $statusLabels[$log->new_status] ?? ucfirst($log->new_status) }}
                             </span>
                         </td>
                         <td>{{ $log->changedBy->name ?? 'Hệ thống' }}</td>
@@ -283,6 +310,7 @@
         @endif
     </div>
 </div>
+
 
 
                 </div>

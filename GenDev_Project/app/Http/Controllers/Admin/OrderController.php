@@ -24,11 +24,12 @@ class OrderController extends Controller
             ->when($request->search, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             })
-            ->latest()
+            ->orderBy('created_at', 'desc') // đảm bảo sắp xếp theo ngày tạo mới nhất
             ->paginate(10);
 
         return view('Admin.orders.index', compact('orders'));
     }
+
 
     // public function updatePaymentStatus(Request $request, $id)
     // {

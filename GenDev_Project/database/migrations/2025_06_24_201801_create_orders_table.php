@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('ward');
             $table->string('postcode');
 
-            $table->enum('payment', ['cod', 'banking', 'momo'])->default('cod');
+            $table->enum('payment', ['cod', 'banking'])->default('cod');
 
             $table->enum('payment_status', ['paid', 'unpaid', 'cancelled'])->default('unpaid');
             $table->timestamp('payment_expired_at')->nullable();
