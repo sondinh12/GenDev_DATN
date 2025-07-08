@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             CouponSeeder::class,
             OrderSeeder::class,
             OrderDetailAttributeSeeder::class,
+            OrderStatusLogSeeder::class,
+
         ]);
     }
 }

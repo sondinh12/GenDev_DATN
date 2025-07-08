@@ -50,10 +50,15 @@
                 </a>
                 <ul role="menu" class="dropdown-menu">
                     <li class="menu-item animate-dropdown">
+                        @role('admin|staff')
+                            <a href="{{ route('admin.dashboard') }}">Quản trị</a>
+                        @endrole
+                    </li>
+                    <li class="menu-item animate-dropdown">
                         <a title="Profile" href="{{ route('profile') }}">Hồ sơ</a>
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="My Orders" href="#">Đơn hàng của tôi</a>
+                        <a title="My Orders" href="#">My Orders</a>
                     </li>
                     <li class="menu-item animate-dropdown">
                         <a title="Logout" href="{{ route('logout') }}" onclick="event.preventDefault();

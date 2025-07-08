@@ -21,8 +21,8 @@ class ProductController extends Controller
             'categoryMini',
             'galleries',
             'variants.variantAttributes.attribute',
-            'variants.variantAttributes.value'
-            ])->findOrFail($id);
+            'variants.variantAttributes.value',
+        ])->findOrFail($id);
 
         // Lấy danh sách ảnh cho gallery
         $galleryImageUrls = [];

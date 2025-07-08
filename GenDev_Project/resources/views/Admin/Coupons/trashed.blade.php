@@ -6,10 +6,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Thùng rác mã giảm giá</h2>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
+    {{-- Nút quay lại --}}
     <a href="{{ route('coupons.index') }}" class="btn btn-secondary mb-3">
         <i class="fa fa-arrow-left"></i> Quay lại danh sách
     </a>
@@ -52,7 +49,7 @@
                         @if($coupon->status)
                             <span class="badge bg-success">Hoạt động</span>
                         @else
-                            <span class="badge bg-secondary">Tắt</span>
+                            <span class="badge bg-secondary">Tạm dừng</span>
                         @endif
                     </td>
                     <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i') }}</td>
@@ -77,4 +74,24 @@
         </table>
     </div>
 </div>
+
+{{-- Thư viện SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Hiển thị thông báo popup nếu có session success --}}
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Đóng',
+            timer: 2000,
+            timerProgressBar: true
+        });
+    });
+</script>
+@endif
 @endsection

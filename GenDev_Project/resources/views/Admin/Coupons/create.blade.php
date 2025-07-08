@@ -49,15 +49,7 @@
             @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="status">Trạng thái</label>
-            <select name="status" class="form-control @error('status') is-invalid @enderror">
-                <option value="">-- Chọn trạng thái --</option>
-                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Hoạt động</option>
-                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tắt</option>
-            </select>
-            @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        </div>
+            <input type="hidden" name="status" value="1">
 
         <div class="mb-3">
             <label for="usage_limit">Giới hạn sử dụng (toàn hệ thống)</label>
