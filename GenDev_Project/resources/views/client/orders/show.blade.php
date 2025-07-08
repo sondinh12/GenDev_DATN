@@ -97,7 +97,7 @@
             <div class="text-end mt-4">
                 <div>Tạm tính: <strong>{{ number_format($order->total, 0, ',', '.') }} đ</strong></div>
                 <div>Phí vận chuyển: <strong>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</strong></div>
-                <div class="fs-5 fw-bold text-danger">Tổng cộng: {{ number_format($order->total + $order->shipping_fee, 0, ',', '.') }} đ</div>
+                <div class="fs-5 fw-bold text-danger">Tổng cộng: {{ number_format($order->total, 0, ',', '.') }} đ</div>
             </div>
         </div>
     </div>
