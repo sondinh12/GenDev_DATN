@@ -114,13 +114,13 @@
                     <div class="mb-3 small text-muted border-bottom pb-2">
                         <span>Danh mục: <b>{{ $product->category->name ?? '' }}</b></span>
                         <br>
-                        <span class="ms-3">Tình trạng: <span class="badge bg-success">{{ $product->status == 1 ? 'Còn hàng' : 'Hết hàng' }}</span></span>
+                        <span class="ms-3">Tình trạng: <span id="variant-status" class="badge {{ $product->status == 1 ? 'bg-success' : 'bg-danger' }}">{{ $product->status == 1 ? 'Còn hàng' : 'Hết hàng' }}</span></span>
                     </div>
                     <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
                         <span class="fw-semibold">Số lượng còn lại:</span>
-                        <span class="fw-bold text-primary">
+                        <span id="variant-quantity" class="fw-bold text-primary">
                             @if(count($product->variants))
-                                {{ $product->variants[0]->quantity }}
+                                --
                             @else
                                 {{ $product->quantity ?? 0 }}
                             @endif
@@ -173,7 +173,7 @@
                         @endforeach
                     
                         <div>    
-                            <button class="btn btn-primary btn-lg rounded-pill px-4 fw-semibold shadow flex-grow-1" type="submit" style="margin-right: 10px;"><i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ</button>
+                            <button id="add-to-cart-btn" class="btn btn-primary btn-lg rounded-pill px-4 fw-semibold shadow flex-grow-1" type="submit" style="margin-right: 10px;"><i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ</button>
                             <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-semibold shadow-sm flex-grow-1">
                                 <i class="fas fa-arrow-left me-1"></i>Quay lại
                             </a>
@@ -382,7 +382,21 @@ $(function() {
                 }
                 $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
                 $('#variant-quantity').text(info.quantity);
+
+                // Tình trạng và nút thêm vào giỏ
+                if(info.quantity > 0) {
+                    $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
+                    $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
+                } else {
+                    $('#variant-status').removeClass('bg-success').addClass('bg-danger').text('Hết hàng');
+                    $('#add-to-cart-btn').removeClass('btn-primary').addClass('btn-secondary').prop('disabled', true);
+                }
             }
+        } else {
+            // Nếu chưa chọn đủ thuộc tính, reset trạng thái
+            $('#variant-quantity').text('--');
+            $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
+            $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
         }
     }
     $('.variant-select').on('change', updateVariantInfo);
