@@ -27,6 +27,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Tên khách</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
                             <th>Tổng tiền</th>
                             <th>Phương thức thanh toán</th>
                             <th>Trạng thái thanh toán</th>
@@ -40,6 +42,9 @@
                             <tr>
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->name }}</td>
+                                <td>{{ $order->phone }}</td>
+                                <td>{{ $order->address }}</td>
+
                                 <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                                 <td>{{ strtoupper($order->payment) }}</td>
                                 <td>
@@ -77,7 +82,7 @@
                                     <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i> Xem
                                     </a>
-                                    
+
                                     <!-- Nút cập nhật trạng thái -->
                                     {{-- @if($order->status !== 'completed' && $order->status !== 'cancelled')
                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
