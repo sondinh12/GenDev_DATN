@@ -173,11 +173,6 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
 
-        // Chỉ kiểm tra nếu số lượng thay đổi
-        $cartQuantity = $product->cartdetails()->sum('quantity');
-        if ($request->quantity != $product->quantity && $request->quantity < $cartQuantity) {
-            return back()->with('error', 'Không thể cập nhật số lượng nhỏ hơn tổng số lượng sản phẩm đã có trong giỏ hàng của khách!');
-        }
         $product->save();
         // Xử lý cập nhật gallery ảnh
         if ($request->hasFile('galleries')) {
@@ -208,13 +203,8 @@ class ProductController extends Controller
                 $key = implode(',', $valueIds);
                 $handledKeys[] = $key;
                 if (isset($oldVariantMap[$key])) {
-                    // Check cart quantity for this variant
+                    // Update variant (không kiểm tra số lượng trong giỏ hàng)
                     $variantModel = $oldVariantMap[$key];
-                    $cartQuantity = $variantModel->cartdetails()->sum('quantity');
-                    if (($variant['quantity'] ?? 0) < $cartQuantity) {
-                        return back()->with('error', 'Không thể cập nhật số lượng biến thể nhỏ hơn tổng số lượng đã có trong giỏ hàng của khách!');
-                    }
-                    // Update variant
                     $variantModel->price = $variant['price'];
                     $variantModel->sale_price = $variant['sale_price'] ?? 0;
                     $variantModel->quantity = $variant['quantity'] ?? 0;
