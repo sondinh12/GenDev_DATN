@@ -22,7 +22,12 @@ class CategoryMiniController extends Controller
             $query->where('name', 'like', '%' . $_GET['search'] . '%');
         }
         $minis = $query->latest()->paginate(10);
-        return view('admin.categories.categories_minis.index', compact('minis', 'categories'));
+
+        // Đếm số lượng danh mục con đã xóa mềm (trong thùng rác)
+        $trashedCount = CategoryMini::onlyTrashed()->where('category_id', $id)->count();
+
+        $category_id = $id;
+        return view('admin.categories.categories_minis.index', compact('minis', 'categories', 'category_id', 'trashedCount'));
     }
 
     /**
@@ -96,15 +101,48 @@ class CategoryMiniController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($category_id,$id)
+    public function destroy($category_id, $id)
     {
         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
-        // Xóa ảnh nếu có
+
+        // Kiểm tra nếu có sản phẩm thì không cho xóa
+        if ($categoryMini->products()->count() > 0) {
+            return redirect()->route('admin.categories_minis.index', ['id' => $category_id])
+                ->with('error', 'Không thể xóa danh mục con này vì vẫn còn sản phẩm!');
+        }
+
+        // Xóa file ảnh nếu có
         if ($categoryMini->image) {
             Storage::disk('public')->delete($categoryMini->image);
         }
-        $categoryMini->delete();
-        return redirect()->route('admin.categories_minis.index',['id' => $category_id])
-            ->with('success', 'Xóa danh mục con thành công!');
+
+        $categoryMini->delete(); // Soft delete
+
+        return redirect()->route('admin.categories_minis.index', ['id' => $category_id])
+            ->with('success', 'Danh mục con đã được chuyển vào thùng rác!');
+    }
+
+    public function trash_catemini(Request $request)
+    {
+        // Lấy id danh mục cha, ví dụ từ query string hoặc logic của bạn
+        $category_id = $request->category_id; // hoặc lấy từ session, hoặc từ 1 bản ghi bất kỳ trong $trashed
+        $trashed = CategoryMini::onlyTrashed()->where('category_id', $category_id)->get();
+        return view('Admin.categories.categories_minis.trash_catemini', compact('trashed', 'category_id'));
+    }
+
+    // Khôi phục
+    public function restore($id)
+    {
+        $categoryMini = CategoryMini::onlyTrashed()->findOrFail($id);
+        $categoryMini->restore();
+        return redirect()->back()->with('success', 'Khôi phục danh mục con thành công!');
+    }
+
+    // Xóa vĩnh viễn
+    public function forceDelete($id)
+    {
+        $categoryMini = CategoryMini::onlyTrashed()->findOrFail($id);
+        $categoryMini->forceDelete();
+        return redirect()->back()->with('success', 'Đã xóa vĩnh viễn danh mục con!');
     }
 }

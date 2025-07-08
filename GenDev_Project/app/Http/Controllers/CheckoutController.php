@@ -36,7 +36,12 @@ class CheckoutController extends Controller
         if (empty($selectedItemIds)) {
             $cartItems = collect();
             $subtotal = 0;
-            return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds'));
+            $coupons = Coupon::where('status', 1)
+                ->where('usage_limit', '>', 0)
+                ->whereDate('start_date', '<=', now())
+                ->whereDate('end_date', '>=', now())
+                ->get();
+            return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds', 'coupons'));
         }
 
         $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute','variant.variantAttributes.value')
@@ -45,7 +50,12 @@ class CheckoutController extends Controller
         $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds'));
+        $coupons = Coupon::where('status', 1)
+            ->where('usage_limit', '>', 0)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->get();
+        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds', 'coupons'));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)

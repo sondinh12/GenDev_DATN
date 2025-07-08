@@ -356,4 +356,24 @@ class ProductController extends Controller
         $value->delete();
         return redirect()->back()->with('success', 'Xóa giá trị thành công!');
     }
+
+    public function search(Request $request)
+    {
+        $query = Product::query();
+
+        if ($request->filled('keyword')) {
+            $query->where('name', 'like', '%' . $request->keyword . '%');
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->paginate(12);
+
+        // Lấy lại danh sách danh mục để truyền cho view nếu cần
+        $categories = Category::all();
+
+        return view('client.layout.partials.search', compact('products', 'categories'));
+    }
 }

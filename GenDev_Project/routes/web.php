@@ -24,17 +24,11 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 
-
-// Route::get('/products', function () {
-
-//     return view('products.index');
-
-// });
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
+Route::get('/search', [ProductController::class, 'search'])->name('search.products');
 
 Route::get('/about', function () {
     return view('client.pages.about');
@@ -95,9 +89,7 @@ Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy
 //     return view('client.cart.wishlist');
 // })->name('wishlist');
 
-Route::get('/checkout', function () {
-    return view('client.checkout.checkout');
-})->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::get('/order', function () {
     return view('client.checkout.order');
 })->name('order');
@@ -136,12 +128,18 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     // Danh mục
     Route::middleware(['permission:manage categories'])->group(function () {
         Route::resource('categories', CategoryController::class);
+        Route::get('admin/categories/trash', [CategoryController::class, 'trash_Category'])->name('categories.trash');
+        Route::put('admin/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+        Route::delete('admin/categories/{id}/force-delete', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
         Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
         Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
         Route::post('/categories/{id}/minis/store', [CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
         Route::get('admin/categories/{category_id}/minis/{id}/edit', [CategoryMiniController::class, 'edit'])->name('categories_minis.edit');
         Route::put('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'update'])->name('categories_minis.update');
         Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
+        Route::get('admin/categories/minis/trash', [CategoryMiniController::class, 'trash_catemini'])->name('categories_mini.trash');
+        Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
+        Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
 
     // Người dùng

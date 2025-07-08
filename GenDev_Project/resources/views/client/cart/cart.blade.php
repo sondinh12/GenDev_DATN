@@ -1,4 +1,3 @@
-{{-- @include('Admin.layouts.head-css') --}}
 @extends('client.layout.master')
 
 @section('content')
@@ -139,22 +138,6 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-
-                                                        <tr>
-                                                            <td class="actions" colspan="7">
-                                                                <div class="coupon">
-                                                                    <label for="coupon_code">Mã giảm giá:</label> <br>
-                                                                    <input type="text" placeholder="Nhập mã giảm giá"
-                                                                        value="" id="coupon_code" class="input-text"
-                                                                        name="coupon_code">
-                                                                    <input type="submit" value="Áp dụng"
-                                                                        name="apply_coupon" class="button">
-                                                                </div>
-
-                                                                <input type="submit" value="Cập nhật" name="update_cart"
-                                                                    class="button">
-                                                            </td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                                 <!-- .shop_table shop_table_responsive -->
