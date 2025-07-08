@@ -3,6 +3,7 @@
 
 
 session_start();
+
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
@@ -169,6 +170,8 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
+    Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
+    Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
 });
 
 
