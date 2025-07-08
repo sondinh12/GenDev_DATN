@@ -28,6 +28,10 @@ class Order extends Model
         'payment_expired_at'
         ];
 
+    protected $casts = [
+        'payment_expired_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');
