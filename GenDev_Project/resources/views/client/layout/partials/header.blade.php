@@ -349,14 +349,14 @@
             <form action="{{ route('search.products') }}" method="GET" class="d-flex" style="width: 100%;">
                 <div id="departments-menu" class="departments-menu" style="display: flex; align-items: center;">
                     <i class="tm tm-departments-thin" style="margin-right: 8px;"></i>
-                    <select name="category_id" class="form-select mx-2" style="width: 220px;">
+                    {{-- <select name="category_id" class="form-select mx-2" style="width: 220px;">
                         <option value="">Danh sách danh mục</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
                 <input type="text" name="keyword" class="form-control" style="width: 700px" placeholder="Tìm kiếm sản phẩm" value="{{ request('keyword') }}">
                 
