@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
+
 
 session_start();
 
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -34,7 +35,7 @@ use App\Http\Controllers\Client\ClientOrderController;
 // });
 // ================= TRANG CHÍNH =================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/about', function () {
@@ -71,6 +72,7 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
 
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
@@ -119,10 +121,14 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
         Route::get('/attributes/{id}/edit', [ProductController::class, 'editAttribute'])->name('admin.attributes.edit');
         Route::put('/attributes/{id}', [ProductController::class, 'updateAttribute'])->name('admin.attributes.update');
-        Route::delete('/attributes/{id}', [ProductController::class, 'destroyAttribute'])->name('admin.attributes.destroy');
+        Route::post('attributes/trash/{id}', [ProductController::class, 'trashAttribute'])->name('admin.attributes.trash');
         Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
         Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
+        Route::post('/admin/attributes/restore/{id}', [ProductController::class, 'restoreAttribute'])->name('admin.attributes.restore');
         Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
+        Route::get('/attributes/trash', [ProductController::class, 'trashList'])->name('admin.attributes.trashList');
+        Route::delete('/attributes/force-delete/{id}', [ProductController::class, 'forceDeleteAttribute'])->name('admin.attributes.forceDelete');
+        Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
     });
 
     // Đơn hàng
@@ -164,6 +170,8 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
+    Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
+    Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
 });
 
 

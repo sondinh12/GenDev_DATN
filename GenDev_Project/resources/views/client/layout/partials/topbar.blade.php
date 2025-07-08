@@ -59,7 +59,7 @@
                         <a title="Profile" href="{{ route('profile') }}">Profile</a>
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="My Orders" href="#">My Orders</a>
+                        <a title="My Orders" href="{{route('client.orders.index')}}">My Orders</a>
                     </li>
                     <li class="menu-item animate-dropdown">
                         <a title="Logout" href="{{ route('logout') }}" onclick="event.preventDefault();
