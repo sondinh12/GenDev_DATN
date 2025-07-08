@@ -56,7 +56,7 @@
                         @endphp
                         <span class="badge bg-{{ $statusClass }}">{{ ucfirst($order->status) }}</span>
                     </td>
-                    <td>{{ number_format($order->total + $order->shipping_fee, 0, ',', '.') }} đ</td>
+                    <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                     <td>
                         <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-sm btn-outline-info">
                             <i class="fa fa-eye me-1"></i> Xem
