@@ -38,7 +38,17 @@ class CheckoutController extends Controller
             ->whereIn('id', $selectedItemIds)
             ->get();
         $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                ? $item->variant->sale_price
+                : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
+
+            return $price * $item->quantity;
         });
 
         $user = auth()->user();

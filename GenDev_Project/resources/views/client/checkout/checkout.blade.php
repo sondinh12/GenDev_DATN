@@ -342,13 +342,24 @@
                                                     @endforeach
 
                                                     @foreach ($cartItems as $item)
+                                                    @php
+                                                        if ($item->variant) {
+                                                            $price = $item->variant->sale_price && $item->variant->sale_price > 0
+                                                                ? $item->variant->sale_price
+                                                                : $item->variant->price;
+                                                        } else {
+                                                            $price = $item->product->sale_price && $item->product->sale_price > 0
+                                                                ? $item->product->sale_price
+                                                                : $item->product->price;
+                                                        }
+                                                    @endphp
                                                     <tr>
                                                         <td>
                                                         <div>
                                                             <input type="hidden" name="product_id" value="{{$item->product_id}}">
                                                             <strong>{{ $item->product->name }}</strong><br>
                                                             Số lượng: {{ $item['quantity'] }} <br>
-                                                            Giá: {{ number_format($item['price']) }} VNĐ <br>
+                                                            Giá: {{ number_format($price) }} VNĐ <br>
                                                             @if ($item->variant && $item->variant->variantAttributes)
                                                                 @foreach ($item->variant->variantAttributes as $att)
                                                                     {{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }} <br>
