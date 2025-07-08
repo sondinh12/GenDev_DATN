@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AttributeRequest;
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
-use App\Models\AttributeValue;
-use App\Models\Category;
-use App\Models\CategoryMini;
-use App\Models\Attribute;
+    use App\Http\Controllers\Controller;
+    use App\Http\Requests\AttributeRequest;
+    use Illuminate\Http\Request;
+    use App\Http\Requests\ProductRequest;
+    use App\Models\AttributeValue;
+    use App\Models\Category;
+    use App\Models\CategoryMini;
+    use App\Models\Attribute;
+use App\Models\Cartdetail;
 use App\Models\Product;
-use App\Models\ProductGallery;
-use App\Models\ProductVariant;
-use App\Models\ProductVariantAttribute;
-use Validator;
+    use App\Models\ProductGallery;
+    use App\Models\ProductVariant;
+    use App\Models\ProductVariantAttribute;
+    use Validator;
 
 class ProductController extends Controller
 {
@@ -23,8 +24,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category','categoryMini'])->orderBy('id','DESC')->paginate(5);
-        return view('Admin.products.index',compact('products'));
+
+        $products = Product::with(['category', 'categoryMini'])
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'DESC')
+            ->paginate(5);
+        $trashedCount = Product::onlyTrashed()->count();
+        return view('Admin.products.index', compact('products', 'trashedCount'));
     }
 
     /**
@@ -35,7 +41,8 @@ class ProductController extends Controller
         $categories = Category::all();
         $categories_mini = CategoryMini::all();
         $attributes = Attribute::with('values')->get();
-        return view('Admin.products.create',compact('categories','attributes','categories_mini'));
+
+        return view('Admin.products.create', compact('categories', 'attributes', 'categories_mini'));
     }
 
     /**
@@ -55,10 +62,11 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category_id,
-            'category_mini_id'=>$request->category_mini_id,
+            'category_mini_id' => $request->category_mini_id,
             'image' => $imagePath,
             'price' => $request->price,
-            'quantity'=>$request->quantity,
+            'quantity'=>$request->quantity, 
+            'status'=>$request->status,
             'sale_price' => $request->sale_price,
         ]);
 
@@ -82,11 +90,13 @@ class ProductController extends Controller
                     'price' => $variant['price'],
                     'sale_price' => $variant['sale_price'] ?? 0,
                     'quantity' => $variant['quantity'] ?? 0,
-                    'status' => $variant['status'] ?? 1,
+                    'status' => $variant['status']  ?? 1,
                 ]);
 
                 // Lấy danh sách value_id của các thuộc tính (màu, size, ...)
-                $valueIds = isset($variant['value_ids']) ? explode(',', $variant['value_ids'][0]) : [];
+                // $valueIds = isset($variant['value_ids']) ? $variant['value_ids'] : [];
+                $valueRaw = $variant['value_ids'] ?? [];  // có thể là chuỗi hoặc mảng
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
 
                 // Lưu từng thuộc tính của biến thể vào bảng product_variant_attributes
                 foreach ($valueIds as $valueId) {
@@ -109,7 +119,7 @@ class ProductController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {   
+    {
         $product = Product::with([
             'category',
             'categoryMini',
@@ -117,7 +127,7 @@ class ProductController extends Controller
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
         ])->findOrFail($id);
-        return view('admin.products.show',compact('product'));
+        return view('Admin.products.show', compact('product'));
     }
 
     /**
@@ -127,7 +137,7 @@ class ProductController extends Controller
     {
         // Lấy thông tin sản phẩm, danh mục, thuộc tính và các giá trị liên quan
         $product = Product::with([
-            
+
             'galleries',
             'variants.variantAttributes.attribute',
             'variants.variantAttributes.value'
@@ -143,6 +153,7 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, string $id)
     {
+
         // Lấy sản phẩm cần cập nhật
         $product = Product::findOrFail($id);
 
@@ -157,11 +168,12 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->category_mini_id = $request->category_mini_id;
+        $product->status = $request->status;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
-        $product->save();
 
+        $product->save();
         // Xử lý cập nhật gallery ảnh
         if ($request->hasFile('galleries')) {
             // Xóa ảnh gallery cũ
@@ -175,32 +187,53 @@ class ProductController extends Controller
                 ]);
             }
         }
-
         // Xử lý cập nhật biến thể sản phẩm
         if ($request->has('variant_combinations')) {
-            // Xóa các biến thể cũ và thuộc tính liên quan
             $oldVariants = ProductVariant::where('product_id', $product->id)->get();
-            foreach ($oldVariants as $variant) {
-                ProductVariantAttribute::where('product_variant_id', $variant->id)->delete();
-                $variant->delete();
+            $oldVariantMap = [];
+            foreach ($oldVariants as $old) {
+                $key = $old->variantAttributes->pluck('attribute_value_id')->implode(',');
+                $oldVariantMap[$key] = $old;
             }
-            // Tạo lại các biến thể mới
+
+            $handledKeys = [];
             foreach ($request->variant_combinations as $variant) {
-                $variantModel = ProductVariant::create([
-                    'product_id' => $product->id,
-                    'price' => $variant['price'],
-                    'sale_price' => $variant['sale_price'] ?? 0,
-                    'quantity' => $variant['quantity'] ?? 0,
-                    'status' => $variant['status'] ?? 1,
-                ]);
-                $valueIds = isset($variant['value_ids']) ? explode(',', $variant['value_ids'][0]) : [];
-                foreach ($valueIds as $valueId) {
-                    $attributeId = AttributeValue::find($valueId)?->attribute_id;
-                    ProductVariantAttribute::create([
-                        'product_variant_id' => $variantModel->id,
-                        'attribute_value_id' => $valueId,
-                        'attribute_id' => $attributeId
+                $valueRaw = $variant['value_ids'] ?? [];
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
+                $key = implode(',', $valueIds);
+                $handledKeys[] = $key;
+                if (isset($oldVariantMap[$key])) {
+                    // Update variant (không kiểm tra số lượng trong giỏ hàng)
+                    $variantModel = $oldVariantMap[$key];
+                    $variantModel->price = $variant['price'];
+                    $variantModel->sale_price = $variant['sale_price'] ?? 0;
+                    $variantModel->quantity = $variant['quantity'] ?? 0;
+                    $variantModel->status = $variant['status'] ?? 1;
+                    $variantModel->save();
+                } else {
+                    // Create new variant
+                    $variantModel = ProductVariant::create([
+                        'product_id' => $product->id,
+                        'price' => $variant['price'],
+                        'sale_price' => $variant['sale_price'] ?? 0,
+                        'quantity' => $variant['quantity'] ?? 0,
+                        'status' => $variant['status'] ?? 1,
                     ]);
+                    foreach ($valueIds as $valueId) {
+                        $attributeId = AttributeValue::find($valueId)?->attribute_id;
+                        ProductVariantAttribute::create([
+                            'product_variant_id' => $variantModel->id,
+                            'attribute_value_id' => $valueId,
+                            'attribute_id' => $attributeId
+                        ]);
+                    }
+                }
+            }
+            // Xóa các biến thể không còn trong tổ hợp mới
+            foreach ($oldVariantMap as $key => $oldVariant) {
+                if (!in_array($key, $handledKeys)) {
+                    ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
+                    $oldVariant->delete();
                 }
             }
         }
@@ -210,146 +243,192 @@ class ProductController extends Controller
     }
 
     /**
-     * Xóa mềm sản phẩm: chỉ cập nhật trạng thái thành 2 (đã xóa)
+     * Xóa mềm sản phẩm: chuyển vào thùng rác (set deleted_at)
      */
     public function trash(string $id)
     {
         $product = Product::findOrFail($id);
-        // Đặt trạng thái sản phẩm thành 2 (đã xóa)
-        $product->status = 2;
-        $product->save();
-        return redirect()->route('products.index')->with('success', 'Xóa mềm sản phẩm thành công!');
+        // Không cho vào thùng rác nếu sản phẩm còn trong giỏ hàng
+        $cartCount = $product->cartdetails()->count();
+        if ($cartCount > 0) {
+            return redirect()->route('products.index')->with('success', 'Không thể chuyển vào thùng rác vì sản phẩm còn tồn tại trong giỏ hàng của khách!');
+        }
+        $product->delete(); // Soft delete: cập nhật deleted_at
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được chuyển vào thùng rác!');
     }
+
+    /**
+     * Khôi phục sản phẩm từ thùng rác
+     */
     public function restore(string $id)
     {
-        $product = Product::findOrFail($id);
-        // Đặt trạng thái sản phẩm thành 1 (hiển thị)
-        $product->status = 1;
-        $product->save();
-        return redirect()->route('products.index')->with('success', 'Khôi phục sản phẩm thành công!');
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+        return redirect()->route('products.trash.list')->with('success', 'Khôi phục sản phẩm thành công!');
     }
+
     /**
-     * Remove the specified resource from storage.
+     * Xóa vĩnh viễn sản phẩm
      */
     public function destroy(string $id)
     {
-        $product = Product::findOrFail($id);
-        // Xóa sản phẩm và các ảnh liên quan
-        $product->galleries()->delete(); // Xóa ảnh gallery
+        $product = Product::onlyTrashed()->findOrFail($id);
+        
+        // Không cho xoá nếu sản phẩm còn trong giỏ hàng
+        $cartCount = $product->cartdetails()->count();
+        if ($cartCount > 0) {
+            return redirect()->route('products.trash.list')->with('success', 'Không thể xoá vĩnh viễn sản phẩm vì còn tồn tại trong giỏ hàng của khách!');
+        }
+        
+        $product->galleries()->delete();
         $product->variants()->each(function ($variant) {
-            $variant->variantAttributes()->delete(); // Xóa thuộc tính biến thể
-            $variant->delete(); // Xóa biến thể
+            $variant->variantAttributes()->delete();
+            $variant->delete();
         });
-        $product->delete(); // Xóa sản phẩm chính
-
-        return redirect()->route('products.index')->with('success', 'Xóa sản phẩm thành công!');
+        $product->forceDelete();
+        return redirect()->route('products.trash.list')->with('success', 'Đã xóa vĩnh viễn sản phẩm!');
     }
 
 
 
-  // Hiển thị danh sách thuộc tính
-public function allAttributes()
-{
-    $attributes = Attribute::with('values')->get();
-    return view('admin.products.ProductsAttribute', compact('attributes'));
-}
+    // Hiển thị danh sách thuộc tính
+    public function allAttributes()
+    {
+        $attributes = Attribute::with('values')->where('status', 1)->get();
+        $trashCount = Attribute::where('status', 2)->count();
+        return view('Admin.attributes.ProductsAttribute', compact('attributes', 'trashCount'));
+    }
 
-// Hiển thị form thêm thuộc tính
-public function createAttribute()
-{
-    return view('admin.products.create_attribute');
-}
 
-// Lưu thuộc tính mới + các value mới
-public function storeAttribute(AttributeRequest $request)
-{
-    $attribute = Attribute::create([
-        'name' => $request->name
-    ]);
+    // Hiển thị form thêm thuộc tính
+    public function createAttribute()
+    {
+        return view('Admin.attributes.create_attribute');
+    }
 
-    if ($request->filled('values')) {
-        $valueArr = explode(',', $request->values);
-        foreach ($valueArr as $val) {
-            $trimmed = trim($val);
-            if (!empty($trimmed)) {
-                AttributeValue::create([
-                    'attribute_id' => $attribute->id,
-                    'value' => $trimmed
-                ]);
+    // Lưu thuộc tính mới + các value mới
+    public function storeAttribute(AttributeRequest $request)
+    {
+        $attribute = Attribute::create([
+            'name' => $request->name
+        ]);
+
+        if ($request->filled('values')) {
+            $valueArr = explode(',', $request->values);
+            foreach ($valueArr as $val) {
+                $trimmed = trim($val);
+                if (!empty($trimmed)) {
+                    AttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $trimmed
+                    ]);
+                }
             }
         }
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
     }
 
-    return redirect()->route('admin.attributes.index')->with('success', 'Thêm thuộc tính thành công!');
-}
+    // Hiển thị form sửa thuộc tính + tất cả value con
+    public function editAttribute($id)
+    {
+        $attribute = Attribute::with('values')->findOrFail($id);
+        return view('Admin.attributes.edit_attribute', compact('attribute'));
+    }
 
-// Hiển thị form sửa thuộc tính + tất cả value con
-public function editAttribute($id)
-{
-    $attribute = Attribute::with('values')->findOrFail($id);
-    return view('admin.products.edit_attribute', compact('attribute'));
-}
+    // Cập nhật thuộc tính + value con cũ và thêm value con mới
+    public function updateAttribute(Request $request, $id)
+    {
+        // Validate đầu vào
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'values' => 'nullable|array',
+            'values.*' => 'required|string|max:255',
+            'new_values' => 'nullable|array',
+            'new_values.*' => 'required|string|max:255',
+        ]);
 
-// Cập nhật thuộc tính + value con cũ và thêm value con mới
-public function updateAttribute(Request $request, $id)
-{
-    // Validate đầu vào
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'values' => 'nullable|array',
-        'values.*' => 'required|string|max:255',
-        'new_values' => 'nullable|array',
-        'new_values.*' => 'required|string|max:255',
-    ]);
+        // 1. Update tên thuộc tính cha
+        $attribute = Attribute::findOrFail($id);
+        $attribute->name = $request->name;
+        $attribute->save();
 
-    // 1. Update tên thuộc tính cha
-    $attribute = Attribute::findOrFail($id);
-    $attribute->name = $request->name;
-    $attribute->save();
-
-    // 2. Update các giá trị con cũ
-    if ($request->has('values')) {
-        foreach ($request->values as $valueId => $val) {
-            $valueModel = AttributeValue::find($valueId);
-            if ($valueModel) {
-                $valueModel->value = $val;
-                $valueModel->save();
+        // 2. Update các giá trị con cũ
+        if ($request->has('values')) {
+            foreach ($request->values as $valueId => $val) {
+                $valueModel = AttributeValue::find($valueId);
+                if ($valueModel) {
+                    $valueModel->value = $val;
+                    $valueModel->save();
+                }
             }
         }
-    }
 
-    // 3. Thêm giá trị con mới nếu có
-    if ($request->has('new_values')) {
-        foreach ($request->new_values as $val) {
-            if (trim($val)) {
-                AttributeValue::create([
-                    'attribute_id' => $attribute->id,
-                    'value' => $val,
-                ]);
+        // 3. Thêm giá trị con mới nếu có
+        if ($request->has('new_values')) {
+            foreach ($request->new_values as $val) {
+                if (trim($val)) {
+                    AttributeValue::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $val,
+                    ]);
+                }
             }
         }
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
     }
 
-    return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
-}
+            public function trashAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->status = 2; // đánh dấu là đã xóa
+        $attribute->save();
 
-// Xóa thuộc tính + tất cả value con
-public function destroyAttribute($id)
-{
-    $attribute = Attribute::findOrFail($id);
-    $attribute->values()->delete();
-    $attribute->delete();
-    return redirect()->route('admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
-}
-
-// Xóa value con đơn lẻ (redirect về lại trang trước)
-public function destroyAttributeValue($id)
-{
-    $value = AttributeValue::findOrFail($id);
-    $value->delete();
-    return redirect()->back()->with('success', 'Xóa giá trị thành công!');
-}
+        return redirect()->route('admin.attributes.index')->with('success', 'Đã đưa thuộc tính vào thùng rác!');
+    }
 
 
-    
+    public function restoreAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->status = 1; // khôi phục
+        $attribute->save();
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Đã khôi phục thuộc tính!');
+    }
+
+        public function trashList()
+    {
+        $attributes = Attribute::with('values')->where('status', 2)->get();
+        return view('Admin.attributes.trash', compact('attributes'));
+    }
+
+
+
+    // Xóa thuộc tính + tất cả value con
+    public function destroyAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->values()->delete();
+        $attribute->delete();
+        return redirect()->route('admin.attributes.index')->with('success', 'Xóa thuộc tính thành công!');
+    }
+
+    // Xóa value con đơn lẻ (redirect về lại trang trước)
+    public function destroyAttributeValue($id)
+    {
+        $value = AttributeValue::findOrFail($id);
+        $value->delete();
+        return redirect()->back()->with('success', 'Xóa giá trị thành công!');
+    }
+        public function forceDeleteAttribute($id)
+    {
+        $attribute = Attribute::with('values')->findOrFail($id);
+        $attribute->values()->delete(); // Xóa các value con
+        $attribute->delete(); // Xóa chính nó
+
+        return redirect()->route('admin.attributes.trashList')->with('success', 'Đã xóa vĩnh viễn thuộc tính!');
+    }
+
 }

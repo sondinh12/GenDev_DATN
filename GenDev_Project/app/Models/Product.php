@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'image',
@@ -32,5 +35,9 @@ class Product extends Model
 
     public function variants(){
         return $this->hasMany(ProductVariant::class,'product_id');
+    }
+
+    public function cartdetails(){
+        return $this->hasMany(Cartdetail::class,'product_id');
     }
 }

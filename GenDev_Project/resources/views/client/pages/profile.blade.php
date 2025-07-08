@@ -1,242 +1,187 @@
 @extends('client.layout.master')
 
 @section('content')
-<div class="container py-5">
-    <div class="row">
-        <!-- Sidebar Profile -->
-        <div class="col-lg-3 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                    <div class="position-relative d-inline-block mb-3">
-                        <img src="{{ asset($user->avatar ?? 'images/default-avatar.png') }}" alt="Avatar"
-                            class="rounded-circle border border-3 border-primary shadow" width="150" height="150">
-                        <div class="position-absolute bottom-0 end-0">
-                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" data-bs-toggle="tooltip"
-                                title="Thay đổi ảnh">
-                                <i class="fas fa-camera"></i>
-                            </button>
-                        </div>
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show position-fixed"
+    style="top: 20px; right: 20px; z-index: 9999;">
+    <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+</div>
+@endif
+@if($errors->any())
+<div class="alert alert-danger alert-dismissible fade show position-fixed"
+    style="top: 70px; right: 20px; z-index: 9999;">
+    <i class="fas fa-exclamation-triangle me-1"></i> Đã có lỗi xảy ra:<br>
+    <ul class="mb-0">
+        @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+<div class="container d-flex justify-content-center py-4" style="min-height: 80vh;">
+    <div class="card w-100" style="max-width: 900px; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,0.07);">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-3 bg-white d-flex flex-column align-items-center pt-4"
+                style="border-radius: 18px 0 0 18px;">
+                <!-- Avatar -->
+                <div class="position-relative mb-3">
+                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/images/default-avatar.png') }}"
+                        alt class="rounded-circle border border-primary"
+                        style="width: 90px; height: 90px; object-fit: cover;">
+                    <form id="avatarForm" method="POST" action="{{ route('profile.update_avatar') }}"
+                        enctype="multipart/form-data">@csrf
+                        <label class="btn btn-outline-primary btn-sm rounded-circle position-absolute"
+                            style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto;"
+                            title="Tải ảnh mới">
+                            <i class="fa fa-camera"></i>
+                            <input type="file" class="account-settings-fileinput" form="avatarForm" name="avatar"
+                                accept="image/*" style="display: none;">
+                        </label>
+                    </form>
+                    <div class="text-center mb-3" style="margin-top: -20px">
+                        <h5 class="fw-bold mb-1">{{ $user->name }}</h5>
                     </div>
-                    <h4 class="mb-1">{{ $user->name }}</h4>
-                    <div class="d-flex justify-content-center gap-2 mb-3">
-                        <span class="badge bg-{{ $user->status == 1 ? 'success' : 'danger' }}">
-                            <i class="fas fa-circle me-1"></i>
-                            {{ $user->status == 1 ? 'Hoạt động' : 'Khóa' }}
-                        </span>
-                        <span class="badge bg-info">
-                            <i class="fas fa-user-shield me-1"></i>
-                            {{ $user->role == 1 ? 'Người dùng' : 'Quản trị' }}
-                        </span>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
-                        </button>
-                        <button class="btn btn-outline-primary">
-                            <i class="fas fa-key me-2"></i>Đổi mật khẩu
-                        </button>
-                    </div>
+                </div>
+
+
+
+                <!-- Menu tab -->
+                <div class="w-100 px-3">
+                    <a class="btn w-100 mb-2 fw-bold tab-link active" data-tab="account-general">Thông tin chung</a>
+                    <a class="btn w-100 fw-bold tab-link" data-tab="account-change-password">Đổi mật khẩu</a>
                 </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="card border-0 shadow-sm mt-4">
-                <div class="card-body p-4">
-                    <h6 class="text-muted mb-3">Thống kê</h6>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Đơn hàng</span>
-                        <span class="fw-bold">0</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Sản phẩm yêu thích</span>
-                        <span class="fw-bold">0</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Đánh giá</span>
-                        <span class="fw-bold">0</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <!-- Content -->
+            <div class="col-md-9 bg-white p-4" style="border-radius: 0 18px 18px 0;">
+                <div class="tab-content" id="account-general">
+                    <form method="POST" action="{{ route('profile.update') }}">
+                        @csrf
+                        @method('PUT')
 
-        <!-- Main Content -->
-        <div class="col-lg-9">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-user-circle text-primary me-2"></i>
-                            Thông tin cá nhân
-                        </h5>
-                        <div class="dropdown">
-                            <button class="btn btn-light btn-sm" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Tải thông
-                                        tin</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i>In thông tin</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="bg-light rounded p-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-envelope text-primary me-2"></i>
-                                    <span class="fw-bold">Email:</span>
-                                </div>
-                                <p class="mb-0 ms-4">{{ $user->email }}</p>
-                                @if(!$user->email_verified_at)
-                                <div class="ms-4 mt-2">
-                                    <button class="btn btn-sm btn-outline-warning">
-                                        <i class="fas fa-envelope me-1"></i>Xác thực email
-                                    </button>
-                                </div>
-                                @else
-                                <div class="ms-4 mt-2">
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-check-circle me-1"></i>Đã xác thực
-                                    </span>
-                                </div>
-                                @endif
-                            </div>
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ và tên</label>
+                            <input type="text" name="name" class="form-control" value="{{ $user->name }}">
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="bg-light rounded p-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-phone text-primary me-2"></i>
-                                    <span class="fw-bold">Số điện thoại:</span>
-                                </div>
-                                <p class="mb-0 ms-4">{{ $user->phone }}</p>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" value="{{ $user->email }}" disabled>
+                            @if(!$user->email_verified_at)
+                            <div class="alert alert-warning mt-2 py-1 px-2">
+                                <span>Email chưa xác thực.</span>
+                                <button type="submit" form="resendEmailForm" class="btn btn-link p-0 ms-2">Gửi lại xác
+                                    thực</button>
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="bg-light rounded p-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                    <span class="fw-bold">Địa chỉ:</span>
-                                </div>
-                                <p class="mb-0 ms-4">{{ $user->address ?? 'Chưa cập nhật' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="bg-light rounded p-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-venus-mars text-primary me-2"></i>
-                                    <span class="fw-bold">Giới tính:</span>
-                                </div>
-                                <p class="mb-0 ms-4">{{ $user->gender }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="mt-5">
-                        <h6 class="text-muted mb-3">Hoạt động gần đây</h6>
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-marker bg-primary"></div>
-                                <div class="timeline-content">
-                                    <h6 class="mb-1">Đăng ký tài khoản</h6>
-                                    <small class="text-muted">{{ $user->created_at->format('d/m/Y H:i') }}</small>
-                                </div>
-                            </div>
-                            @if($user->email_verified_at)
-                            <div class="timeline-item">
-                                <div class="timeline-marker bg-success"></div>
-                                <div class="timeline-content">
-                                    <h6 class="mb-1">Xác thực email</h6>
-                                    <small class="text-muted">{{ $user->email_verified_at->format('d/m/Y H:i')
-                                        }}</small>
-                                </div>
-                            </div>
+                            <form id="resendEmailForm" method="POST" action="{{ route('verification.resend') }}">@csrf
+                            </form>
+                            @else
+                            <span class="badge bg-success mt-2"><i class="fa fa-check-circle me-1"></i>Đã xác
+                                thực</span>
                             @endif
                         </div>
-                    </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="text" name="phone" class="form-control" value="{{ $user->phone }}">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Giới tính</label>
+                            <select class="form-select" name="gender">
+                                <option value="Nam" {{ $user->gender == 'Nam' ? 'selected' : '' }}>Nam</option>
+                                <option value="Nữ" {{ $user->gender == 'Nữ' ? 'selected' : '' }}>Nữ</option>
+                                <option value="Khác" {{ $user->gender == 'Khác' ? 'selected' : '' }}>Khác</option>
+                            </select>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thành phố</label>
+                            <input type="text" name="city" class="form-control" value="{{ $user->city }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phường/Xã</label>
+                            <input type="text" name="ward" class="form-control" value="{{ $user->ward }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mã bưu chính</label>
+                            <input type="text" name="postcode" class="form-control" value="{{ $user->postcode }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Địa chỉ</label>
+                            <input type="text" name="address" class="form-control" value="{{ $user->address }}">
+                        </div>
+
+                        <!-- Save button -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary px-4 py-2 fw-bold rounded-pill">Lưu thay
+                                đổi</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tab-content d-none" id="account-change-password">
+                    <form method="POST" action="{{ route('profile.change_password.update') }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control" name="current_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mật khẩu mới</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nhập lại mật khẩu mới</label>
+                            <input type="password" class="form-control" name="password_confirmation" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Đổi mật
+                                khẩu</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
 
-<!-- Edit Profile Modal -->
-<div class="modal fade" id="editProfileModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Chỉnh sửa thông tin</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editProfileForm">
-                    <div class="mb-3">
-                        <label class="form-label">Họ và tên</label>
-                        <input type="text" class="form-control" value="{{ $user->name }}">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="tel" class="form-control" value="{{ $user->phone }}">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Địa chỉ</label>
-                        <textarea class="form-control" rows="3">{{ $user->address }}</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Giới tính</label>
-                        <select class="form-select">
-                            <option value="Nam" {{ $user->gender == 'Nam' ? 'selected' : '' }}>Nam</option>
-                            <option value="Nữ" {{ $user->gender == 'Nữ' ? 'selected' : '' }}>Nữ</option>
-                            <option value="Khác" {{ $user->gender == 'Khác' ? 'selected' : '' }}>Khác</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+@push('styles')
 <style>
-    .timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-
-    .timeline-item {
-        position: relative;
-        padding-bottom: 1.5rem;
-    }
-
-    .timeline-item:last-child {
-        padding-bottom: 0;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -30px;
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-    }
-
-    .timeline-item:not(:last-child):before {
-        content: '';
-        position: absolute;
-        left: -23px;
-        top: 15px;
-        height: calc(100% - 15px);
-        width: 2px;
-        background: #e9ecef;
+    .tab-link:hover,
+    .tab-link.active {
+        background-color: #f0f4ff;
+        color: #0d6efd;
+        transition: background 0.2s, color 0.2s;
     }
 </style>
+@endpush
 
-@endsection
+@push('scripts')
+<script>
+    document.querySelectorAll('.tab-link').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.tab-link').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('d-none'));
+
+            this.classList.add('active');
+            document.getElementById(this.getAttribute('data-tab')).classList.remove('d-none');
+        });
+    });
+
+    // Auto submit avatar form
+    document.querySelectorAll('.account-settings-fileinput').forEach(input => {
+        input.addEventListener('change', function () {
+            this.closest('form').submit();
+        });
+    });
+</script>
+@endpush

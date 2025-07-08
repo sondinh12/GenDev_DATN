@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -30,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/email/verify';
 
     /**
      * Create a new controller instance.
@@ -56,14 +57,8 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
-            'gender' => ['required', 'in:male,female,other'],
+            'gender' => ['required', 'in:Nam,Nữ,Khác'],
         ];
-        // Nếu có file avatar thì validate là file ảnh, không phải string
-        if (request()->hasFile('avatar')) {
-            $rules['avatar'] = ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'];
-        } else {
-            $rules['avatar'] = ['required', 'string', 'max:255'];
-        }
         return Validator::make($data, $rules);
     }
 
@@ -75,39 +70,26 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' => $data['avatar'],
+            'avatar' => null,
             'address' => $data['address'],
             'phone' => $data['phone'],
             'gender' => $data['gender'],
             'status' => 1,
             'role' => 2,
         ]);
+        $user->assignRole('user');
+        return $user;
     }
 
-    /**
-     * Register a new user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function register(\Illuminate\Http\Request $request)
+    public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
-        $data = $request->all();
-        // Xử lý upload avatar nếu có file
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
-            $data['avatar'] = 'images/' . $filename;
-        }
-        $user = $this->create($data);
-        event(new \Illuminate\Auth\Events\Registered($user));
-        $this->guard()->login($user);
-        return redirect('/home')->with('register_success', 'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.');
+        $response = $this->traitRegister($request);
+        // Sau khi đăng ký thành công, lưu session flash
+        session()->flash('register_success', true);
+        return $response;
     }
 }

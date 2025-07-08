@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
-{
+{   
+    protected $table = 'categories';
     protected $fillable = [
         'name',
         'status',
@@ -16,7 +17,7 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function categoriesMini(){
+    public function categoryMinis(){
         return $this->hasMany(CategoryMini::class);
     }
 }

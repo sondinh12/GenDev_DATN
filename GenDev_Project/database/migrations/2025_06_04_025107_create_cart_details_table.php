@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("cart_id");
             $table->unsignedBigInteger("product_id");
-            $table->unsignedBigInteger("variant_id");
-            $table->decimal("price",10,2);
+            $table->unsignedBigInteger("variant_id")->nullable();
+            $table->decimal("price", 10, 2)->nullable();
             $table->integer("quantity");
             $table->timestamps();
 
             // foreign key
             $table->foreign("cart_id")->references("id")->on("carts");
             $table->foreign("product_id")->references("id")->on("products");
-            $table->foreign("variant_id")->references("id")->on("product_variants");
+            $table->foreign("variant_id")->references("id")->on("product_variants")->nullable();
         });
     }
 
