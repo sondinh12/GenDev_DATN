@@ -31,63 +31,70 @@
                 </div>
                 <div class="card-body">
                     {{-- Trạng thái thanh toán & đơn hàng --}}
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5 class="fw-bold mb-2">Trạng thái thanh toán</h5>
-                            @php
-                            $paymentClass = match($order->payment_status) {
-                                'paid' => 'success',
-                                'unpaid' => 'warning',
-                                'cancelled' => 'danger',
-                                default => 'secondary',
-                            };
-                            @endphp
-                            <span class="badge bg-{{ $paymentClass }} p-2 mb-2">{{ ucfirst($order->payment_status) }}</span>
-                            @if(!in_array($order->payment_status, ['cancelled', 'paid']))
-                            <form action="{{ route('admin.orders.update-payment-status', $order->id) }}"
-                                onsubmit="return confirm('Bạn có chắc chắn muốn cập nhật trạng thái thanh toán?')"
-                                method="POST" class="d-inline-block mt-2">
-                                @csrf
-                                @method('PUT')
-                                <select name="payment_status" class="form-select form-select-sm d-inline-block w-auto me-2">
-                                    <option value="unpaid" {{ $order->payment_status == 'unpaid' ? 'selected' : '' }}>Chưa thanh toán</option>
-                                    <option value="paid">Đã thanh toán</option>
-                                    <option value="cancelled">Đã hủy</option>
-                                </select>
-                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-sync"></i> Cập nhật</button>
-                            </form>
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
-                            @php
-                            $statusClass = match($order->status) {
-                                'pending' => 'secondary',
-                                'processing' => 'info',
-                                'shipped' => 'primary',
-                                'completed' => 'success',
-                                'cancelled' => 'danger',
-                                default => 'dark',
-                            };
-                            @endphp
-                            <span class="badge bg-{{ $statusClass }} p-2 mb-2">{{ ucfirst($order->status) }}</span>
-                            @if(!in_array($order->status, ['completed', 'cancelled']))
-                            <form action="{{ route('admin.orders.update-status', $order->id) }}"
-                                onsubmit="return confirm('Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng?')" method="POST" class="d-inline-block mt-2">
-                                @csrf
-                                @method('PUT')
-                                <select name="status" class="form-select form-select-sm d-inline-block w-auto me-2">
-                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
-                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
-                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Đang giao</option>
-                                    <option value="completed">Hoàn tất</option>
-                                    <option value="cancelled">Đã hủy</option>
-                                </select>
-                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-sync"></i> Cập nhật</button>
-                            </form>
-                            @endif
-                        </div>
-                    </div>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h5 class="fw-bold mb-2">Trạng thái thanh toán</h5>
+        @php
+            $paymentClass = match($order->payment_status) {
+                'paid' => 'success',
+                'unpaid' => 'warning',
+                'cancelled' => 'danger',
+                default => 'secondary',
+            };
+
+            $paymentLabels = [
+                'paid' => 'Đã thanh toán',
+                'unpaid' => 'Chưa thanh toán',
+                'cancelled' => 'Đã hủy',
+            ];
+        @endphp
+        <span class="badge bg-{{ $paymentClass }} p-2 mb-2">
+            {{ $paymentLabels[$order->payment_status] ?? ucfirst($order->payment_status) }}
+        </span>
+    </div>
+
+    <div class="col-md-6">
+        <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
+        @php
+            $statusClass = match($order->status) {
+                'pending' => 'secondary',
+                'processing' => 'info',
+                'shipped' => 'primary',
+                'completed' => 'success',
+                'cancelled' => 'danger',
+                default => 'dark',
+            };
+
+            $statusLabels = [
+                'pending' => 'Chờ xử lý',
+                'processing' => 'Đang xử lý',
+                'shipped' => 'Đã giao',
+                'completed' => 'Hoàn thành',
+                'cancelled' => 'Đã hủy',
+            ];
+        @endphp
+        <span class="badge bg-{{ $statusClass }} p-2 mb-2">
+            {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
+        </span>
+
+        @if(!in_array($order->status, ['shipped', 'cancelled','completed']))
+        <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
+            @csrf
+            @method('PUT')
+            <div class="d-flex flex-column flex-md-row align-items-start gap-2">
+                <select name="status" class="form-select form-select-sm w-auto">
+                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
+                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
+                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Đã giao</option>
+                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                </select>
+                <input type="text" name="note" class="form-control form-control-sm w-50" placeholder="Ghi chú (nếu có)">
+                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-sync"></i> Cập nhật</button>
+            </div>
+        </form>
+        @endif
+    </div>
+</div>
 
                     {{-- Thông tin khách hàng --}}
                     <div class="card mb-4 border-start border-4 border-primary">
@@ -237,6 +244,75 @@
                             </div>
                         </div>
                     </div>
+
+                        {{-- Lịch sử trạng thái --}}
+{{-- Lịch sử trạng thái --}}
+<div class="card mb-4 border-start border-4 border-dark">
+    <div class="card-header bg-light fw-bold">
+        <i class="fas fa-history me-2"></i>Lịch sử trạng thái đơn hàng
+    </div>
+    <div class="card-body p-3">
+        @php
+            $badgeColors = [
+                'pending' => 'secondary',
+                'processing' => 'info',
+                'shipped' => 'primary',
+                'completed' => 'success',
+                'cancelled' => 'danger',
+            ];
+
+            $statusLabels = [
+                'pending' => 'Chờ xử lý',
+                'processing' => 'Đang xử lý',
+                'shipped' => 'Đã giao',
+                'completed' => 'Hoàn thành',
+                'cancelled' => 'Đã huỷ',
+            ];
+        @endphp
+
+        @if($order->orderStatusLogs && $order->orderStatusLogs->isNotEmpty())
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>STT</th>
+                        <th>Trạng thái cũ</th>
+                        <th>Trạng thái mới</th>
+                        <th>Người thay đổi</th>
+                        <th>Thời gian</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($order->orderStatusLogs->sortByDesc('changed_at')->values() as $index => $log)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>
+                            <span class="badge bg-{{ $badgeColors[$log->old_status] ?? 'secondary' }}">
+                                {{ $statusLabels[$log->old_status] ?? ucfirst($log->old_status) }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ $badgeColors[$log->new_status] ?? 'secondary' }}">
+                                {{ $statusLabels[$log->new_status] ?? ucfirst($log->new_status) }}
+                            </span>
+                        </td>
+                        <td>{{ $log->changedBy->name ?? 'Hệ thống' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($log->changed_at)->format('d/m/Y H:i') }}</td>
+                        <td>{{ $log->note ?? '-' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @else
+        <p class="text-muted mb-0">Không có thay đổi nào được ghi nhận.</p>
+        @endif
+    </div>
+</div>
+
+
+
                 </div>
             </div>
         </div>
