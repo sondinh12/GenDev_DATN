@@ -38,7 +38,17 @@ class CheckoutController extends Controller
             ->whereIn('id', $selectedItemIds)
             ->get();
         $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                ? $item->variant->sale_price
+                : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
+
+            return $price * $item->quantity;
         });
 
         $user = auth()->user();
@@ -67,7 +77,17 @@ class CheckoutController extends Controller
         try {
             // Tính tổng tiền sản phẩm
             $subtotal = $cartItems->sum(function ($item) {
-                return $item->price * $item->quantity;
+                if ($item->variant) {
+                    $price = $item->variant->sale_price > 0
+                        ? $item->variant->sale_price
+                        : $item->variant->price;
+                } else {
+                    $price = $item->product->sale_price > 0
+                        ? $item->product->sale_price
+                        : $item->product->price;
+                }
+
+                return $price * $item->quantity;
             });
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
@@ -139,12 +159,21 @@ class CheckoutController extends Controller
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                    ? $item->variant->sale_price
+                    : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
             foreach ($cartItems as $item) {
                 $detail = OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
                     'variant_id' => $item['variant_id'] ?? null,
-                    'price' => $item['price'],
+                    'price' => $price,
                     'quantity' => $item['quantity'],
                     'note' => $note
                 ]);
