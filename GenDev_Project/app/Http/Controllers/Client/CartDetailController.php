@@ -255,17 +255,35 @@ class CartDetailController extends Controller
     public function handleAction(Request $request)
     {
         if ($request->has('btn_checkout')) {
-            $selectedItems = $request->input('selected_items', []);
+            $selectedItemIds = $request->input('selected_items', []);
 
-            if (empty($selectedItems)) {
+            if (empty($selectedItemIds)) {
                 return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
             }
 
-            return redirect()->route('checkout', ['selected_items' => $selectedItems]);
+            $cartItems = Cartdetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+            ->whereIn('id', $selectedItemIds)
+            ->get();
+
+            foreach ($cartItems as $item) {
+                if ($item->variant_id) {
+                    $variant = ProductVariant::find($item->variant_id);
+                    if (!$variant || $variant->quantity < $item->quantity) {
+                        return back()->with('error', "Biến thể sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                    }
+                } else {
+                    $product = Product::find($item->product_id);
+                    if (!$product || $product->quantity < $item->quantity) {
+                        return back()->with('error', "Sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                    }
+                }
+            }
+
+            return redirect()->route('checkout', ['selected_items' => $selectedItemIds]);
         } elseif ($request->has('update_cart')) {
             $cartDetailRequest = app(CartDetailRequest::class);
             $validatedData = $cartDetailRequest->validated();
-            $selectedItems = $validatedData['selected_items'] ?? [];
+            $selectedItemIds = $validatedData['selected_items'] ?? [];
 
             return $this->update($cartDetailRequest);
         }
