@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
+
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CartDetailRequest;
 use App\Models\Cart;
 use App\Models\Cartdetail;
+
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
@@ -21,18 +23,11 @@ class CartDetailController extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     // public function store(CartDetailRequest $request)
     // {
 
@@ -251,6 +246,7 @@ class CartDetailController extends Controller
         }
         return back()->with('error', 'Không thể xóa sản phẩm.');
     }
+
 
     public function handleAction(Request $request)
     {

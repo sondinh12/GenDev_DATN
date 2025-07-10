@@ -3,80 +3,103 @@
 @section('title', 'Danh mục con')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-        <div>
-            <a href="{{ route('categories.index') }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left"></i> Quay lại danh mục
-            </a>
-        </div>
-        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-success">
-            <i class="fas fa-plus"></i> Thêm danh mục con
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+<div class="card">
+    <div style="margin-left: 20px; margin-top: 20px;">
+        <a href="{{ route('categories.index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại danh mục
         </a>
     </div>
 
-    <h4 class="mt-3 mb-3">
-        📁 Danh mục con của: <strong class="text-primary">{{ $categories->name }}</strong>
-    </h4>
-
-    <form method="GET" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..."
-            value="{{ $_GET['search'] ?? '' }}">
-        <button type="submit" class="btn btn-outline-secondary">Tìm kiếm</button>
-    </div>
-    </form>
-
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">#ID</th>
-                            <th scope="col">Tên danh mục con</th>
-                            <th scope="col">Ảnh</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col" class="text-center">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($minis as $mini)
-                            <tr>
-                                <td>{{ $mini->id }}</td>
-                                <td>{{ $mini->name }}</td>
-                                <td>
-                                    <img src="{{asset('storage/'.$mini->image)}}" alt="{{ $mini->name }}" width="60" class="rounded border">
-                                </td>
-                                <td>
-                                    @if ($mini->status)
-                                        <span class="badge bg-success">Hiển thị</span>
-                                    @else
-                                        <span class="badge bg-secondary">Ẩn</span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('categories_minis.edit', ['category_id' => $categories->id, 'id' => $mini->id]) }}" class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i> Sửa</a>
-
-                                   <form action="{{ route('categories_minis.destroy', ['category_id' => $categories->id, 'id' => $mini->id]) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash-alt"></i> Xoá
-                                        </button>
-                                    </form>
-                                    
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mt-3 mb-3">
+            📁 Danh mục con của: <strong class="text-primary">{{ $categories->name }}</strong>
+        </h4>
+        <form method="GET" style="max-width: 300px; width: 100%;">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="🔍 Tìm kiếm..."
+                    value="{{ request('search') }}">
+                <button type="submit" class="btn btn-outline-secondary">Tìm</button>
             </div>
-        </div>
+        </form>
+    </div> <br>
+    
+
+    <div class="card-body py-3 d-flex justify-content-between align-items-center"> {{-- Use card-body for this section --}}
+        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-success btn-sm"> {{-- Use btn-success for "Add" and btn-sm --}}
+            <i class="fas fa-plus me-1"></i> Thêm danh mục con
+        </a>
+
+        <a href="{{ route('categories_mini.trash', ['category_id' => $category_id]) }}" class="btn btn-outline-danger position-relative">
+            <i class="fa fa-trash me-1"></i> Thùng rác
+            @if(isset($trashedCount) && $trashedCount > 0)
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.9em;">
+                    {{ $trashedCount }}
+                </span>
+            @endif
+        </a>
     </div>
 
+    <div class="card-body table-responsive">
+        <table class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Tên danh mục con</th>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col" class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($minis as $mini)
+                    <tr>
+                        <td>{{ $mini->id }}</td>
+                        <td>{{ $mini->name }}</td>
+                        <td>
+                            <img src="{{asset('storage/'.$mini->image)}}" alt="{{ $mini->name }}" width="60" class="rounded border">
+                        </td>
+                        <td>
+                            @if ($mini->status)
+                                <span class="badge bg-success">Hiển thị</span>
+                            @else
+                                <span class="badge bg-secondary">Ẩn</span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('categories_minis.edit', ['category_id' => $categories->id, 'id' => $mini->id]) }}" class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i> Sửa</a>
+
+                            <form action="{{ route('categories_minis.destroy', ['category_id' => $category_id, 'id' => $mini->id]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục con {{ addslashes($mini->name) }} này không?')">
+                                    <i class="fa fa-trash"></i> Xoá
+                                </button>
+                            </form>
+                            
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     <div class="mt-3">
         {{ $minis->links() }}
     </div>
 </div>
+
 @endsection

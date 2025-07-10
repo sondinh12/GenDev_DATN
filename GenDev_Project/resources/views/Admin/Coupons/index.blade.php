@@ -4,7 +4,8 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-4">Danh sách mã giảm giá</h2>
+
+    <h4 class="mb-4">Danh sách mã giảm giá</h2>
 
     <div class="d-flex justify-content-between mb-3">
         <a href="{{ route('coupons.create') }}" class="btn btn-primary">

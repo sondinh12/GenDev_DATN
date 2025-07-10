@@ -5,7 +5,6 @@
 session_start();
 
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
@@ -18,22 +17,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
-
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CheckoutController;
-
 use App\Http\Controllers\Client\CartDetailController;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 
-
-// Route::get('/products', function () {
-
-//     return view('products.index');
-
-// });
 // ================= TRANG CHÍNH =================
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -64,6 +57,7 @@ Route::get('/shop', [ClientProductController::class, 'shop'])->name('shop');
 Route::get('/product', function () {
     return view('client.product.product');
 })->name('product');
+
 Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
@@ -96,21 +90,19 @@ Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy
 // Route::get('/wishlist', function () {
 //     return view('client.cart.wishlist');
 // })->name('wishlist');
-// Route::get('/checkout', function () {
-//     return view('client.checkout.checkout');
-// })->name('checkout');
-// Route::get('/order', function () {
-//     return view('client.checkout.order');
-// })->name('order');
-// Route::get('/track-order', function () {
-//     return view('client.checkout.track-order');
-// })->name('track-order');
+
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::get('/order', function () {
+    return view('client.checkout.order');
+})->name('order');
+Route::get('/track-order', function () {
+    return view('client.checkout.track-order');
+})->name('track-order');
 
 // ================= ADMIN =================
 
 Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
-
     // Sản phẩm
     Route::middleware(['permission:manage products'])->group(function () {
         Route::resource('/products', ProductController::class);
@@ -138,22 +130,29 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::put('orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.update-payment-status');
     });
 
+
     // Danh mục
     Route::middleware(['permission:manage categories'])->group(function () {
         Route::resource('categories', CategoryController::class);
+        Route::get('admin/categories/trash', [CategoryController::class, 'trash_Category'])->name('categories.trash');
+        Route::put('admin/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+        Route::delete('admin/categories/{id}/force-delete', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
         Route::get('/categories/{id}/minis', [CategoryMiniController::class, 'index'])->name('admin.categories_minis.index');
         Route::get('/categories/{id}/minis/create', [CategoryMiniController::class, 'create'])->name('admin.categories_minis.create');
         Route::post('/categories/{id}/minis/store', [CategoryMiniController::class, 'store'])->name('admin.categories_minis.store');
         Route::get('admin/categories/{category_id}/minis/{id}/edit', [CategoryMiniController::class, 'edit'])->name('categories_minis.edit');
         Route::put('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'update'])->name('categories_minis.update');
         Route::delete('admin/categories/{category_id}/minis/{id}', [CategoryMiniController::class, 'destroy'])->name('categories_minis.destroy');
+        Route::get('admin/categories/minis/trash', [CategoryMiniController::class, 'trash_catemini'])->name('categories_mini.trash');
+        Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
+        Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
 
     // Người dùng
     Route::middleware(['permission:manage users'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
-        Route::put('admin/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
+        Route::put('/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
         Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
@@ -177,6 +176,7 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
 
 // ================= TÀI KHOẢN =================
 
+
 Auth::routes(['verify' => true]); // Xác thực email
 
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
@@ -192,6 +192,7 @@ Route::post('/profile/change-password', [ProfileController::class, 'changePasswo
 Route::get('/forgot-password', function () {
     return view('auth.passwords.reset'); // form gửi OTP
 })->name('password.request');
+
 
 // Gửi OTP
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'])->name('password.email');
