@@ -5,7 +5,6 @@
 session_start();
 
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;

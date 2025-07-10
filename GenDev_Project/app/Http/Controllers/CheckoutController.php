@@ -31,30 +31,10 @@ class CheckoutController extends Controller
             $selectedItemIds = $output['selected_items'] ?? [];
         }
 
-<<<<<<< HEAD
-        // Ép về mảng để tránh lỗi whereIn
-        $selectedItemIds = (array) $selectedItemIds;
 
-        // Nếu không có selected_items, truyền subtotal = 0 và cartItems rỗng
-        if (empty($selectedItemIds)) {
-            $cartItems = collect();
-            $subtotal = 0;
-            $coupons = Coupon::where('status', 1)
-                ->where('usage_limit', '>', 0)
-                ->whereDate('start_date', '<=', now())
-                ->whereDate('end_date', '>=', now())
-                ->get();
-            return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds', 'coupons'));
-        }
-
-        $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute','variant.variantAttributes.value')
-                    ->whereIn('id', $selectedItemIds)
-                    ->get();
-=======
         $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
->>>>>>> f9b3ffd61c33c542175ece4632ba4148b30518ed
         $subtotal = $cartItems->sum(function ($item) {
             if ($item->variant) {
                 $price = $item->variant->sale_price > 0
@@ -68,18 +48,13 @@ class CheckoutController extends Controller
 
             return $price * $item->quantity;
         });
-<<<<<<< HEAD
-        $coupons = Coupon::where('status', 1)
-            ->where('usage_limit', '>', 0)
-            ->whereDate('start_date', '<=', now())
-            ->whereDate('end_date', '>=', now())
-            ->get();
-        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds', 'coupons'));
-=======
 
         $user = auth()->user();
-        return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user'));
->>>>>>> f9b3ffd61c33c542175ece4632ba4148b30518ed
+
+        // Lấy danh sách coupon hợp lệ
+        $coupons = Coupon::where('usage_limit', '>', 0)->get();
+
+        return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
@@ -91,11 +66,8 @@ class CheckoutController extends Controller
         }
 
         // Truy vấn cart_details với quan hệ product và variant
-<<<<<<< HEAD
-        $cartItems = CartDetail::with('product','cart','variant.variantAttributes.attribute','variant.variantAttributes.value')
-=======
+
         $cartItems = Cartdetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
->>>>>>> f9b3ffd61c33c542175ece4632ba4148b30518ed
             ->whereIn('id', $selectedItemIds)
             ->get();
 

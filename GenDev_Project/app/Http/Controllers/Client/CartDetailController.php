@@ -23,18 +23,10 @@ class CartDetailController extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     // public function store(CartDetailRequest $request)
     // {
@@ -255,13 +247,9 @@ class CartDetailController extends Controller
         return back()->with('error', 'Không thể xóa sản phẩm.');
     }
 
-<<<<<<< HEAD
 
-    public function handleAction(Request $request){
-=======
     public function handleAction(Request $request)
     {
->>>>>>> f9b3ffd61c33c542175ece4632ba4148b30518ed
         if ($request->has('btn_checkout')) {
             $selectedItems = $request->input('selected_items', []);
 
