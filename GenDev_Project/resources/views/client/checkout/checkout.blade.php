@@ -158,7 +158,7 @@
                                                             <label class="" for="billing_postcode">Mã bưu điện
                                                                 <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="text" value="" placeholder="" id="billing_postcode" name="postcode" class="input-text ">
+                                                            <input type="text" value="{{$user->postcode}}" placeholder="" id="billing_postcode" name="postcode" class="input-text ">
                                                             @error('postcode')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
