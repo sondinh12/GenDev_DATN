@@ -54,7 +54,7 @@
 
                 <li>
                     <a href="{{ url('/admin/coupons') }}" class="">
-                      <i class="fa-solid fa-tag"></i>
+                        <i class="fa-solid fa-tag"></i>
                         <span>Mã Giảm Giá</span>
                     </a>
                 <li>

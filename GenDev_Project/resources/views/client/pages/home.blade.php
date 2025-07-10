@@ -21,30 +21,20 @@
                                     style="background-image: url(assets/images/slider/home-v2-background.jpg);">
                                     <img src="assets/images/slider/home-v2-img-1.png" alt="">
                                     <div class="caption">
-                                        <div class="title">The new-tech gift you are wishing for
-                                            <br>is right here
-                                        </div>
-                                        <div class="sub-title">Big screens in incredibly slim designs that in your hand.
-                                        </div>
-                                        <div class="button">Browse now
-                                            <i class="tm tm-long-arrow-right"></i>
-                                        </div>
-                                        <div class="bottom-caption">Free shipping on US Terority</div>
+                                        <div class="title">Món quà công nghệ mới mà bạn mong muốn<br>đang ở ngay đây</div>
+                                        <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng, vừa vặn trong tay bạn.</div>
+                                        <div class="button">Xem ngay <i class="tm tm-long-arrow-right"></i></div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
                                     </div>
                                 </div>
                                 <div class="slider-1"
                                     style="background-image: url(assets/images/slider/home-v2-background.jpg);">
                                     <img src="assets/images/slider/home-v2-img-1.png" alt="">
                                     <div class="caption">
-                                        <div class="title">The new-tech gift you are wishing for
-                                            <br>is right here
-                                        </div>
-                                        <div class="sub-title">Big screens in incredibly slim designs that in your hand.
-                                        </div>
-                                        <div class="button">Browse now
-                                            <i class="tm tm-long-arrow-right"></i>
-                                        </div>
-                                        <div class="bottom-caption">Free shipping on US Terority</div>
+                                        <div class="title">Món quà công nghệ mới mà bạn mong muốn<br>đang ở ngay đây</div>
+                                        <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng, vừa vặn trong tay bạn.</div>
+                                        <div class="button">Xem ngay <i class="tm tm-long-arrow-right"></i></div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
                                     </div>
                                 </div>
                             </div>
@@ -57,11 +47,11 @@
                                         <div class="caption">
                                             <div class="banner-info">
                                                 <h3 class="title">
-                                                    <strong>20% Off Tech</strong>
-                                                    <br> at Ultrabooks,
-                                                    <br> Laptops, Tablets
-                                                    <br>Notebooks &amp;
-                                                    <br>More
+                                                    <strong>Giảm 20% sản phẩm công nghệ</strong>
+                                                    <br> cho Ultrabook,
+                                                    <br> Laptop, Máy tính bảng
+                                                    <br>Notebook &amp;
+                                                    <br>và nhiều hơn nữa
                                                 </h3>
                                             </div>
                                             <!-- .banner-info -->
@@ -78,11 +68,11 @@
                                         class="banner-bg">
                                         <div class="caption">
                                             <div class="banner-info">
-                                                <h4 class="pretitle">Best Gift Idea</h4>
-                                                <h3 class="title">Mini Two Wheel
+                                                <h4 class="pretitle">Gợi ý quà tặng tuyệt vời</h4>
+                                                <h3 class="title">Xe điện cân bằng
                                                     <br>
-                                                    <strong>Self Balancing</strong>
-                                                    <br> Scooter
+                                                    <strong>Mini 2 bánh</strong>
+                                                    <br>
                                                 </h3>
                                             </div>
                                             <!-- .banner-info -->
@@ -110,11 +100,8 @@
                     </div>
                     <section class="section-top-categories section-categories-carousel" id="categories-carousel-3">
                         <header class="section-header">
-                            <h2 class="section-title">Top
-                                <br>categories
-                                <br>this week
-                            </h2>
-                            <a class="readmore-link" href="#">Full Catalog</a>
+                            <h2 class="section-title">Danh mục<br>nổi bật<br>tuần này</h2>
+                            <a class="readmore-link" href="#">Xem tất cả</a>
                         </header>
                         <!-- .section-header -->
                         <div class="product-categories product-categories-carousel" data-ride="tm-slick-carousel"
@@ -131,49 +118,49 @@
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Fashion"
                                                 src="assets/images/category/sm-1.png">
-                                            <h2 class="woocommerce-loop-category__title"> All in One PC </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Máy tính tất cả trong một </h2>
                                         </a>
                                     </div>
                                     <div class="product-category product">
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Footwear"
                                                 src="assets/images/category/sm-2.png">
-                                            <h2 class="woocommerce-loop-category__title"> Audio & Music </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Âm thanh & Nhạc </h2>
                                         </a>
                                     </div>
                                     <div class="product-category product">
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Furnitures"
                                                 src="assets/images/category/sm-3.png">
-                                            <h2 class="woocommerce-loop-category__title"> Cells & Tablets </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Điện thoại & Máy tính bảng </h2>
                                         </a>
                                     </div>
                                     <div class="product-category product">
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Perfumes"
                                                 src="assets/images/category/sm-4.png">
-                                            <h2 class="woocommerce-loop-category__title"> Computers & Laptops </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Máy tính & Laptop </h2>
                                         </a>
                                     </div>
                                     <div class="product-category product">
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Power Tools"
                                                 src="assets/images/category/sm-5.png">
-                                            <h2 class="woocommerce-loop-category__title"> Desktop PCs </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Máy tính để bàn </h2>
                                         </a>
                                     </div>
                                     <div class="product-category product">
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Smart Appliances"
                                                 src="assets/images/category/sm-6.png">
-                                            <h2 class="woocommerce-loop-category__title"> Digital Cameras </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Máy ảnh kỹ thuật số </h2>
                                         </a>
                                     </div>
                                     <div class="product-category product">
                                         <a href="product-category.html">
                                             <img width="224" height="197" alt="Perfumes"
                                                 src="assets/images/category/sm-4.png">
-                                            <h2 class="woocommerce-loop-category__title"> Computers & Laptops </h2>
+                                            <h2 class="woocommerce-loop-category__title"> Máy tính & Laptop </h2>
                                         </a>
                                     </div>
                                 </div>
@@ -186,9 +173,7 @@
                     <!-- .section-top-categories -->
                     <section class="section-6-1-6-products-tabs">
                         <header class="section-header">
-                            <h2 class="section-title">Daily Deals!
-                                <span>Get our best prices.</span>
-                            </h2>
+                            <h2 class="section-title">Ưu đãi mỗi ngày!<span>Nhận giá tốt nhất từ chúng tôi.</span></h2>
                         </header>
                         <!-- /.section-header -->
                         <div class="6-1-6-products-tabs">
@@ -225,13 +210,12 @@
                                                                         </del>
                                                                     </span>
                                                                     <!-- /.price -->
-                                                                    <h2 class="woocommerce-loop-product__title">Tablet
-                                                                        Red EliteBook Revolve</h2>
+                                                                    <h2 class="woocommerce-loop-product__title">Máy tính bảng Red EliteBook Revolve</h2>
                                                                 </div>
                                                                 <!-- /.price-and-title -->
                                                                 <div class="sale-label-outer">
                                                                     <div class="sale-saved-label">
-                                                                        <span class="saved-label-text">Save</span>
+                                                                        <span class="saved-label-text">Tiết kiệm</span>
                                                                         <span class="saved-label-amount">
                                                                             <span
                                                                                 class="woocommerce-Price-amount amount">
@@ -248,10 +232,10 @@
                                                                 src="assets/images/products/6-1-6-center.jpg">
                                                             <div class="deal-progress">
                                                                 <div class="deal-stock">
-                                                                    <div class="stock-sold">Already Sold:
+                                                                    <div class="stock-sold">Đã bán:
                                                                         <strong>0</strong>
                                                                     </div>
-                                                                    <div class="stock-available">Available:
+                                                                    <div class="stock-available">Còn lại:
                                                                         <strong>1000</strong>
                                                                     </div>
                                                                 </div>
@@ -264,8 +248,8 @@
                                                             <!-- /.deal-progress -->
                                                             <div class="deal-countdown-timer">
                                                                 <div class="marketing-text">
-                                                                    <span class="line-1">Hurry up!</span>
-                                                                    <span class="line-2">Offers ends in:</span>
+                                                                    <span class="line-1">Nhanh tay!</span>
+                                                                    <span class="line-2">Ưu đãi kết thúc sau:</span>
                                                                 </div>
                                                                 <!-- /.marketing-text -->
                                                                 <span style="display:none;"
@@ -301,8 +285,8 @@
                         <div class="col-full">
                             <header class="section-header text-center mb-4">
                                 <h2 class="section-title h3 fw-bold">
-                                    <span class="text-gradient">Hurry up!</span>
-                                    <span class="d-block text-primary mt-1">Special Offers</span>
+                                    <span class="text-gradient">Nhanh tay!</span>
+                                    <span class="d-block text-primary mt-1">Ưu đãi đặc biệt</span>
                                 </h2>
                                 <ul role="tablist" class="nav nav-pills justify-content-center mb-3">
                                     @foreach($categories as $category)
@@ -385,8 +369,9 @@
                                                             <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
                                                                 @csrf
                                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
+
                                                                 <input type="hidden" name="quantity" value="1">
-                                                               {{-- @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                                {{-- @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
                                                                     <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $variantAttr->value_id }}">
                                                                 @endforeach --}}
                                                                 @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
