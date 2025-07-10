@@ -35,7 +35,7 @@ Manage
         <th>Ảnh</th>
         <th>Tên danh mục</th>
         <th>Giá</th>
-        <th>Số lượng</th>
+        <!-- <th>Số lượng</th> -->
         <th>Danh mục con</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
@@ -50,8 +50,31 @@ Manage
             <img src="{{asset('storage/'.$pro->image)}}" alt="Ảnh" width="100px">
         </td>
         <td>{{$pro->category->name}}</td>
-        <td>{{$pro->price}}</td>
-        <td>{{$pro->quantity}}</td>
+        <td>
+            @if($pro->variants && $pro->variants->count())
+                @php
+                    $prices = $pro->variants->map(function($v) {
+                        return $v->sale_price && $v->sale_price > 0 ? $v->sale_price : $v->price;
+                    });
+                    $min = $prices->min();
+                    $max = $prices->max();
+                @endphp
+                @if($min == $max)
+                    {{ number_format($min) }} đ
+                @else
+                    {{ number_format($min) }} đ - {{ number_format($max) }} đ
+                @endif
+            @else
+                {{ number_format($pro->sale_price && $pro->sale_price > 0 ? $pro->sale_price : $pro->price) }} đ
+            @endif
+        </td>
+        <!--
+        <td>
+            @if(!$pro->variants || !$pro->variants->count())
+                {{$pro->quantity}}
+            @endif
+        </td>
+        -->
         <td>{{$pro->categoryMini?->name}}</td>
         <th>
             @if($pro->status == 1)

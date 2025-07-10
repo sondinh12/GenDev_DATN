@@ -3,6 +3,7 @@
 
 
 session_start();
+
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CouponController;
@@ -71,6 +72,7 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
 
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
@@ -168,6 +170,8 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
+    Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
+    Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
 });
 
 

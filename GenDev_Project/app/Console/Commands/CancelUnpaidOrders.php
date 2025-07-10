@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\OrderCancelled;
 use App\Models\Order;
 use Illuminate\Console\Command;
+use Mail;
 
 class CancelUnpaidOrders extends Command
 {
@@ -40,6 +42,8 @@ class CancelUnpaidOrders extends Command
             $order->update([
                 'status' => 'cancelled'
             ]);
+
+            Mail::to($order->email)->send(new OrderCancelled($order));
 
             $this->info("Đã hủy đơn hàng #{$order->id} (Mã giao dịch: {$order->transaction_code})");
         }
