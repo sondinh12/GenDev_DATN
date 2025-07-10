@@ -31,7 +31,7 @@ class PaymentController extends Controller
                 $i = 1;
             }
         }
-        $secureHash = hash_hmac('sha512', $hashData, env('VNPAY_HASH_SECRET'));
+        $secureHash = hash_hmac('sha512', $hashData, env('VNPAY_HASH_SECRET')); 
 
         if ($secureHash === $vnp_SecureHash) {
             // cần sửa tnxRef
@@ -55,14 +55,15 @@ class PaymentController extends Controller
                         $q->where('user_id', $order->user_id);
                     })->delete();
                     $order->update([
-                        'status' => 'pending', // đã xác nhận
+                        'status' => 'processing', // đã xác nhận
                         'payment_status' => 'paid' // đã thanh toán
                     ]);
                     Mail::to($order->email)->send(new OrderConfirmation($order));
                     return redirect()->route('checkout.success')->with('success', 'Thanh toán thành công!');
                 } else {
                     $order->update([
-                        'payment_status' => 'cancelled' // thất bại
+                        'status' => 'pending',
+                        'payment_status' => 'unpaid' // thất bại
                     ]);
                     return redirect()->route('checkout.failed')->with('error', 'Thanh toán thất bại!');
                 }
