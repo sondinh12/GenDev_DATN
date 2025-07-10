@@ -35,61 +35,61 @@
             <div class="d-flex align-items-center gap-2">
                 <div class="dropdown d-none d-lg-block">
                     <button type="button" class="btn btn-primary btn-sm fs-14 d-inline" data-bs-toggle="dropdown">
-                        Apps
+                        Ứng dụng
                         <i class="mdi mdi-chevron-down align-middle"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-start dropdown-menu-animated">
                         <a href="#" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fa fa-boxes"></i></div>
-                            <span class="dropdown-content">Inventory Manager</span>
+                            <span class="dropdown-content">Quản lý kho</span>
                             <div class="dropdown-addon"><span class="badge badge-warning rounded-pill">20</span></div>
                         </a>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fa fa-project-diagram"></i></div>
-                                <span class="dropdown-content">Project manager</span>
+                                <span class="dropdown-content">Quản lý dự án</span>
                                 <div class="dropdown-addon"><i class="mdi mdi-chevron-right align-middle"></i></div>
                             </a>
                             <div class="dropdown-submenu-menu dropdown-submenu-end">
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Create project</span> </a>
+                                        class="dropdown-content">Tạo dự án</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Delete project</span> </a>
+                                        class="dropdown-content">Xóa dự án</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Ongoing project</span> </a>
+                                        class="dropdown-content">Dự án đang thực hiện</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Completed project</span> </a>
+                                        class="dropdown-content">Dự án đã hoàn thành</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Urgent project</span></a>
+                                        class="dropdown-content">Dự án khẩn cấp</span></a>
                             </div>
                         </div>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fa fa-tasks"></i></div>
-                                <span class="dropdown-content">Task manager</span>
+                                <span class="dropdown-content">Quản lý công việc</span>
                                 <div class="dropdown-addon"><i class="mdi mdi-chevron-right align-middle"></i></div>
                             </a>
                             <div class="dropdown-submenu-menu dropdown-submenu-end">
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Show task</span> </a>
+                                        class="dropdown-content">Xem công việc</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Assign task</span> </a>
+                                        class="dropdown-content">Giao việc</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Assign member</span> </a>
+                                        class="dropdown-content">Giao thành viên</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Completed task</span> </a>
+                                        class="dropdown-content">Công việc đã hoàn thành</span> </a>
                                 <a href="#" class="dropdown-item"><i class="dropdown-bullet"></i> <span
-                                        class="dropdown-content">Urgent task</span></a>
+                                        class="dropdown-content">Công việc khẩn cấp</span></a>
                             </div>
                         </div>
                         <a href="#" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fa fa-dollar-sign"></i></div>
-                            <span class="dropdown-content">Invoice</span>
+                            <span class="dropdown-content">Hóa đơn</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ url('apps-contact') }}" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fa fa-user-cog"></i></div>
-                            <span class="dropdown-content">My Account</span>
+                            <span class="dropdown-content">Tài khoản của tôi</span>
                         </a>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                 <div class="dropdown d-none d-lg-block">
                     <button type="button" class="btn btn-primary btn-sm fs-14" data-bs-toggle="dropdown"
                         aria-haspopup="false" aria-expanded="false">
-                        Features
+                        Tính năng
                         <i class="mdi mdi-chevron-down align-middle"></i>
                     </button>
                     <div
@@ -108,7 +108,7 @@
                                     class="img-fluid" style="height: 200px;">
                             </div>
                             <div class="dropdown-col">
-                                <h2 class="">Welcome back!</h2>
+                                <h2 class="">Chào mừng trở lại!</h2>
                                 <p class="text-muted mb-0">
                                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, commodi hic
                                     qui aspernatur doloremque quos tempora placeat culpa illum, voluptatibus delectus
@@ -116,59 +116,59 @@
                                     aliquid enim, laborum aliquam. Quod, perferendis unde.
                                 </p>
                                 <div class="mt-3">
-                                    <a href="{{ url('auth-login') }}" class="btn btn-dark btn-wider">Login</a>
+                                    <a href="{{ url('auth-login') }}" class="btn btn-dark btn-wider">Đăng nhập</a>
                                 </div>
                             </div>
                             <div class="dropdown-col border-start border-primary border-opacity-50">
-                                <h4 class="dropdown-header">Features</h4>
+                                <h4 class="dropdown-header">Tính năng</h4>
                                 <div class="grid-nav grid-nav-action">
                                     <div class="grid-nav-row">
                                         <a href="{{ url('index') }}" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-window-restore"></i></div>
-                                            <span class="grid-nav-content">Dashboard</span>
+                                            <span class="grid-nav-content">Bảng điều khiển</span>
                                         </a>
                                         <a href="{{ url('apps-kanban') }}" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-clipboard"></i></div>
-                                            <span class="grid-nav-content">TODO List</span>
+                                            <span class="grid-nav-content">Danh sách việc cần làm</span>
                                         </a>
                                         <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-question-circle"></i></div>
-                                            <span class="grid-nav-content">Help Center</span>
+                                            <span class="grid-nav-content">Trung tâm trợ giúp</span>
                                         </a>
                                     </div>
                                     <div class="grid-nav-row">
                                         <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-images"></i></div>
-                                            <span class="grid-nav-content">Gallery</span>
+                                            <span class="grid-nav-content">Thư viện ảnh</span>
                                         </a>
                                         <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-chart-bar"></i></div>
-                                            <span class="grid-nav-content">Scrumboard</span>
+                                            <span class="grid-nav-content">Bảng scrum</span>
                                         </a>
                                         <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-bookmark"></i></div>
-                                            <span class="grid-nav-content">Docs</span>
+                                            <span class="grid-nav-content">Tài liệu</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="dropdown-col border-start border-primary border-opacity-50">
-                                <h4 class="dropdown-header">Tools</h4>
+                                <h4 class="dropdown-header">Công cụ</h4>
                                 <a href="#" class="dropdown-item"><i
                                         class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
-                                    <span class="dropdown-content">Components</span> </a>
+                                    <span class="dropdown-content">Thành phần</span> </a>
                                 <a href="#" class="dropdown-item"><i
                                         class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
-                                    <span class="dropdown-content">Form Wizard</span> </a>
+                                    <span class="dropdown-content">Trình hướng dẫn biểu mẫu</span> </a>
                                 <a href="#" class="dropdown-item"><i
                                         class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
-                                    <span class="dropdown-content">Documentation</span> </a>
+                                    <span class="dropdown-content">Tài liệu hướng dẫn</span> </a>
                                 <a href="#" class="dropdown-item"><i
                                         class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
-                                    <span class="dropdown-content">Knowledge Base</span> </a>
+                                    <span class="dropdown-content">Kiến thức cơ bản</span> </a>
                                 <a href="#" class="dropdown-item"><i
                                         class="mdi mdi-checkbox-blank-circle align-middle dropdown-bullet me-2"></i>
-                                    <span class="dropdown-content">Inventory Manager</span></a>
+                                    <span class="dropdown-content">Quản lý kho</span></a>
                             </div>
                         </div>
                     </div>
@@ -176,15 +176,6 @@
             </div>
 
             <div class="d-flex align-items-center gap-2">
-                <!--Start App Search-->
-                <form class="app-search d-none d-lg-block">
-                    <div class="position-relative">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="fab fa-sistrix fs-17 align-middle"></span>
-                    </div>
-                </form>
-                <!--End App Search-->
-
                 <!-- Start Notification -->
                 <div class="dropdown d-inline-block">
                     <button type="button" class="btn btn-sm top-icon" id="page-header-notifications-dropdown"
@@ -197,7 +188,7 @@
                         <div class="p-3 bg-info">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h6 class="text-white m-0"><i class="far fa-bell me-2"></i> Notifications </h6>
+                                    <h6 class="text-white m-0"><i class="far fa-bell me-2"></i> Thông báo </h6>
                                 </div>
                                 <div class="col-auto">
                                     <a href="#!" class="badge bg-info-subtle text-info"> 8+</a>
@@ -213,9 +204,9 @@
                                         </span>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mb-1">New report has been recived</h6>
+                                        <h6 class="mb-1">Báo cáo mới đã được nhận</h6>
                                         <div class="fs-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 phút trước</p>
                                         </div>
                                     </div>
                                     <i class="mdi mdi-chevron-right align-middle ms-2"></i>
@@ -229,9 +220,9 @@
                                         </span>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mb-1">Last order was completed</h6>
+                                        <h6 class="mb-1">Đơn hàng cuối cùng đã hoàn thành</h6>
                                         <div class="fs-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hour ago</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 giờ trước</p>
                                         </div>
                                     </div>
                                     <i class="mdi mdi-chevron-right align-middle ms-2"></i>
@@ -245,9 +236,9 @@
                                         </span>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mb-1">Completed meeting canceled</h6>
+                                        <h6 class="mb-1">Cuộc họp đã hoàn thành bị hủy</h6>
                                         <div class="fs-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 5 hour ago</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 5 giờ trước</p>
                                         </div>
                                     </div>
                                     <i class="mdi mdi-chevron-right align-middle ms-2"></i>
@@ -261,9 +252,9 @@
                                         </span>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mb-1">New feedback received</h6>
+                                        <h6 class="mb-1">Phản hồi mới đã được nhận</h6>
                                         <div class="fs-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 6 hour ago</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 6 giờ trước</p>
                                         </div>
                                     </div>
                                     <i class="mdi mdi-chevron-right align-middle ms-2"></i>
@@ -277,9 +268,9 @@
                                         </span>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mb-1">New update was available</h6>
+                                        <h6 class="mb-1">Có bản cập nhật mới</h6>
                                         <div class="fs-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 day ago</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 ngày trước</p>
                                         </div>
                                     </div>
                                     <i class="mdi mdi-chevron-right align-middle ms-2"></i>
@@ -293,9 +284,9 @@
                                         </span>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mb-1">Your password was changed</h6>
+                                        <h6 class="mb-1">Mật khẩu của bạn đã được thay đổi</h6>
                                         <div class="fs-12 text-muted">
-                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 2 day ago</p>
+                                            <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 2 ngày trước</p>
                                         </div>
                                     </div>
                                     <i class="mdi mdi-chevron-right align-middle ms-2"></i>
@@ -305,7 +296,7 @@
                         <div class="p-2 border-top">
                             <div class="d-grid">
                                 <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
-                                    <i class="mdi mdi-arrow-right-circle me-1"></i> View More..
+                                    <i class="mdi mdi-arrow-right-circle me-1"></i> Xem thêm..
                                 </a>
                             </div>
                         </div>
@@ -352,35 +343,35 @@
                                     <div class="grid-nav-row">
                                         <a href="{{ url('apps-contact') }}" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-address-card"></i></div>
-                                            <span class="grid-nav-content">Profile</span>
+                                            <span class="grid-nav-content">Hồ sơ</span>
                                         </a>
                                         <a href="#!" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-comments"></i></div>
-                                            <span class="grid-nav-content">Messages</span>
+                                            <span class="grid-nav-content">Tin nhắn</span>
                                         </a>
                                         <a href="#!" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-clone"></i></div>
-                                            <span class="grid-nav-content">Activities</span>
+                                            <span class="grid-nav-content">Hoạt động</span>
                                         </a>
                                     </div>
                                     <div class="grid-nav-row">
                                         <a href="#!" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-calendar-check"></i></div>
-                                            <span class="grid-nav-content">Tasks</span>
+                                            <span class="grid-nav-content">Công việc</span>
                                         </a>
                                         <a href="#!" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-sticky-note"></i></div>
-                                            <span class="grid-nav-content">Notes</span>
+                                            <span class="grid-nav-content">Ghi chú</span>
                                         </a>
                                         <a href="#!" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-bell"></i></div>
-                                            <span class="grid-nav-content">Notification</span>
+                                            <span class="grid-nav-content">Thông báo</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer card-footer-bordered rounded-0"><a href="{{ url('auth-login') }}"
-                                    class="btn btn-label-danger">Sign out</a></div>
+                                    class="btn btn-label-danger">Đăng xuất</a></div>
                         </div>
                     </div>
                 </div>

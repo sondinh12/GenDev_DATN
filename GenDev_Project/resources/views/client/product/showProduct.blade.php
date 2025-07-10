@@ -128,7 +128,7 @@
                     </div>
 
                     <form method="POST" action="{{ route('cart-detail') }}" class="d-flex flex-column align-items-start gap-3 mt-3 flex-wrap"> 
-                          @csrf
+                        @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <input type="hidden" name="quantity" value="1">
                         @php

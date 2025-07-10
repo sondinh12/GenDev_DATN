@@ -22,9 +22,9 @@ class CouponController extends Controller
         if($subtotal < $coupon->min_coupon){
             return back()->with('error','Đơn hàng chưa đủ giá trị tối thiểu để áp dụng mã này');
         }
-        if($subtotal > $coupon->max_coupon){
-            return back()->with('error','Đơn hàng đã vượt quá giá trị để áp dụng mã này');
-        }
+        // if($subtotal > $coupon->max_coupon){
+        //     return back()->with('error','Đơn hàng đã vượt quá giá trị để áp dụng mã này');
+        // }
 
         $userId = auth()->id() ?? null;
         if ($coupon->user_id != -1 && ($coupon->user_id != $userId || !$userId)) {
