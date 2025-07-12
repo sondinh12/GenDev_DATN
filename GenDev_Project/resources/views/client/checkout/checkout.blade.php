@@ -319,49 +319,73 @@
                                                     @endforeach
 
                                                     @foreach ($cartItems as $item)
-                                                    @php
-                                                        if ($item->variant) {
-                                                            $price = $item->variant->sale_price && $item->variant->sale_price > 0
-                                                                ? $item->variant->sale_price
-                                                                : $item->variant->price;
-                                                        } else {
-                                                            $price = $item->product->sale_price && $item->product->sale_price > 0
-                                                                ? $item->product->sale_price
-                                                                : $item->product->price;
-                                                        }
-                                                    @endphp
-                                                    <tr>
-                                                        <td>
-                                                        <div>
-                                                            <input type="hidden" name="product_id" value="{{$item->product_id}}">
-                                                            <strong>{{ $item->product->name }}</strong><br>
-                                                            Số lượng: {{ $item['quantity'] }} <br>
-                                                            Giá: {{ number_format($price) }} VNĐ <br>
-                                                            @if ($item->variant && $item->variant->variantAttributes)
-                                                                @foreach ($item->variant->variantAttributes as $att)
-                                                                    {{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }} <br>
-                                                                @endforeach
-                                                            @endif
-                                                            <hr>
-                                                        </div>
-                                                        </td>
-                                                    </tr>
+                                                        @php
+                                                            if ($item->variant) {
+                                                                $price = $item->variant->sale_price && $item->variant->sale_price > 0
+                                                                    ? $item->variant->sale_price
+                                                                    : $item->variant->price;
+                                                            } else {
+                                                                $price = $item->product->sale_price && $item->product->sale_price > 0
+                                                                    ? $item->product->sale_price
+                                                                    : $item->product->price;
+                                                            }
+                                                        @endphp
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <div class="d-flex justify-content-between align-items-start">
+                                                                    <div>
+                                                                        <div class="fw-bold">{{ $item->product->name }}</div>
+                                                                        <div class="text-muted small">Số lượng: {{ $item->quantity }}</div>
+                                                                        <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
+
+                                                                        {{-- Biến thể --}}
+                                                                        @if ($item->variant && $item->variant->variantAttributes)
+                                                                            <div class="text-muted small">
+                                                                                @foreach ($item->variant->variantAttributes as $att)
+                                                                                    <div>{{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }}</div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+
+                                                                    <div class="fw-bold text-end">{{ number_format($price * $item->quantity) }} VNĐ</div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     @endforeach
                                                 </tbody>
                                                 <tfoot>
                                                     <tr class="cart-subtotal">
                                                         <th>Tạm tính</th>
                                                         <td>
-                                                            <span class="woocommerce-Price-amount amount">
-                                                                <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
+                                                            <span id="subtotal" data-value="{{ $subtotal }}">{{ number_format($subtotal) }} VNĐ</span>
                                                         </td>
                                                     </tr>
+                                                    
+                                                    <tr class="discount-row">
+                                                        <th>Discount</th>
+                                                        <td>
+                                                            <span id="discount-amount"
+                                                                data-value="{{ session('applied_coupon.discount') ?? 0 }}">
+                                                                {{ number_format(session('applied_coupon.discount') ?? 0) }} VNĐ
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+
                                                     <tr class="order-total">
                                                         <th>Tổng cộng</th>
                                                         <td>
                                                             <strong>
                                                                 <span class="woocommerce-Price-amount amount">
                                                                     <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                     <tr class="order-total">
+                                                        <th>Total</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
                                                             </strong>
                                                         </td>
                                                     </tr>
@@ -385,7 +409,7 @@
                                                 </ul>
                                                 @foreach($ships as $ship)
                                                     <label>
-                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}">
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}">
                                                         {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
                                                     </label><br>
                                                 @endforeach
@@ -424,4 +448,37 @@
     </div>
     <!-- .col-full -->
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const subtotal = parseInt(document.getElementById('subtotal').dataset.value);
+    let shipping = 0;
+    let discount = parseInt(document.getElementById('discount-amount').dataset.value) || 0;
+
+    const totalEl = document.getElementById('total-amount');
+    const shippingEl = document.getElementById('shipping-fee');
+    const discountEl = document.getElementById('discount-amount');
+
+    function formatVND(number) {
+        return new Intl.NumberFormat('vi-VN').format(number) + ' VNĐ';
+    }
+
+    function updateTotal() {
+        const total = Math.max(subtotal + shipping - discount, 0);
+        totalEl.textContent = formatVND(total);
+        shippingEl.textContent = formatVND(shipping);
+        discountEl.textContent = formatVND(discount);
+    }
+
+    document.querySelectorAll('.ship-option').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            shipping = parseInt(this.dataset.price) || 0;
+            updateTotal();
+        });
+    });
+
+    updateTotal();
+});
+</script>
+
 @endsection
