@@ -34,7 +34,7 @@ class CouponsController extends Controller
     public function store(StoreCouponRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = Auth::id();
+        // $data['user_id'] = Auth::id();
         $data['total_used'] = 0;
         $data['status'] = $request->input('status', 1);
 

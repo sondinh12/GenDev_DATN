@@ -12,13 +12,6 @@ class StoreCouponRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
-    {
-        if ($this->input('discount_type') === 'fixed') {
-            $this->merge(['max_coupon' => 0]);
-        }
-    }
-
     public function rules(): array
     {
         $couponId = $this->route('coupon');
@@ -57,32 +50,34 @@ class StoreCouponRequest extends FormRequest
                 }
             ],
 
-            'usage_limit' => 'nullable|integer|min:1|max:10000',
-            'per_use_limit' => 'nullable|integer|min:1|max:10',
+            'usage_limit' => 'required|integer|min:1|max:10000',
+            'per_use_limit' => 'required|integer|min:1|max:10',
 
-            'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
+            'min_coupon' => 'required|numeric|min:0|max:99999999.99',
 
             'max_coupon' => [
-                'nullable',
+                'required',
                 'numeric',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent') {
-                        $discount = request('discount_amount');
-                        $min = request('min_coupon');
+                    $discountType = request('discount_type');
+                    $discount = request('discount_amount');
+                    $min = request('min_coupon');
 
-                        if (!is_null($min) && $value < $min) {
-                            $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
-                        }
+                    // Nếu max và min đều có, thì max phải >= min
+                    if (!is_null($min) && $value < $min) {
+                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
+                    }
 
-                        if (!is_null($value) && $value < $discount) {
-                            $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị giảm.');
-                        }
+                    // Nếu max và discount_amount đều có, thì max phải >= discount_amount
+                    if (!is_null($discount) && $value < $discount) {
+                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
                     }
                 }
             ],
 
             'status' => 'required|in:0,1',
+            'user_id'=>'integer'
         ];
     }
 
@@ -113,22 +108,27 @@ class StoreCouponRequest extends FormRequest
             'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
             'end_date.*' => 'Thời hạn mã giảm giá không được vượt quá 1 năm.',
 
+            'usage_limit.required' => 'Giá trị này không được bỏ trống!',
             'usage_limit.max' => 'Giới hạn sử dụng không được vượt quá 10.000.',
             'usage_limit.integer' => 'Giới hạn tổng sử dụng phải là số nguyên.',
             'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn 0.',
 
+            'per_use_limit.required' => 'Giá trị này không đực bỏ trống!',
             'per_use_limit.integer' => 'Giới hạn mỗi người dùng phải là số nguyên.',
             'per_use_limit.min' => 'Giới hạn mỗi người dùng không hợp lệ.',
             'per_use_limit.max' => 'Mỗi người chỉ được sử dụng mã này tối đa 10 lần.',
 
+            'min_coupon.required' => 'Giá trị đơn hàng tối thiểu không được bỏ trống',
             'min_coupon.max' => 'Giá trị đơn hàng tối thiểu không được vượt quá 99,999,999.99.',
             'min_coupon.numeric' => 'Giá trị đơn hàng tối thiểu phải là số.',
             'min_coupon.min' => 'Giá trị đơn hàng tối thiểu không được âm.',
 
+            'max_coupon.required' => 'Giá trị đơn hàng tối đa không được bỏ trống',
             'max_coupon.numeric' => 'Giá trị đơn hàng tối đa phải là số.',
             'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
 
             'status.in' => 'Trạng thái không hợp lệ.',
+            'user_id.integer'=> 'Giá trị phải là 1 số'
         ];
     }
 }
