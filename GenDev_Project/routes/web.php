@@ -29,12 +29,13 @@ use App\Http\Controllers\Client\ClientOrderController;
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-// Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
+Route::get('/products', function () {
+    return view('client.pages.product');
+})->name('products');
 Route::get('/contact', function () {
     return view('client.pages.contact');
 })->name('contact');

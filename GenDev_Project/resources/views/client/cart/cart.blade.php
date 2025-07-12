@@ -159,15 +159,6 @@
 
                                                             <tr>
                                                                 <td class="actions" colspan="7">
-                                                                    <div class="coupon">
-                                                                        <label for="coupon_code">Mã giảm giá:</label> <br>
-                                                                        <input type="text" placeholder="Nhập mã giảm giá"
-                                                                            value="" id="coupon_code" class="input-text"
-                                                                            name="coupon_code">
-                                                                        <input type="submit" value="Áp dụng"
-                                                                            name="apply_coupon" class="button">
-                                                                    </div>
-
                                                                     {{-- <input type="submit" value="Cập nhật"
                                                                         name="update_cart" class="button"> --}}
                                                                     <button type="submit" name="update_cart"
@@ -218,11 +209,11 @@
                                                         </tbody>
                                                     </table>
                                                     <!-- .shop_table shop_table_responsive -->
-                                                    <div class="wc-proceed-to-checkout">
-                                                        <!-- .wc-proceed-to-checkout -->
+                                                    <div class="wc-proceed-to-checkout justify-content-center" 
+                                                        style="display:flex; flex-direction:column; align-items:center; width:100%; margin-top:16px;">
                                                         <button type="submit" name="btn_checkout"
-                                                            class="button wc-forward text-center">Checkout</button>
-                                                        <a class="back-to-shopping" href="shop.html">Back to Shopping</a>
+                                                        class="checkout-button button alt wc-forward">Tiến hành thanh toán</button>
+                                                        <a class="back-to-shopping" href="/products">Quay lại Mua sắm</a>
                                                     </div>
                                                     <!-- .cart_totals -->
                                                 </div>
