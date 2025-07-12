@@ -97,26 +97,28 @@
                                     @php
                                     $min = null; $max = null;
                                     if(count($product->variants)) {
-                                    foreach($product->variants as $v) {
-                                    $sale = $v->sale_price ?? $v->price;
-                                    if($min === null || $sale < $min) $min=$sale;
-                                        if($max===null || $sale> $max) $max = $sale;
+                                        foreach($product->variants as $v) {
+                                            $sale = $v->sale_price;
+                                            $price = $v->price;
+                                            $display = $sale !== null ? $sale : $price;
+                                            if($min === null || $display < $min) $min = $display;
+                                            if($max === null || $display > $max) $max = $display;
                                         }
-                                        }
-                                        @endphp
-                                        @if(count($product->variants))
+                                    }
+                                    @endphp
+                                    @if(count($product->variants))
                                         @if($min == $max)
-                                        {{ number_format($min) }}đ
+                                            {{ number_format($min) }}đ
                                         @else
-                                        {{ number_format($min) }}đ - {{ number_format($max) }}đ
+                                            {{ number_format($min) }}đ - {{ number_format($max) }}đ
                                         @endif
+                                    @else
+                                        @if($product->sale_price !== null)
+                                            {{ number_format($product->sale_price) }}đ
                                         @else
-                                        @if($product->sale_price)
-                                        {{ number_format($product->sale_price) }}đ
-                                        @else
-                                        {{ number_format($product->price) }}đ
+                                            {{ number_format($product->price) }}đ
                                         @endif
-                                        @endif
+                                    @endif
                                 </span>
                             </div>
                             <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
