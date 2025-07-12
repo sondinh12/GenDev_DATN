@@ -1,142 +1,219 @@
 @extends('client.layout.master')
 
 @section('content')
-<style>
-    .form-control.is-invalid {
-        border-color: #dc3545;
-        background-color: #fff8f8;
-    }
+    <style>
+        body {
+            min-height: 100vh;
+        }
 
-    .form-select.is-invalid {
-        border-color: #dc3545;
-        background-color: #fff8f8;
-    }
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .toggle-password {
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-        color: #6c757d;
-        cursor: pointer;
-        user-select: none;
-        padding: 0.375rem 0.75rem;
-    }
+        .card {
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
 
-    .toggle-password:hover {
-        background-color: #e9ecef;
-    }
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
 
-    .invalid-feedback {
-        color: #dc3545;
-        margin-top: 0.25rem;
-        font-size: 0.875em;
-        display: block !important;
-    }
-</style>
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4 p-md-5">
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .toggle-password {
+            background: none;
+            border: none;
+            color: #2575fc;
+            cursor: pointer;
+            user-select: none;
+            padding: 0 0.75rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #6a11cb;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            display: block !important;
+        }
+
+        .btn-primary {
+            background: #2575fc;
+            border: none;
+            font-weight: 600;
+            color: #fff;
+            transition: box-shadow 0.2s, background 0.2s;
+            box-shadow: 0 2px 8px rgba(31, 38, 135, 0.08);
+        }
+
+        .btn-primary:hover {
+            background: #1250b5;
+            box-shadow: 0 4px 16px rgba(31, 38, 135, 0.12);
+            color: #fff;
+        }
+
+        .social-btns .btn {
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin: 0 0.25rem;
+            border: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-facebook {
+            background: #3b5998;
+            color: #fff;
+        }
+
+        .btn-facebook:hover {
+            background: #2d4373;
+        }
+
+        .btn-google {
+            background: #db4437;
+            color: #fff;
+        }
+
+        .btn-google:hover {
+            background: #a33324;
+        }
+
+        .btn-twitter {
+            background: #1da1f2;
+            color: #fff;
+        }
+
+        .btn-twitter:hover {
+            background: #0d8ddb;
+        }
+
+        .register-link a {
+            font-weight: 600;
+            text-decoration: underline;
+            color: #2575fc;
+        }
+
+        .register-link a:hover {
+            color: #6a11cb;
+        }
+    </style>
+
+    <div class="login-container">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold text-primary">Đăng nhập</h3>
-                        <p class="text-muted">Chào mừng bạn quay trở lại!</p>
+                        <h3 class="fw-bold text-primary" style="font-size:2rem;">Đăng nhập</h3>
+                        <p class="text-muted mb-0">Chào mừng bạn quay trở lại!</p>
                     </div>
-
                     <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
                         @csrf
-
                         <!-- Email -->
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-4">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
                                 name="email" value="{{ old('email') }}" placeholder="Nhập email của bạn" required
                                 autofocus>
                             @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <!-- Mật khẩu -->
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-4">
                             <label for="password" class="form-label">Mật khẩu</label>
                             <div class="input-group">
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                     id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
-                                <span class="toggle-password">
-                                    Hiện
-                                </span>
+                                <button type="button" class="toggle-password" tabindex="-1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
                             @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <!-- Remember Me & Forgot Password -->
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{
-                                    old('remember') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="remember" id="remember" style="margin-left: 2px"
+                                    {{ old('remember') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="remember">
                                     Ghi nhớ đăng nhập
                                 </label>
                             </div>
                             @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-primary text-decoration-none">
-                                Quên mật khẩu?
-                            </a>
+                                <a href="{{ route('password.request') }}" class="text-primary text-decoration-none">
+                                    Quên mật khẩu?
+                                </a>
                             @endif
                         </div>
-
                         <!-- Login Button -->
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
                                 Đăng nhập
                             </button>
-
-                            <!-- Social Login -->
-                            <div class="text-center my-3">
-                                <p class="text-muted">Hoặc đăng nhập với</p>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="#" class="btn btn-outline-primary">
-                                        Facebook
-                                    </a>
-                                    <a href="#" class="btn btn-outline-danger">
-                                        Google
-                                    </a>
-                                    <a href="#" class="btn btn-outline-info">
-                                        Twitter
-                                    </a>
-                                </div>
+                        </div>
+                        <!-- Social Login -->
+                        <div class="text-center my-3">
+                            <p class="text-muted mb-2">Hoặc đăng nhập với</p>
+                            <div class="d-flex justify-content-center social-btns">
+                                <a href="#" class="btn btn-facebook" title="Facebook"><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="btn btn-google" title="Google"><i class="fab fa-google"></i></a>
+                                <a href="#" class="btn btn-twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
                             </div>
                         </div>
                     </form>
-
                     <!-- Register Link -->
-                    <div class="text-center mt-4">
-                        <p class="mb-0">Chưa có tài khoản? <a href="{{ route('register') }}" class="text-primary">Đăng
-                                ký ngay</a></p>
+                    <div class="text-center mt-4 register-link">
+                        <p class="mb-0">Chưa có tài khoản? <a href="{{ route('register') }}">Đăng ký ngay</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-@push('scripts')
-<script>
-    // Toggle password visibility
-    document.querySelector('.toggle-password').addEventListener('click', function() {
-        const passwordInput = document.querySelector('#password');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            this.textContent = 'Ẩn';
-        } else {
-            passwordInput.type = 'password';
-            this.textContent = 'Hiện';
-        }
-    });
-</script>
-@endpush
 
+    @push('scripts')
+        <!-- Font Awesome CDN for social icons -->
+        <script src="https://kit.fontawesome.com/4e7b8e7e2a.js" crossorigin="anonymous"></script>
+        <script>
+            // Toggle password visibility
+            document.querySelector('.toggle-password').addEventListener('click', function() {
+                const passwordInput = document.querySelector('#password');
+                const icon = this.querySelector('i');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        </script>
+    @endpush
 @endsection
