@@ -44,6 +44,13 @@
         </div>
 
         <div class="mb-3">
+            <label for="user_id">Người sử dụng</label>
+            <input type="number" placeholder="Nhập id của người được sử dụng" name="user_id" class="form-control @error('user_id') is-invalid @enderror"
+                value="{{ old('discount_amount', isset($coupon->user_id) ? (int)$coupon->user_id : -1) }}">
+            @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
             <label for="start_date">Ngày bắt đầu</label>
             <input type="datetime-local" name="start_date" class="form-control @error('start_date') is-invalid @enderror"
                 value="{{ old('start_date', isset($coupon->start_date) ? \Carbon\Carbon::parse($coupon->start_date)->format('Y-m-d\TH:i') : '') }}">
@@ -100,7 +107,7 @@
     </form>
 </div>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const discountType = document.getElementById('discount_type');
         const maxCouponWrapper = document.getElementById('maxCouponWrapper');
@@ -118,5 +125,5 @@
         toggleMaxCoupon();
         discountType.addEventListener('change', toggleMaxCoupon);
     });
-</script>
+</script> --}}
 @endsection
