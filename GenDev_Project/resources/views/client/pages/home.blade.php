@@ -14,379 +14,159 @@
         <div class="row">
             <div id="primary" class="content-area">
                 <main id="main" class="site-main">
-                    <div class="slider-with-banners row">
-                        <div class="slider-block column-1-slider-block ">
-                            <div class="home-v2-slider home-slider">
-                                <div class="slider-1"
-                                    style="background-image: url(assets/images/slider/home-v2-background.jpg);">
-                                    <img src="assets/images/slider/home-v2-img-1.png" alt="">
-                                    <div class="caption">
-                                        <div class="title">Món quà công nghệ mới mà bạn mong muốn<br>đang ở ngay đây</div>
-                                        <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng, vừa vặn trong tay bạn.</div>
-                                        <div class="button">Xem ngay <i class="tm tm-long-arrow-right"></i></div>
-                                        <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
-                                    </div>
+
+                    <!-- Hero Section với Slider -->
+                    <div class="home-v1-slider home-slider">
+                        <div class="slider-1"
+                            style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                            <img src="assets/images/slider/home-v1-img-1.png" alt="">
+                            <div class="caption">
+                                <div class="title">Xoay. Nhấn. Mở rộng. Thiết kế mô-đun thông minh giúp thêm bộ nhớ dễ
+                                    dàng cho dữ liệu ngày càng tăng.</div>
+                                <div class="sub-title">Bộ xử lý sáu nhân mạnh mẽ, hiển thị sống động 4K UHD và SSD tốc
+                                    độ cao trong thiết kế hợp kim mềm mại.</div>
+                                <div class="button">Sở hữu ngay
+                                    <i class="tm tm-long-arrow-right"></i>
                                 </div>
-                                <div class="slider-1"
-                                    style="background-image: url(assets/images/slider/home-v2-background.jpg);">
-                                    <img src="assets/images/slider/home-v2-img-1.png" alt="">
-                                    <div class="caption">
-                                        <div class="title">Món quà công nghệ mới mà bạn mong muốn<br>đang ở ngay đây</div>
-                                        <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng, vừa vặn trong tay bạn.</div>
-                                        <div class="button">Xem ngay <i class="tm tm-long-arrow-right"></i></div>
-                                        <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
-                                    </div>
-                                </div>
+                                <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
                             </div>
                         </div>
-                        <div class="banners-block column-2-banners-block">
-                            <div class="banner text-in-left">
-                                <a href="shop.html">
-                                    <div style="background-size: cover; background-position: center center; background-image: url( assets/images/banner/2-1.jpg); height: 256px;"
-                                        class="banner-bg">
-                                        <div class="caption">
-                                            <div class="banner-info">
-                                                <h3 class="title">
-                                                    <strong>Giảm 20% sản phẩm công nghệ</strong>
-                                                    <br> cho Ultrabook,
-                                                    <br> Laptop, Máy tính bảng
-                                                    <br>Notebook &amp;
-                                                    <br>và nhiều hơn nữa
-                                                </h3>
-                                            </div>
-                                            <!-- .banner-info -->
-                                        </div>
-                                        <!-- .caption -->
-                                    </div>
-                                    <!-- .banner-bg -->
-                                </a>
+                        <!-- .slider-1 -->
+                        <div class="slider-1 slider-2"
+                            style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                            <img src="assets/images/slider/home-v1-img-2.png" alt="">
+                            <div class="caption">
+                                <div class="title">Món quà công nghệ mới
+                                    <br> bạn đang mong chờ
+                                    <br> có ngay tại đây
+                                </div>
+                                <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng
+                                    <br>gọn gàng trong tay bạn.
+                                </div>
+                                <div class="button">Khám phá ngay
+                                    <i class="tm tm-long-arrow-right"></i>
+                                </div>
+                                <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
                             </div>
-                            <!-- .banner -->
-                            <div class="banner text-in-left">
-                                <a href="shop.html">
-                                    <div style="background-size: cover; background-position: center center; background-image: url( assets/images/banner/2-2.jpg); height: 256px;"
-                                        class="banner-bg">
-                                        <div class="caption">
-                                            <div class="banner-info">
-                                                <h4 class="pretitle">Gợi ý quà tặng tuyệt vời</h4>
-                                                <h3 class="title">Xe điện cân bằng
-                                                    <br>
-                                                    <strong>Mini 2 bánh</strong>
-                                                    <br>
-                                                </h3>
-                                            </div>
-                                            <!-- .banner-info -->
-                                            <span class="price">
-                                                <ins>
-                                                    <span class="woocommerce-Price-amount amount">
-                                                        <span
-                                                            class="woocommerce-Price-currencySymbol">£</span>339.99</span>
-                                                </ins>
-                                                <del>
-                                                    <span class="woocommerce-Price-amount amount">
-                                                        <span
-                                                            class="woocommerce-Price-currencySymbol">£</span>689</span>
-                                                </del>
-                                            </span>
-                                        </div>
-                                        <!-- .caption -->
-                                    </div>
-                                    <!-- .banner-bg -->
-                                </a>
-                            </div>
-                            <!-- .banner -->
                         </div>
-                        <!-- .banners-block -->
+                        <!-- .slider-2 -->
                     </div>
-                    <section class="section-top-categories section-categories-carousel" id="categories-carousel-3">
+                    <!-- .home-v1-slider -->
+
+                    <!-- Danh mục nổi bật -->
+                    <section class="section-top-categories section-categories-carousel mb-5" id="categories-carousel-3">
                         <header class="section-header">
                             <h2 class="section-title">Danh mục<br>nổi bật<br>tuần này</h2>
-                            <a class="readmore-link" href="#">Xem tất cả</a>
+                            <a class="readmore-link" href="{{ route('shop') }}">Xem tất cả</a>
                         </header>
-                        <!-- .section-header -->
                         <div class="product-categories product-categories-carousel" data-ride="tm-slick-carousel"
-                            data-wrap=".products"
-                            data-slick="{&quot;infinite&quot;:false,&quot;slidesToShow&quot;:7,&quot;slidesToScroll&quot;:1,&quot;dots&quot;:false,&quot;arrows&quot;:true,&quot;prevArrow&quot;:&quot;&lt;a href=https://transvelo.github.io/"
-                            #\&quot;&gt;&lt;i class=\&quot;tm
-                            tm-arrow-left\&quot;&gt;&lt;\/i&gt;&lt;\/a&gt;&quot;,&quot;nextArrow&quot;:&quot;&lt;a
-                            href=https://transvelo.github.io/"#\&quot;&gt;&lt;i class=\&quot;tm
-                            tm-arrow-right\&quot;&gt;&lt;\/i&gt;&lt;\/a&gt;&quot;,&quot;appendArrows&quot;:&quot;#categories-carousel-3
-                            .custom-slick-nav&quot;,&quot;responsive&quot;:[{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesToScroll&quot;:2}},{&quot;breakpoint&quot;:1400,&quot;settings&quot;:{&quot;slidesToShow&quot;:5,&quot;slidesToScroll&quot;:5}},{&quot;breakpoint&quot;:1700,&quot;settings&quot;:{&quot;slidesToShow&quot;:6,&quot;slidesToScroll&quot;:6}}]}">
+                            data-wrap=".products">
                             <div class="woocommerce columns-7">
                                 <div class="products">
+                                    @foreach($categories as $category)
                                     <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Fashion"
-                                                src="assets/images/category/sm-1.png">
-                                            <h2 class="woocommerce-loop-category__title"> Máy tính tất cả trong một </h2>
+                                        <a href="{{ route('shop', ['category' => $category->id]) }}">
+                                            <img width="224" height="197" alt="{{ $category->name }}"
+                                                src="{{ asset('storage/' . $category->image) }}">
+                                            <h2 class="woocommerce-loop-category__title">{{ $category->name }}</h2>
                                         </a>
                                     </div>
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Footwear"
-                                                src="assets/images/category/sm-2.png">
-                                            <h2 class="woocommerce-loop-category__title"> Âm thanh & Nhạc </h2>
-                                        </a>
-                                    </div>
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Furnitures"
-                                                src="assets/images/category/sm-3.png">
-                                            <h2 class="woocommerce-loop-category__title"> Điện thoại & Máy tính bảng </h2>
-                                        </a>
-                                    </div>
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Perfumes"
-                                                src="assets/images/category/sm-4.png">
-                                            <h2 class="woocommerce-loop-category__title"> Máy tính & Laptop </h2>
-                                        </a>
-                                    </div>
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Power Tools"
-                                                src="assets/images/category/sm-5.png">
-                                            <h2 class="woocommerce-loop-category__title"> Máy tính để bàn </h2>
-                                        </a>
-                                    </div>
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Smart Appliances"
-                                                src="assets/images/category/sm-6.png">
-                                            <h2 class="woocommerce-loop-category__title"> Máy ảnh kỹ thuật số </h2>
-                                        </a>
-                                    </div>
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Perfumes"
-                                                src="assets/images/category/sm-4.png">
-                                            <h2 class="woocommerce-loop-category__title"> Máy tính & Laptop </h2>
-                                        </a>
-                                    </div>
+                                    @endforeach
                                 </div>
-                                <!-- .products-->
                             </div>
-                            <!-- .woocommerce-->
                         </div>
-                        <!-- .product-categories -->
                     </section>
-                    <!-- .section-top-categories -->
-                    <section class="section-6-1-6-products-tabs">
-                        <header class="section-header">
-                            <h2 class="section-title">Ưu đãi mỗi ngày!<span>Nhận giá tốt nhất từ chúng tôi.</span></h2>
+
+                    <!-- Sản phẩm nổi bật -->
+                    @if($featuredProducts->count() > 0)
+                    <section class="section-featured-products mb-5">
+                        <header class="section-header text-center">
+                            <h2 class="section-title">
+                                <span>🔥<span class="text-gradient">Sản phẩm nổi bật</span></span>
+                                <span class="d-block text-primary mt-1">Khuyến mãi đặc biệt</span>
+                            </h2>
                         </header>
-                        <!-- /.section-header -->
-                        <div class="6-1-6-products-tabs">
-                            <ul role="tablist" class="nav justify-content-center">
-                                <li class="nav-item"><a class="nav-link " href="#tab-30" data-toggle="tab">-30%</a></li>
-                                <li class="nav-item"><a class="nav-link active" href="#tab-50"
-                                        data-toggle="tab">-50%</a></li>
-                                <li class="nav-item"><a class="nav-link " href="#tab-70" data-toggle="tab">-70%</a></li>
-                            </ul>
-                            <!-- /.nav -->
-                            <div class="tab-content">
-                                <div id="tab-30" class="tab-pane" role="tabpanel">
-                                    <div class="row row-6-1-6-products">
-                                        <div class="product-1">
-                                            <div class="woocommerce columns-1">
-                                                <div class="products">
-                                                    <div class="sale-product-with-timer product">
-                                                        <a class="woocommerce-LoopProduct-link"
-                                                            href="single-product-fullwidth.html">
-                                                            <div class="sale-product-with-timer-header">
-                                                                <div class="price-and-title">
-                                                                    <span class="price">
-                                                                        <ins>
-                                                                            <span
-                                                                                class="woocommerce-Price-amount amount">
-                                                                                <span
-                                                                                    class="woocommerce-Price-currencySymbol">$</span>425.89</span>
-                                                                        </ins>
-                                                                        <del>
-                                                                            <span
-                                                                                class="woocommerce-Price-amount amount">
-                                                                                <span
-                                                                                    class="woocommerce-Price-currencySymbol">$</span>545.89</span>
-                                                                        </del>
-                                                                    </span>
-                                                                    <!-- /.price -->
-                                                                    <h2 class="woocommerce-loop-product__title">Máy tính bảng Red EliteBook Revolve</h2>
-                                                                </div>
-                                                                <!-- /.price-and-title -->
-                                                                <div class="sale-label-outer">
-                                                                    <div class="sale-saved-label">
-                                                                        <span class="saved-label-text">Tiết kiệm</span>
-                                                                        <span class="saved-label-amount">
-                                                                            <span
-                                                                                class="woocommerce-Price-amount amount">
-                                                                                <span
-                                                                                    class="woocommerce-Price-currencySymbol">$</span>120.00</span>
-                                                                        </span>
-                                                                    </div>
-                                                                    <!-- /.sale-saved-label -->
-                                                                </div>
-                                                                <!-- /.sale-label-outer -->
-                                                            </div>
-                                                            <!-- /.sale-product-with-timer-header -->
-                                                            <img width="224" height="197" alt="" class="wp-post-image"
-                                                                src="assets/images/products/6-1-6-center.jpg">
-                                                            <div class="deal-progress">
-                                                                <div class="deal-stock">
-                                                                    <div class="stock-sold">Đã bán:
-                                                                        <strong>0</strong>
-                                                                    </div>
-                                                                    <div class="stock-available">Còn lại:
-                                                                        <strong>1000</strong>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- /.deal-stock -->
-                                                                <div class="progress">
-                                                                    <span style="width:0%" class="progress-bar">0</span>
-                                                                </div>
-                                                                <!-- /.progress -->
-                                                            </div>
-                                                            <!-- /.deal-progress -->
-                                                            <div class="deal-countdown-timer">
-                                                                <div class="marketing-text">
-                                                                    <span class="line-1">Nhanh tay!</span>
-                                                                    <span class="line-2">Ưu đãi kết thúc sau:</span>
-                                                                </div>
-                                                                <!-- /.marketing-text -->
-                                                                <span style="display:none;"
-                                                                    class="deal-time-diff">29994</span>
-                                                                <div class="deal-countdown countdown"></div>
-                                                            </div>
-                                                            <!-- /.deal-countdown-timer -->
-                                                        </a>
-                                                        <!-- /.woocommerce-LoopProduct-link -->
-                                                    </div>
-                                                    <!-- /.sale-product-with-timer -->
-                                                </div>
-                                                <!-- /.products -->
-                                            </div>
-                                            <!-- /.woocommerce -->
-                                        </div>
-
+                        <div class="product-cards-grid">
+                            <div class="row row-cols-2 row-cols-md-4 g-3">
+                                @foreach($featuredProducts as $product)
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
+                                    @include('client.components.product-card', ['product' => $product])
+                                </div>
+                                @endforeach
                             </div>
-                            <!-- /.tab-content -->
                         </div>
-                        <!-- /.6-1-6-products-tabs -->
                     </section>
-                    <!-- /.section-6-1-6-products-tabs -->
-                    <div class="fullwidth-notice stretch-full-width">
-                        
-                    </div>
-                    <!-- .fullwidth-notice -->
+                    @endif
 
-                    <!-- /.banners -->
+                    <!-- Sản phẩm bán chạy -->
+                    @if($bestSellingProducts->count() > 0)
+                    <section class="section-best-selling mb-5">
+                        <header class="section-header text-center">
+                            <h2 class="section-title">
+                                <span>⭐<span class="text-gradient">Sản phẩm bán chạy</span></span>
+                                <span class="d-block text-primary mt-1">Được yêu thích nhất</span>
+                            </h2>
+                        </header>
+                        <div class="product-cards-grid">
+                            <div class="row row-cols-2 row-cols-md-4 g-3">
+                                @foreach($bestSellingProducts as $product)
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
+                                    @include('client.components.product-card', ['product' => $product])
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </section>
+                    @endif
 
-                    <!-- .section-products-carousel-tabs -->
+                    <!-- Sản phẩm mới nhất -->
+                    @if($newProducts->count() > 0)
+                    <section class="section-new-products mb-5">
+                        <header class="section-header text-center">
+                            <h2 class="section-title">
+                                <span>🆕<span class="text-gradient">Sản phẩm mới nhất</span></span>
+                                <span class="d-block text-primary mt-1">Cập nhật hàng ngày</span>
+                            </h2>
+                        </header>
+                        <div class="product-cards-grid">
+                            <div class="row row-cols-2 row-cols-md-4 g-3">
+                                @foreach($newProducts as $product)
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
+                                    @include('client.components.product-card', ['product' => $product])
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </section>
+                    @endif
+
+                    <!-- Sản phẩm theo danh mục -->
                     <section class="section-3-2-3-product-cards-tabs-with-featured-product stretch-full-width py-4">
                         <div class="col-full">
-                            <header class="section-header">
-                                <h2 class="section-title">
-                                    <strong>Power Audio &amp; Visual </strong>entertainment
+                            <header class="section-header text-center mb-4">
+                                <h2 class="section-title h3 fw-bold">
+                                    <span class="text-gradient">Nhanh tay!</span>
+                                    <span class="d-block text-primary mt-1">Ưu đãi đặc biệt</span>
                                 </h2>
                                 <ul role="tablist" class="nav nav-pills justify-content-center mb-3">
                                     @foreach($categories as $category)
                                     <li class="nav-item">
-                                        <a class="nav-link {{ $loop->first ? 'active' : '' }} btn btn-sm btn-outline-primary mx-1 rounded-pill px-3" 
-                                           href="#category-{{ $category->id }}" 
-                                           data-toggle="tab">{{ $category->name }}</a>
+                                        <a class="nav-link {{ $loop->first ? 'active' : '' }} btn btn-sm btn-outline-primary mx-1 rounded-pill px-3"
+                                            href="#category-{{ $category->id }}" data-toggle="tab">{{ $category->name
+                                            }}</a>
                                     </li>
                                     @endforeach
                                 </ul>
                             </header>
-                            <!-- .section-header -->
                             <div class="tab-content">
                                 @foreach($categories as $category)
-                                <div id="category-{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}" role="tabpanel">
+                                <div id="category-{{ $category->id }}"
+                                    class="tab-pane {{ $loop->first ? 'active' : '' }}" role="tabpanel">
                                     <div class="product-cards-3-2-3-with-featured-product">
                                         <div class="row row-cols-2 row-cols-md-4 g-3">
                                             @foreach($categoryProducts[$category->id] as $product)
-                                            <div class="col-lg-3 col-md-4 col-sm-6
-                                                        col-12 mb-3">
-                                                <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="min-width:0; min-height:unset;">
-                                                    <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
-                                                        <a href="{{ route('client.product.show', $product->id) }}" class="d-block w-100 h-100">
-                                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
-                                                        </a>
-                                                        @if($product->sale_price)
-                                                        <!-- <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ round((($product->price - $product->sale_price) / $product->price) * 100) }}%</span> -->
-                                                        @endif
-                                                    </div>
-                                                        <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center">
-                                                        <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
-                                                            <a href="" class="text-decoration-none text-dark">{{ $product->name }}</a>
-                                                        </h6>
-                                                        <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
-                                                            @if($product->variants && $product->variants->count())
-                                                                @php
-                                                                    $salePrices = $product->variants->pluck('sale_price')->filter(function($v) { return $v > 0; });
-                                                                    if ($salePrices->count()) {
-                                                                        $minPrice = $salePrices->min();
-                                                                        $maxPrice = $salePrices->max();
-                                                                    } else {
-                                                                        $prices = $product->variants->pluck('price')->filter();
-                                                                        $minPrice = $prices->min();
-                                                                        $maxPrice = $prices->max();
-                                                                    }
-                                                                @endphp
-                                                                @if($minPrice == $maxPrice)
-                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ</span>
-                                                                @else
-                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ - {{ number_format($maxPrice) }}đ</span>
-                                                                @endif
-                                                            @else
-                                                                @if($product->sale_price)
-                                                                    <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
-                                                                    <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
-                                                                @else
-                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
-                                                                @endif
-                                                            @endif
-                                                        </div>
-                                                        <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star-half-alt"></i>
-                                                            <small class="text-muted ms-1">(4.5)</small>
-                                                        </div>
-                                                        <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                                                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng">
-                                                                <i class="fas fa-shopping-cart text-primary"></i>
-                                                            </a>
-                                                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-wishlist" title="Thêm vào yêu thích">
-                                                                <i class="fas fa-heart text-danger"></i>
-                                                            </a>
-                                                            <a href="{{ route('product.show', $product->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
-                                                                <i class="fas fa-eye text-info"></i>
-                                                            </a>
-                                                        </div>
-                                                            <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
-                                                                @csrf
-                                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                                                                <input type="hidden" name="quantity" value="1">
-                                                                {{-- @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
-                                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $variantAttr->value_id }}">
-                                                                @endforeach --}}
-                                                                @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
-                                                                    @php
-                                                                        $valueId = $variantAttr->attribute_value_id 
-                                                                            ?? $variantAttr->value_id 
-                                                                            ?? optional($variantAttr->value)->id;
-                                                                    @endphp
-                                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
-                                                                @endforeach
-                                                                <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
-                                                                    Mua ngay
-                                                                </button>
-                                                            </form>
-                                                    </div>
-                                                </div>
+                                            <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
+                                                @include('client.components.product-card', ['product' => $product])
                                             </div>
                                             @endforeach
                                         </div>
@@ -396,7 +176,7 @@
                             </div>
                         </div>
                     </section>
-                    <!-- .section-products-carousel-tabs-->
+
                 </main>
             </div>
         </div>
