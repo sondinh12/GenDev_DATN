@@ -124,7 +124,7 @@
                         @if($priceInfo['has_discount'])
                         <span class="onsale">-{{ $priceInfo['discount_percent'] }}%</span>
                         @endif
-                        <img src="https://sakurafashion.vn/upload/a/3927-mypage-8987.jpg" alt="{{ $product->name }}"
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                             class="attachment-shop_catalog size-shop_catalog wp-post-image">
                         <h2 class="woocommerce-loop-product__title">{{ $product->name }}</h2>
                         <span class="price">
