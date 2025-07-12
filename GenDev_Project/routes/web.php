@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
+use App\Http\Controllers\Client\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Client\HomeController;
@@ -218,3 +219,4 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp
     ->name('password.update');
 
 Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyResetOtp'])->name('password.verify');
+Route::post('/product/{id}/review', [ProductReviewController::class, 'store'])->name('product.review.store');
