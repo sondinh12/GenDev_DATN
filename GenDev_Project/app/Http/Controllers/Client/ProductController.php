@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    // public function index()
+    // {
+    //     return view('client.product.index');
+    // }
     public function show($id)
     {
         $product = Product::with([
@@ -243,4 +247,6 @@ class ProductController extends Controller
 
         return view('client.product.shop', compact('products', 'categories', 'priceRange'));
     }
+
+
 }

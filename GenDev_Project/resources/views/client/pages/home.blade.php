@@ -9,7 +9,6 @@
     </button>
 </div>
 @endif
-
 <div id="content" class="site-content" tabindex="-1">
     <div class="col-full">
         <div class="row">
@@ -17,67 +16,42 @@
                 <main id="main" class="site-main">
 
                     <!-- Hero Section với Slider -->
-                    <section class="hero-section mb-5">
-                        <div class="slider-with-banners row">
-                            <div class="slider-block column-1-slider-block">
-                                <div class="home-v2-slider home-slider">
-                                    <div class="slider-1"
-                                        style="background-image: url(assets/images/slider/home-v2-background.jpg);">
-                                        <img src="assets/images/slider/home-v2-img-1.png" alt="">
-                                        <div class="caption">
-                                            <div class="title">Món quà công nghệ mới mà bạn mong muốn<br>đang ở ngay đây
-                                            </div>
-                                            <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng, vừa vặn trong
-                                                tay bạn.</div>
-                                            <div class="button">Xem ngay <i class="tm tm-long-arrow-right"></i></div>
-                                            <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
-                                        </div>
-                                    </div>
+                    <div class="home-v1-slider home-slider">
+                        <div class="slider-1"
+                            style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                            <img src="assets/images/slider/home-v1-img-1.png" alt="">
+                            <div class="caption">
+                                <div class="title">Xoay. Nhấn. Mở rộng. Thiết kế mô-đun thông minh giúp thêm bộ nhớ dễ
+                                    dàng cho dữ liệu ngày càng tăng.</div>
+                                <div class="sub-title">Bộ xử lý sáu nhân mạnh mẽ, hiển thị sống động 4K UHD và SSD tốc
+                                    độ cao trong thiết kế hợp kim mềm mại.</div>
+                                <div class="button">Sở hữu ngay
+                                    <i class="tm tm-long-arrow-right"></i>
                                 </div>
-                            </div>
-                            <div class="banners-block column-2-banners-block">
-                                <div class="banner text-in-left">
-                                    <a href="{{ route('shop') }}">
-                                        <div style="background-size: cover; background-position: center center; background-image: url(assets/images/banner/2-1.jpg); height: 256px;"
-                                            class="banner-bg">
-                                            <div class="caption">
-                                                <div class="banner-info">
-                                                    <h3 class="title">
-                                                        <strong>Giảm 20% sản phẩm công nghệ</strong>
-                                                        <br> cho Ultrabook, Laptop, Máy tính bảng
-                                                        <br>Notebook &amp; và nhiều hơn nữa
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="banner text-in-left">
-                                    <a href="{{ route('shop') }}">
-                                        <div style="background-size: cover; background-position: center center; background-image: url(assets/images/banner/2-2.jpg); height: 256px;"
-                                            class="banner-bg">
-                                            <div class="caption">
-                                                <div class="banner-info">
-                                                    <h4 class="pretitle">Gợi ý quà tặng tuyệt vời</h4>
-                                                    <h3 class="title">Xe điện cân bằng
-                                                        <br><strong>Mini 2 bánh</strong>
-                                                    </h3>
-                                                </div>
-                                                <span class="price">
-                                                    <ins><span class="woocommerce-Price-amount amount">
-                                                            <span
-                                                                class="woocommerce-Price-currencySymbol">₫</span>339.99</span></ins>
-                                                    <del><span class="woocommerce-Price-amount amount">
-                                                            <span
-                                                                class="woocommerce-Price-currencySymbol">₫</span>689</span></del>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
                             </div>
                         </div>
-                    </section>
+                        <!-- .slider-1 -->
+                        <div class="slider-1 slider-2"
+                            style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                            <img src="assets/images/slider/home-v1-img-2.png" alt="">
+                            <div class="caption">
+                                <div class="title">Món quà công nghệ mới
+                                    <br> bạn đang mong chờ
+                                    <br> có ngay tại đây
+                                </div>
+                                <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng
+                                    <br>gọn gàng trong tay bạn.
+                                </div>
+                                <div class="button">Khám phá ngay
+                                    <i class="tm tm-long-arrow-right"></i>
+                                </div>
+                                <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
+                            </div>
+                        </div>
+                        <!-- .slider-2 -->
+                    </div>
+                    <!-- .home-v1-slider -->
 
                     <!-- Danh mục nổi bật -->
                     <section class="section-top-categories section-categories-carousel mb-5" id="categories-carousel-3">

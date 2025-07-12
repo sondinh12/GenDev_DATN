@@ -54,7 +54,8 @@ class CheckoutController extends Controller
         // Lấy danh sách coupon hợp lệ
         $coupons = Coupon::where('usage_limit', '>', 0)->get();
 
-        return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'));
+        return view('client.checkout.checkout', compact(
+            'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
