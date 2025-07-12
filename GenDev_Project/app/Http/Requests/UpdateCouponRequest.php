@@ -12,13 +12,6 @@ class UpdateCouponRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
-    {
-        if ($this->input('discount_type') === 'fixed') {
-            $this->merge(['max_coupon' => 0]);
-        }
-    }
-
     public function rules(): array
     {
         $couponId = $this->route('coupon');
@@ -67,22 +60,24 @@ class UpdateCouponRequest extends FormRequest
                 'numeric',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent') {
-                        $discount = request('discount_amount');
-                        $min = request('min_coupon');
+                    $discountType = request('discount_type');
+                    $discount = request('discount_amount');
+                    $min = request('min_coupon');
 
-                        if (!is_null($min) && $value < $min) {
-                            $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
-                        }
+                    // Nếu max và min đều có, thì max phải >= min
+                    if (!is_null($min) && $value < $min) {
+                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
+                    }
 
-                        if (!is_null($value) && $value < $discount) {
-                            $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị giảm.');
-                        }
+                    // Nếu max và discount_amount đều có, thì max phải >= discount_amount
+                    if (!is_null($discount) && $value < $discount) {
+                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
                     }
                 }
             ],
 
             'status' => 'required|in:0,1',
+            'user_id'=>'integer'
         ];
     }
 
@@ -129,6 +124,7 @@ class UpdateCouponRequest extends FormRequest
             'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
 
             'status.in' => 'Trạng thái không hợp lệ.',
+            'user_id.integer'=> 'Giá trị phải là 1 số'
         ];
     }
 }

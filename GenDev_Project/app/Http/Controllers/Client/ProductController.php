@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -26,35 +27,37 @@ class ProductController extends Controller
             'categoryMini',
             'galleries',
             'variants.variantAttributes.attribute',
-            'variants.variantAttributes.value',
+            'variants.variantAttributes.value'
         ])->findOrFail($id);
 
         // Lấy danh sách ảnh cho gallery
         $galleryImageUrls = [];
-        // Add main product image first
         if ($product->image) {
             $galleryImageUrls[] = asset('storage/' . $product->image);
         }
-        // Add gallery images
         if ($product->galleries) {
             foreach ($product->galleries as $gallery) {
                 $galleryImageUrls[] = asset('storage/' . $gallery->image);
             }
         }
 
-        // Lấy sản phẩm liên quan
-        $relatedProducts = Product::with([
-            'variants.variantAttributes.attribute',
-            'variants.variantAttributes.value',
-            'category'
-        ])
-            ->where('category_id', $product->category_id)
+        // Lấy 10 sản phẩm liên quan cùng danh mục (trừ sản phẩm hiện tại)
+        $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->where('status', 1)
-            ->take(4)
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')
+            ->limit(10)
             ->get();
 
-        return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts'));
+        $canReview = false;
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $canReview = \App\Models\OrderDetail::whereHas('order', function($q) use ($userId) {
+                $q->where('user_id', $userId)
+                  ->where('payment_status', 'paid'); // status: success = đã thanh toán thành công
+            })->where('product_id', $product->id)->exists();
+        }
+        return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
     }
 
     public function shop(Request $request)
