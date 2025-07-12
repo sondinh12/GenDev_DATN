@@ -965,9 +965,6 @@
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
-                        <span class="amount">
-                            <span class="price-label">Your Cart</span>&#036;136.99</span>
-
                     </a>
                     <ul class="dropdown-menu dropdown-menu-mini-cart">
                         <li>
@@ -1009,9 +1006,6 @@
                                     </p> --}}
                                     <p class="woocommerce-mini-cart__buttons buttons">
                                         <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
-                                        <a href="{{ asset('checkout.html') }}"
-
-                                            class="button checkout wc-forward">Checkout</a>
                                     </p>
                                 </div>
                                 <!-- .widget_shopping_cart_content -->
