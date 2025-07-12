@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use Illuminate\Support\Facades\Route;
@@ -162,6 +163,10 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
+
+    Route::resource('posts', PostController::class);
+    Route::get('posts/{post}/history', [PostController::class, 'history'])->name('posts.history');
+
 });
 
 Route::resource('/product', ClientProductController::class);

@@ -58,6 +58,12 @@
                         <span>Mã Giảm Giá</span>
                     </a>
                 <li>
+                <li>
+                    <a href="{{ url('/admin/posts') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Quản lý bài viết</span>
+                    </a>
+                <li>
             </ul>
         </div>
         <!-- Sidebar -->

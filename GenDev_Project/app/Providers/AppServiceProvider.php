@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Cart;
+use App\Models\Post;
+use App\Observers\PostObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -21,8 +23,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-     public function boot()
+    public function boot(): void
     {
+        // Share cartCount cho header
         View::composer('client.layout.partials.header', function ($view) {
             $cartCount = 0;
 
@@ -36,7 +39,12 @@ class AppServiceProvider extends ServiceProvider
             $view->with('cartCount', $cartCount);
         });
 
+        // Sử dụng Bootstrap cho phân trang
         Paginator::useBootstrap();
 
+        // Đăng ký PostObserver để theo dõi Post update
+        Post::observe(PostObserver::class);
     }
+
+
 }

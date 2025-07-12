@@ -422,7 +422,7 @@ class ProductController extends Controller
         $value->delete();
         return redirect()->back()->with('success', 'Xóa giá trị thành công!');
     }
-<<<<<<< HEAD
+
 
     public function search(Request $request)
     {
@@ -443,7 +443,7 @@ class ProductController extends Controller
 
         return view('client.layout.partials.search', compact('products', 'categories'));
     }
-=======
+
         public function forceDeleteAttribute($id)
     {
         $attribute = Attribute::with('values')->findOrFail($id);
@@ -453,5 +453,5 @@ class ProductController extends Controller
         return redirect()->route('admin.attributes.trashList')->with('success', 'Đã xóa vĩnh viễn thuộc tính!');
     }
 
->>>>>>> f9b3ffd61c33c542175ece4632ba4148b30518ed
+
 }
