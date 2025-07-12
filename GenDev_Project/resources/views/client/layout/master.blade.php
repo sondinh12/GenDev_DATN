@@ -30,7 +30,7 @@ $bodyClass = match($route) {
         @include('client.layout.partials.topbar')
         @include('client.layout.partials.header')
         @yield('content')
-        {{-- @include('client.layout.partials.footer') --}}
+        @include('client.layout.partials.footer')
     </div>
     @include('client.layout.partials.script')
     @yield('scripts')
