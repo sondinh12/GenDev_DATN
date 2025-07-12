@@ -5,11 +5,11 @@
     <div class="col-full">
         <div class="row">
             <nav class="woocommerce-breadcrumb">
-                <a href="home-v1.html">Home</a>
+                <a href="/">Trang chủ</a>
                 <span class="delimiter">
                     <i class="tm tm-breadcrumbs-arrow-right"></i>
                 </span>
-                About Us
+                Giới thiệu
             </nav>
             <!-- .woocommerce-breadcrumb -->
             <div id="primary" class="content-area">
@@ -21,9 +21,8 @@
                             </div>
                             <!-- .page-featured-image -->
                             <div class="page-header-caption">
-                                <h1 class="entry-title">About Us</h1>
-                                <p class="entry-subtitle">Passion may be a friendly or eager interest in or admiration for a proposal,
-                                    <br> cause, discovery, or activity or love to a feeling of unusual excitement. </p>
+                                <h1 class="entry-title">Về chúng tôi</h1>
+                                <p class="entry-subtitle">Đam mê có thể là sự quan tâm thân thiện hoặc háo hức, ngưỡng mộ một đề xuất, lý tưởng, khám phá hoặc hoạt động, hoặc là cảm xúc yêu thích đặc biệt.</p>
                             </div>
                             <!-- .page-header-caption -->
                         </header>
@@ -36,8 +35,8 @@
                                     </div>
                                     <!-- .single_image -->
                                     <div class="text-block">
-                                        <h2 class="align-top">What we really do?</h2>
-                                        <p>Donec libero dolor, tincidunt id laoreet vitae,ullamcorper eu tortor. Maecenas pellentesque,dui vitae iaculis mattis, tortor nisi faucibus magna,vitae ultrices lacus purus vitae metus.</p>
+                                        <h2 class="align-top">Chúng tôi thực sự làm gì?</h2>
+                                        <p>Chúng tôi cung cấp các sản phẩm chất lượng, dịch vụ tận tâm và luôn đặt khách hàng lên hàng đầu. Đội ngũ của chúng tôi không ngừng đổi mới để mang lại trải nghiệm tốt nhất cho bạn.</p>
                                     </div>
                                     <!-- .text_block -->
                                 </div>
@@ -48,8 +47,8 @@
                                     </div>
                                     <!-- .single_image -->
                                     <div class="text-block">
-                                        <h2 class="align-top">Our Vision</h2>
-                                        <p>Donec libero dolor, tincidunt id laoreet vitae,ullamcorper eu tortor. Maecenas pellentesque,dui vitae iaculis mattis, tortor nisi faucibus magna,vitae ultrices lacus purus vitae metus.</p>
+                                        <h2 class="align-top">Tầm nhìn của chúng tôi</h2>
+                                        <p>Chúng tôi hướng tới trở thành thương hiệu hàng đầu trong lĩnh vực, mang lại giá trị bền vững cho khách hàng và cộng đồng.</p>
                                     </div>
                                     <!-- .text_block -->
                                 </div>
@@ -60,8 +59,8 @@
                                     </div>
                                     <!-- .single_image -->
                                     <div class="text-block">
-                                        <h2 class="align-top">History of Beginning</h2>
-                                        <p>Donec libero dolor, tincidunt id laoreet vitae,ullamcorper eu tortor. Maecenas pellentesque,dui vitae iaculis mattis, tortor nisi faucibus magna,vitae ultrices lacus purus vitae metus.</p>
+                                        <h2 class="align-top">Lịch sử hình thành</h2>
+                                        <p>Chúng tôi bắt đầu từ niềm đam mê và khát vọng phát triển, không ngừng học hỏi và hoàn thiện để đạt được thành công như ngày hôm nay.</p>
                                     </div>
                                     <!-- .text_block -->
                                 </div>
@@ -76,7 +75,7 @@
                                                 <img src="assets/images/team-member/1.jpg" alt="">
                                                 <div class="profile">
                                                     <h3>Thomas Snow
-                                                        <small class="description">CEO/Founder</small>
+                                                        <small class="description">Giám đốc/Người sáng lập</small>
                                                     </h3>
                                                 </div>
                                             </div>
@@ -87,7 +86,7 @@
                                                 <img src="assets/images/team-member/2.jpg" alt="">
                                                 <div class="profile">
                                                     <h3>Anna Baranov
-                                                        <small class="description">Client Care</small>
+                                                        <small class="description">Chăm sóc khách hàng</small>
                                                     </h3>
                                                 </div>
                                             </div>
@@ -98,7 +97,7 @@
                                                 <img src="assets/images/team-member/3.jpg" alt="">
                                                 <div class="profile">
                                                     <h3>Andre Kowalsy
-                                                        <small class="description">Support Boss</small>
+                                                        <small class="description">Trưởng bộ phận hỗ trợ</small>
                                                     </h3>
                                                 </div>
                                             </div>
@@ -109,7 +108,7 @@
                                                 <img src="assets/images/team-member/4.jpg" alt="">
                                                 <div class="profile">
                                                     <h3>Pamela Doe
-                                                        <small class="description">Delivery Driver</small>
+                                                        <small class="description">Nhân viên giao hàng</small>
                                                     </h3>
                                                 </div>
                                             </div>
@@ -120,7 +119,7 @@
                                                 <img src="assets/images/team-member/5.jpg" alt="">
                                                 <div class="profile">
                                                     <h3>Susan McCain
-                                                        <small class="description">Packaging Girl</small>
+                                                        <small class="description">Đóng gói sản phẩm</small>
                                                     </h3>
                                                 </div>
                                             </div>
@@ -130,7 +129,7 @@
                                             <div class="team-member circle">
                                                 <img src="assets/images/team-member/7.png" alt="">
                                                 <div class="profile">
-                                                    <h3>See Details
+                                                    <h3>Xem chi tiết
                                                         <small class="description"></small>
                                                     </h3>
                                                 </div>
@@ -148,16 +147,16 @@
                                     <div class="row first-row">
                                         <div class="col-sm-6">
                                             <div class="text-block">
-                                                <h3 class="highlight">What we really do?</h3>
-                                                <p>Donec libero dolor, tincidunt id laoreet vitae, ullamcorper eu tortor. Maecenas pellentesque, dui vitae iaculis mattis, tortor nisi faucibus magna, vitae ultrices lacus purus vitae metus. Ut nec odio facilisis, ultricies nunc eget, fringilla orci.</p>
+                                                <h3 class="highlight">Chúng tôi thực sự làm gì?</h3>
+                                                <p>Chúng tôi cung cấp các sản phẩm chất lượng, dịch vụ tận tâm và luôn đặt khách hàng lên hàng đầu. Đội ngũ của chúng tôi không ngừng đổi mới để mang lại trải nghiệm tốt nhất cho bạn.</p>
                                             </div>
                                             <!-- .text-block -->
                                         </div>
                                         <!-- .col -->
                                         <div class="col-sm-6">
                                             <div class="text-block">
-                                                <h3 class="highlight">Our Vision</h3>
-                                                <p>Vestibulum velit nibh, egestas vel faucibus vitae, feugiat sollicitudin urna. Praesent iaculis id ipsum sit amet pretium. Aliquam tristique sapien nec enim euismod, scelerisque facilisis arcu consectetur. Vestibulum velit nibh, egestas vel faucibus vitae.</p>
+                                                <h3 class="highlight">Tầm nhìn của chúng tôi</h3>
+                                                <p>Chúng tôi hướng tới trở thành thương hiệu hàng đầu trong lĩnh vực, mang lại giá trị bền vững cho khách hàng và cộng đồng.</p>
                                             </div>
                                             <!-- .text-block -->
                                         </div>
@@ -167,16 +166,16 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="text-block">
-                                                <h3 class="highlight">What we really do?</h3>
-                                                <p>Donec libero dolor, tincidunt id laoreet vitae, ullamcorper eu tortor. Maecenas pellentesque, dui vitae iaculis mattis, tortor nisi faucibus magna, vitae ultrices lacus purus vitae metus. Ut nec odio facilisis, ultricies nunc eget, fringilla orci.</p>
+                                                <h3 class="highlight">Chúng tôi thực sự làm gì?</h3>
+                                                <p>Chúng tôi cung cấp các sản phẩm chất lượng, dịch vụ tận tâm và luôn đặt khách hàng lên hàng đầu. Đội ngũ của chúng tôi không ngừng đổi mới để mang lại trải nghiệm tốt nhất cho bạn.</p>
                                             </div>
                                             <!-- .text-block -->
                                         </div>
                                         <!-- .col -->
                                         <div class="col-sm-6">
                                             <div class="text-block">
-                                                <h3 class="highlight">Our Vision</h3>
-                                                <p>Vestibulum velit nibh, egestas vel faucibus vitae, feugiat sollicitudin urna. Praesent iaculis id ipsum sit amet pretium. Aliquam tristique sapien nec enim euismod, scelerisque facilisis arcu consectetur. Vestibulum velit nibh, egestas vel faucibus vitae.</p>
+                                                <h3 class="highlight">Tầm nhìn của chúng tôi</h3>
+                                                <p>Chúng tôi hướng tới trở thành thương hiệu hàng đầu trong lĩnh vực, mang lại giá trị bền vững cho khách hàng và cộng đồng.</p>
                                             </div>
                                             <!-- .text-block -->
                                         </div>
@@ -188,14 +187,14 @@
                                 <div class="about-accordion col-sm-5">
                                     <div class="vc_column-inner ">
                                         <div class="wpb_wrapper">
-                                            <h3 class="about-accordion-title">What can we do for you ?</h3>
+                                            <h3 class="about-accordion-title">Chúng tôi có thể làm gì cho bạn?</h3>
                                             <div id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="card">
                                                     <div class="card-header" role="tab" id="headingOne">
                                                         <h5 class="mb-0">
                                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                                 <i class="fa-icon"></i>
-                                                                Support 24/7
+                                                                Hỗ trợ 24/7
                                                             </a>
                                                         </h5>
                                                     </div>
@@ -213,7 +212,7 @@
                                                         <h5 class="mb-0">
                                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                                                 <i class="fa-icon"></i>
-                                                                Best Quality
+                                                                Chất lượng tốt nhất
                                                             </a>
                                                         </h5>
                                                     </div>
@@ -231,7 +230,7 @@
                                                         <h5 class="mb-0">
                                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                                                                 <i class="fa-icon"></i>
-                                                                Fastest Delivery
+                                                                Giao hàng nhanh nhất
                                                             </a>
                                                         </h5>
                                                     </div>
@@ -249,7 +248,7 @@
                                                         <h5 class="mb-0">
                                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
                                                                 <i class="fa-icon"></i>
-                                                                Customer Care
+                                                                Chăm sóc khách hàng
                                                             </a>
                                                         </h5>
                                                     </div>
@@ -267,7 +266,7 @@
                                                         <h5 class="mb-0">
                                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
                                                                 <i class="fa-icon"></i>
-                                                                Over 200 Satisfied Customers
+                                                                Hơn 200 khách hàng hài lòng
                                                             </a>
                                                         </h5>
                                                     </div>
