@@ -11,122 +11,7 @@
 @endif
 
 <div id="content" class="site-content">
-    <section class="section-3-2-3-product-cards-tabs-with-featured-product stretch-full-width py-4">
-        <div class="col-full">
-            <header class="section-header text-center mb-4">
-                <h2 class="section-title h3 fw-bold">
-                    <span class="text-gradient">Nhanh tay!</span>
-                    <span class="d-block text-primary mt-1">Ưu đãi đặc biệt</span>
-                </h2>
-                <ul role="tablist" class="nav nav-pills justify-content-center mb-3">
-                    @foreach($categories as $category)
-                    <li class="nav-item">
-                        <a class="nav-link {{ $loop->first ? 'active' : '' }} btn btn-sm btn-outline-primary mx-1 rounded-pill px-3" 
-                            href="#category-{{ $category->id }}" 
-                            data-toggle="tab">{{ $category->name }}</a>
-                    </li>
-                    @endforeach
-                </ul>
-            </header>
-            <!-- .section-header -->
-            <div class="tab-content">
-                @foreach($categories as $category)
-                <div id="category-{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}" role="tabpanel">
-                    <div class="product-cards-3-2-3-with-featured-product">
-                        <div class="row row-cols-2 row-cols-md-4 g-3">
-                            @foreach($categoryProducts[$category->id] as $product)
-                            <div class="col-lg-3 col-md-4 col-sm-6
-                                        col-12 mb-3">
-                                <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="min-width:0; min-height:unset;">
-                                    <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
-                                        <a href="{{ route('client.product.show', $product->id) }}" class="d-block w-100 h-100">
-                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
-                                        </a>
-                                        @if($product->sale_price)
-                                        <!-- <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ round((($product->price - $product->sale_price) / $product->price) * 100) }}%</span> -->
-                                        @endif
-                                    </div>
-                                        <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center">
-                                        <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
-                                            <a href="" class="text-decoration-none text-dark">{{ $product->name }}</a>
-                                        </h6>
-                                        <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
-                                            @if($product->variants && $product->variants->count())
-                                                @php
-                                                    $salePrices = $product->variants->pluck('sale_price')->filter(function($v) { return $v > 0; });
-                                                    if ($salePrices->count()) {
-                                                        $minPrice = $salePrices->min();
-                                                        $maxPrice = $salePrices->max();
-                                                    } else {
-                                                        $prices = $product->variants->pluck('price')->filter();
-                                                        $minPrice = $prices->min();
-                                                        $maxPrice = $prices->max();
-                                                    }
-                                                @endphp
-                                                @if($minPrice == $maxPrice)
-                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ</span>
-                                                @else
-                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ - {{ number_format($maxPrice) }}đ</span>
-                                                @endif
-                                            @else
-                                                @if($product->sale_price)
-                                                    <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
-                                                    <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
-                                                @else
-                                                    <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
-                                                @endif
-                                            @endif
-                                        </div>
-                                        <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                            <small class="text-muted ms-1">(4.5)</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng">
-                                                <i class="fas fa-shopping-cart text-primary"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-wishlist" title="Thêm vào yêu thích">
-                                                <i class="fas fa-heart text-danger"></i>
-                                            </a>
-                                            <a href="{{ route('product.show', $product->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
-                                                <i class="fas fa-eye text-info"></i>
-                                            </a>
-                                        </div>
-                                            <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
-                                                @csrf
-                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
     
-                                                <input type="hidden" name="quantity" value="1">
-                                                {{-- @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
-                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $variantAttr->value_id }}">
-                                                @endforeach --}}
-                                                @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
-                                                    @php
-                                                        $valueId = $variantAttr->attribute_value_id 
-                                                            ?? $variantAttr->value_id 
-                                                            ?? optional($variantAttr->value)->id;
-                                                    @endphp
-                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
-                                                @endforeach
-                                                <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
-                                                    Mua ngay
-                                                </button>
-                                            </form>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
     <div class="col-full">
         <div class="row">
             <div id="primary" class="content-area">
@@ -221,127 +106,161 @@
                         <!-- .features -->
                     </div>
                     <!-- /.features list -->
+
+
+
+
+
+
+                    <section class="section-3-2-3-product-cards-tabs-with-featured-product stretch-full-width py-4">
+                        <div class="col-full">
+                            <header class="section-header text-center mb-4">
+                                <h2 class="section-title h3 fw-bold">
+                                    <span class="text-gradient">Nhanh tay!</span>
+                                    <span class="d-block text-primary mt-1">Ưu đãi đặc biệt</span>
+                                </h2>
+                                <ul role="tablist" class="nav nav-pills justify-content-center mb-3">
+                                    @foreach($categories as $category)
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $loop->first ? 'active' : '' }} btn btn-sm btn-outline-primary mx-1 rounded-pill px-3" 
+                                            href="#category-{{ $category->id }}" 
+                                            data-toggle="tab">{{ $category->name }}</a>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </header>
+                            <!-- .section-header -->
+                            <div class="tab-content">
+                                @foreach($categories as $category)
+                                <div id="category-{{ $category->id }}" class="tab-pane {{ $loop->first ? 'active' : '' }}" role="tabpanel">
+                                    <div class="product-cards-3-2-3-with-featured-product">
+                                        <div class="row row-cols-2 row-cols-md-4 g-3">
+                                            @foreach($categoryProducts[$category->id] as $product)
+                                            <div class="col-lg-3 col-md-4 col-sm-6
+                                                        col-12 mb-3">
+                                                <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="min-width:0; min-height:unset;">
+                                                    <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
+                                                        <a href="{{ route('client.product.show', $product->id) }}" class="d-block w-100 h-100">
+                                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
+                                                        </a>
+                                                        @if($product->sale_price)
+                                                        <!-- <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ round((($product->price - $product->sale_price) / $product->price) * 100) }}%</span> -->
+                                                        @endif
+                                                    </div>
+                                                        <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center">
+                                                        <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
+                                                            <a href="" class="text-decoration-none text-dark">{{ $product->name }}</a>
+                                                        </h6>
+                                                        <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
+                                                            @if($product->variants && $product->variants->count())
+                                                                @php
+                                                                    $salePrices = $product->variants->pluck('sale_price')->filter(function($v) { return $v > 0; });
+                                                                    if ($salePrices->count()) {
+                                                                        $minPrice = $salePrices->min();
+                                                                        $maxPrice = $salePrices->max();
+                                                                    } else {
+                                                                        $prices = $product->variants->pluck('price')->filter();
+                                                                        $minPrice = $prices->min();
+                                                                        $maxPrice = $prices->max();
+                                                                    }
+                                                                @endphp
+                                                                @if($minPrice == $maxPrice)
+                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ</span>
+                                                                @else
+                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($minPrice) }}đ - {{ number_format($maxPrice) }}đ</span>
+                                                                @endif
+                                                            @else
+                                                                @if($product->sale_price)
+                                                                    <span class="text-danger fw-bold fs-6">{{ number_format($product->sale_price) }}đ</span>
+                                                                    <small class="text-muted text-decoration-line-through ms-1">{{ number_format($product->price) }}đ</small>
+                                                                @else
+                                                                    <span class="text-primary fw-bold fs-6">{{ number_format($product->price) }}đ</span>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                        <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star-half-alt"></i>
+                                                            <small class="text-muted ms-1">(4.5)</small>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
+                                                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng">
+                                                                <i class="fas fa-shopping-cart text-primary"></i>
+                                                            </a>
+                                                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-wishlist" title="Thêm vào yêu thích">
+                                                                <i class="fas fa-heart text-danger"></i>
+                                                            </a>
+                                                            <a href="{{ route('product.show', $product->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
+                                                                <i class="fas fa-eye text-info"></i>
+                                                            </a>
+                                                        </div>
+                                                            <form action="{{ route('cart-detail') }}" method="POST" class="mt-3">
+                                                                @csrf
+                                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                                <input type="hidden" name="quantity" value="1">
+                                                                {{-- @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $variantAttr->value_id }}">
+                                                                @endforeach --}}
+                                                                @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                                    @php
+                                                                        $valueId = $variantAttr->attribute_value_id 
+                                                                            ?? $variantAttr->value_id 
+                                                                            ?? optional($variantAttr->value)->id;
+                                                                    @endphp
+                                                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
+                                                                @endforeach
+                                                                <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
+                                                                    Mua ngay
+                                                                </button>
+                                                            </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </section>
+
+
+
+
                     <section class="section-top-categories section-categories-carousel" id="categories-carousel-1">
                         <header class="section-header">
-                            <h4 class="pre-title">Featured</h4>
-                            <h2 class="section-title">Top categories
-                                <br>this week</h2>
+                            {{-- <h4 class="pre-title">Nổi bật</h4> --}}
+                            <h2 class="section-title">Danh mục
+                                <br>sản phẩm</h2>
                             <nav class="custom-slick-nav"></nav>
                             <!-- .custom-slick-nav -->
-                            <a class="readmore-link" href="#">Full Catalog</a>
                         </header>
                         <!-- .section-header -->
                         <div class="product-categories-1 product-categories-carousel" data-ride="tm-slick-carousel" data-wrap=".products" data-slick="{&quot;slidesToShow&quot;:5,&quot;slidesToScroll&quot;:1,&quot;dots&quot;:false,&quot;arrows&quot;:true,&quot;prevArrow&quot;:&quot;&lt;a href=\&quot;#\&quot;&gt;&lt;i class=\&quot;tm tm-arrow-left\&quot;&gt;&lt;\/i&gt;&lt;\/a&gt;&quot;,&quot;nextArrow&quot;:&quot;&lt;a href=\&quot;#\&quot;&gt;&lt;i class=\&quot;tm tm-arrow-right\&quot;&gt;&lt;\/i&gt;&lt;\/a&gt;&quot;,&quot;appendArrows&quot;:&quot;#categories-carousel-1 .custom-slick-nav&quot;,&quot;responsive&quot;:[{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesToScroll&quot;:2}},{&quot;breakpoint&quot;:1400,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesToScroll&quot;:4}}]}">
                             <div class="woocommerce columns-5">
                                 <div class="products">
-                                    <div class="product-category product first">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="All in One PC" src="assets/images/category/16.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                All in One PC
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Audio &amp; Music" src="assets/images/category/17.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Audio &amp; Music
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Cells &amp; Tablets" src="assets/images/category/18.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Cells &amp; Tablets
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Computers &amp; Laptops" src="assets/images/category/19.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Computers &amp; Laptops
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product last">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Desktop PCs" src="assets/images/category/20.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Desktop PCs
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product first">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Digital Cameras" src="assets/images/category/21.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Digital Cameras
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Games &amp; Consoles" src="assets/images/category/22.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Games &amp; Consoles
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Headphones" src="assets/images/category/23.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Headphones
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Home Entertainment" src="assets/images/category/24.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Home Entertainment
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product last">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Home Theater &amp; Audio" src="assets/images/category/25.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Home Theater &amp; Audio
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product first">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Laptops" src="assets/images/category/18.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Laptops
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
-                                    <div class="product-category product">
-                                        <a href="product-category.html">
-                                            <img width="224" height="197" alt="Mac Computers" src="assets/images/category/22.png">
-                                            <h2 class="woocommerce-loop-category__title">
-                                                Mac Computers
-                                            </h2>
-                                        </a>
-                                    </div>
-                                    <!-- .product-category -->
+                                    @foreach($categories as $category)
+                                        <div class="product-category product">
+                                            <a href="#">
+                                                <img class="category-img" 
+                                                width="224" height="197" 
+                                                object-fit= "cover" 
+                                                border-radius= "12px"
+                                                box-shadow= "0 2px 8px rgba(0,0,0,0.08)"
+                                                background= "#f5f5f5"
+                                                display= "block"
+                                                margin= "0 auto"
+                                                alt="{{ $category->name }}" src="{{ $category->image }}">
+                                                <h2 class="woocommerce-loop-category__title">
+                                                    {{ $category->name }}
+                                                </h2>
+                                            </a>
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <!-- .products -->
                             </div>

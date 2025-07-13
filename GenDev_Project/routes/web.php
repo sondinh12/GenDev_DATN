@@ -62,6 +62,9 @@ Route::get('/product', function () {
 
 Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
 
+// Thêm route hiển thị sản phẩm theo danh mục
+Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::class, 'category'])->name('product.category');
+
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
