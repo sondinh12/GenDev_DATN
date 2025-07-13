@@ -105,7 +105,7 @@
                 <div class="fw-bold text-muted">
                     Tổng tiền:
                     <span class="text-danger fs-5">
-                        {{ number_format($order->total + $order->shipping_fee, 0, ',', '.') }} đ
+                        {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
                 <div class="d-flex gap-2">
