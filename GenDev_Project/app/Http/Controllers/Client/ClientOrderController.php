@@ -48,7 +48,7 @@ class ClientOrderController extends Controller
     public function cancel(Order $order)
     {
         // Kiểm tra quyền
-        if (Auth::id()  !== $order->user_id) {
+        if (Auth::id() !== $order->user_id) {
             abort(403, 'Bạn không có quyền thao tác đơn hàng này.');
         }
 
@@ -62,14 +62,16 @@ class ClientOrderController extends Controller
             return back()->with('error', 'Đơn hàng đã thanh toán, vui lòng liên hệ bộ phận hỗ trợ để hủy.');
         }
 
-        // // Trả lại hàng về kho
-        // foreach ($order->orderDetails as $detail) {
-        //     if ($detail->variant) {
-        //         $detail->variant->increment('quantity', $detail->quantity);
-        //     } elseif ($detail->product) {
-        //         $detail->product->increment('quantity', $detail->quantity);
-        //     }
-        // }
+        // Cập nhật tồn kho
+        foreach ($order->orderDetails as $detail) {
+            if ($detail->variant) {
+                // Nếu có biến thể
+                $detail->variant->increment('quantity', $detail->quantity);
+            } else {
+                // Không có biến thể → cập nhật product
+                $detail->product->increment('quantity', $detail->quantity);
+            }
+        }
 
         // Cập nhật trạng thái đơn hàng
         $order->status = 'cancelled';
@@ -78,6 +80,7 @@ class ClientOrderController extends Controller
 
         return back()->with('success', 'Đơn hàng đã được hủy thành công.');
     }
+
     public function retry($orderId)
     {
         $order = Order::with('orderDetails.variant')->findOrFail($orderId);
