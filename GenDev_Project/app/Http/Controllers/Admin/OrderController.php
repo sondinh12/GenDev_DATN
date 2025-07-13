@@ -30,37 +30,6 @@ class OrderController extends Controller
         return view('Admin.orders.index', compact('orders'));
     }
 
-
-    // public function updatePaymentStatus(Request $request, $id)
-    // {
-    //     $order = Order::findOrFail($id);
-
-    //     // Không cho cập nhật nếu đã hoàn thành hoặc đã hủy
-    //     if (in_array($order->status, ['completed', 'cancelled']) || in_array($order->payment_status, ['paid', 'cancelled'])) {
-    //         return redirect()->back()->with('error', 'Không thể cập nhật trạng thái khi đơn hàng đã hoàn tất hoặc đã hủy.');
-    //     }
-
-    //     // Xác nhận trạng thái hợp lệ
-    //     $validator = Validator::make($request->all(), [
-    //         'payment_status' => 'required|in:paid,unpaid,cancelled',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return redirect()->back()->withErrors($validator)->withInput();
-    //     }
-
-    //     $newStatus = $request->payment_status;
-
-    //     // Nếu cập nhật thành "cancelled" thì đơn hàng cũng bị hủy
-    //     if ($newStatus === 'cancelled') {
-    //         $order->status = 'cancelled';
-    //     }
-
-    //     $order->payment_status = $newStatus;
-    //     $order->save();
-
-    //     return redirect()->back()->with('success', 'Cập nhật trạng thái thanh toán thành công.');
-    // }
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
@@ -111,13 +80,16 @@ class OrderController extends Controller
 
         if ($new === 'cancelled') {
             foreach ($order->orderDetails as $detail) {
-                $variant = $detail->variant;
-                if ($variant) {
-                    $variant->quantity += $detail->quantity;
-                    $variant->save();
+                if ($detail->variant) {
+                    // Sản phẩm có biến thể => hoàn kho cho biến thể
+                    $detail->variant->increment('quantity', $detail->quantity);
+                } else {
+                    // Sản phẩm không có biến thể => hoàn kho cho sản phẩm gốc
+                    $detail->product->increment('quantity', $detail->quantity);
                 }
             }
         }
+
 
         // Lưu log thay đổi trạng thái
         OrderStatusLog::create([

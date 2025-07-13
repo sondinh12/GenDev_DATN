@@ -50,21 +50,43 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="border rounded p-3 h-100">
-                <h6 class="fw-bold mb-2">HÌNH THỨC THANH TOÁN</h6>
-<p class="mb-0">
-    @switch($order->payment)
-        @case('cod')
-            Thanh toán khi nhận hàng
-            @break
-        @case('banking')
-            Chuyển khoản ngân hàng
-            @break
-        @default
-            {{ ucfirst($order->payment) }}
-    @endswitch
-</p>            </div>
-        </div>
+    <div class="border rounded p-3 h-100">
+        <h6 class="fw-bold mb-2">HÌNH THỨC THANH TOÁN</h6>
+        <p class="mb-0">
+            @switch($order->payment)
+                @case('cod')
+                    Thanh toán khi nhận hàng
+                    @break
+                @case('banking')
+                    Chuyển khoản ngân hàng
+                    @break
+                @default
+                    {{ ucfirst($order->payment) }}
+            @endswitch
+        </p>
+
+        {{-- Trạng thái thanh toán --}}
+        @php
+            $paymentStatusClass = match($order->payment_status) {
+                'paid' => 'success',
+                'unpaid' => 'warning',
+                'cancelled' => 'danger',
+                default => 'secondary',
+            };
+
+            $paymentStatusText = match($order->payment_status) {
+                'paid' => 'Đã thanh toán',
+                'unpaid' => 'Chưa thanh toán',
+                'cancelled' => 'Đã hủy',
+                default => ucfirst($order->payment_status),
+            };
+        @endphp
+        <span class="badge bg-{{ $paymentStatusClass }} mt-2">
+            {{ $paymentStatusText }}
+        </span>
+    </div>
+</div>
+
     </div>
 
     {{-- SẢN PHẨM --}}
