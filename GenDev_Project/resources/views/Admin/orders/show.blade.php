@@ -6,22 +6,23 @@
     <div class="container-fluid py-4" style="background: #f8fafc;">
         <div class="row justify-content-center">
             {{-- Flash Message --}}
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @elseif(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-triangle me-1"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @elseif(session('notification'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <i class="fas fa-info-circle me-1"></i> {{ session('notification') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+          @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @elseif(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-1"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @elseif(session('notification'))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle me-1"></i> {{ session('notification') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+</div>
 
             <div class="col-lg-10">
                 <div class="card shadow mb-4">
@@ -57,57 +58,58 @@
                             </div>
 
                             <div class="col-md-6">
-                                <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
-                                @php
-                                    $statusClass = match ($order->status) {
-                                        'pending' => 'secondary',
-                                        'processing' => 'info',
-                                        'shipped' => 'primary',
-                                        'completed' => 'success',
-                                        'cancelled' => 'danger',
-                                        default => 'dark',
-                                    };
+    <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
 
-                                    $statusLabels = [
-                                        'pending' => 'Chờ xử lý',
-                                        'processing' => 'Đang xử lý',
-                                        'shipped' => 'Đã giao',
-                                        'completed' => 'Hoàn thành',
-                                        'cancelled' => 'Đã hủy',
-                                    ];
-                                @endphp
-                                <span class="badge bg-{{ $statusClass }} p-2 mb-2">
-                                    {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
-                                </span>
+    @php
+        $statusOrder = ['pending', 'processing', 'shipped', 'completed', 'cancelled'];
+        $statusClass = [
+            'pending' => 'secondary',
+            'processing' => 'info',
+            'shipped' => 'primary',
+            'completed' => 'success',
+            'cancelled' => 'danger',
+        ];
+        $statusLabels = [
+            'pending' => 'Chờ xử lý',
+            'processing' => 'Đang xử lý',
+            'shipped' => 'Đã giao',
+            'completed' => 'Hoàn thành',
+            'cancelled' => 'Đã hủy',
+        ];
+        $currentIndex = array_search($order->status, $statusOrder);
+    @endphp
 
-                                @if (!in_array($order->status, ['shipped', 'cancelled', 'completed']))
-                                    <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST"
-                                        class="mt-2">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="d-flex flex-column flex-md-row align-items-start gap-2">
-                                            <select name="status" class="form-select form-select-sm w-auto">
-                                                <option value="pending"
-                                                    {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ
-                                                    xử lý</option>
-                                                <option value="processing"
-                                                    {{ $order->status == 'processing' ? 'selected' : '' }}>Đang xử lý
-                                                </option>
-                                                <option value="shipped"
-                                                    {{ $order->status == 'shipped' ? 'selected' : '' }}>Đã
-                                                    giao</option>
-                                                <option value="cancelled"
-                                                    {{ $order->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
-                                            </select>
-                                            <input type="text" name="note" class="form-control form-control-sm w-50"
-                                                placeholder="Ghi chú (nếu có)">
-                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-sync"></i> Cập
-                                                nhật</button>
-                                        </div>
-                                    </form>
-                                @endif
-                            </div>
-                        </div>
+    {{-- Hiển thị trạng thái hiện tại --}}
+    <span class="badge bg-{{ $statusClass[$order->status] ?? 'dark' }} p-2 mb-2">
+        {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
+    </span>
+
+    {{-- Nếu chưa hoàn thành hoặc huỷ thì cho cập nhật --}}
+    @if (!in_array($order->status, ['shipped', 'cancelled', 'completed']))
+        <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
+            @csrf
+            @method('PUT')
+            <div class="d-flex flex-column flex-md-row align-items-start gap-2">
+                <select name="status" class="form-select form-select-sm w-auto">
+                    @foreach($statusOrder as $key => $status)
+                        {{-- Chỉ cho chuyển đến trạng thái tiếp theo và huỷ, không cho hoàn thành thủ công --}}
+                        @if(
+                            ($key > $currentIndex && $status !== 'completed') ||
+                            ($status === 'cancelled' && $order->status !== 'cancelled')
+                        )
+                            <option value="{{ $status }}">{{ $statusLabels[$status] }}</option>
+                        @endif
+                    @endforeach
+                </select>
+                <input type="text" name="note" class="form-control form-control-sm w-50"
+                       placeholder="Ghi chú (nếu có)">
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-sync"></i> Cập nhật
+                </button>
+            </div>
+        </form>
+    @endif
+</div>
 
                         {{-- Thông tin khách hàng --}}
                         <div class="card mb-4 border-start border-4 border-primary">
@@ -341,10 +343,18 @@
 
 
                     </div>
+
+
+    </div>
+</div>
+
+
+
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
 
 <style>
