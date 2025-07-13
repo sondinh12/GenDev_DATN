@@ -66,7 +66,7 @@
                                     @foreach($categories as $category)
                                     <div class="product-category product">
                                         <a href="{{ route('shop', ['category' => $category->id]) }}">
-                                            <img width="224" height="197" alt="{{ $category->name }}"
+                                            <img width="400" height="200" alt="{{ $category->name }}"
                                                 src="{{ asset('storage/' . $category->image) }}">
                                             <h2 class="woocommerce-loop-category__title">{{ $category->name }}</h2>
                                         </a>
