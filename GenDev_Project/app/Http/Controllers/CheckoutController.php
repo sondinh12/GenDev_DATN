@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
 use App\Mail\OrderConfirmation;
-use App\Models\Cartdetail;
+use App\Models\CartDetail;
 use App\Models\Coupon;
 use App\Models\CouponUser;
 use App\Models\Order;
@@ -16,8 +16,8 @@ use App\Models\Ship;
 use App\Services\VnpayService;
 use DB;
 use Illuminate\Http\Request;
-use Log;
-use Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
@@ -26,23 +26,36 @@ class CheckoutController extends Controller
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');
 
-        if (empty($selectedItemIds) && $request->isMethod('post') || count($selectedItemIds) === 0) {
-            return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
-        }
         if (is_string($selectedItemIds)) {
             parse_str($selectedItemIds, $output);
             $selectedItemIds = $output['selected_items'] ?? [];
         }
 
+
         $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
         $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                ? $item->variant->sale_price
+                : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
+
+            return $price * $item->quantity;
         });
 
         $user = auth()->user();
-        return view('client.checkout.checkout', compact('ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user'));
+
+        // Lấy danh sách coupon hợp lệ
+        $coupons = Coupon::where('usage_limit', '>', 0)->get();
+
+        return view('client.checkout.checkout', compact(
+            'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
@@ -54,6 +67,7 @@ class CheckoutController extends Controller
         }
 
         // Truy vấn cart_details với quan hệ product và variant
+
         $cartItems = Cartdetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
@@ -67,7 +81,17 @@ class CheckoutController extends Controller
         try {
             // Tính tổng tiền sản phẩm
             $subtotal = $cartItems->sum(function ($item) {
-                return $item->price * $item->quantity;
+                if ($item->variant) {
+                    $price = $item->variant->sale_price > 0
+                        ? $item->variant->sale_price
+                        : $item->variant->price;
+                } else {
+                    $price = $item->product->sale_price > 0
+                        ? $item->product->sale_price
+                        : $item->product->price;
+                }
+
+                return $price * $item->quantity;
             });
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
@@ -139,12 +163,32 @@ class CheckoutController extends Controller
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng
+
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                    ? $item->variant->sale_price
+                    : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
+
             foreach ($cartItems as $item) {
+                if ($item->variant) {
+                    $price = $item->variant->sale_price > 0
+                        ? $item->variant->sale_price
+                        : $item->variant->price;
+                } else {
+                    $price = $item->product->sale_price > 0
+                        ? $item->product->sale_price
+                        : $item->product->price;
+                }
                 $detail = OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
                     'variant_id' => $item['variant_id'] ?? null,
-                    'price' => $item['price'],
+                    'price' => $price,
                     'quantity' => $item['quantity'],
                     'note' => $note
                 ]);

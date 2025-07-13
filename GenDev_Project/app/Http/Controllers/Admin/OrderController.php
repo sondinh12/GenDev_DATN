@@ -94,15 +94,15 @@ class OrderController extends Controller
                 return back()->with('error', 'Đơn thanh toán online chưa được thanh toán.');
             }
 
-            foreach ($order->orderDetails as $detail) {
-                $variant = $detail->variant;
-                if ($variant && $variant->quantity >= $detail->quantity) {
-                    $variant->quantity -= $detail->quantity;
-                    $variant->save();
-                } else {
-                    return back()->with('error', 'Không đủ hàng trong kho để xử lý đơn hàng.');
-                }
-            }
+            // foreach ($order->orderDetails as $detail) {
+            //     $variant = $detail->variant;
+            //     if ($variant && $variant->quantity >= $detail->quantity) {
+            //         $variant->quantity -= $detail->quantity;
+            //         $variant->save();
+            //     } else {
+            //         return back()->with('error', 'Không đủ hàng trong kho để xử lý đơn hàng.');
+            //     }
+            // }
         }
 
         if ($new === 'shipped' && $order->payment === 'cod') {

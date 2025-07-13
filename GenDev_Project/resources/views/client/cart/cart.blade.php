@@ -43,7 +43,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th class="product-select" style="width: 30px;"><input
-                                                                        type="checkbox" id="select-all-checkbox" checked>
+                                                                        type="checkbox" id="select-all-checkbox">
                                                                 </th>
                                                                 <th class="product-thumbnail">Ảnh</th>
                                                                 <th class="product-name">Tên sản phẩm</th>
@@ -77,7 +77,6 @@
                                                                 <tr class="cart_item">
                                                                     <td class="product-select">
                                                                         <input type="checkbox" class="cart-item-checkbox"
-                                                                            checked
                                                                             data-item-subtotal="{{ $item->price * $item->quantity }}"
                                                                             data-item-name="{{ $item->product->name }}"
                                                                             data-item-price="{{ $item->price }}"
@@ -160,15 +159,6 @@
 
                                                             <tr>
                                                                 <td class="actions" colspan="7">
-                                                                    <div class="coupon">
-                                                                        <label for="coupon_code">Mã giảm giá:</label> <br>
-                                                                        <input type="text" placeholder="Nhập mã giảm giá"
-                                                                            value="" id="coupon_code" class="input-text"
-                                                                            name="coupon_code">
-                                                                        <input type="submit" value="Áp dụng"
-                                                                            name="apply_coupon" class="button">
-                                                                    </div>
-
                                                                     {{-- <input type="submit" value="Cập nhật"
                                                                         name="update_cart" class="button"> --}}
                                                                     <button type="submit" name="update_cart"
@@ -219,11 +209,11 @@
                                                         </tbody>
                                                     </table>
                                                     <!-- .shop_table shop_table_responsive -->
-                                                    <div class="wc-proceed-to-checkout">
-                                                        <!-- .wc-proceed-to-checkout -->
+                                                    <div class="wc-proceed-to-checkout justify-content-center" 
+                                                        style="display:flex; flex-direction:column; align-items:center; width:100%; margin-top:16px;">
                                                         <button type="submit" name="btn_checkout"
-                                                            class="button wc-forward text-center">Checkout</button>
-                                                        <a class="back-to-shopping" href="shop.html">Back to Shopping</a>
+                                                        class="checkout-button button alt wc-forward">Tiến hành thanh toán</button>
+                                                        <a class="back-to-shopping" href="/products">Quay lại Mua sắm</a>
                                                     </div>
                                                     <!-- .cart_totals -->
                                                 </div>
@@ -287,18 +277,17 @@
             const selectedProductsList = document.getElementById('selected-products-list');
             if (selectedProducts.length > 0) {
                 selectedProductsList.innerHTML = selectedProducts.map(p =>
-                    `<div style=\"display: flex; align-items: center; padding: 6px 0;\">
-                        <div style=\"flex:2; color: #222; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;\">
+                    `<div style="display: flex; align-items: center; padding: 6px 0;">
+                        <div style="flex:2; color: #222; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             <span>${p.name}</span>
-                            <span style=\"color:#888; margin:0 4px;\">×</span>
-                            <span style=\"color: #007bff; \">${p.quantity}</span>
+                            <span style="color:#888; margin:0 4px;">×</span>
+                            <span style="color: #007bff;">${p.quantity}</span>
                         </div>
-                        <div style=\"flex:1; text-align:right; color: #e53935; min-width: 120px;\">${formatCurrency(p.price * p.quantity)} VNĐ</div>
+                        <div style="flex:1; text-align:right; color: #e53935; min-width: 120px;">${formatCurrency(p.price * p.quantity)} VNĐ</div>
                     </div>`
                 ).join('');
-                if (selectedProducts.length === 0) {
-                    selectedProductsList.innerHTML = '<em>Chưa chọn sản phẩm nào</em>';
-                }
+            } else {
+                selectedProductsList.innerHTML = '<em>Chưa chọn sản phẩm nào</em>';
             }
         }
 
