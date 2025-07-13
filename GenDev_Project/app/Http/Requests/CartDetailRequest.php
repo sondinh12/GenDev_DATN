@@ -38,37 +38,28 @@ class CartDetailRequest extends FormRequest
 
 
         if ($this->isMethod('put')) {
-            $rules = [
+            return [
                 'quantities' => 'required|array',
                 'quantities.*' => 'required|integer|min:1',
             ];
         }
 
-        return $rules;
+        return [];
     }
 
-    public function massages()
+    public function messages()
     {
         return [
             'product_id.required' => 'Vui lòng chọn sản phẩm.',
             'product_id.exists' => 'Sản phẩm không tồn tại trong hệ thống.',
-
-            // 'variant_id.required' => 'Vui lòng chọn biến thể sản phẩm.',
-            // 'variant_id.exists' => 'Biến thể sản phẩm không tồn tại trong hệ thống.',
-
             'quantity.required' => 'Vui lòng nhập số lượng.',
             'quantity.integer' => 'Số lượng phải là một số nguyên.',
             'quantity.min' => 'Số lượng tối thiểu là 1.',
-
             'quantities.required' => 'Không có dữ liệu cập nhật.',
             'quantities.*.integer' => 'Số lượng phải là số.',
             'quantities.*.min' => 'Số lượng ít nhất là 1.',
-
             'attribute.array' => 'Dữ liệu thuộc tính không hợp lệ.',
             'attribute.*.exists' => 'Giá trị thuộc tính không hợp lệ.',
-            'quantities.required' => 'Không có dữ liệu cập nhật.',
-            'quantities.*.integer' => 'Số lượng phải là số.',
-            'quantities.*.min' => 'Số lượng ít nhất là 1.',
         ];
     }
 }
