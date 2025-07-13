@@ -1,0 +1,6 @@
+# *
+# Ngoại lệ: không bỏ qua file default-avatar.png
+!default-avatar.png
+
+# Giữ lại chính file .gitignore này
+!.gitignore
