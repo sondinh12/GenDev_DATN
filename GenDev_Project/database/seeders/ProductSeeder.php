@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +18,6 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        // Danh sách sản phẩm thực tế, mỗi sản phẩm gán vào category_id phù hợp
         $products = [
             // Điện thoại
             ['name' => 'iPhone 15 Pro Max', 'image' => 'https://cdn.tgdd.vn/Products/Images/42/303891/iphone-15-pro-max-blue-1-600x600.jpg', 'category_name' => 'iPhone', 'sale_price' => 32000000, 'price' => 35000000, 'quantity' => 10, 'status' => 1, 'description' => 'iPhone 15 Pro Max mới nhất của Apple.'],

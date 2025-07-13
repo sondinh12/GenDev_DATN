@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB ;
@@ -22,7 +21,6 @@ class ProductVariantAttributeSeeder extends Seeder
                 'attribute_id' => 1,
                 'attribute_value_id' => 1,
             ]);
-            // Thêm các attribute khác nếu muốn
         }
     }
 

@@ -35,7 +35,6 @@ $bodyClass = match($route) {
     @include('client.layout.partials.script')
     @yield('scripts')
 </body>
-
 <!-- Mirrored from transvelo.github.io/techmarket-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 May 2025 14:26:03 GMT -->
 
 </html>

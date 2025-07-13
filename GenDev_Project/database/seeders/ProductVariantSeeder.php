@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -23,9 +22,7 @@ class ProductVariantSeeder extends Seeder
                 'sale_price' => 230000,
                 'quantity' => 10,
                 'status' => 1,
-                // ... các trường khác nếu có
             ]);
-            // Thêm các variant khác nếu muốn
         }
     }
 }
