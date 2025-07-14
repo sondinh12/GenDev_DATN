@@ -60,7 +60,7 @@ class OrderSeeder extends Seeder
                 'city' => 'Đà Nẵng',
                 'ward' => 'Hải Châu',
                 'postcode' => '550000',
-                'payment' => 'momo',
+                'payment' => 'cod',
                 'total' => 180000,
                 'shipping_fee' => 25000,
                 'status' => 'completed',
