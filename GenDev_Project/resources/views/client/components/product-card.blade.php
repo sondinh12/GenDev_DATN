@@ -1,6 +1,7 @@
 @php
 use App\Helpers\ProductHelper;
 $priceInfo = ProductHelper::getProductPriceInfo($product);
+$discountPercent = ProductHelper::getFirstVariantDiscountPercent($product);
 @endphp
 
 <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp"
@@ -13,17 +14,12 @@ $priceInfo = ProductHelper::getProductPriceInfo($product);
                 style="max-height:110px; object-fit:contain; margin:0 auto;">
         </a>
 
-        @php
-            $variant = $product->variants->first();
-            $discountPercent = null;
-            if($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
-                $discountPercent = round(100 - ($variant->sale_price / $variant->price * 100));
-            }
-        @endphp
         @if($discountPercent)
-            <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
+        <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent
+            }}%</span>
         @elseif($priceInfo['has_discount'])
-            <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $priceInfo['discount_percent'] }}%</span>
+        <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{
+            $priceInfo['discount_percent'] }}%</span>
         @endif
     </div>
 
@@ -40,23 +36,25 @@ $priceInfo = ProductHelper::getProductPriceInfo($product);
         -->
         <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
             @php
-                $variant = $product->variants->first();
+            $variant = $product->variants->first();
             @endphp
             @if($variant)
-                @if($variant->sale_price && $variant->sale_price < $variant->price)
-                    <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
-                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
+            @if($variant->sale_price && $variant->sale_price < $variant->price)
+                <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price)
+                        }}đ</del></small>
                 @else
-                    <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
+                <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                 @endif
-            @else
+                @else
                 @if($priceInfo['has_discount'])
-                    <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
-                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($priceInfo['original_price']) }}đ</del></small>
+                <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                <small class="text-muted text-decoration-line-through ms-1"><del>{{
+                        number_format($priceInfo['original_price']) }}đ</del></small>
                 @else
-                    <ins class="text-primary fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                <ins class="text-primary fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
                 @endif
-            @endif
+                @endif
         </div>
 
         <div
