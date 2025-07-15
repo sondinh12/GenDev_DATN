@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CategoryMini extends Model
 {
+    use SoftDeletes;
     protected $table = 'categories_mini';
     protected $fillable = [
         'category_id',
@@ -14,11 +16,13 @@ class CategoryMini extends Model
         'image'
     ];
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function products(){
+    public function products()
+    {
         return $this->hasMany(Product::class);
     }
 }

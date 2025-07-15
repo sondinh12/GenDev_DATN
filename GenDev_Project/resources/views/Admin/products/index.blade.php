@@ -20,6 +20,14 @@ Manage
 @endif
 
 <a href="{{route('products.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
+    <a href="{{ route('products.trash.list') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
+        Thùng rác
+        @if(isset($trashedCount) && $trashedCount > 0)
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ $trashedCount }}
+            </span>
+        @endif
+    </a>
 <table border=1 class="table">
     <tr>
         <th>ID</th>
@@ -27,7 +35,7 @@ Manage
         <th>Ảnh</th>
         <th>Tên danh mục</th>
         <th>Giá</th>
-        <th>Số lượng</th>
+        <!-- <th>Số lượng</th> -->
         <th>Danh mục con</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
@@ -42,8 +50,31 @@ Manage
             <img src="{{asset('storage/'.$pro->image)}}" alt="Ảnh" width="100px">
         </td>
         <td>{{$pro->category->name}}</td>
-        <td>{{$pro->price}}</td>
-        <td>{{$pro->quantity}}</td>
+        <td>
+            @if($pro->variants && $pro->variants->count())
+                @php
+                    $prices = $pro->variants->map(function($v) {
+                        return $v->sale_price && $v->sale_price > 0 ? $v->sale_price : $v->price;
+                    });
+                    $min = $prices->min();
+                    $max = $prices->max();
+                @endphp
+                @if($min == $max)
+                    {{ number_format($min) }} đ
+                @else
+                    {{ number_format($min) }} đ - {{ number_format($max) }} đ
+                @endif
+            @else
+                {{ number_format($pro->sale_price && $pro->sale_price > 0 ? $pro->sale_price : $pro->price) }} đ
+            @endif
+        </td>
+        <!--
+        <td>
+            @if(!$pro->variants || !$pro->variants->count())
+                {{$pro->quantity}}
+            @endif
+        </td>
+        -->
         <td>{{$pro->categoryMini?->name}}</td>
         <th>
             @if($pro->status == 1)
@@ -63,7 +94,7 @@ Manage
                 <form action="{{ route('products.trash', $pro->id) }}" method="POST" style="display:inline-block;">
                     @csrf
                     @method('PATCH')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn chuyển sản phẩm này vào thùng rác?')">Thùng rác</button>
                 </form>
             @elseif($pro->status == 2)
                 <form action="{{ route('products.restore', $pro->id) }}" method="POST" style="display:inline-block;">
