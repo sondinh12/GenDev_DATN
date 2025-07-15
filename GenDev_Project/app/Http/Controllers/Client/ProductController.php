@@ -46,7 +46,7 @@ class ProductController extends Controller
             ->where('id', '!=', $product->id)
             ->whereNull('deleted_at')
             ->orderBy('id', 'desc')
-            ->limit(10)
+            ->limit(8)
             ->get();
 
         $canReview = false;
