@@ -13,9 +13,17 @@ $priceInfo = ProductHelper::getProductPriceInfo($product);
                 style="max-height:110px; object-fit:contain; margin:0 auto;">
         </a>
 
-        @if($priceInfo['has_discount'])
-        <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{
-            $priceInfo['discount_percent'] }}%</span>
+        @php
+            $variant = $product->variants->first();
+            $discountPercent = null;
+            if($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
+                $discountPercent = round(100 - ($variant->sale_price / $variant->price * 100));
+            }
+        @endphp
+        @if($discountPercent)
+            <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
+        @elseif($priceInfo['has_discount'])
+            <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $priceInfo['discount_percent'] }}%</span>
         @endif
     </div>
 
@@ -25,13 +33,29 @@ $priceInfo = ProductHelper::getProductPriceInfo($product);
                 $product->name }}</a>
         </h6>
 
+        <!--
+            Hiển thị giá cho sản phẩm có biến thể:
+            - Nếu có biến thể: lấy giá sale của biến thể đầu tiên, nếu không có thì lấy giá gốc của biến thể đầu tiên.
+            - Nếu không có biến thể: dùng logic cũ.
+        -->
         <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
-            @if($priceInfo['has_discount'])
-            <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
-            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($priceInfo['original_price'])
-                }}đ</del></small>
+            @php
+                $variant = $product->variants->first();
+            @endphp
+            @if($variant)
+                @if($variant->sale_price && $variant->sale_price < $variant->price)
+                    <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
+                @else
+                    <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
+                @endif
             @else
-            <ins class="text-primary fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                @if($priceInfo['has_discount'])
+                    <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($priceInfo['original_price']) }}đ</del></small>
+                @else
+                    <ins class="text-primary fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                @endif
             @endif
         </div>
 
