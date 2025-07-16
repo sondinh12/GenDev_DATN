@@ -65,8 +65,8 @@ Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::clas
 // Thêm route hiển thị sản phẩm theo danh mục
 Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::class, 'category'])->name('product.category');
 
-// ================= GIỎ HÀNG & THANH TOÁN =================
 
+// ================= GIỎ HÀNG & THANH TOÁN =================
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
@@ -105,7 +105,6 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
-
 Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     // Sản phẩm
