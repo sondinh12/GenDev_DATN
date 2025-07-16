@@ -11,7 +11,9 @@ use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
+use App\Http\Controllers\Client\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Client\HomeController;
@@ -28,12 +30,13 @@ use App\Http\Controllers\Client\ClientOrderController;
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-// Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
+Route::get('/products', function () {
+    return view('client.pages.product');
+})->name('products');
 Route::get('/contact', function () {
     return view('client.pages.contact');
 })->name('contact');
@@ -147,6 +150,13 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
+    
+    // Đánh giá(Reviews)
+    Route::middleware(['auth','check_ban','permission:manage reviews'])->group(function () {
+        Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+        Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
+    });
 
     // Người dùng
     Route::middleware(['permission:manage users'])->group(function () {
@@ -218,3 +228,4 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp
     ->name('password.update');
 
 Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyResetOtp'])->name('password.verify');
+Route::post('/product/{id}/review', [ProductReviewController::class, 'store'])->name('product.review.store');

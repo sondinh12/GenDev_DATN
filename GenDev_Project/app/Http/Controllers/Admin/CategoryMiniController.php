@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
 class CategoryMiniController extends Controller
 {
@@ -30,18 +31,13 @@ class CategoryMiniController extends Controller
         return view('admin.categories.categories_minis.index', compact('minis', 'categories', 'category_id', 'trashedCount'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create($id)
     {
         $categories = Category::findOrFail($id);
         return view('admin.categories.categories_minis.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CategoryMiniRequest $request,$id)
     {
         $data = $request->validated();
@@ -53,17 +49,10 @@ class CategoryMiniController extends Controller
         return redirect()->route('admin.categories_minis.index', ['id' => $id])->with('success', 'Thêm thành công');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($category_id,$id)
     {
         $categories = Category::findOrFail($category_id);
@@ -71,9 +60,6 @@ class CategoryMiniController extends Controller
         return view('admin.categories.categories_minis.edit', compact('categories', 'categoryMini'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CategoryMiniRequest $request, $category_id ,$id)
     {
         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
@@ -98,9 +84,6 @@ class CategoryMiniController extends Controller
         return redirect()->route('admin.categories_minis.index', ['id' => $category_id])->with('success', 'Cập nhật thành công');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($category_id, $id)
     {
         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
