@@ -16,22 +16,25 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            CategorySeeder::class,
-            CategoryMiniSeeder::class,
-            AttributeSeeder::class,
-            AttributeValueSeeder::class,
-            ProductSeeder::class,
-            ProductGallerySeeder::class,
-            ProductVariantSeeder::class,
-            ProductVariantAttributeSeeder::class,
-            RoleAndPermissionSeeder::class,
-            UserSeeder::class,
-            ShipSeeder::class,
-            CouponSeeder::class,
-            OrderSeeder::class,
-            OrderDetailAttributeSeeder::class,
-            OrderStatusLogSeeder::class,
-
+            // CategorySeeder::class,
+            // CategoryMiniSeeder::class,
+            // AttributeSeeder::class,
+            // AttributeValueSeeder::class,
+            // ProductSeeder::class,
+            // ProductGallerySeeder::class,
+            // ProductVariantSeeder::class,
+            // ProductVariantAttributeSeeder::class,
+            // RoleAndPermissionSeeder::class,
+            // UserSeeder::class,
+            // ShipSeeder::class,
+            // CouponSeeder::class,
+            // OrderSeeder::class,
+            // OrderDetailAttributeSeeder::class,
+            // OrderStatusLogSeeder::class,
+            // SupplierSeeder::class,
+            SupplierProductPriceSeeder::class,
+            ImportSeeder::class,
+            ImportDetailSeeder::class,
         ]);
     }
 }

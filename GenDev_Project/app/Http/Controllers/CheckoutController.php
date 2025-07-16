@@ -75,6 +75,33 @@ class CheckoutController extends Controller
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
         }
+        // $reorderMode = $request->input('reorder_mode', false);
+        // $userId = auth()->id();
+
+        // if ($reorderMode) {
+        //     $rawItems = json_decode($request->input('reorder_cart_items'), true);
+
+        //     if (empty($rawItems)) {
+        //         return back()->with('error', 'Không tìm thấy sản phẩm mua lại.');
+        //     }
+
+        //     $cartItems = $rawItems; // Dùng mảng luôn
+        // } else {
+        //     $selectedItemIds = $request->input('selected_items', []);
+
+        //     if (empty($selectedItemIds)) {
+        //         return back()->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        //     }
+
+        //     $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+        //         ->whereIn('id', $selectedItemIds)
+        //         ->get()
+        //         ->toArray();
+
+        //     if (empty($cartItems)) {
+        //         return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
+        //     }
+        // }
 
         DB::beginTransaction();
 
@@ -274,5 +301,64 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
+
+    // public function checkoutFromOrder($orderId)
+    // {
+    //     $order = Order::with([
+    //         'orderDetails.product',
+    //         // 'orderDetails.variant.variantAttributes.attribute',
+    //         // 'orderDetails.variant.variantAttributes.value'
+    //         'orderDetails.attributes'
+    //     ])->findOrFail($orderId);
+        
+    //     $selectedItemIds = $order->orderDetails->pluck('id')->toArray();
+    //     $cartItems = [];
+    //     $subtotal = 0;
+
+    //     foreach ($order->orderDetails as $item) {
+    //         $product = $item->product;
+    //         $variant = $item->variant;
+
+    //         $price = $variant
+    //             ? ($variant->sale_price > 0 ? $variant->sale_price : $variant->price)
+    //             : ($product->sale_price > 0 ? $product->sale_price : $product->price);
+
+    //         $subtotal += $price * $item->quantity;
+    //         $coupons = Coupon::all(); 
+    //         $user = auth()->user();
+    //         // $reorderMode = true;
+    //         $originalOrder = $order;
+
+    //         $cartItems[] = [
+    //             'product_id' => $product->id,
+    //             'product' => $product,
+    //             'variant_id' => $variant->id ?? null,
+    //             'variant' => $variant,
+    //             'quantity' => $item->quantity,
+    //             'attributes' => $item->attributes->map(function ($att) {
+    //                 return [
+    //                     'attribute_name' => $att->attribute_name,
+    //                     'value' => $att->attribute_value,
+    //                 ];
+    //             })->toArray(),
+    //         ];
+    //     }
+
+    //     $ships = Ship::all(); // bạn cần load danh sách ship ở đây
+
+    //     return view('client.checkout.checkout', compact(
+    //         'cartItems',
+    //         'subtotal',
+    //         // 'reorderMode',
+    //         'originalOrder',
+    //         'ships',
+    //         'coupons',
+    //         'user',
+    //         'selectedItemIds',
+    //     )) ->with([
+    //     'reorder_mode' => true, // optional flag
+    // ]);;
+    // }
+
 
 }

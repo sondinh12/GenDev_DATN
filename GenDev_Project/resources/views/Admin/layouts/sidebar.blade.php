@@ -46,7 +46,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ url('admin/orders') }}">
+                    <a href="{{ url('/admin/orders') }}">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Danh sách đơn hàng</span>
                     </a>
@@ -56,6 +56,20 @@
                     <a href="{{ url('/admin/coupons') }}" class="">
                         <i class="fa-solid fa-tag"></i>
                         <span>Mã Giảm Giá</span>
+                    </a>
+                <li>
+
+                <li>
+                    <a href="{{ url('/admin/suppliers') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Nhà cung cấp</span>
+                    </a>
+                <li>
+
+                <li>
+                    <a href="{{ url('/admin/imports') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Nguồn nhập</span>
                     </a>
                 <li>
             </ul>
