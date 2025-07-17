@@ -169,6 +169,12 @@ class CartDetailController extends Controller
             })
             ->first();
 
+        $inCartQty = $cartDetail ? $cartDetail->quantity : 0;
+        $totalQty = $inCartQty + $quantity;
+        $stockQty = $matchedVariant ? $matchedVariant->quantity : $product->quantity;
+        if ($totalQty > $stockQty) {
+            return back()->withInput()->with('error', 'Số lượng vượt quá tồn kho hiện có là ' . $stockQty . '.');
+        }
         if ($cartDetail) {
             // Cập nhật số lượng nếu sản phẩm đã có trong giỏ
             $cartDetail->quantity += $quantity;
@@ -183,8 +189,8 @@ class CartDetailController extends Controller
                 // 'price' => $matchedVariant ? ($matchedVariant->sale_price ?? $matchedVariant->price) : ($product->sale_price ?? $product->price),
             ]);
         }
-
-        return redirect()->route('cart')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+        
+        return redirect()->route('product.show', $productId)->withInput()->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
     }
 
     /**
@@ -223,7 +229,7 @@ class CartDetailController extends Controller
                 : $cartDetail->product->quantity;
 
             if ($qty > $maxQty) {
-                return back()->with('error', 'Số lượng bạn yêu cầu cho sản phẩm "' . $cartDetail->product->name . '" vượt quá tồn kho.');   
+                return back()->with('error', 'Số lượng bạn yêu cầu cho sản phẩm "' . $cartDetail->product->name . '" vượt quá tồn kho là ' . $maxQty . '.');   
             }
 
             if ($cartDetail && $cartDetail->cart->user_id === Auth::id()) {
