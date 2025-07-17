@@ -58,6 +58,13 @@
                         <span>Mã Giảm Giá</span>
                     </a>
                 <li>
+
+                <li>
+                    <a href="{{ url('/admin/reviews') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Đánh giá</span>
+                    </a>
+                <li>
             </ul>
         </div>
         <!-- Sidebar -->

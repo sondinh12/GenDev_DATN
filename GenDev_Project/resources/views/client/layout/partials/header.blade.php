@@ -239,11 +239,12 @@
                             <div class="widget woocommerce widget_shopping_cart">
                                 <div class="widget_shopping_cart_content">
                                     <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-                                        <p class="woocommerce-mini-cart__buttons buttons">
-                                            <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
-                                            <a href="{{ asset('checkout.html') }}"
-                                                class="button checkout wc-forward">Checkout</a>
-                                        </p>
+
+
+                                    <p class="woocommerce-mini-cart__buttons buttons">
+                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
+                                    </p>
+
                                 </div>
                             </div>
                             <!-- .widget_shopping_cart -->

@@ -78,11 +78,9 @@
                     onsubmit="return validatePriceFilter();">
                     <div class="form-group mb-2">
                         <input type="number" name="min_price" class="form-control mb-2" placeholder="Từ"
-                            value="{{ request('min_price') }}" min="{{ $priceRange->min_price ?? 0 }}"
-                            max="{{ $priceRange->max_price ?? '' }}" id="minPriceInput">
+                            value="{{ request('min_price') }}" min="0" id="minPriceInput">
                         <input type="number" name="max_price" class="form-control" placeholder="Đến"
-                            value="{{ request('max_price') }}" min="{{ $priceRange->min_price ?? 0 }}"
-                            max="{{ $priceRange->max_price ?? '' }}" id="maxPriceInput">
+                            value="{{ request('max_price') }}" min="0" id="maxPriceInput">
                         <div id="priceFilterError" class="text-danger small mt-1" style="display:none;"></div>
                     </div>
                     <button type="submit" class="button btn btn-primary btn-block w-100">Lọc giá</button>
@@ -117,28 +115,7 @@
             <div class="row">
                 @foreach($products as $product)
                 <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <div class="product h-100 d-flex flex-column text-center p-2 border rounded">
-                    <a href="{{ route('client.product.show', $product->id) }}"
-                        class="woocommerce-LoopProduct-link woocommerce-loop-product__link">
-                        @php $priceInfo = App\Helpers\ProductHelper::getProductPriceInfo($product); @endphp
-                        @if($priceInfo['has_discount'])
-                        <span class="onsale">-{{ $priceInfo['discount_percent'] }}%</span>
-                        @endif
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                            class="attachment-shop_catalog size-shop_catalog wp-post-image">
-                        <h2 class="woocommerce-loop-product__title">{{ $product->name }}</h2>
-                        <span class="price">
-                            @if($priceInfo['has_discount'])
-                            <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
-                            <del>{{ number_format($priceInfo['original_price']) }}đ</del>
-                            @else
-                            <ins>{{ $priceInfo['display_price'] }}</ins>
-                            @endif
-                        </span>
-                    </a>
-                    <a href="{{ route('client.product.show', $product->id) }}" class="button add_to_cart_button">Xem chi
-                        tiết</a>
-                    </div>
+                    @include('client.components.product-card', ['product' => $product])
                 </div>
                 @endforeach
             </div>
