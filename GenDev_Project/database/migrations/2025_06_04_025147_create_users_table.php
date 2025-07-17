@@ -25,6 +25,10 @@ return new class extends Migration
             $table->tinyInteger("role")->default(1);
             $table->rememberToken();
             $table->timestamps();
+            // Ban tạm thời
+            $table->boolean('is_banned')->default(false);
+            $table->timestamp('banned_until')->nullable();
+            $table->unsignedTinyInteger('violation_count')->default(0);
         });
     }
 
