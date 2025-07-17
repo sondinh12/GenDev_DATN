@@ -171,7 +171,6 @@
                                 </span>
                                 <span id="variant-sale-price" class="fs-2 fw-bold text-danger">
                                     @php
-
                                     $min = null; $max = null;
                                     $discountPercent = null;
                                     if(count($product->variants)) {
@@ -205,7 +204,6 @@
                                                 {{ number_format($product->sale_price ?: $product->price, 0, ',', '.') }}đ
                                                 @endif
                                                 @endif
-
                                 </span>
                             </div>
                             <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
@@ -271,7 +269,6 @@
                                             <option value="" disabled {{ !old('attribute.'.$attr['id']) ? 'selected' : '' }}>-- Chọn {{ $attrName }} --</option>
                                             @foreach($attr['values'] as $valId => $val)
                                             @php
-
                                             $variantKey = [];
                                             foreach ($attributes as $attrName2 => $attr2) {
                                             $variantKey[$attr2['id']] = ($attr2['id'] == $attr['id']) ? $valId : null;
@@ -280,10 +277,8 @@
                                             $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
                                             $salePrice = $variantMap[$key]['price'] ?? null;
                                             @endphp
-
                                             <option value="{{ $valId }}" {{ old('attribute.'.$attr['id']) == $valId ? 'selected' : '' }}>
                                                 {{ $val }}
-
                                             </option>
                                             @endforeach
                                         </select>
@@ -418,17 +413,12 @@
                         </h6>
                         <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
                             @if($variant)
-
                             @if($variant->sale_price && $variant->sale_price < $variant->price)
                                 <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
                                 <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
                                 @else
                                 <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                                 @endif
-                            @else
-                                @if($item->sale_price && $item->sale_price < $item->price)
-                                    <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
-                                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
                                 @else
                                 @if($item->sale_price && $item->sale_price < $item->price)
                                     <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
@@ -490,15 +480,14 @@
         align-items: stretch;
     }
 
-
     .related-grid>div {
-
         width: 100%;
         max-width: 270px;
         min-width: 250px;
         display: flex;
         align-items: stretch;
     }
+
     @media (max-width: 1200px) {
         .related-grid {
             grid-template-columns: repeat(3, 1fr);
@@ -858,7 +847,6 @@
                 var info = variantMap[key];
                 if (info) {
                     if (info.price != info.origin_price) {
-
                         $('#variant-origin-price').text(formatPrice(info.origin_price)).show();
                         // Tính phần trăm giảm giá
                         var percent = Math.round(100 * (info.origin_price - info.price) / info.origin_price);
@@ -902,23 +890,6 @@
                 $('#variant-quantity').text('--');
                 $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
                 $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
-                // Hiển thị lại khoảng giá ban đầu
-                var min = null, max = null;
-                Object.values(variantMap).forEach(function(v) {
-                    var display = v.price;
-                    if (min === null || display < min) min = display;
-                    if (max === null || display > max) max = display;
-                });
-                if (min !== null && max !== null) {
-                    if (min == max) {
-                        $('#variant-sale-price').text(min.toLocaleString('vi-VN') + 'đ');
-                    } else {
-                        $('#variant-sale-price').text(min.toLocaleString('vi-VN') + 'đ - ' + max.toLocaleString('vi-VN') + 'đ');
-                    }
-                } else {
-                    $('#variant-sale-price').text('');
-                }
-                $('#variant-origin-price').hide();
             }
         }
         $('.variant-select').on('change', updateVariantInfo);
