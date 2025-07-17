@@ -212,7 +212,7 @@
                                                     <div class="wc-proceed-to-checkout justify-content-center" 
                                                         style="display:flex; flex-direction:column; align-items:center; width:100%; margin-top:16px;">
                                                         <button type="submit" name="btn_checkout"
-                                                        class="checkout-button button alt wc-forward">Tiến hành thanh toán</button>
+                                                        class="checkout-button button alt wc-forward text-center">Tiến hành thanh toán</button>
                                                         <a class="back-to-shopping" href="/products">Quay lại Mua sắm</a>
                                                     </div>
                                                     <!-- .cart_totals -->

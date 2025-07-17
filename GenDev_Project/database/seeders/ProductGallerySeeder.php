@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB as FacadesDB;
+use App\Models\Product;
+use App\Models\ProductGallery;
 
 class ProductGallerySeeder extends Seeder
 {
@@ -14,9 +13,15 @@ class ProductGallerySeeder extends Seeder
      */
     public function run(): void
     {
-        FacadesDB::table('product_galleries')->insert([
-            ['id' => 1, 'product_id' => 1, 'image' => 'tshirt_side.jpg'],
-            ['id' => 2, 'product_id' => 1, 'image' => 'tshirt_back.jpg'],
-        ]);
+        foreach (Product::all() as $product) {
+            ProductGallery::create([
+                'product_id' => $product->id,
+                'image' => 'tshirt_side.jpg',
+            ]);
+            ProductGallery::create([
+                'product_id' => $product->id,
+                'image' => 'tshirt_back.jpg',
+            ]);
+        }
     }
 }
