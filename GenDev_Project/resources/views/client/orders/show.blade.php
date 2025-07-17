@@ -1,95 +1,199 @@
 @extends('client.layout.master')
-@section('content')
+@section('title', 'Chi tiết đơn hàng')
 
+@push('styles')
+<style>
+    .info-box {
+        border: 1px solid #dee2e6;
+        border-left: 4px solid #0d6efd;
+        background-color: #f8f9fa;
+        padding: 16px;
+        border-radius: 8px;
+        height: 100%;
+    }
+
+    .order-summary {
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .product-item {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
+    .product-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+</style>
+@endpush
+
+@section('content')
 <div class="container py-4">
-    <h3>Chi tiết đơn hàng #{{ $order->id }}</h3>
-@if(session('success'))
+    <div>
+        <a href="{{ route('client.orders.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại đơn hàng của tôi
+        </a>
+    </div>
+    <br>
+
+    @php
+        $statusVi = [
+            'pending' => 'Chờ xử lý',
+            'processing' => 'Đang xử lý',
+            'shipped' => 'Đang giao hàng',
+            'completed' => 'Hoàn tất',
+            'cancelled' => 'Đã hủy',
+        ][$order->status] ?? ucfirst($order->status);
+
+        $paymentStatusClass = match($order->payment_status) {
+            'paid' => 'success',
+            'unpaid' => 'warning',
+            'cancelled' => 'danger',
+            default => 'secondary',
+        };
+
+        $paymentStatusText = match($order->payment_status) {
+            'paid' => 'Đã thanh toán',
+            'unpaid' => 'Chưa thanh toán',
+            'cancelled' => 'Đã hủy',
+            default => ucfirst($order->payment_status),
+        };
+
+        $tamTinh = $order->total - $order->shipping_fee;
+        $discount = 0;
+
+        if ($order->coupon) {
+            if ($order->coupon->discount_type === 'fixed') {
+                $discount = $order->coupon->discount_amount;
+            } elseif ($order->coupon->discount_type === 'percent') {
+                $discount = $tamTinh * $order->coupon->discount_amount / 100;
+                if ($order->coupon->max_coupon > 0) {
+                    $discount = min($discount, $order->coupon->max_coupon);
+                }
+            }
+        }
+    @endphp
+
+    <h5 class="mb-4">
+        Chi tiết đơn hàng #{{ $order->id }} -
+        <span class="text-danger text-uppercase">{{ $statusVi }}</span>
+    </h5>
+
+    @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @elseif(session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
-    <section class="mb-4">
-                <h5 class="fw-bold mb-2">Thông tin khách hàng</h5>
-                <table class="table table-borderless mb-0">
-                    <tr><th class="w-25">Họ và tên:</th><td>{{ $order->user->name ?? $order->name }}</td></tr>
-                    <tr><th>Email:</th><td>{{ $order->email }}</td></tr>
-                    <tr><th>Số điện thoại:</th><td>{{ $order->phone }}</td></tr>
-                    <tr><th>Địa chỉ:</th><td>{{ $order->address }}</td></tr>
-                    <tr><th>Thành phố:</th><td>{{ $order->city }}</td></tr>
-                    <tr><th>Phường/Xã:</th><td>{{ $order->ward }}</td></tr>
-                    <tr><th>Mã bưu chính:</th><td>{{ $order->postcode }}</td></tr>
-                </table>
-            </section>
 
-            {{-- Giao hàng & thanh toán --}}
-            <section class="mb-4">
-                <h5 class="fw-bold mb-2">Thông tin giao hàng</h5>
-                <table class="table table-borderless mb-0">
-                    <tr><th class="w-25">Phương thức thanh toán:</th><td>{{ strtoupper($order->payment) }}</td></tr>
-                    <tr><th>Đơn vị giao hàng:</th><td>{{ $order->ship->name ?? '-' }}</td></tr>
-                    <tr><th>Phí giao hàng:</th><td>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</td></tr>
-                    <tr><th>Mã giảm giá:</th><td>{{ $order->coupon->coupon_code ?? '-' }}</td></tr>
-                </table>
-            </section>
-
-            {{-- Sản phẩm --}}
-            <section class="mb-4">
-                <h5 class="fw-bold mb-2">Danh sách sản phẩm</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr><th>STT</th><th>Sản phẩm</th><th>Biến thể</th><th>Giá</th><th>Số lượng</th><th>Ghi chú</th><th>Thuộc tính</th></tr>
-                        </thead>
-                        <tbody>
-                            @foreach($order->orderDetails as $i => $detail)
-                            <tr>
-                                <td>{{ $i+1 }}</td>
-                                <td>{{ $detail->product->name ?? '-' }}</td>
-                                <td>{{ $detail->variant->id ?? '-' }}</td>
-                                <td>{{ number_format($detail->price, 0, ',', '.') }} đ</td>
-                                <td>{{ $detail->quantity }}</td>
-                                <td>{{ $detail->note ?? '-' }}</td>
-                                <td>
-                                    @if($detail->attributes && count($detail->attributes))
-                                    <ul class="mb-0 ps-3">
-                                        @foreach($detail->attributes as $attr)
-                                        <li>{{ $attr->attribute_name }}: {{ $attr->attribute_value }}</li>
-                                        @endforeach
-                                    </ul>
-                                    @else
-                                    <span class="text-muted">Không có</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            {{-- Tổng kết --}}
-            <section class="mb-4">
-                <h5 class="fw-bold mb-2">Tổng kết đơn hàng</h5>
-                <table class="table table-borderless mb-0">
-                    <tr><th class="w-25">Tổng tiền hàng:</th><td>{{ number_format($order->total, 0, ',', '.') }} đ</td></tr>
-                    <tr><th>Phí giao hàng:</th><td>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</td></tr>
-                    <tr><th>Mã giảm giá:</th><td>{{ $order->coupon->coupon_code ?? '-' }}</td></tr>
-                </table>
-            </section>
-@if($order->status === 'pending')
-<form action="{{ route('client.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
-    @csrf
-    @method('PUT')
-    <button class="btn btn-danger mt-3">
-        <i class="fa fa-times me-1"></i> Hủy đơn hàng
-    </button>
-</form>
-@endif
-
-            <a href="{{ route('client.orders.index') }}" class="btn btn-secondary mt-3">
-                <i class="fas fa-arrow-left"></i> Quay lại danh sách
-            </a>
+    {{-- THÔNG TIN --}}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="info-box">
+                <h6 class="fw-bold mb-2">ĐỊA CHỈ NGƯỜI NHẬN</h6>
+                <p class="mb-1">{{ strtoupper($order->name) }}</p>
+                <p class="mb-1">Địa chỉ: {{ $order->address }}, {{ $order->ward }}, {{ $order->city }}</p>
+                <p class="mb-0">Điện thoại: {{ $order->phone }}</p>
+            </div>
         </div>
+        <div class="col-md-4">
+            <div class="info-box border-info">
+                <h6 class="fw-bold mb-2">HÌNH THỨC GIAO HÀNG</h6>
+                <p class="mb-1">{{ $order->ship->name ?? 'FAST Giao Tiết Kiệm' }}</p>
+                <p class="mb-1">Ngày đặt hàng: {{ $order->created_at->format('H:i d/m/Y') }}</p>
+                <p class="mb-0">Phí vận chuyển: {{ number_format($order->shipping_fee, 0, ',', '.') }} đ</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box border-success">
+                <h6 class="fw-bold mb-2">HÌNH THỨC THANH TOÁN</h6>
+                <p class="mb-0">
+                    @switch($order->payment)
+                        @case('cod')
+                            Thanh toán khi nhận hàng
+                            @break
+                        @case('banking')
+                            Chuyển khoản ngân hàng
+                            @break
+                        @default
+                            {{ ucfirst($order->payment) }}
+                    @endswitch
+                </p>
+                <span class="badge bg-{{ $paymentStatusClass }} mt-2">
+                    {{ $paymentStatusText }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {{-- SẢN PHẨM --}}
+    <div class="order-summary mb-4">
+        <h6 class="fw-bold border-bottom pb-2 mb-3">Sản phẩm</h6>
+        @foreach($order->orderDetails as $detail)
+        <div class="product-item d-flex justify-content-between">
+            <div class="d-flex">
+                <img src="{{ asset('storage/'.$detail->product->image) }}" alt="" width="80" height="80" class="me-3 rounded border">
+                <div>
+                    <div class="fw-semibold">{{ $detail->product->name }}</div>
+                    @if($detail->variant && $detail->variant->variantAttributes->count())
+                    <div class="text-muted small mt-1">
+                        @foreach($detail->variant->variantAttributes as $attr)
+                            {{ $attr->attribute->name ?? '' }}: {{ $attr->value->value ?? '' }}@if(!$loop->last), @endif
+                        @endforeach
+                    </div>
+                    @endif
+                    <div class="text-muted small mt-1">SKU: {{ $detail->variant->sku ?? '---' }}</div>
+                </div>
+            </div>
+            <div class="text-end">
+                <div class="text-muted">x{{ $detail->quantity }}</div>
+                <div class="fw-bold">{{ number_format($detail->price, 0, ',', '.') }} đ</div>
+            </div>
+        </div>
+        @endforeach
+
+        <div class="text-end mt-4">
+            <div>Tạm tính: <strong>{{ number_format($tamTinh + $discount, 0, ',', '.') }} đ</strong></div>
+
+            @if($order->coupon)
+                <div>Mã giảm giá: <strong>{{ $order->coupon->coupon_code }}</strong></div>
+                <div class="text-success">Giảm: -{{ number_format($discount, 0, ',', '.') }} đ</div>
+            @endif
+
+            <div>Phí vận chuyển: <strong>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</strong></div>
+
+            <div class="fs-5 fw-bold text-danger">
+                Tổng cộng: {{ number_format($order->total, 0, ',', '.') }} đ
+            </div>
+        </div>
+    </div>
+
+    {{-- Hành động --}}
+    <div class="d-flex gap-2">
+        @if($order->status === 'pending')
+            <form action="{{ route('client.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+                @csrf
+                @method('PUT')
+                <button class="btn btn-outline-danger">
+                    <i class="fa fa-times me-1"></i> Hủy đơn hàng
+                </button>
+            </form>
+        @endif
+
+        @if($order->status === 'shipped')
+            <form action="{{ route('client.orders.complete', $order->id) }}" method="POST" onsubmit="return confirm('Bạn xác nhận đã nhận hàng và muốn hoàn thành đơn này?');">
+                @csrf
+                @method('PUT')
+                <button class="btn btn-outline-success">
+                    <i class="fa fa-check me-1"></i> Đã nhận hàng
+                </button>
+            </form>
+        @endif
     </div>
 </div>
 @endsection

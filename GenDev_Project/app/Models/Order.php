@@ -22,13 +22,19 @@ class Order extends Model
         'payment',
         'total',
         'shipping_fee',
+        'transaction_code',
         'status',
         'payment_status',
+        'payment_expired_at'
     ];
 
-    public function user(): BelongsTo
+    protected $casts = [
+        'payment_expired_at' => 'datetime',
+    ];
+
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function coupon()
@@ -44,5 +50,9 @@ class Order extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'order_id');
+    }
+    public function orderStatusLogs()
+    {
+        return $this->hasMany(OrderStatusLog::class);
     }
 }

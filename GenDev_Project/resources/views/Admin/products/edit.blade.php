@@ -276,7 +276,15 @@ Products
             const valueIdsInput = tr.querySelector('input[type="hidden"][name*="[value_ids]"]');
             if (valueIdsInput) {
                 const valueIds = valueIdsInput.value;
+                // Lấy label cũ nếu có
+                let label = '';
+                const labelCell = valueIdsInput.closest('td');
+                if (labelCell) {
+                    // Lấy text trước input hidden (label)
+                    label = labelCell.childNodes[0]?.textContent?.trim() || '';
+                }
                 existingVariants[valueIds] = {
+                    label: label,
                     price: tr.querySelector('input[name*="[price]"]').value,
                     sale_price: tr.querySelector('input[name*="[sale_price]"]').value,
                     quantity: tr.querySelector('input[name*="[quantity]"]').value
@@ -297,7 +305,11 @@ Products
             };
         });
         // Giữ lại các biến thể cũ không còn trong tổ hợp mới (nếu muốn giữ lại)
-        Object.assign(allCombos, existingVariants); // Nếu muốn giữ lại hoàn toàn
+        for (const valueIds in existingVariants) {
+            if (!allCombos[valueIds]) {
+                allCombos[valueIds] = existingVariants[valueIds];
+            }
+        }
 
         // Render lại bảng
         const table = document.createElement('table');

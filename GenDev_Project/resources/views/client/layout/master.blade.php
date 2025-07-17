@@ -24,18 +24,17 @@ $bodyClass = match($route) {
     default => 'page home page-template-default'
 };
 @endphp
-
+@stack('styles')
 <body class="{{ $bodyClass }}">
     <div id="page" class="site">
         @include('client.layout.partials.topbar')
         @include('client.layout.partials.header')
         @yield('content')
-        {{-- @include('client.layout.partials.footer') --}}
+        @include('client.layout.partials.footer')
     </div>
     @include('client.layout.partials.script')
     @yield('scripts')
 </body>
-
 <!-- Mirrored from transvelo.github.io/techmarket-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 May 2025 14:26:03 GMT -->
 
 </html>

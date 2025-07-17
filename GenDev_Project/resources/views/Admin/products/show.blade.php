@@ -85,7 +85,28 @@
                 </div>
             @else
                 <hr class="my-4">
-                <p class="text-muted"><em>Sản phẩm không có biến thể.</em></p>
+                <table class="table table-bordered table-striped align-middle mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Giá</th>
+                            <th>KM</th>
+                            <th>Số lượng</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ number_format($product->price) }}đ</td>
+                            <td>{{ number_format($product->sale_price) }}đ</td>
+                            <td>{{ $product->quantity }}</td>
+                            <td>
+                                <span class="badge {{ $product->status ? 'bg-success' : 'bg-secondary' }}">
+                                    {{ $product->status ? 'Hiển thị' : 'Ẩn' }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             @endif
 
             <a href="{{ route('products.index') }}" class="btn btn-outline-primary mt-4">← Quay lại danh sách</a>

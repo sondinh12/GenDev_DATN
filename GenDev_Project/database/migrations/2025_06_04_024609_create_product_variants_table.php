@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal("sale_price",10,2);
             $table->integer("quantity");
             $table->tinyInteger("status")->default(1);
-            $table->bigInteger("product_id");
+            $table->unsignedBigInteger("product_id");
             $table->timestamps();
         });
     }

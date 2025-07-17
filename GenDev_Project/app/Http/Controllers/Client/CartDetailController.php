@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
+
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CartDetailRequest;
 use App\Models\Cart;
 use App\Models\Cartdetail;
+
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
@@ -21,18 +23,11 @@ class CartDetailController extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     // public function store(CartDetailRequest $request)
     // {
 
@@ -185,7 +180,7 @@ class CartDetailController extends Controller
                 'product_id' => $productId,
                 'variant_id' => $matchedVariant ? $matchedVariant->id : null,
                 'quantity' => $quantity,
-                'price' => $matchedVariant ? ($matchedVariant->sale_price ?? $matchedVariant->price) : ($product->sale_price ?? $product->price),
+                // 'price' => $matchedVariant ? ($matchedVariant->sale_price ?? $matchedVariant->price) : ($product->sale_price ?? $product->price),
             ]);
         }
 
@@ -223,6 +218,14 @@ class CartDetailController extends Controller
                 continue;
             }
             $cartDetail = Cartdetail::find($cartDetailId);
+            $maxQty = $cartDetail->variant
+                ? $cartDetail->variant->quantity
+                : $cartDetail->product->quantity;
+
+            if ($qty > $maxQty) {
+                return back()->with('error', 'Số lượng bạn yêu cầu cho sản phẩm "' . $cartDetail->product->name . '" vượt quá tồn kho.');   
+            }
+
             if ($cartDetail && $cartDetail->cart->user_id === Auth::id()) {
                 $cartDetail->quantity = $qty;
                 $cartDetail->save();
@@ -244,19 +247,39 @@ class CartDetailController extends Controller
         return back()->with('error', 'Không thể xóa sản phẩm.');
     }
 
-    public function handleAction(Request $request){
-        if ($request->has('btn_checkout')) {
-            $selectedItems = $request->input('selected_items', []);
 
-            if (empty($selectedItems)) {
+    public function handleAction(Request $request)
+    {
+        if ($request->has('btn_checkout')) {
+            $selectedItemIds = $request->input('selected_items', []);
+
+            if (empty($selectedItemIds)) {
                 return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
             }
 
-            return redirect()->route('checkout', ['selected_items' => $selectedItems]);
+            $cartItems = Cartdetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+            ->whereIn('id', $selectedItemIds)
+            ->get();
+
+            foreach ($cartItems as $item) {
+                if ($item->variant_id) {
+                    $variant = ProductVariant::find($item->variant_id);
+                    if (!$variant || $variant->quantity < $item->quantity) {
+                        return back()->with('error', "Biến thể sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                    }
+                } else {
+                    $product = Product::find($item->product_id);
+                    if (!$product || $product->quantity < $item->quantity) {
+                        return back()->with('error', "Sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                    }
+                }
+            }
+
+            return redirect()->route('checkout', ['selected_items' => $selectedItemIds]);
         } elseif ($request->has('update_cart')) {
             $cartDetailRequest = app(CartDetailRequest::class);
             $validatedData = $cartDetailRequest->validated();
-            $selectedItems = $validatedData['selected_items'] ?? [];
+            $selectedItemIds = $validatedData['selected_items'] ?? [];
 
             return $this->update($cartDetailRequest);
         }

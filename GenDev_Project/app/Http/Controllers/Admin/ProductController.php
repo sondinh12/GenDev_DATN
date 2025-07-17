@@ -173,14 +173,7 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         $product->sale_price = $request->sale_price;
 
-        // Kiểm tra nếu sản phẩm đã có trong giỏ hàng thì không cho sửa số lượng nhỏ hơn tổng số lượng đã có trong giỏ
-        $cartQuantity = $product->cartdetails()->sum('quantity');
-        if ($request->quantity < $cartQuantity) {
-            return back()->with('error', 'Không thể cập nhật số lượng nhỏ hơn tổng số lượng sản phẩm đã có trong giỏ hàng của khách!');
-        }
-
         $product->save();
-
         // Xử lý cập nhật gallery ảnh
         if ($request->hasFile('galleries')) {
             // Xóa ảnh gallery cũ
@@ -194,33 +187,53 @@ class ProductController extends Controller
                 ]);
             }
         }
-
         // Xử lý cập nhật biến thể sản phẩm
         if ($request->has('variant_combinations')) {
-            // Xóa các biến thể cũ và thuộc tính liên quan
             $oldVariants = ProductVariant::where('product_id', $product->id)->get();
-            foreach ($oldVariants as $variant) {
-                ProductVariantAttribute::where('product_variant_id', $variant->id)->delete();
-                $variant->delete();
+            $oldVariantMap = [];
+            foreach ($oldVariants as $old) {
+                $key = $old->variantAttributes->pluck('attribute_value_id')->implode(',');
+                $oldVariantMap[$key] = $old;
             }
-            // Tạo lại các biến thể mới
+
+            $handledKeys = [];
             foreach ($request->variant_combinations as $variant) {
-                $variantModel = ProductVariant::create([
-                    'product_id' => $product->id,
-                    'price' => $variant['price'],
-                    'sale_price' => $variant['sale_price'] ?? 0,
-                    'quantity' => $variant['quantity'] ?? 0,
-                    'status' => $variant['status'] ?? 1,
-                ]);
                 $valueRaw = $variant['value_ids'] ?? [];
                 $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
-                foreach ($valueIds as $valueId) {
-                    $attributeId = AttributeValue::find($valueId)?->attribute_id;
-                    ProductVariantAttribute::create([
-                        'product_variant_id' => $variantModel->id,
-                        'attribute_value_id' => $valueId,
-                        'attribute_id' => $attributeId
+                $key = implode(',', $valueIds);
+                $handledKeys[] = $key;
+                if (isset($oldVariantMap[$key])) {
+                    // Update variant (không kiểm tra số lượng trong giỏ hàng)
+                    $variantModel = $oldVariantMap[$key];
+                    $variantModel->price = $variant['price'];
+                    $variantModel->sale_price = $variant['sale_price'] ?? 0;
+                    $variantModel->quantity = $variant['quantity'] ?? 0;
+                    $variantModel->status = $variant['status'] ?? 1;
+                    $variantModel->save();
+                } else {
+                    // Create new variant
+                    $variantModel = ProductVariant::create([
+                        'product_id' => $product->id,
+                        'price' => $variant['price'],
+                        'sale_price' => $variant['sale_price'] ?? 0,
+                        'quantity' => $variant['quantity'] ?? 0,
+                        'status' => $variant['status'] ?? 1,
                     ]);
+                    foreach ($valueIds as $valueId) {
+                        $attributeId = AttributeValue::find($valueId)?->attribute_id;
+                        ProductVariantAttribute::create([
+                            'product_variant_id' => $variantModel->id,
+                            'attribute_value_id' => $valueId,
+                            'attribute_id' => $attributeId
+                        ]);
+                    }
+                }
+            }
+            // Xóa các biến thể không còn trong tổ hợp mới
+            foreach ($oldVariantMap as $key => $oldVariant) {
+                if (!in_array($key, $handledKeys)) {
+                    ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
+                    $oldVariant->delete();
                 }
             }
         }
@@ -281,9 +294,11 @@ class ProductController extends Controller
     // Hiển thị danh sách thuộc tính
     public function allAttributes()
     {
-        $attributes = Attribute::with('values')->get();
-        return view('Admin.attributes.ProductsAttribute', compact('attributes'));
+        $attributes = Attribute::with('values')->where('status', 1)->get();
+        $trashCount = Attribute::where('status', 2)->count();
+        return view('Admin.attributes.ProductsAttribute', compact('attributes', 'trashCount'));
     }
+
 
     // Hiển thị form thêm thuộc tính
     public function createAttribute()
@@ -364,6 +379,33 @@ class ProductController extends Controller
         return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
     }
 
+            public function trashAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->status = 2; // đánh dấu là đã xóa
+        $attribute->save();
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Đã đưa thuộc tính vào thùng rác!');
+    }
+
+
+    public function restoreAttribute($id)
+    {
+        $attribute = Attribute::findOrFail($id);
+        $attribute->status = 1; // khôi phục
+        $attribute->save();
+
+        return redirect()->route('admin.attributes.index')->with('success', 'Đã khôi phục thuộc tính!');
+    }
+
+        public function trashList()
+    {
+        $attributes = Attribute::with('values')->where('status', 2)->get();
+        return view('Admin.attributes.trash', compact('attributes'));
+    }
+
+
+
     // Xóa thuộc tính + tất cả value con
     public function destroyAttribute($id)
     {
@@ -381,12 +423,35 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Xóa giá trị thành công!');
     }
 
-    /**
-     * Hiển thị danh sách sản phẩm đã xoá mềm (thùng rác)
-     */
-    public function trashList()
+
+    public function search(Request $request)
     {
-        $products = Product::onlyTrashed()->with('category')->orderByDesc('deleted_at')->get();
-        return view('Admin.products.trash', compact('products'));
+        $query = Product::query();
+
+        if ($request->filled('keyword')) {
+            $query->where('name', 'like', '%' . $request->keyword . '%');
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->paginate(12);
+
+        // Lấy lại danh sách danh mục để truyền cho view nếu cần
+        $categories = Category::all();
+
+        return view('client.layout.partials.search', compact('products', 'categories'));
     }
+
+        public function forceDeleteAttribute($id)
+    {
+        $attribute = Attribute::with('values')->findOrFail($id);
+        $attribute->values()->delete(); // Xóa các value con
+        $attribute->delete(); // Xóa chính nó
+
+        return redirect()->route('admin.attributes.trashList')->with('success', 'Đã xóa vĩnh viễn thuộc tính!');
+    }
+
+
 }

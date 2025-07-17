@@ -4,18 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
 use App\Mail\OrderConfirmation;
-use App\Models\Cartdetail;
+use App\Models\CartDetail;
 use App\Models\Coupon;
 use App\Models\CouponUser;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderDetailAttribute;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Ship;
 use App\Services\VnpayService;
 use DB;
 use Illuminate\Http\Request;
-use Log;
-use Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
@@ -24,21 +26,36 @@ class CheckoutController extends Controller
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');
 
-        if (empty($selectedItemIds) && $request->isMethod('post') || count($selectedItemIds) === 0) {
-            return redirect()->route('cart')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
-        }
         if (is_string($selectedItemIds)) {
             parse_str($selectedItemIds, $output);
             $selectedItemIds = $output['selected_items'] ?? [];
         }
 
-        $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute','variant.variantAttributes.value')
-                    ->whereIn('id', $selectedItemIds)
-                    ->get();
+
+        $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+            ->whereIn('id', $selectedItemIds)
+            ->get();
         $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                ? $item->variant->sale_price
+                : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
+
+            return $price * $item->quantity;
         });
-        return view('client.checkout.checkout', compact('ships', 'subtotal','cartItems','selectedItemIds'));
+
+        $user = auth()->user();
+
+        // Lấy danh sách coupon hợp lệ
+        $coupons = Coupon::where('usage_limit', '>', 0)->get();
+
+        return view('client.checkout.checkout', compact(
+            'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
@@ -50,7 +67,8 @@ class CheckoutController extends Controller
         }
 
         // Truy vấn cart_details với quan hệ product và variant
-        $cartItems = Cartdetail::with('product','cart','variant.variantAttributes.attribute','variant.variantAttributes.value')
+
+        $cartItems = Cartdetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
 
@@ -59,11 +77,21 @@ class CheckoutController extends Controller
         }
 
         DB::beginTransaction();
-        
+
         try {
             // Tính tổng tiền sản phẩm
             $subtotal = $cartItems->sum(function ($item) {
-                return $item->price * $item->quantity;
+                if ($item->variant) {
+                    $price = $item->variant->sale_price > 0
+                        ? $item->variant->sale_price
+                        : $item->variant->price;
+                } else {
+                    $price = $item->product->sale_price > 0
+                        ? $item->product->sale_price
+                        : $item->product->price;
+                }
+
+                return $price * $item->quantity;
             });
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
@@ -97,7 +125,23 @@ class CheckoutController extends Controller
             if ($total < 0)
                 $total = 0;
 
+            //kiểm tra số lượng tồn khp ngay khi bấm mua
+            foreach ($cartItems as $item) {
+                if ($item->variant_id) {
+                    $variant = ProductVariant::find($item->variant_id);
+                    if (!$variant || $variant->quantity < $item->quantity) {
+                        return back()->with('error', "Biến thể sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                    }
+                } else {
+                    $product = Product::find($item->product_id);
+                    if (!$product || $product->quantity < $item->quantity) {
+                        return back()->with('error', "Sản phẩm '{$item->product->name}' không đủ tồn kho.");
+                    }
+                }
+            }
+
             // Tạo đơn hàng
+            $txnCode = 'ORD' . strtoupper(uniqid());
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'coupon_id' => $couponId,
@@ -111,19 +155,40 @@ class CheckoutController extends Controller
                 'ward' => $request->ward,
                 'postcode' => $request->postcode,
                 'payment' => $request->payment_method,
-                'payment_status'=>'unpaid',
-                'payment_expired_at'=>$request->payment_method === 'banking' ? now()->addMinutes(30) : null,
+                'payment_status' => 'unpaid',
+                'payment_expired_at' => $request->payment_method === 'banking' ? now()->addMinutes(30) : null,
                 'total' => $total,
+                'transaction_code' => $txnCode,
                 'status' => 'pending',
             ]);
             $note = $request->note ?? null;
             // Lưu từng sản phẩm vào chi tiết đơn hàng
+
+            if ($item->variant) {
+                $price = $item->variant->sale_price > 0
+                    ? $item->variant->sale_price
+                    : $item->variant->price;
+            } else {
+                $price = $item->product->sale_price > 0
+                    ? $item->product->sale_price
+                    : $item->product->price;
+            }
+
             foreach ($cartItems as $item) {
+                if ($item->variant) {
+                    $price = $item->variant->sale_price > 0
+                        ? $item->variant->sale_price
+                        : $item->variant->price;
+                } else {
+                    $price = $item->product->sale_price > 0
+                        ? $item->product->sale_price
+                        : $item->product->price;
+                }
                 $detail = OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
                     'variant_id' => $item['variant_id'] ?? null,
-                    'price' => $item['price'],
+                    'price' => $price,
                     'quantity' => $item['quantity'],
                     'note' => $note
                 ]);
@@ -138,17 +203,29 @@ class CheckoutController extends Controller
                         ]);
                     }
                 }
+                if ($request->payment_method === 'cod') {
+                    //trừ số lượng sau khi mua
+                    if ($item->variant_id) {
+                        $variant = ProductVariant::find($item->variant_id);
+                        $variant->decrement('quantity', $item->quantity);
+                    } else {
+                        $product = Product::find($item->product_id);
+                        $product->decrement('quantity', $item->quantity);
+                    }
+                }
+
             }
 
-            
+            if ($request->payment_method === 'cod') {
+                session()->forget('applied_coupon');
 
-            session()->forget('applied_coupon');
-            $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
-                ->whereHas('cart', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                })
-                ->delete();
+                $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
+                    ->whereHas('cart', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    })
+                    ->delete();
                 Log::info('CheckoutController::store - Deleted cart items:', ['deleted_rows' => $deletedRows]);
+            }
             DB::commit();
 
             if ($request->payment_method === 'banking') {
@@ -163,4 +240,39 @@ class CheckoutController extends Controller
             return back()->with('error', 'Lỗi đặt hàng: ' . $e->getMessage());
         }
     }
+
+    public function retryPayment($orderId, VnpayService $vnpayService)
+    {
+        $userId = auth()->id();
+
+        $order = Order::with('orderDetails.product', 'orderDetails.variant')
+            ->where('id', $orderId)
+            ->where('user_id', $userId)
+            ->where('payment', 'banking')
+            ->whereIn('status', ['cancelled','pending'])
+            ->where('payment_status','unpaid')
+            ->first();
+
+        if (!$order) {
+            return redirect()->back()->with('error', 'Đơn hàng không hợp lệ hoặc không thể thanh toán lại.');
+        }
+
+        foreach ($order->orderDetails as $item) {
+            if ($item->variant_id) {
+                $variant = ProductVariant::find($item->variant_id);
+                if (!$variant || $variant->quantity < $item->quantity) {
+                    return redirect()->back()->with('error', "Biến thể '{$item->product->name}' không còn đủ hàng để thanh toán lại.");
+                }
+            } else {
+                $product = Product::find($item->product_id);
+                if (!$product || $product->quantity < $item->quantity) {
+                    return redirect()->back()->with('error', "Sản phẩm '{$item->product->name}' không còn đủ hàng để thanh toán lại.");
+                }
+            }
+        }
+
+        $paymentUrl = $vnpayService->buildPaymentUrl($order);
+        return redirect($paymentUrl);
+    }
+
 }

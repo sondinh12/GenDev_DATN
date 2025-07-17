@@ -29,12 +29,7 @@ class ProductRequest extends FormRequest
     {
         $rules=  [
             'name'=>'required|max:255|string',
-
-
-            // 'price'=>'required|integer|min:1',
-            // 'quantity'=>'required|integer|min:1',
             'description'=>'required',
-
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
             'category_id'=>'required|exists:categories,id', 
@@ -45,12 +40,12 @@ class ProductRequest extends FormRequest
 
         if ($this->input('product_type') === 'simple') {
             $rules['price'] = 'required|numeric|min:0';
-            $rules['sale_price'] = 'nullable|numeric|min:0';
+            $rules['sale_price'] = ['nullable','numeric','min:0','lte:price'];
             $rules['quantity'] = 'required|integer|min:0';
         } elseif ($this->input('product_type') === 'variable') {
             $rules['variant_combinations'] = 'required|array|min:1';
             $rules['variant_combinations.*.price'] = 'required|numeric|min:0';
-            $rules['variant_combinations.*.sale_price'] = 'nullable|numeric|min:0';
+            $rules['variant_combinations.*.sale_price'] = ['nullable','numeric','min:0','lte:variant_combinations.*.price'];
             $rules['variant_combinations.*.quantity'] = 'required|integer|min:0';
             $rules['variant_combinations.*.value_ids'] = 'required|string';
         }
@@ -60,6 +55,8 @@ class ProductRequest extends FormRequest
 
     public function messages(){
         return [
+            'sale_price.lte' => 'Giá khuyến mãi không được lớn hơn giá gốc.',
+            'variant_combinations.*.sale_price.lte' => 'Giá khuyến mãi của biến thể không được lớn hơn giá gốc của biến thể.',
             'name.required'=>'Tên sản phẩm không được bỏ trống',
             'name.max'=>'Tên chỉ giới hạn 255 kí tự',
             'name.string'=>'Tên phải là chuỗi kí tự',

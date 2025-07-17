@@ -38,6 +38,12 @@
         </div>
 
         <div class="mb-3">
+            <label for="user_id">Người sử dụng</label>
+            <input placeholder="Nhập id của người được sử dụng" type="number" name="user_id" class="form-control @error('user_id') is-invalid @enderror" value="{{ old('user_id' ) ?? -1 }}">
+            @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
             <label for="start_date">Ngày bắt đầu</label>
             <input type="datetime-local" name="start_date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date') }}">
             @error('start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -49,15 +55,7 @@
             @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-        <div class="mb-3">
-            <label for="status">Trạng thái</label>
-            <select name="status" class="form-control @error('status') is-invalid @enderror">
-                <option value="">-- Chọn trạng thái --</option>
-                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Hoạt động</option>
-                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tắt</option>
-            </select>
-            @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        </div>
+            <input type="hidden" name="status" value="1">
 
         <div class="mb-3">
             <label for="usage_limit">Giới hạn sử dụng (toàn hệ thống)</label>
@@ -79,7 +77,7 @@
 
         <div class="mb-3" id="maxCouponWrapper">
             <label for="max_coupon">Giảm tối đa</label>
-            <input type="number" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" value="{{ old('max_coupon', 0) }}">
+            <input type="number" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" value="{{ old('max_coupon') }}">
             @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
@@ -89,7 +87,7 @@
 </div>
 
 <!-- Script xử lý max_coupon khi chọn loại giảm -->
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const discountTypeSelect = document.getElementById('discount_type');
         const maxCouponWrapper = document.getElementById('maxCouponWrapper');
@@ -107,5 +105,5 @@
         toggleMaxCouponField();
         discountTypeSelect.addEventListener('change', toggleMaxCouponField);
     });
-</script>
+</script> --}}
 @endsection
