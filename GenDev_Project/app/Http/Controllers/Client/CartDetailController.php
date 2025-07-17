@@ -117,34 +117,32 @@ class CartDetailController extends Controller
         // ]);
 
         $matchedVariant = null;
-        if ($variants->isNotEmpty()) {
-            // Tìm biến thể khớp với tổ hợp thuộc tính
-            $matchedVariant = $variants->first(function ($variant) use ($attributeInput) {
-                // $attrPairs = $variant->variantAttributes->mapWithKeys(function ($item) {
-                //     return [$item->attribute_id => $item->attribute_value_id ];
-                // });
-
-
-                $attrPairs = $variant->variantAttributes->mapWithKeys(function ($item) {
-                    $valueId = null;
-
-                    if (isset($item->attribute_value_id)) {
-                        $valueId = $item->attribute_value_id;
-                    } elseif (isset($item->value_id)) {
-                        $valueId = $item->value_id;
-                    } elseif ($item->relationLoaded('value') && $item->value) {
-                        $valueId = $item->value->id;
-                    }
-
-                    return [$item->attribute_id => $valueId];
+        if (
+            $variants->isNotEmpty()
+        ) {
+            if (empty($attributeInput) && $variants->count() === 1) {
+                // Nếu không truyền thuộc tính và chỉ có 1 biến thể, chọn luôn biến thể đó
+                $matchedVariant = $variants->first();
+            } else {
+                // Tìm biến thể khớp với tổ hợp thuộc tính
+                $matchedVariant = $variants->first(function ($variant) use ($attributeInput) {
+                    $attrPairs = $variant->variantAttributes->mapWithKeys(function ($item) {
+                        $valueId = null;
+                        if (isset($item->attribute_value_id)) {
+                            $valueId = $item->attribute_value_id;
+                        } elseif (isset($item->value_id)) {
+                            $valueId = $item->value_id;
+                        } elseif ($item->relationLoaded('value') && $item->value) {
+                            $valueId = $item->value->id;
+                        }
+                        return [$item->attribute_id => $valueId];
+                    });
+                    return $attrPairs->count() === count($attributeInput) && $attrPairs->diffAssoc($attributeInput)->isEmpty();
                 });
-
-
-                return $attrPairs->count() === count($attributeInput) && $attrPairs->diffAssoc($attributeInput)->isEmpty();
-            });
+            }
 
             if (!$matchedVariant) {
-                return back()->with('error', 'Không tìm thấy biến thể phù hợp với lựa chọn của bạn.');
+                return redirect()->route('home')->with('error', 'Không tìm thấy biến thể phù hợp với lựa chọn của bạn.');
             }
 
             // Kiểm tra số lượng tồn kho của biến thể
@@ -184,7 +182,7 @@ class CartDetailController extends Controller
             ]);
         }
 
-        return redirect()->route('cart')->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+        return redirect()->route('home')->with('success', 'Thêm sản phẩm vào giỏ hàng thành công');
     }
 
     /**

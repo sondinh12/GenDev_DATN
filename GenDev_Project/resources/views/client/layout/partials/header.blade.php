@@ -68,20 +68,6 @@
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" href="{{ asset('/products') }}">Sản phẩm </a>
-                            {{-- <ul role="menu" class=" dropdown-menu">
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
-                                </li>
-                            </ul> --}}
                             <!-- .dropdown-menu -->
                         </li>
                         <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
