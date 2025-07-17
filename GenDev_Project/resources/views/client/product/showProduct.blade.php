@@ -279,7 +279,6 @@
                                             @endphp
                                             <option value="{{ $valId }}" {{ old('attribute.'.$attr['id']) == $valId ? 'selected' : '' }}>
                                                 {{ $val }}
-
                                             </option>
                                             @endforeach
                                         </select>
