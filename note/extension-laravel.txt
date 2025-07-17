@@ -1,0 +1,5 @@
+laravel blade
+laravel blade formatter
+laravel blade snippets
+laravel Goto controller
+laravel goto view
