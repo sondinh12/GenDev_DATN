@@ -279,9 +279,6 @@
                                             @endphp
                                             <option value="{{ $valId }}" {{ old('attribute.'.$attr['id']) == $valId ? 'selected' : '' }}>
                                                 {{ $val }}
-                                                @if($salePrice)
-                                                - {{ number_format($salePrice) }}đ
-                                                @endif
                                             </option>
                                             @endforeach
                                         </select>
