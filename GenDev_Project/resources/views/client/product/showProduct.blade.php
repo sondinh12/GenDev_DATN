@@ -22,17 +22,93 @@
         opacity: 1;
         transition: opacity 0.3s ease;
     }
+
+    /* Xóa các custom style cho quantity-group, quantity-wrapper, btn-qty, qty-input để trả lại mặc định */
+    .quantity-wrapper {
+        gap: 10px;
+    }
+
+    .btn-qty {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #2196F3;
+        color: #2196F3;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        outline: none;
+    }
+
+    .btn-qty:hover,
+    .btn-qty:focus {
+        background: #2196F3;
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.16);
+    }
+
+    .qty-input {
+        width: 38px;
+        height: 36px;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+        border: 2px solid #2196F3;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #222;
+        pointer-events: none;
+    }
+
+    .btn-qty-minus {
+        background: #ffeaea;
+        border-color: #ff5252;
+        color: #ff5252;
+    }
+
+    .btn-qty-minus:hover,
+    .btn-qty-minus:focus {
+        background: #ff5252;
+        color: #fff;
+        border-color: #ff5252;
+    }
+
+    .btn-qty-plus {
+        background: #eaffea;
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+
+    .btn-qty-plus:hover,
+    .btn-qty-plus:focus {
+        background: #4caf50;
+        color: #fff;
+        border-color: #4caf50;
+    }
 </style>
 @endsection
 
 @section('content')
-@if(session('error'))
-<div class="alert alert-danger alert-dismissible fade show fixed-top m-3 shadow" role="alert" style="z-index: 1050;">
-    {{ session('error') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
+        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert-success').alert('close');
+        }, 2500);
+    </script>
+@elseif(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
+        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert-danger').alert('close');
+        }, 2500);
+    </script>
 @endif
 <div id="content" class="site-content py-4" tabindex="-1" style="min-height: 100vh;" data-gallery-images="{{ json_encode($galleryImageUrls) }}">
     <div class="container-fluid px-0">
@@ -95,39 +171,41 @@
                                 </span>
                                 <span id="variant-sale-price" class="fs-2 fw-bold text-danger">
                                     @php
-                                        $min = null; $max = null;
-                                        $discountPercent = null;
-                                        if(count($product->variants)) {
-                                            foreach($product->variants as $v) {
-                                                $sale = $v->sale_price;
-                                                $price = $v->price;
-                                                $display = $sale !== null ? $sale : $price;
-                                                if($min === null || $display < $min) $min=$display;
-                                                if($max===null || $display> $max) $max = $display;
-                                            }
-                                        } else {
-                                            if($product->sale_price !== null && $product->sale_price < $product->price && $product->price > 0) {
-                                                $discountPercent = round(100 - ($product->sale_price / $product->price * 100));
-                                            }
+
+                                    $min = null; $max = null;
+                                    $discountPercent = null;
+                                    if(count($product->variants)) {
+                                    foreach($product->variants as $v) {
+                                    $sale = $v->sale_price;
+                                    $price = $v->price;
+                                    $display = $sale !== null ? $sale : $price;
+                                    if($min === null || $display < $min) $min=$display;
+                                        if($max===null || $display> $max) $max = $display;
                                         }
-                                    @endphp
-                                    @if(count($product->variants))
-                                        @if($min == $max)
-                                            {{ number_format($min) }}đ
-                                        @else
-                                            {{ number_format($min) }}đ - {{ number_format($max) }}đ
-                                        @endif
-                                    @else
-                                        @if($product->sale_price !== null && $product->sale_price < $product->price)
-                                            {{ number_format($product->sale_price) }}đ
-                                            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($product->price) }}đ</del></small>
-                                            @if($discountPercent)
-                                                <span class="badge bg-danger ms-2">-{{ $discountPercent }}%</span>
+                                        } else {
+                                        if($product->sale_price !== null && $product->sale_price < $product->price && $product->price > 0) {
+                                            $discountPercent = round(100 - ($product->sale_price / $product->price * 100));
+                                            }
+                                            }
+                                            @endphp
+                                            @if(count($product->variants))
+                                            @if($min == $max)
+                                            {{ number_format($min, 0, ',', '.') }}đ
+                                            @else
+                                            {{ number_format($min, 0, ',', '.') }}đ - {{ number_format($max, 0, ',', '.') }}đ
                                             @endif
-                                        @else
-                                            {{ number_format($product->sale_price ?: $product->price) }}đ
-                                        @endif
-                                    @endif
+                                            @else
+                                            @if($product->sale_price !== null && $product->sale_price < $product->price)
+                                                {{ number_format($product->sale_price, 0, ',', '.') }}đ
+                                                <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($product->price, 0, ',', '.') }}đ</del></small>
+                                                @if($discountPercent)
+                                                <span class="badge bg-danger ms-2">-{{ $discountPercent }}%</span>
+                                                @endif
+                                                @else
+                                                {{ number_format($product->sale_price ?: $product->price, 0, ',', '.') }}đ
+                                                @endif
+                                                @endif
+
                                 </span>
                             </div>
                             <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
@@ -152,7 +230,15 @@
                             <form method="POST" action="{{ route('cart-detail') }}" class="mt-3">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" name="quantity" value="1">
+                                <div class="quantity-wrapper d-flex align-items-center mb-3">
+                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-left justify-content-left" tabindex="-1">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" name="quantity" id="quantity-input" class="qty-input" value="{{ old('quantity', 1) }}" min="1" readonly style="text-align: center;">
+                                    <button type="button" class="btn btn-qty btn-qty-plus d-flex align-items-left justify-content-left" tabindex="-1">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
                                 @php
                                 $attributes = [];
                                 $variantMap = [];
@@ -182,10 +268,10 @@
                                     <div class="col-12 col-md-6 mb-2">
                                         <label class="form-label fw-semibold">{{ $attrName }}</label>
                                         <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
-                                            <option value="" disabled selected>-- Chọn {{ $attrName }} --</option>
+                                            <option value="" disabled {{ !old('attribute.'.$attr['id']) ? 'selected' : '' }}>-- Chọn {{ $attrName }} --</option>
                                             @foreach($attr['values'] as $valId => $val)
                                             @php
-                                            // Tìm biến thể có giá sale tương ứng với lựa chọn hiện tại
+
                                             $variantKey = [];
                                             foreach ($attributes as $attrName2 => $attr2) {
                                             $variantKey[$attr2['id']] = ($attr2['id'] == $attr['id']) ? $valId : null;
@@ -194,7 +280,8 @@
                                             $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
                                             $salePrice = $variantMap[$key]['price'] ?? null;
                                             @endphp
-                                            <option value="{{ $valId }}">
+
+                                            <option value="{{ $valId }}" {{ old('attribute.'.$attr['id']) == $valId ? 'selected' : '' }}>
                                                 {{ $val }}
                                                 @if($salePrice)
                                                 - {{ number_format($salePrice) }}đ
@@ -307,25 +394,25 @@
                             <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
                         </a>
                         @php
-                            $variant = $item->variants->first();
-                            $discountPercent = null;
-                            $min = null; $max = null;
-                            if($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
-                                $discountPercent = round(100 - ($variant->sale_price / $variant->price * 100));
+                        $variant = $item->variants->first();
+                        $discountPercent = null;
+                        $min = null; $max = null;
+                        if($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
+                            $discountPercent = round(100 - ($variant->sale_price / $variant->price * 100));
                             } elseif($item->sale_price && $item->sale_price < $item->price && $item->price > 0) {
                                 $discountPercent = round(100 - ($item->sale_price / $item->price * 100));
-                            }
-                            if(count($item->variants ?? [])) {
-                                foreach($item->variants as $v) {
-                                    $sale = $v->sale_price ?? $v->price;
-                                    if($min === null || $sale < $min) $min=$sale;
-                                    if($max===null || $sale> $max) $max = $sale;
                                 }
-                            }
-                        @endphp
-                        @if($discountPercent)
-                            <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
-                        @endif
+                                if(count($item->variants ?? [])) {
+                                foreach($item->variants as $v) {
+                                $sale = $v->sale_price ?? $v->price;
+                                if($min === null || $sale < $min) $min=$sale;
+                                    if($max===null || $sale> $max) $max = $sale;
+                                    }
+                                    }
+                                    @endphp
+                                    @if($discountPercent)
+                                    <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
+                                    @endif
                     </div>
                     <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center" style="flex:1 1 auto;">
                         <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
@@ -333,20 +420,25 @@
                         </h6>
                         <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
                             @if($variant)
-                                @if($variant->sale_price && $variant->sale_price < $variant->price)
-                                    <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
-                                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
+
+                            @if($variant->sale_price && $variant->sale_price < $variant->price)
+                                <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                                <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
                                 @else
-                                    <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
+                                <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                                 @endif
                             @else
                                 @if($item->sale_price && $item->sale_price < $item->price)
                                     <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
                                     <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
                                 @else
+                                @if($item->sale_price && $item->sale_price < $item->price)
+                                    <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
+                                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
+                                    @else
                                     <ins class="text-primary fw-bold fs-6">{{ number_format($item->sale_price ?: $item->price) }}đ</ins>
-                                @endif
-                            @endif
+                                    @endif
+                                    @endif
                         </div>
                         <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
                             <i class="fas fa-star"></i>
@@ -372,14 +464,14 @@
                             <input type="hidden" name="product_id" value="{{ $item->id }}">
                             <input type="hidden" name="quantity" value="1">
                             @if($item->variants && $item->variants->count() > 0)
-                                @foreach ($item->variants->first()->variantAttributes ?? [] as $variantAttr)
-                                    @php
-                                        $valueId = $variantAttr->attribute_value_id
-                                        ?? $variantAttr->value_id
-                                        ?? optional($variantAttr->value)->id;
-                                    @endphp
-                                    <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
-                                @endforeach
+                            @foreach ($item->variants->first()->variantAttributes ?? [] as $variantAttr)
+                            @php
+                            $valueId = $variantAttr->attribute_value_id
+                            ?? $variantAttr->value_id
+                            ?? optional($variantAttr->value)->id;
+                            @endphp
+                            <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
+                            @endforeach
                             @endif
                             <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">Mua ngay</button>
                         </form>
@@ -399,7 +491,10 @@
         justify-items: center;
         align-items: stretch;
     }
-    .related-grid > div {
+
+
+    .related-grid>div {
+
         width: 100%;
         max-width: 270px;
         min-width: 250px;
@@ -411,21 +506,25 @@
             grid-template-columns: repeat(3, 1fr);
         }
     }
+
     @media (max-width: 900px) {
         .related-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
+
     @media (max-width: 600px) {
         .related-grid {
             grid-template-columns: 1fr;
         }
     }
+
     /* Căn chỉnh sản phẩm liên quan đều đẹp */
     .container-fluid .product-card {
         margin-bottom: 0 !important;
         box-sizing: border-box;
     }
+
     .container-fluid .product-image-wrapper {
         min-height: 140px;
         height: 140px;
@@ -434,6 +533,7 @@
         justify-content: center;
         background: #fff;
     }
+
     .container-fluid .card-body {
         min-height: 220px;
         display: flex;
@@ -441,23 +541,28 @@
         justify-content: space-between;
         align-items: center;
     }
+
     @media (max-width: 991px) {
         .container-fluid .product-card {
             max-width: 100% !important;
         }
+
         .container-fluid .card-body {
             min-height: 200px;
         }
     }
+
     @media (max-width: 767px) {
         .container-fluid .product-card {
             min-width: 100% !important;
             max-width: 100% !important;
         }
+
         .container-fluid .card-body {
             min-height: 180px;
         }
     }
+
     .star-select {
         transition: color 0.2s;
     }
@@ -720,6 +825,13 @@
 
         // Variant price/quantity logic
         var variantMap = @json($variantMap);
+        function formatPrice(price) {
+            if (typeof price === 'number') {
+                return price.toLocaleString('vi-VN') + 'đ';
+            }
+            price = parseInt(price) || 0;
+            return price.toLocaleString('vi-VN') + 'đ';
+        }
 
         function getSelectedKey() {
             var key = [];
@@ -748,20 +860,21 @@
                 var info = variantMap[key];
                 if (info) {
                     if (info.price != info.origin_price) {
-                        $('#variant-origin-price').text(info.origin_price.toLocaleString('vi-VN') + 'đ').show();
+
+                        $('#variant-origin-price').text(formatPrice(info.origin_price)).show();
                         // Tính phần trăm giảm giá
                         var percent = Math.round(100 * (info.origin_price - info.price) / info.origin_price);
                         if (percent > 0) {
                             // Hiển thị phần trăm giảm giá cạnh giá sale
                             $('#variant-sale-price').html(
-                                info.price.toLocaleString('vi-VN') + 'đ <span class="badge bg-danger ms-2">-' + percent + '%</span>'
+                                formatPrice(info.price) + ' <span class="badge bg-danger ms-2">-' + percent + '%</span>'
                             );
                         } else {
-                            $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
+                            $('#variant-sale-price').text(formatPrice(info.price));
                         }
                     } else {
                         $('#variant-origin-price').hide();
-                        $('#variant-sale-price').text(info.price.toLocaleString('vi-VN') + 'đ');
+                        $('#variant-sale-price').text(formatPrice(info.price));
                     }
                     $('#variant-quantity').text(info.quantity);
 
@@ -775,7 +888,19 @@
                     }
                 }
             } else {
-                // Nếu chưa chọn đủ thuộc tính, reset trạng thái
+                // Nếu chưa chọn đủ thuộc tính, luôn hiển thị giá từ min đến max
+                var min = null, max = null;
+                Object.values(variantMap).forEach(function(v) {
+                    var display = parseInt(v.price);
+                    if (min === null || display < min) min = display;
+                    if (max === null || display > max) max = display;
+                });
+                if (min !== null && max !== null) {
+                    $('#variant-sale-price').text(formatPrice(min) + (min != max ? ' - ' + formatPrice(max) : ''));
+                } else {
+                    $('#variant-sale-price').text('');
+                }
+                $('#variant-origin-price').hide();
                 $('#variant-quantity').text('--');
                 $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
                 $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
@@ -800,6 +925,16 @@
         }
         $('.variant-select').on('change', updateVariantInfo);
         updateVariantInfo();
+
+        // Nếu có giá trị old (tức là vừa submit xong), trigger lại sự kiện change để cập nhật giá/số lượng đúng
+        $('.variant-select').each(function() {
+            if ($(this).val()) {
+                $(this).trigger('change');
+            }
+        });
+        if ($('#quantity-input').val()) {
+            $('#quantity-input').trigger('input');
+        }
 
         // Star rating JS
         var $stars = $('#star-rating .star-select');
@@ -834,6 +969,59 @@
             updateStars(val);
         });
         updateStars(selected);
+
+        // Số lượng tối đa hiện tại
+        function getMaxQuantity() {
+            // Nếu có biến thể
+            if (Object.keys(variantMap).length && allAttrSelected()) {
+                var key = getSelectedKey();
+                var info = variantMap[key];
+                if (info) return info.quantity;
+            }
+            // Nếu không có biến thể
+            var q = parseInt(JSON.parse('{{ $product->quantity ?? 0 }}'));
+            return isNaN(q) ? 1 : q;
+        }
+
+        function updateQtyInputMax() {
+            var maxQty = getMaxQuantity();
+            var $qtyInput = $('#quantity-input');
+            $qtyInput.attr('max', maxQty > 0 ? maxQty : 1);
+            // Nếu giá trị hiện tại lớn hơn max thì set lại
+            if (parseInt($qtyInput.val()) > maxQty) {
+                $qtyInput.val(maxQty > 0 ? maxQty : 1);
+            }
+            // Nếu nhỏ hơn 1 thì set lại
+            if (parseInt($qtyInput.val()) < 1) {
+                $qtyInput.val(1);
+            }
+        }
+
+        // Sự kiện tăng/giảm số lượng
+        $('.btn-qty-plus').on('click', function() {
+            var $qtyInput = $('#quantity-input');
+            var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
+            var val = parseInt($qtyInput.val()) || 1;
+            if (val < max) {
+                $qtyInput.val(val + 1);
+            }
+        });
+        $('.btn-qty-minus').on('click', function() {
+            var $qtyInput = $('#quantity-input');
+            var val = parseInt($qtyInput.val()) || 1;
+            if (val > 1) {
+                $qtyInput.val(val - 1);
+            }
+        });
+        $('#quantity-input').on('input change', function() {
+            updateQtyInputMax();
+        });
+
+        // Khi thay đổi biến thể thì cập nhật lại số lượng tối đa
+        $('.variant-select').on('change', function() {
+            setTimeout(updateQtyInputMax, 100); // Đợi updateVariantInfo xong
+        });
+        updateQtyInputMax();
     });
 </script>
 @endsection

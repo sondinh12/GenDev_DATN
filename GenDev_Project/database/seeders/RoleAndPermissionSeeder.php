@@ -22,11 +22,13 @@ class RoleAndPermissionSeeder extends Seeder
             'manage comments',
             'manage orders',
             'manage banners',
+            'manage reviews',
             // Admin
             'manage posts',
             'manage categories',
             'manage coupons',
             'manage users',
+            'manage reviews',
             'view statistics',
         ];
         foreach ($permissions as $permission) {
@@ -40,6 +42,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage comments',
             'manage orders',
             'manage banners',
+            'manage reviews'
         ]); // staff chỉ có quyền quản lý sản phẩm, bình luận, đơn hàng, banner
         $userRole->syncPermissions([]); // user không có quyền đặc biệt
     }

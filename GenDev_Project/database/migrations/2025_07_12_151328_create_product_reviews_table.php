@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_id');
             $table->tinyInteger('rating')->default(5); // 1-5 sao
             $table->text('comment')->nullable();
+            $table->enum('status', ['approved', 'rejected'])->default('approved');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
