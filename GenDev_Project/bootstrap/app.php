@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'check_ban' => \App\Http\Middleware\CheckUserBanned::class
         ]);
-        // $middleware->appendToGroup('web', \App\Http\Middleware\CheckUserBanned::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

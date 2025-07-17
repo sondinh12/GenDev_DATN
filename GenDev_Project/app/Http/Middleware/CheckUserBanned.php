@@ -37,11 +37,6 @@ class CheckUserBanned
                 }
             }
         } 
-        // else {
-        //     // Ban vĩnh viễn
-        //     Auth::logout();
-        //     return redirect()->route('login')->withErrors('Tài khoản của bạn đã bị khóa vĩnh viễn.');
-        // }
         return $next($request);
     }
 }
