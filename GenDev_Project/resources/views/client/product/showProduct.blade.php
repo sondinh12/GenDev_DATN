@@ -328,30 +328,6 @@
                         </div>
                         <input type="hidden" name="rating" id="rating-value" value="5" required>
                     </div>
-
-                    <input type="hidden" name="rating" id="rating-value" value="5" required>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="form-label fw-semibold">Bình luận</label>
-                    <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
-                </div>
-                <div class="col-12 col-md-2 text-end">
-                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi đánh giá</button>
-                </div>
-            </form>
-        @else
-            <div class="alert alert-warning mb-4">Bạn đã đánh giá sản phẩm này tối đa 2 lần.</div>
-        @endif
-    @else
-        <div class="alert alert-warning mb-4">Bạn cần mua sản phẩm này thành công để có thể đánh giá.</div>
-    @endif
-                @else
-                <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
-                @endauth
-                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                @php $reviews = $product->reviews()->with('user')->where('status', 'approved')->latest()->take(5)->get(); @endphp
-                <div class="row g-3">
-                    @forelse($reviews as $review)
                     <div class="col-12 col-md-6">
                         <label class="form-label fw-semibold">Bình luận</label>
                         <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
