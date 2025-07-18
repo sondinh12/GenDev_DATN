@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Carbon;
 
-class UpdateCouponRequest extends FormRequest
+class StoreCouponRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -41,10 +41,8 @@ class UpdateCouponRequest extends FormRequest
             'shipping_code' => [
                 function ($attribute, $value, $fail) {
                     if (request('type') === 'shipping') {
-                        if (empty($value)) {
-                            $fail('Vui lòng chọn kiểu giảm giá cho mã giảm phí ship.');
-                        } elseif (!in_array($value, ['percent', 'fixed'])) {
-                            $fail('Kiểu giảm giá phí ship không hợp lệ.');
+                        if ($value !== 'fixed') {
+                            $fail('Mã giảm phí ship chỉ hỗ trợ kiểu giảm cố định.');
                         }
                     }
                 }
@@ -58,9 +56,6 @@ class UpdateCouponRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if (request('type') === 'order' && request('discount_type') === 'percent' && $value > 100) {
                         $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
-                    }
-                    if (request('type') === 'shipping' && request('shipping_code') === 'percent' && $value > 100) {
-                        $fail('Giảm giá phí ship theo phần trăm không được vượt quá 100%.');
                     }
                 }
             ],
@@ -80,13 +75,13 @@ class UpdateCouponRequest extends FormRequest
                 }
             ],
 
-            'usage_limit' => 'nullable|integer|min:1|max:10000',
-            'per_use_limit' => 'nullable|integer|min:1|max:10',
+            'usage_limit' => 'required|integer|min:1|max:10000',
+            'per_use_limit' => 'required|integer|min:1|max:10',
 
-            'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
+            'min_coupon' => 'required|numeric|min:0|max:99999999.99',
 
             'max_coupon' => [
-                'nullable',
+                'required',
                 'numeric',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
@@ -108,7 +103,7 @@ class UpdateCouponRequest extends FormRequest
             ],
 
             'status' => 'required|in:0,1',
-            'user_id'=>'integer'
+            'user_id'=>'integer',
         ];
     }
 
@@ -122,8 +117,9 @@ class UpdateCouponRequest extends FormRequest
             'coupon_code.unique' => 'Mã giảm giá này đã tồn tại.',
             'coupon_code.max' => 'Mã giảm giá không được vượt quá 20 ký tự.',
 
-            'discount_type.required' => 'Vui lòng chọn loại giảm.',
-            'discount_type.in' => 'Loại giảm không hợp lệ.',
+            'type.required' => 'Vui lòng chọn loại mã.',
+            'type.in' => 'Loại mã không hợp lệ.',
+            // discount_type messages đã được xử lý trong function custom, không cần thêm ở đây
 
             'discount_amount.required' => 'Vui lòng nhập giá trị giảm.',
             'discount_amount.numeric' => 'Giá trị giảm phải là số.',
@@ -139,23 +135,27 @@ class UpdateCouponRequest extends FormRequest
             'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
             'end_date.*' => 'Thời hạn mã giảm giá không được vượt quá 1 năm.',
 
+            'usage_limit.required' => 'Giá trị này không được bỏ trống!',
             'usage_limit.max' => 'Giới hạn sử dụng không được vượt quá 10.000.',
             'usage_limit.integer' => 'Giới hạn tổng sử dụng phải là số nguyên.',
             'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn 0.',
 
+            'per_use_limit.required' => 'Giá trị này không đực bỏ trống!',
             'per_use_limit.integer' => 'Giới hạn mỗi người dùng phải là số nguyên.',
             'per_use_limit.min' => 'Giới hạn mỗi người dùng không hợp lệ.',
             'per_use_limit.max' => 'Mỗi người chỉ được sử dụng mã này tối đa 10 lần.',
 
+            'min_coupon.required' => 'Giá trị đơn hàng tối thiểu không được bỏ trống',
             'min_coupon.max' => 'Giá trị đơn hàng tối thiểu không được vượt quá 99,999,999.99.',
             'min_coupon.numeric' => 'Giá trị đơn hàng tối thiểu phải là số.',
             'min_coupon.min' => 'Giá trị đơn hàng tối thiểu không được âm.',
 
+            'max_coupon.required' => 'Giá trị đơn hàng tối đa không được bỏ trống',
             'max_coupon.numeric' => 'Giá trị đơn hàng tối đa phải là số.',
             'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
 
             'status.in' => 'Trạng thái không hợp lệ.',
-            'user_id.integer'=> 'Giá trị phải là 1 số'
+            'user_id.integer'=> 'Giá trị phải là 1 số',
         ];
     }
 }
