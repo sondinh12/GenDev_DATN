@@ -25,6 +25,7 @@ use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Admin\PostCategoryController;
 
 // ================= TRANG CHÍNH =================
 
@@ -149,6 +150,13 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
+
+    // Thùng rác danh mục bài viết
+    Route::get('post-categories/trash', [PostCategoryController::class, 'trash'])->name('post-categories.trash');
+    Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
+    Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
+    // CRUD danh mục bài viết
+    Route::resource('post-categories', PostCategoryController::class);
 
     // Người dùng
     Route::middleware(['permission:manage users'])->group(function () {

@@ -21,7 +21,34 @@ class UpdateCouponRequest extends FormRequest
 
             'coupon_code' => 'required|string|max:20|unique:coupons,coupon_code,' . $couponId,
 
-            'discount_type' => 'required|in:percent,fixed',
+            'type' => 'required|in:order,shipping',
+            
+            'discount_type' => [
+                function ($attribute, $value, $fail) {
+                    if (request('type') === 'order') {
+                        if (empty($value)) {
+                            $fail('Vui lòng chọn kiểu giảm giá cho mã giảm đơn hàng.');
+                        } elseif (!in_array($value, ['percent', 'fixed'])) {
+                            $fail('Kiểu giảm giá không hợp lệ.');
+                        }
+                    }
+                    if (request('type') === 'shipping' && !empty($value)) {
+                        $fail('Không cần chọn kiểu giảm giá cho mã giảm phí ship.');
+                    }
+                }
+            ],
+            
+            'shipping_code' => [
+                function ($attribute, $value, $fail) {
+                    if (request('type') === 'shipping') {
+                        if (empty($value)) {
+                            $fail('Vui lòng chọn kiểu giảm giá cho mã giảm phí ship.');
+                        } elseif (!in_array($value, ['percent', 'fixed'])) {
+                            $fail('Kiểu giảm giá phí ship không hợp lệ.');
+                        }
+                    }
+                }
+            ],
 
             'discount_amount' => [
                 'required',
@@ -29,8 +56,11 @@ class UpdateCouponRequest extends FormRequest
                 'min:0.01',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent' && $value > 100) {
+                    if (request('type') === 'order' && request('discount_type') === 'percent' && $value > 100) {
                         $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
+                    }
+                    if (request('type') === 'shipping' && request('shipping_code') === 'percent' && $value > 100) {
+                        $fail('Giảm giá phí ship theo phần trăm không được vượt quá 100%.');
                     }
                 }
             ],
@@ -61,6 +91,7 @@ class UpdateCouponRequest extends FormRequest
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
                     $discountType = request('discount_type');
+                    $shippingCode = request('shipping_code');
                     $discount = request('discount_amount');
                     $min = request('min_coupon');
 

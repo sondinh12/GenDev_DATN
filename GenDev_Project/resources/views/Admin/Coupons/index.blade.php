@@ -29,11 +29,12 @@
                     <th>#</th>
                     <th>Mã</th>
                     <th>Tên</th>
-                    <th>Người tạo</th>
-                    <th>Loại giảm</th>
+                    <th>Loại mã</th>
+                    <th>Kiểu giảm</th>
                     <th>Giá trị</th>
                     <th>Ngày tạo</th> 
                     <th>Hết hạn</th>   
+                    <th>Người sử dụng</th>
                     <th>Đã dùng</th>
                     <th>Số lượng</th>
                     <th>Trạng thái</th>
@@ -46,7 +47,7 @@
                     <td>{{ $index + $coupons->firstItem() }}</td>
                     <td>{{ $coupon->coupon_code }}</td>
                     <td>{{ $coupon->name }}</td>
-                    <td>{{ $coupon->creator->name ?? 'Không rõ' }}</td>
+                    <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
                     <td>
                         @if($coupon->discount_type == 'percent')
                             Phần trăm
@@ -63,12 +64,21 @@
                     </td>
                     <td>{{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i:s') }}</td>
                     <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>    
+                    <td>
+                        @if($coupon->user_id == -1)
+                            Toàn bộ hệ thống
+                        @elseif($coupon->user_id == 0)
+                            Mã tri ân
+                        @else
+                            ID: {{ $coupon->user_id }}
+                        @endif
+                    </td>
                     <td>{{ $coupon->total_used }}</td>
                     <td>
                         @if($coupon->usage_limit == -1)
                             Không giới hạn
                         @else
-                            {{ $coupon->usage_limit }}
+                            {{ number_format($coupon->usage_limit, 0, ',', '.') }}
                         @endif
                     </td>
                     <td>

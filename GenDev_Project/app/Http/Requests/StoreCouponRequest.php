@@ -21,7 +21,32 @@ class StoreCouponRequest extends FormRequest
 
             'coupon_code' => 'required|string|max:20|unique:coupons,coupon_code,' . $couponId,
 
-            'discount_type' => 'required|in:percent,fixed',
+            'type' => 'required|in:order,shipping',
+            
+            'discount_type' => [
+                function ($attribute, $value, $fail) {
+                    if (request('type') === 'order') {
+                        if (empty($value)) {
+                            $fail('Vui lòng chọn kiểu giảm giá cho mã giảm đơn hàng.');
+                        } elseif (!in_array($value, ['percent', 'fixed'])) {
+                            $fail('Kiểu giảm giá không hợp lệ.');
+                        }
+                    }
+                    if (request('type') === 'shipping' && !empty($value)) {
+                        $fail('Không cần chọn kiểu giảm giá cho mã giảm phí ship.');
+                    }
+                }
+            ],
+            
+            'shipping_code' => [
+                function ($attribute, $value, $fail) {
+                    if (request('type') === 'shipping') {
+                        if ($value !== 'fixed') {
+                            $fail('Mã giảm phí ship chỉ hỗ trợ kiểu giảm cố định.');
+                        }
+                    }
+                }
+            ],
 
             'discount_amount' => [
                 'required',
@@ -29,7 +54,7 @@ class StoreCouponRequest extends FormRequest
                 'min:0.01',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent' && $value > 100) {
+                    if (request('type') === 'order' && request('discount_type') === 'percent' && $value > 100) {
                         $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
                     }
                 }
@@ -61,6 +86,7 @@ class StoreCouponRequest extends FormRequest
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
                     $discountType = request('discount_type');
+                    $shippingCode = request('shipping_code');
                     $discount = request('discount_amount');
                     $min = request('min_coupon');
 
@@ -77,7 +103,7 @@ class StoreCouponRequest extends FormRequest
             ],
 
             'status' => 'required|in:0,1',
-            'user_id'=>'integer'
+            'user_id'=>'integer',
         ];
     }
 
@@ -91,8 +117,9 @@ class StoreCouponRequest extends FormRequest
             'coupon_code.unique' => 'Mã giảm giá này đã tồn tại.',
             'coupon_code.max' => 'Mã giảm giá không được vượt quá 20 ký tự.',
 
-            'discount_type.required' => 'Vui lòng chọn loại giảm.',
-            'discount_type.in' => 'Loại giảm không hợp lệ.',
+            'type.required' => 'Vui lòng chọn loại mã.',
+            'type.in' => 'Loại mã không hợp lệ.',
+            // discount_type messages đã được xử lý trong function custom, không cần thêm ở đây
 
             'discount_amount.required' => 'Vui lòng nhập giá trị giảm.',
             'discount_amount.numeric' => 'Giá trị giảm phải là số.',
@@ -128,7 +155,7 @@ class StoreCouponRequest extends FormRequest
             'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
 
             'status.in' => 'Trạng thái không hợp lệ.',
-            'user_id.integer'=> 'Giá trị phải là 1 số'
+            'user_id.integer'=> 'Giá trị phải là 1 số',
         ];
     }
 }

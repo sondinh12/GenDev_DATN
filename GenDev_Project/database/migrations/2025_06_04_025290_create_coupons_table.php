@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             // -1 là không giới hạn người dùng, 0 là không ai được dùng
+            
             $table->integer('user_id')->default(-1);
             $table->string("name", 255);
             $table->string("coupon_code", 20)->unique();
+            $table->enum('type', ['order', 'shipping'])->default('order');
             $table->enum('discount_type', ['percent', 'fixed']);
+            $table->string('shipping_code', 50)->nullable();
             $table->decimal('discount_amount', 10, 2);
             $table->dateTime("start_date");
             $table->dateTime("end_date");
