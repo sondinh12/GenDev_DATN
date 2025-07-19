@@ -18,13 +18,15 @@
                     <th>#</th>
                     <th>Mã</th>
                     <th>Tên</th>
-                    <th>Người tạo</th>
-                    <th>Loại giảm</th>
+                    <th>Loại mã</th>
+                    <th>Kiểu giảm</th>
                     <th>Giá trị</th>
-                    <th>Giới hạn</th>
+                    <th>Ngày tạo</th> 
+                    <th>Hết hạn</th>   
+                    <th>Người sử dụng</th>
                     <th>Đã dùng</th>
+                    <th>Số lượng</th>
                     <th>Trạng thái</th>
-                    <th>Hết hạn</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
@@ -34,25 +36,49 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $coupon->coupon_code }}</td>
                     <td>{{ $coupon->name }}</td>
-                    <td>{{ $coupon->creator->name ?? 'Không rõ' }}</td>
-                    <td>{{ $coupon->discount_type === 'percent' ? 'Phần trăm' : 'Cố định' }}</td>
+                    <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
                     <td>
-                        @if($coupon->discount_type === 'percent')
-                            {{ $coupon->discount_amount }}%
+                        @if($coupon->discount_type == 'percent')
+                            Phần trăm
+                        @else
+                            Cố định
+                        @endif
+                    </td>
+                    <td>
+                        @if($coupon->discount_type == 'percent')
+                            {{ (int)$coupon->discount_amount }}%
                         @else
                             {{ number_format($coupon->discount_amount, 0, ',', '.') }}₫
                         @endif
                     </td>
-                    <td>{{ $coupon->usage_limit }}</td>
-                    <td>{{ $coupon->total_used }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i:s') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>    
                     <td>
-                        @if($coupon->status)
-                            <span class="badge bg-success">Hoạt động</span>
+                        @if($coupon->user_id == -1)
+                            Toàn bộ hệ thống
+                        @elseif($coupon->user_id == 0)
+                            Mã tri ân
                         @else
-                            <span class="badge bg-secondary">Tạm dừng</span>
+                            ID: {{ $coupon->user_id }}
                         @endif
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i') }}</td>
+                    <td>{{ $coupon->total_used }}</td>
+                    <td>
+                        @if($coupon->usage_limit == -1)
+                            Không giới hạn
+                        @else
+                            {{ number_format($coupon->usage_limit, 0, ',', '.') }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($coupon->status == 1)
+                            <span class="badge bg-success">Hoạt động</span>
+                        @elseif($coupon->status == 0)
+                            <span class="badge bg-secondary">Tạm dừng</span>
+                        @elseif($coupon->status == 2)
+                            <span class="badge bg-danger">Đã hết hạn</span>
+                        @endif
+                    </td>
                     <td class="d-flex gap-1">
                         <form action="{{ route('coupons.restore', $coupon->id) }}" method="POST">
                             @csrf

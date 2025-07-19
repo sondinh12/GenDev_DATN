@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use App\Http\Controllers\Client\ProductReviewController;
 use Illuminate\Support\Facades\Route;
@@ -63,8 +64,11 @@ Route::get('/product', function () {
 
 Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
 
-// ================= GIỎ HÀNG & THANH TOÁN =================
+// Thêm route hiển thị sản phẩm theo danh mục
+Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::class, 'category'])->name('product.category');
 
+
+// ================= GIỎ HÀNG & THANH TOÁN =================
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
@@ -103,7 +107,6 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
-
 Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     // Sản phẩm
@@ -149,6 +152,13 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::get('admin/categories/minis/trash', [CategoryMiniController::class, 'trash_catemini'])->name('categories_mini.trash');
         Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
+    });
+    
+    // Đánh giá(Reviews)
+    Route::middleware(['auth','check_ban','permission:manage reviews'])->group(function () {
+        Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+        Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
     });
 
     // Người dùng
