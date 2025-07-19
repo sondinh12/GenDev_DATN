@@ -185,15 +185,6 @@
                             </button>
                         </div>
                         <!-- Social Login -->
-                        <div class="text-center my-3">
-                            <p class="text-muted mb-2">Hoặc đăng nhập với</p>
-                            <div class="d-flex justify-content-center social-btns">
-                                <a href="#" class="btn btn-facebook" title="Facebook"><i
-                                        class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="btn btn-google" title="Google"><i class="fab fa-google"></i></a>
-                                <a href="#" class="btn btn-twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
-                            </div>
-                        </div>
                     </form>
                     <!-- Register Link -->
                     <div class="text-center mt-4 register-link">

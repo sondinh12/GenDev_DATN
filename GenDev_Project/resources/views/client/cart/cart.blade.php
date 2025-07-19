@@ -189,10 +189,6 @@
                                                                     </span>
                                                                 </td>
                                                             </tr>
-                                                            <tr class="shipping">
-                                                                <th>Vận chuyển</th>
-                                                                <td data-title="Shipping">Phí cố định</td>
-                                                            </tr>
                                                             <tr class="order-total">
                                                                 <th>Tổng cộng</th>
                                                                 <td data-title="Total">

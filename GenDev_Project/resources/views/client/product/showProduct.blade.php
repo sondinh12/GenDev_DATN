@@ -969,6 +969,7 @@
         // Sự kiện tăng/giảm số lượng
         $('.btn-qty-plus').on('click', function() {
             var $qtyInput = $('#quantity-input');
+
             var val = parseInt($qtyInput.val()) || 1;
             // Nếu có biến thể
             if (Object.keys(variantMap).length) {
@@ -989,6 +990,7 @@
                 if (val < max) {
                     $qtyInput.val(val + 1);
                 }
+
             }
         });
         $('.btn-qty-minus').on('click', function() {

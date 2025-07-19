@@ -18,6 +18,8 @@ class Coupon extends Model
         'coupon_code',
         'discount_type',
         'discount_amount',
+        'type',
+        'shipping_code',
         'start_date',
         'end_date',
         'status',

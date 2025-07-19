@@ -77,7 +77,7 @@ class CartDetailController extends Controller
             });
 
             if (!$matchedVariant) {
-                return back()->with('error', 'Không tìm thấy biến thể phù hợp với lựa chọn của bạn.');
+                return redirect()->route('home')->with('error', 'Không tìm thấy biến thể phù hợp với lựa chọn của bạn.');
             }
 
             // Kiểm tra số lượng tồn kho của biến thể
