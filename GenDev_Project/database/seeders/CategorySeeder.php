@@ -16,16 +16,16 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $category = [
-            ["name" => "Điện thoại", 'image' => 'https://cdn11.dienmaycholon.vn/filewebdmclnew/DMCL21/Picture/News/News_expe_3183/3183.png?version=081600', "status" => 1],
-            ["name" => "Laptop", 'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1Y3UzcFYYhF5XKLoJp4e5F5IfCDuUD9zFsw&s', "status" => 1],
-            ["name" => "Phụ kiện", 'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaloOxVK8t78JGSCTPF2kAXM_n2q5yWIj7IQ&s', "status" => 1],
-            ["name" => "Máy tính bảng", 'image' => 'https://cdn.tgdd.vn/Products/Images/522/253516/samsung-galaxy-tab-a7-lite-600x600.jpg', "status" => 1],
-            ["name" => "Tivi", 'image' => 'https://cdn.tgdd.vn/Products/Images/1942/248096/smart-tivi-lg-4k-43-inch-43uq7550psf-600x600.jpg', "status" => 1],
-            ["name" => "Âm thanh", 'image' => 'https://cdn.tgdd.vn/Products/Images/2162/248096/loa-bluetooth-sony-srs-xb13-600x600.jpg', "status" => 1],
-            ["name" => "Máy ảnh", 'image' => 'https://cdn.tgdd.vn/Products/Images/4727/248096/may-anh-canon-eos-m50-mark-ii-600x600.jpg', "status" => 1],
-            ["name" => "Thiết bị đeo thông minh", 'image' => 'https://cdn.tgdd.vn/Products/Images/7077/248096/dong-ho-thong-minh-apple-watch-se-2022-600x600.jpg', "status" => 1],
-            ["name" => "Thiết bị mạng", 'image' => 'https://cdn.tgdd.vn/Products/Images/4727/248096/thiet-bi-mang-tp-link-600x600.jpg', "status" => 1],
-            ["name" => "Máy in", 'image' => 'https://cdn.tgdd.vn/Products/Images/4727/248096/may-in-canon-600x600.jpg', "status" => 1],
+            ["name" => "Điện thoại", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m9o7ct255au2d5.webp', "status" => 1],
+            ["name" => "Laptop", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mbnzkoyssb661b.webp', "status" => 1],
+            ["name" => "Phụ kiện", 'image' => 'https://down-vn.img.susercontent.com/file/sg-11134201-7rdwv-mc8quswrinht08.webp', "status" => 1],
+            ["name" => "Máy tính bảng", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mato1vi88u6w17.webp', "status" => 1],
+            ["name" => "Tivi", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m9pc5nyn9xy268.webp', "status" => 1],
+            ["name" => "Âm thanh", 'image' => 'https://down-vn.img.susercontent.com/file/sg-11134301-7rd5d-lwzgyh9v7ai106.webp', "status" => 1],
+            ["name" => "Máy ảnh", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lwccgby4iaqh5a.webp', "status" => 1],
+            ["name" => "Đồng hồ", 'image' => 'https://down-vn.img.susercontent.com/file/sg-11134201-7rasd-mar297f4r052a6.webp', "status" => 1],
+            ["name" => "Thiết bị mạng", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lzleaoq84nrh8a.webp', "status" => 1],
+            ["name" => "Máy in", 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-m2nhg12trabq3f.webp', "status" => 1],
         ];
 
         foreach ($category as $data) {

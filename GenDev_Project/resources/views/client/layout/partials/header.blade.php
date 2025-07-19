@@ -215,35 +215,16 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
+                    <a href="{{ route('cart') }}" class="cart-contents"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-mini-cart">
-                        <li>
-                            <div class="widget woocommerce widget_shopping_cart">
-                                <div class="widget_shopping_cart_content">
-                                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-
-
-                                    <p class="woocommerce-mini-cart__buttons buttons">
-                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
-                                    </p>
-
-                                </div>
-                            </div>
-                            <!-- .widget_shopping_cart -->
-                        </li>
-                    </ul>
-                    <!-- .dropdown-menu-mini-cart -->
                 </li>
             </ul>
             <!-- .site-header-cart -->
             <!-- .site-header-cart -->
         </div>
-
-        <!-- /.row -->
     </div>
     <!-- .col-full -->
     <div class="col-full handheld-only">
