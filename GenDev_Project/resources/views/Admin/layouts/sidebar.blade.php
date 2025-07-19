@@ -58,6 +58,13 @@
                         <span>Mã Giảm Giá</span>
                     </a>
                 <li>
+
+                <li>
+                    <a href="{{ url('/admin/post-categories') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Danh mục bài viết</span>
+                    </a>
+                <li>
             </ul>
         </div>
         <!-- Sidebar -->

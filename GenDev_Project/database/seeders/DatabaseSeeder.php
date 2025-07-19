@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
             OrderDetailAttributeSeeder::class,
             OrderStatusLogSeeder::class,
+            PostCategorySeeder::class
 
         ]);
     }
