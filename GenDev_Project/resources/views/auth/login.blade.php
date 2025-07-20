@@ -128,15 +128,6 @@
                         <h3 class="fw-bold text-primary" style="font-size:2rem;">Đăng nhập</h3>
                         <p class="text-muted mb-0">Chào mừng bạn quay trở lại!</p>
                     </div>
-                    @if ($errors->has('email'))
-                    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
-                        role="alert"
-                        id="autoDismissAlert"
-                        style="z-index:9999; min-width:300px; max-width:90vw;">
-                        <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first('email') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    @endif
                     <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
                         @csrf
                         <!-- Email -->
@@ -214,17 +205,6 @@
                     icon.classList.add('fa-eye');
                 }
             });
-            // Báo tự động ẩn thông báo sau 2.5 giây
-            document.addEventListener("DOMContentLoaded", function () {
-            setTimeout(function () {
-                let alert = document.getElementById('autoDismissAlert');
-                if (alert) {
-                    alert.classList.remove('show');
-                    alert.classList.add('hide');
-                    setTimeout(() => alert.remove(), 300);
-                }
-            }, 2500);
-        });
         </script>
     @endpush
 @endsection
