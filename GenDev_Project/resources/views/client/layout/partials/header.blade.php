@@ -67,7 +67,22 @@
                             <a title="Giới thiệu" href="{{ asset('/about') }}">Giới thiệu</a>
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
-                            <a title="Sản phẩm" href="{{ asset('/products') }}">Sản phẩm </a>
+                            <a title="Sản phẩm" 
+                            href="{{ asset('/products') }}">Sản phẩm </a>
+                            {{-- <ul role="menu" class=" dropdown-menu">
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
+                                </li>
+                            </ul> --}}
                             <!-- .dropdown-menu -->
                         </li>
                         <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
@@ -100,8 +115,8 @@
                         </li>
                         <li
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-487 animate-dropdown dropdown">
-                            <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle"
-                                aria-haspopup="true" href="#">
+                            <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
+                                href="#">
                                 <i class="tm tm-dollar"></i>Dollar (US)
                                 <span class="caret"></span>
                             </a>
@@ -142,52 +157,25 @@
         </div>
         <!-- .techmarket-sticky-wrap -->
         <div class="row align-items-center">
-            <div id="departments-menu" class="dropdown departments-menu">
-                <button class="btn dropdown-toggle btn-block" type="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="tm tm-departments-thin"></i>
-                    <span>Danh mục sản phẩm </span>
-                </button>
-                <ul id="menu-departments-menu" class="dropdown-menu yamm departments-menu-dropdown">
-                    @foreach($categories as $category)
-                        @if($category->children->count())
-                            <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
-                                <a title="{{ $category->name }}" data-toggle="dropdown" class="dropdown-toggle"
-                                    aria-haspopup="true" href="#">
-                                    {{ $category->name }} <span class="caret"></span>
-                                </a>
-                                <ul role="menu" class="dropdown-menu">
-                                    @foreach($category->children as $child)
-                                        <li class="menu-item animate-dropdown">
-                                            <a title="{{ $child->name }}" href="#">
-                                                {{ $child->name }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        @else
-                            <li class="menu-item animate-dropdown">
-                                <a title="{{ $category->name }}" href="#">
-                                    {{ $category->name }}
-                                </a>
-                            </li>
-                        @endif
-                    @endforeach
-                </ul>
-            </div>
-            <!-- .departments-menu -->
-
-            <form class="navbar-search" method="get" action="home-v1.html">
+            <form class="navbar-search" method="get" action="https://transvelo.github.io/techmarket-html/home-v1.html">
                 <label class="sr-only screen-reader-text" for="search">Tìm kiếm:</label>
                 <div class="input-group">
-                    <input type="text" id="search" class="form-control search-field product-search-field"
-                        dir="ltr" value="" name="s" placeholder="Tìm kiếm sản phẩm" />
+                    <input type="text" id="search" class="form-control search-field product-search-field" dir="ltr"
+                        value="" name="s" placeholder="Tìm kiếm sản phẩm" />
+                    <div class="input-group-addon search-categories">
+                        <select name='product_cat' id='product_cat' class='postform resizeselect'>
+                            <option value='0' selected='selected'>Danh sách danh mục</option>
+                            @foreach($categoriesMini as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- .input-group-addon -->
                     <div class="input-group-btn">
                         <input type="hidden" id="search-param" name="post_type" value="product" />
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i>
-                            <span class="search-btn">Tìm kiếm</span>
+                            <span class="search-btn">Search</span>
                         </button>
                     </div>
                     <!-- .input-group-btn -->
@@ -215,16 +203,30 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ route('cart') }}" class="cart-contents"
+                    <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
+                    <ul class="dropdown-menu dropdown-menu-mini-cart">
+                        <li>
+                            <div class="widget woocommerce widget_shopping_cart">
+                                <div class="widget_shopping_cart_content">
+                                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                    <p class="woocommerce-mini-cart__buttons buttons">
+                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- .widget_shopping_cart -->
+                        </li>
+                    </ul>
+                    <!-- .dropdown-menu-mini-cart -->
                 </li>
             </ul>
             <!-- .site-header-cart -->
-            <!-- .site-header-cart -->
         </div>
+        <!-- /.row -->
     </div>
     <!-- .col-full -->
     <div class="col-full handheld-only">
@@ -329,8 +331,7 @@
                                 <li class="highlight menu-item animate-dropdown">
                                     <a title="New Arrivals" href="{{ asset('shop.html') }}">New Arrivals</a>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
                                     <a title="Computers &amp; Laptops" data-toggle="dropdown" class="dropdown-toggle"
                                         aria-haspopup="true" href="#">Computers &#038; Laptops <span
                                             class="caret"></span></a>
@@ -356,8 +357,7 @@
                                                                 <ul>
                                                                     <li class="nav-title">Computers &amp; Accessories
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All
-                                                                            Computers
+                                                                    <li><a href="{{ asset('shop.html') }}">All Computers
                                                                             &amp;
                                                                             Accessories</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Laptops,
@@ -374,8 +374,7 @@
                                                                     <li><a href="{{ asset('shop.html') }}">Computer
                                                                             Accessories</a>
                                                                     </li>
-                                                                    <li><a
-                                                                            href="{{ asset('shop.html') }}">Software</a>
+                                                                    <li><a href="{{ asset('shop.html') }}">Software</a>
                                                                     </li>
                                                                     <li class="nav-divider"></li>
                                                                     <li>
@@ -417,8 +416,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
                                     <a title="Cameras &amp; Photo" data-toggle="dropdown" class="dropdown-toggle"
                                         aria-haspopup="true" href="#">Cameras &#038; Photo <span
                                             class="caret"></span></a>
@@ -443,11 +441,9 @@
                                                             <div class="kc_text_block">
                                                                 <ul>
                                                                     <li class="nav-title">Cameras & Photography</li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All Cameras
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">All Cameras &
                                                                             Photography</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Point &
-                                                                            Shoot
+                                                                    <li><a href="{{ asset('shop.html') }}">Point & Shoot
                                                                             Cameras</a>
                                                                     </li>
                                                                     <li><a href="{{ asset('shop.html') }}">Lenses</a>
@@ -457,8 +453,7 @@
                                                                     <li><a href="{{ asset('shop.html') }}">Security &
                                                                             Surveillance</a>
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Binoculars
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">Binoculars &
                                                                             Telescopes</a>
                                                                     </li>
                                                                     <li><a
@@ -487,8 +482,7 @@
                                                                     <li class="nav-title">Audio & Video</li>
                                                                     <li><a href="{{ asset('shop.html') }}">All Audio &
                                                                             Video</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Headphones
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">Headphones &
                                                                             Speakers</a>
                                                                     </li>
                                                                     <li><a href="{{ asset('shop.html') }}">Home
@@ -510,11 +504,10 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
-                                    <a title="Smart Phones &amp; Tablets" data-toggle="dropdown"
-                                        class="dropdown-toggle" aria-haspopup="true" href="#">Smart Phones
-                                        &#038; Tablets <span class="caret"></span></a>
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                    <a title="Smart Phones &amp; Tablets" data-toggle="dropdown" class="dropdown-toggle"
+                                        aria-haspopup="true" href="#">Smart Phones &#038; Tablets <span
+                                            class="caret"></span></a>
                                     <ul role="menu" class=" dropdown-menu">
                                         <li class="menu-item menu-item-object-static_block animate-dropdown">
                                             <div class="yamm-content">
@@ -537,8 +530,7 @@
                                                                 <ul>
                                                                     <li class="nav-title">Computers &amp; Accessories
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All
-                                                                            Computers
+                                                                    <li><a href="{{ asset('shop.html') }}">All Computers
                                                                             &amp;
                                                                             Accessories</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Laptops,
@@ -555,8 +547,7 @@
                                                                     <li><a href="{{ asset('shop.html') }}">Computer
                                                                             Accessories</a>
                                                                     </li>
-                                                                    <li><a
-                                                                            href="{{ asset('shop.html') }}">Software</a>
+                                                                    <li><a href="{{ asset('shop.html') }}">Software</a>
                                                                     </li>
                                                                     <li class="nav-divider"></li>
                                                                     <li>
@@ -598,11 +589,10 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
-                                    <a title="Video Games &amp; Consoles" data-toggle="dropdown"
-                                        class="dropdown-toggle" aria-haspopup="true" href="#">Video Games
-                                        &#038; Consoles <span class="caret"></span></a>
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                    <a title="Video Games &amp; Consoles" data-toggle="dropdown" class="dropdown-toggle"
+                                        aria-haspopup="true" href="#">Video Games &#038; Consoles <span
+                                            class="caret"></span></a>
                                     <ul role="menu" class=" dropdown-menu">
                                         <li class="menu-item menu-item-object-static_block animate-dropdown">
                                             <div class="yamm-content">
@@ -624,11 +614,9 @@
                                                             <div class="kc_text_block">
                                                                 <ul>
                                                                     <li class="nav-title">Cameras & Photography</li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All Cameras
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">All Cameras &
                                                                             Photography</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Point &
-                                                                            Shoot
+                                                                    <li><a href="{{ asset('shop.html') }}">Point & Shoot
                                                                             Cameras</a>
                                                                     </li>
                                                                     <li><a href="{{ asset('shop.html') }}">Lenses</a>
@@ -638,8 +626,7 @@
                                                                     <li><a href="{{ asset('shop.html') }}">Security &
                                                                             Surveillance</a>
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Binoculars
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">Binoculars &
                                                                             Telescopes</a>
                                                                     </li>
                                                                     <li><a
@@ -668,8 +655,7 @@
                                                                     <li class="nav-title">Audio & Video</li>
                                                                     <li><a href="{{ asset('shop.html') }}">All Audio &
                                                                             Video</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Headphones
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">Headphones &
                                                                             Speakers</a>
                                                                     </li>
                                                                     <li><a href="{{ asset('shop.html') }}">Home
@@ -691,11 +677,9 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
                                     <a title="TV &amp; Audio" data-toggle="dropdown" class="dropdown-toggle"
-                                        aria-haspopup="true" href="#">TV &#038; Audio <span
-                                            class="caret"></span></a>
+                                        aria-haspopup="true" href="#">TV &#038; Audio <span class="caret"></span></a>
                                     <ul role="menu" class=" dropdown-menu">
                                         <li class="menu-item menu-item-object-static_block animate-dropdown">
                                             <div class="yamm-content">
@@ -718,8 +702,7 @@
                                                                 <ul>
                                                                     <li class="nav-title">Computers &amp; Accessories
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All
-                                                                            Computers
+                                                                    <li><a href="{{ asset('shop.html') }}">All Computers
                                                                             &amp; Accessories</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Laptops,
                                                                             Desktops &amp; Monitors</a>
@@ -734,8 +717,7 @@
                                                                     </li>
                                                                     <li><a href="{{ asset('shop.html') }}">Computer
                                                                             Accessories</a></li>
-                                                                    <li><a
-                                                                            href="{{ asset('shop.html') }}">Software</a>
+                                                                    <li><a href="{{ asset('shop.html') }}">Software</a>
                                                                     </li>
                                                                     <li class="nav-divider"></li>
                                                                     <li>
@@ -776,11 +758,10 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
-                                    <a title="Car Electronic &amp; GPS" data-toggle="dropdown"
-                                        class="dropdown-toggle" aria-haspopup="true" href="#">Car Electronic
-                                        &#038; GPS <span class="caret"></span></a>
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                    <a title="Car Electronic &amp; GPS" data-toggle="dropdown" class="dropdown-toggle"
+                                        aria-haspopup="true" href="#">Car Electronic &#038; GPS <span
+                                            class="caret"></span></a>
                                     <ul role="menu" class=" dropdown-menu">
                                         <li class="menu-item menu-item-object-static_block animate-dropdown">
                                             <div class="yamm-content">
@@ -802,11 +783,9 @@
                                                             <div class="kc_text_block">
                                                                 <ul>
                                                                     <li class="nav-title">Cameras & Photography</li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All Cameras
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">All Cameras &
                                                                             Photography</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Point &
-                                                                            Shoot
+                                                                    <li><a href="{{ asset('shop.html') }}">Point & Shoot
                                                                             Cameras</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Lenses</a>
                                                                     </li>
@@ -814,8 +793,7 @@
                                                                             Accessories</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Security &
                                                                             Surveillance</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Binoculars
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">Binoculars &
                                                                             Telescopes</a></li>
                                                                     <li><a
                                                                             href="{{ asset('shop.html') }}">Camcorders</a>
@@ -843,8 +821,7 @@
                                                                     <li class="nav-title">Audio & Video</li>
                                                                     <li><a href="{{ asset('shop.html') }}">All Audio &
                                                                             Video</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Headphones
-                                                                            &
+                                                                    <li><a href="{{ asset('shop.html') }}">Headphones &
                                                                             Speakers</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Home
                                                                             Entertainment Systems</a></li>
@@ -864,11 +841,9 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li
-                                    class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
                                     <a title="Accesories" data-toggle="dropdown" class="dropdown-toggle"
-                                        aria-haspopup="true" href="#">Accesories <span
-                                            class="caret"></span></a>
+                                        aria-haspopup="true" href="#">Accesories <span class="caret"></span></a>
                                     <ul role="menu" class=" dropdown-menu">
                                         <li class="menu-item menu-item-object-static_block animate-dropdown">
                                             <div class="yamm-content">
@@ -891,8 +866,7 @@
                                                                 <ul>
                                                                     <li class="nav-title">Computers &amp; Accessories
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">All
-                                                                            Computers
+                                                                    <li><a href="{{ asset('shop.html') }}">All Computers
                                                                             &amp; Accessories</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Laptops,
                                                                             Desktops &amp; Monitors</a>
@@ -907,8 +881,7 @@
                                                                     </li>
                                                                     <li><a href="{{ asset('shop.html') }}">Computer
                                                                             Accessories</a></li>
-                                                                    <li><a
-                                                                            href="{{ asset('shop.html') }}">Software</a>
+                                                                    <li><a href="{{ asset('shop.html') }}">Software</a>
                                                                     </li>
                                                                     <li class="nav-divider"></li>
                                                                     <li>
@@ -964,8 +937,7 @@
                         <div class="widget woocommerce widget_product_search">
                             <form role="search" method="get" class="woocommerce-product-search"
                                 action="https://transvelo.github.io/techmarket-html/home-v1.html">
-                                <label class="screen-reader-text" for="woocommerce-product-search-field-0">Tìm
-                                    kiếm...</label>
+                                <label class="screen-reader-text" for="woocommerce-product-search-field-0">Tìm kiếm...</label>
                                 <input type="search" id="woocommerce-product-search-field-0" class="search-field"
                                     placeholder="Search products&hellip;" value="" name="s" />
                                 <input type="submit" value="Search" />
