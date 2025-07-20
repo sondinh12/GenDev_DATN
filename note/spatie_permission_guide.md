@@ -1,5 +1,5 @@
 # Hướng dẫn chi tiết sử dụng Spatie Laravel Permission cho dự án
-
+.
 ## 1. Giới thiệu
 
 Dự án sử dụng package [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v5/introduction) để quản lý vai trò (role) và quyền (permission) cho user. Đây là giải pháp động, dễ mở rộng, không phụ thuộc vào trường `role` trong bảng users.
