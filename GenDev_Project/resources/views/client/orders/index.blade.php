@@ -28,8 +28,8 @@
         @foreach($tabs as $key => $label)
         <li class="nav-item" role="presentation">
             <a class="nav-link {{ ($currentStatus === $key || ($key === 'all' && !$currentStatus)) ? 'active' : '' }}"
-               href="{{ route('client.orders.index', $key !== 'all' ? ['status' => $key] : []) }}">
-               {{ $label }}
+                href="{{ route('client.orders.index', $key !== 'all' ? ['status' => $key] : []) }}">
+                {{ $label }}
             </a>
         </li>
         @endforeach
