@@ -63,14 +63,17 @@ Route::get('/product', function () {
 
 Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
 
+// Thêm route hiển thị sản phẩm theo danh mục
+Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::class, 'category'])->name('product.category');
+
+
 // ================= GIỎ HÀNG & THANH TOÁN =================
-Route::middleware(['auth', 'check_ban'])->group(function () {
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
 Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
-});
+
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
 })->name('checkout.success');
@@ -80,7 +83,6 @@ Route::get('/checkout-failed', function () {
 Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
 
 // hành dộng trang cart
-Route::middleware(['auth', 'check_ban'])->group(function () {
 Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
 
@@ -88,7 +90,6 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware(
 Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
 Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
 Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
-});
 // Route::get('/cart', function () {
 //     return view('client.cart.cart');
 // })->name('cart');
@@ -105,7 +106,6 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
-
 Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     // Sản phẩm
@@ -177,7 +177,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
 });
 
 Route::resource('/product', ClientProductController::class);
-Route::middleware(['auth','check_ban','verified'])->prefix('orders')->name('client.orders.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
@@ -190,12 +190,10 @@ Route::middleware(['auth','check_ban','verified'])->prefix('orders')->name('clie
 
 
 Auth::routes(['verify' => true]); // Xác thực email
-Route::middleware(['auth', 'check_ban'])->group(function () {
+
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
 Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
-});
-
 Route::get('/profile/change-password', function () {
     return view('auth.passwords.change_password');
 })->middleware('auth')->name('profile.change_password');

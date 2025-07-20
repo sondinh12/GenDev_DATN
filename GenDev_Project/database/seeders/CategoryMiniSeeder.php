@@ -2,14 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-use Illuminate\Support\Facades\DB;
-
 use App\Models\Category;
 use App\Models\CategoryMini;
-
 
 class CategoryMiniSeeder extends Seeder
 {
@@ -18,7 +13,6 @@ class CategoryMiniSeeder extends Seeder
      */
     public function run(): void
     {
-
         // Danh sách tên danh mục con thực tế cho từng danh mục cha
         $categoryMinis = [
             'Điện thoại' => [
@@ -85,6 +79,5 @@ class CategoryMiniSeeder extends Seeder
                 ]);
             }
         }
-
     }
 }

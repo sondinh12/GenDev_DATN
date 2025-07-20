@@ -9,7 +9,6 @@ class ProductVariantAttributeSeeder extends Seeder
 {
     public function run(): void
     {
-
         DB::table('product_variant_attributes')->truncate();
         DB::table('product_variant_attributes')->insert([
             // iPhone 15 Pro Max - 4 biến thể
@@ -211,7 +210,6 @@ class ProductVariantAttributeSeeder extends Seeder
             ['product_variant_id' => 79, 'attribute_id' => 2, 'attribute_value_id' => 4],
             ['product_variant_id' => 80, 'attribute_id' => 1, 'attribute_value_id' => 2],
             ['product_variant_id' => 80, 'attribute_id' => 2, 'attribute_value_id' => 5],
-
         ]);
     }
 }
