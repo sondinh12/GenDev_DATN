@@ -16,30 +16,77 @@
         </div>
 
         <div class="mb-3">
-            <label for="coupon_code">Mã code</label>
-            <input type="text" name="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" value="{{ old('coupon_code') }}">
+            <label id="couponCodeLabel">Mã code</label>
+            <input type="text" name="coupon_code" id="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" value="{{ old('coupon_code') }}">
             @error('coupon_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">
-            <label for="discount_type">Loại giảm giá</label>
-            <select name="discount_type" class="form-control @error('discount_type') is-invalid @enderror" id="discount_type">
-                <option value="">-- Chọn loại giảm --</option>
-                <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>Phần trăm</option>
-                <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Cố định</option>
+            <label for="type" class="form-label">Loại mã</label>
+            <select name="type" id="type" class="form-select @error('type') is-invalid @enderror">
+                <option value="order" {{ old('type', $coupon->type ?? '') == 'order' ? 'selected' : '' }}>Giảm giá đơn hàng</option>
+                <option value="shipping" {{ old('type', $coupon->type ?? '') == 'shipping' ? 'selected' : '' }}>Giảm giá phí ship</option>
+            </select>
+            @error('type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
+        
+        <!-- Trường shipping_code ẩn giữ nguyên -->
+        <input type="hidden" name="shipping_code" id="shipping_code" value="{{ old('shipping_code', $coupon->shipping_code ?? '') }}">
+        
+        <div id="discountTypeGroup" class="mb-3">
+            <label for="discount_type" class="form-label">Kiểu giảm giá</label>
+            <select name="discount_type" id="discount_type" class="form-select @error('discount_type') is-invalid @enderror">
+                <option value="percent" {{ old('discount_type', $coupon->discount_type ?? '') == 'percent' ? 'selected' : '' }}>Phần trăm (%)</option>
+                <option value="fixed" {{ old('discount_type', $coupon->discount_type ?? '') == 'fixed' ? 'selected' : '' }}>Cố định (VNĐ)</option>
             </select>
             @error('discount_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
-
-        <div class="mb-3">
-            <label for="discount_amount">Giá trị giảm</label>
-            <input type="number" name="discount_amount" class="form-control @error('discount_amount') is-invalid @enderror" value="{{ old('discount_amount') }}">
+        <div id="discountAmountGroup" class="mb-3">
+            <label for="discount_amount" class="form-label" id="discountAmountLabel">
+                {{ old('type', $coupon->type ?? '') == 'shipping' ? 'Số tiền giảm phí ship' : 'Giá trị giảm' }}
+            </label>
+            <input type="number" step="0.01" name="discount_amount" id="discount_amount" class="form-control @error('discount_amount') is-invalid @enderror" value="{{ old('discount_amount', $coupon->discount_amount ?? '') }}">
             @error('discount_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
+        <script>
+            function toggleDiscountType() {
+                const type = document.getElementById('type').value;
+                const discountTypeGroup = document.getElementById('discountTypeGroup');
+                const discountAmountLabel = document.getElementById('discountAmountLabel');
+                const discountTypeSelect = document.getElementById('discount_type');
+                const shippingCodeInput = document.getElementById('shipping_code');
+                const couponCodeLabel = document.getElementById('couponCodeLabel');
+
+                if(type === 'shipping') {
+                    discountTypeGroup.style.display = 'none';
+                    discountTypeSelect.value = 'fixed';
+                    discountTypeSelect.disabled = true;
+                    shippingCodeInput.value = 'fixed';
+                    discountAmountLabel.textContent = 'Số tiền giảm phí ship';
+                    couponCodeLabel.textContent = 'Mã giảm phí ship';
+                } else {
+                    discountTypeGroup.style.display = 'block';
+                    discountTypeSelect.disabled = false;
+                    discountAmountLabel.textContent = 'Giá trị giảm';
+                    couponCodeLabel.textContent = 'Mã giảm đơn hàng';
+                    shippingCodeInput.value = '';
+                }
+            }
+
+            function initializeForm() {
+                toggleDiscountType();
+            }
+
+            document.getElementById('type').addEventListener('change', toggleDiscountType);
+            window.addEventListener('DOMContentLoaded', initializeForm);
+        </script>
 
         <div class="mb-3">
             <label for="user_id">Người sử dụng</label>
-            <input placeholder="Nhập id của người được sử dụng" type="number" name="user_id" class="form-control @error('user_id') is-invalid @enderror" value="{{ old('user_id' ) ?? -1 }}">
+            <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                <option value="-1" {{ old('user_id', isset($coupon->user_id) ? $coupon->user_id : -1) == -1 ? 'selected' : '' }}>Toàn bộ hệ thống</option>
+                <option value="0" {{ old('user_id', isset($coupon->user_id) ? $coupon->user_id : -1) == 0 ? 'selected' : '' }}>Mã tri ân</option>
+            </select>
             @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
@@ -55,7 +102,7 @@
             @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
-            <input type="hidden" name="status" value="1">
+        <input type="hidden" name="status" value="1">
 
         <div class="mb-3">
             <label for="usage_limit">Giới hạn sử dụng (toàn hệ thống)</label>
@@ -85,25 +132,4 @@
         <a href="{{ route('coupons.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>
 </div>
-
-<!-- Script xử lý max_coupon khi chọn loại giảm -->
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const discountTypeSelect = document.getElementById('discount_type');
-        const maxCouponWrapper = document.getElementById('maxCouponWrapper');
-        const maxCouponInput = document.getElementById('max_coupon_input');
-
-        function toggleMaxCouponField() {
-            if (discountTypeSelect.value === 'fixed') {
-                maxCouponWrapper.style.display = 'none';
-                maxCouponInput.value = 0;
-            } else {
-                maxCouponWrapper.style.display = '';
-            }
-        }
-
-        toggleMaxCouponField();
-        discountTypeSelect.addEventListener('change', toggleMaxCouponField);
-    });
-</script> --}}
 @endsection

@@ -13,16 +13,23 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
+
             // -1 là không giới hạn người dùng, 0 là không ai được dùng
             $table->integer('user_id')->default(-1);
             $table->string("name", 255);
-            $table->string("coupon_code", 20)->unique();
+            
+            // sửa lại coupon_code nullable vì type shipping không dùng
+            $table->string("coupon_code", 20)->nullable()->unique();
+            
+            $table->enum('type', ['order', 'shipping'])->default('order');
             $table->enum('discount_type', ['percent', 'fixed']);
+            
+            // shipping_code đã nullable đúng rồi, giữ nguyên
+            $table->string('shipping_code', 50)->nullable();
+            
             $table->decimal('discount_amount', 10, 2);
             $table->dateTime("start_date");
             $table->dateTime("end_date");
-
-            // $table->integer("quantity"); <-- đã loại bỏ
 
             $table->tinyInteger('status')->default(1)->comment('0: Tạm dừng, 1: Hoạt động, 2: Đã hết hạn');
             $table->decimal("max_coupon", 10, 2);

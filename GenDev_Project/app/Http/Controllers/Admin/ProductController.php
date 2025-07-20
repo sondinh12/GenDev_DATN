@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-    use App\Http\Controllers\Controller;
-    use App\Http\Requests\AttributeRequest;
-    use Illuminate\Http\Request;
-    use App\Http\Requests\ProductRequest;
-    use App\Models\AttributeValue;
-    use App\Models\Category;
-    use App\Models\CategoryMini;
-    use App\Models\Attribute;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AttributeRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
+use App\Models\AttributeValue;
+use App\Models\Category;
+use App\Models\CategoryMini;
+use App\Models\Attribute;
 use App\Models\Cartdetail;
 use App\Models\Product;
-    use App\Models\ProductGallery;
-    use App\Models\ProductVariant;
-    use App\Models\ProductVariantAttribute;
-    use Validator;
+use App\Models\ProductGallery;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantAttribute;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -65,8 +65,8 @@ class ProductController extends Controller
             'category_mini_id' => $request->category_mini_id,
             'image' => $imagePath,
             'price' => $request->price,
-            'quantity'=>$request->quantity, 
-            'status'=>$request->status,
+            'quantity' => $request->quantity,
+            'status' => $request->status,
             'sale_price' => $request->sale_price,
         ]);
 
@@ -273,13 +273,13 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
-        
+
         // Không cho xoá nếu sản phẩm còn trong giỏ hàng
         $cartCount = $product->cartdetails()->count();
         if ($cartCount > 0) {
             return redirect()->route('products.trash.list')->with('success', 'Không thể xoá vĩnh viễn sản phẩm vì còn tồn tại trong giỏ hàng của khách!');
         }
-        
+
         $product->galleries()->delete();
         $product->variants()->each(function ($variant) {
             $variant->variantAttributes()->delete();
@@ -379,7 +379,7 @@ class ProductController extends Controller
         return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
     }
 
-            public function trashAttribute($id)
+    public function trashAttribute($id)
     {
         $attribute = Attribute::findOrFail($id);
         $attribute->status = 2; // đánh dấu là đã xóa
@@ -398,7 +398,7 @@ class ProductController extends Controller
         return redirect()->route('admin.attributes.index')->with('success', 'Đã khôi phục thuộc tính!');
     }
 
-        public function trashList()
+    public function trashList()
     {
         $attributes = Attribute::with('values')->where('status', 2)->get();
         return view('Admin.attributes.trash', compact('attributes'));
@@ -445,6 +445,7 @@ class ProductController extends Controller
     }
 
         public function forceDeleteAttribute($id)
+
     {
         $attribute = Attribute::with('values')->findOrFail($id);
         $attribute->values()->delete(); // Xóa các value con
@@ -452,6 +453,4 @@ class ProductController extends Controller
 
         return redirect()->route('admin.attributes.trashList')->with('success', 'Đã xóa vĩnh viễn thuộc tính!');
     }
-
-
 }
