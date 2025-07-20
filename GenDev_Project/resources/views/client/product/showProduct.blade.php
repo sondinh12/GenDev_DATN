@@ -370,71 +370,6 @@
                         </div>
                         @endforelse
                     </div>
-                @auth
-                @php
-                $userReviewCount = 0;
-                if(auth()->check()) {
-                $userReviewCount = $product->reviews()->where('user_id', auth()->id())->count();
-                }
-                @endphp
-                @if(!empty($canReview) && $canReview)
-                @if($userReviewCount < 2)
-                    <form method="POST" action="{{ route('product.review.store', $product->id) }}" class="row g-3 align-items-end mb-4">
-                    @csrf
-                    <div class="col-12 col-md-4 text-center">
-                        <label class="form-label fw-semibold mb-2">Số sao</label>
-                        <div id="star-rating" class="d-inline-block">
-                            @for($i=1; $i<=5; $i++)
-                                <i class="fas fa-star star-select text-secondary" data-value="{{ $i }}" style="font-size:2rem; cursor:pointer; margin:0 2px;"></i>
-                                @endfor
-                        </div>
-                        <input type="hidden" name="rating" id="rating-value" value="5" required>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Bình luận</label>
-                        <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
-                    </div>
-                    <div class="col-12 col-md-2 text-end">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi đánh giá</button>
-                    </div>
-                    </form>
-                    @else
-                    <div class="alert alert-warning mb-4">Bạn đã đánh giá sản phẩm này tối đa 2 lần.</div>
-                    @endif
-                    @else
-                    <div class="alert alert-warning mb-4">Bạn cần mua sản phẩm này thành công để có thể đánh giá.</div>
-                    @endif
-                    @else
-                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
-                    @endauth
-                    <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                    @php $reviews = $product->reviews()->with('user')->latest()->take(5)->get(); @endphp
-                    <div class="row g-3">
-                        @forelse($reviews as $review)
-                        <div class="col-12 col-md-6">
-                            <div class="review-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="fw-bold me-2 text-dark" style="font-size:1.1rem;">{{ $review->user->name ?? 'Ẩn danh' }}</span>
-                                    <span class="review-stars text-warning fs-5">
-                                        @for($i=1; $i<=5; $i++)
-                                            @if($i <=$review->rating)
-                                            <i class="fas fa-star"></i>
-                                            @else
-                                            <i class="far fa-star"></i>
-                                            @endif
-                                            @endfor
-                                    </span>
-                                    <span class="ms-2 text-muted small">{{ $review->created_at->format('d/m/Y H:i') }}</span>
-                                </div>
-                                <div class="review-comment text-secondary" style="font-size:1rem;">{{ $review->comment }}</div>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="col-12">
-                            <div class="text-muted">Chưa có đánh giá nào.</div>
-                        </div>
-                        @endforelse
-                    </div>
             </div>
         </div>
     </div>
@@ -443,7 +378,6 @@
     @if(isset($relatedProducts) && count($relatedProducts))
     <div class="container-fluid mt-5 px-0">
         <h4 class="mb-4 fw-bold text-primary text-center">Sản phẩm liên quan</h4>
-        <div class="related-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:32px 24px; justify-items:center; align-items:stretch;">
         <div class="related-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:32px 24px; justify-items:center; align-items:stretch;">
             @foreach($relatedProducts as $item)
             <div style="width:100%; max-width:270px; min-width:250px; display:flex; align-items:stretch;">
@@ -485,10 +419,6 @@
                                 @else
                                 <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                                 @endif
-                            @else
-                                @if($item->sale_price && $item->sale_price < $item->price)
-                                    <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
-                                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
                                 @else
                                 @if($item->sale_price && $item->sale_price < $item->price)
                                     <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
@@ -960,23 +890,6 @@
                 $('#variant-quantity').text('--');
                 $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
                 $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
-                // Hiển thị lại khoảng giá ban đầu
-                var min = null, max = null;
-                Object.values(variantMap).forEach(function(v) {
-                    var display = v.price;
-                    if (min === null || display < min) min = display;
-                    if (max === null || display > max) max = display;
-                });
-                if (min !== null && max !== null) {
-                    if (min == max) {
-                        $('#variant-sale-price').text(min.toLocaleString('vi-VN') + 'đ');
-                    } else {
-                        $('#variant-sale-price').text(min.toLocaleString('vi-VN') + 'đ - ' + max.toLocaleString('vi-VN') + 'đ');
-                    }
-                } else {
-                    $('#variant-sale-price').text('');
-                }
-                $('#variant-origin-price').hide();
             }
         }
         $('.variant-select').on('change', updateVariantInfo);
@@ -1056,10 +969,28 @@
         // Sự kiện tăng/giảm số lượng
         $('.btn-qty-plus').on('click', function() {
             var $qtyInput = $('#quantity-input');
-            var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
+
             var val = parseInt($qtyInput.val()) || 1;
-            if (val < max) {
-                $qtyInput.val(val + 1);
+            // Nếu có biến thể
+            if (Object.keys(variantMap).length) {
+                if (!allAttrSelected()) {
+                    // Chưa chọn đủ thuộc tính, không tăng
+                    $qtyInput.val(1);
+                    return;
+                }
+                var key = getSelectedKey();
+                var info = variantMap[key];
+                var max = info ? parseInt(info.quantity) : 1;
+                if (val < max) {
+                    $qtyInput.val(val + 1);
+                }
+            } else {
+                // Không có biến thể, dùng số lượng sản phẩm
+                var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
+                if (val < max) {
+                    $qtyInput.val(val + 1);
+                }
+
             }
         });
         $('.btn-qty-minus').on('click', function() {

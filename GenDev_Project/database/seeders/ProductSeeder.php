@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
 use App\Models\Category;
 use App\Models\CategoryMini;
 
@@ -16,6 +17,7 @@ class ProductSeeder extends Seeder
         $minis = CategoryMini::all()->groupBy('category_id');
 
         $products = [
+
             // Điện thoại
             [
                 'name' => 'iPhone 15 Pro Max',
@@ -245,10 +247,12 @@ class ProductSeeder extends Seeder
                 'description' => 'Máy in Epson L3250 -Bảo hành 24 tháng.',
                 'category_name' => 'Máy in',
                 'mini_name' => 'Máy in phun',
+
             ],
         ];
 
         foreach ($products as $product) {
+
             $category = $categories[$product['category_name']] ?? null;
             if (!$category) continue;
             $mini = $minis[$category->id]->firstWhere('name', $product['mini_name']) ?? null;
@@ -256,6 +260,7 @@ class ProductSeeder extends Seeder
             $product['category_id'] = $category->id;
             $product['category_mini_id'] = $mini->id;
             unset($product['category_name'], $product['mini_name']);
+
             DB::table('products')->insert($product);
         }
     }

@@ -4,12 +4,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
 use App\Models\Product;
+
 
 class ProductVariantSeeder extends Seeder
 {
     public function run(): void
     {
+
         $productIds = [
             'iPhone 15 Pro Max' => Product::where('name', 'iPhone 15 Pro Max')->value('id'),
             'Samsung Galaxy S24 Ultra' => Product::where('name', 'Samsung Galaxy S24 Ultra')->value('id'),
@@ -153,6 +156,7 @@ class ProductVariantSeeder extends Seeder
             ['product_id' => $productIds['Máy in Epson L3250'], 'price' => 2600000, 'sale_price' => 2300000, 'quantity' => 2, 'status' => 1],
             ['product_id' => $productIds['Máy in Epson L3250'], 'price' => 2550000, 'sale_price' => 2250000, 'quantity' => 1, 'status' => 1],
             ['product_id' => $productIds['Máy in Epson L3250'], 'price' => 2650000, 'sale_price' => 2350000, 'quantity' => 1, 'status' => 1],
+
         ]);
     }
 }
