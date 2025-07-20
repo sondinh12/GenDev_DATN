@@ -134,7 +134,6 @@
                         id="autoDismissAlert"
                         style="z-index:9999; min-width:300px; max-width:90vw;">
                         <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first('email') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     @endif
                     <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
