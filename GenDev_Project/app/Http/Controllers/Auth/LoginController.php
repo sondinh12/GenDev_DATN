@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -29,6 +30,20 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+
+    /**
+     * Get the post-login redirect path.
+     *
+     * @return string
+     */
+    protected function redirectTo()
+    {
+        $user = Auth::user();
+        if ($user && $user->hasAnyRole(['admin', 'staff'])) {
+            return '/admin';
+        }
+        return '/';
+    }
 
     /**
      * Create a new controller instance.
