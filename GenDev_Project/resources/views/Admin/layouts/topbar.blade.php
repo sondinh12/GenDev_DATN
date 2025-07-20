@@ -370,8 +370,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer card-footer-bordered rounded-0"><a href="{{ url('auth-login') }}"
-                                    class="btn btn-label-danger">Đăng xuất</a></div>
+                            <div class="card-footer card-footer-bordered rounded-0"><a href="{{ url('/') }}"
+                                    class="btn btn-label-danger">Về trang chủ</a></div>
                         </div>
                     </div>
                 </div>
