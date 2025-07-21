@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('import_date');
             $table->decimal('total_cost',15,2);
             $table->text('note');
+            $table->integer('status')->default(0);
             $table->timestamps();
 
             $table->foreign("supplier_id")->references("id")->on("suppliers");

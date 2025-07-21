@@ -21,7 +21,8 @@ class ImportSeeder extends Seeder
                 'supplier_id' => $supplier->id,
                 'import_date' => now()->subDays(rand(1, 15)),
                 'total_cost' => 0, // sẽ cập nhật sau
-                'note' => 'Phiếu nhập test'
+                'note' => 'Phiếu nhập test',
+                'status'=> 0
             ]);
         }
     }

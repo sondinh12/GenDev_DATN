@@ -15,7 +15,10 @@ return new class extends Migration
         Schema::create('import_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('import_id');
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->unsignedBigInteger('variant_id')->nullable();
+            $table->json('variant_data')->nullable(); // lưu biến thể tạm thời
+            $table->string('product_temp_name')->nullable(); //lưu tên sp tạm thời
             $table->integer('quantity');
             $table->decimal('import_price',15,2);
             $table->decimal('subtotal',15,2);
@@ -23,6 +26,7 @@ return new class extends Migration
 
             $table->foreign("import_id")->references("id")->on("imports");
             $table->foreign("product_id")->references("id")->on("products");
+            $table->foreign("variant_id")->references("id")->on("product_variants");
         });
     }
 

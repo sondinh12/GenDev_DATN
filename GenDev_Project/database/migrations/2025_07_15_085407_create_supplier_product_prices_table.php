@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('supplier_product_prices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('supplier_id');
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_id')->nullable();
             $table->decimal('import_price',15,2);
             $table->date('start_date');
             $table->date('end_date')->nullable();

@@ -10,7 +10,8 @@ class Import extends Model
         'supplier_id',
         'import_date',
         'total_cost',
-        'note'
+        'note',
+        'status'
     ];
 
     public function supplier()

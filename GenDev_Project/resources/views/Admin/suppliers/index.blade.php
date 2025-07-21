@@ -3,6 +3,17 @@
 @section('title', 'Nhà cung cấp')
 
 @section('content')
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{session('success')}}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{session('error')}}
+        </div>
+    @endif
     <h2>Nhà cung cấp</h2>
     <a href="{{route('admin.suppliers.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
     <table class="table">
@@ -18,7 +29,7 @@
                 <th>Hành động</th>
             </tr>
         </thead>
-        
+
         <tbody>
             @foreach ($suppliers as $supplier)
                 <tr>
@@ -30,9 +41,15 @@
                     <td>{{$supplier->created_at}}</td>
                     <td>{{$supplier->updated_at}}</td>
                     <td>
-                        <a href="{{route('admin.suppliers.show',$supplier->id)}}" class="btn btn-primary">Xem</a>
-                        <a href="{{route('admin.suppliers.edit',$supplier->id)}}" class="btn btn-info">Sửa</a>
-                        <a href="{{route('admin.suppliers.destroy',$supplier->id)}}" class="btn btn-danger">Xóa</a>
+                        <div class="d-flex gap-2">
+                            <a href="{{route('admin.suppliers.edit', $supplier->id)}}" class="btn btn-info">Sửa</a>
+                            <form action="{{route('admin.suppliers.destroy', $supplier->id)}}" method="post"
+                                onclick="return confirm('Bạn chác chắn muốn xóa chứ')">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

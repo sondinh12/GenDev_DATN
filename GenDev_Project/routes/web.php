@@ -178,12 +178,12 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/imports/store',[ImportController::class,'store'])->name('admin.imports.store');
         Route::get('/imports/edit/{id}',[ImportController::class,'edit'])->name('admin.imports.edit');
         Route::put('/imports/upadte/{id}',[ImportController::class,'update'])->name('admin.imports.update');
+        Route::post('/imports/updateStatus/{id}',[ImportController::class,'show'])->name('admin.imports.updateStatus');
         Route::delete('/imports/destroy/{id}',[ImportController::class,'destroy'])->name('admin.imports.destroy');
-
     // });
     
     //Nhà cung cấp
-    // Route::middleware(['permission:manage suppliers'])->group(function () {
+    Route::middleware(['permission:manage suppliers'])->group(function () {
         Route::get('/suppliers',[SupplierController::class,'index'])->name('admin.suppliers.index');
         Route::get('/suppliers/show/{id}',[SupplierController::class,'show'])->name('admin.suppliers.show');
         Route::get('/suppliers/create',[SupplierController::class,'create'])->name('admin.suppliers.create');
@@ -192,7 +192,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::put('/suppliers/upadte/{id}',[SupplierController::class,'update'])->name('admin.suppliers.update');
         Route::delete('/suppliers/destroy/{id}',[SupplierController::class,'destroy'])->name('admin.suppliers.destroy');
 
-    // });
+    });
 });
 
 Route::resource('/product', ClientProductController::class);

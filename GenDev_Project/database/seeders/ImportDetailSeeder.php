@@ -15,13 +15,20 @@ class ImportDetailSeeder extends Seeder
      */
     public function run(): void
     {
+        ImportDetail::truncate();
         $imports = Import::all();
         $products = Product::all();
 
         foreach ($imports as $import) {
             $total = 0;
 
-            foreach ($products->random(3) as $product) {
+            foreach ($products->random(min(3, $products->count())) as $product) {
+                $variantId = null;
+                if (!$product->variants->isEmpty()) {
+                    $variant = $product->variants->random();
+                    $variantId = $variant->id;
+                }
+
                 $quantity = rand(1, 10);
                 $price = rand(100000, 300000);
                 $subtotal = $price * $quantity;
@@ -29,6 +36,7 @@ class ImportDetailSeeder extends Seeder
                 ImportDetail::create([
                     'import_id' => $import->id,
                     'product_id' => $product->id,
+                    'variant_id' => $variantId,
                     'quantity' => $quantity,
                     'import_price' => $price,
                     'subtotal' => $subtotal,

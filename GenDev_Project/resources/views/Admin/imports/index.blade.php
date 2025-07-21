@@ -31,11 +31,16 @@
                     <td>{{$import->created_at}}</td>
                     <td>
                         <a href="{{route('admin.imports.show',$import->id)}}" class="btn btn-primary">Xem</a>
-                        <a href="{{route('admin.imports.edit',$import->id)}}" class="btn btn-info">Sửa</a>
-                        <a href="{{route('admin.imports.destroy',$import->id)}}" class="btn btn-danger">Xóa</a>
+                        @if ($import->status == 0)                          
+                            <a href="{{route('admin.imports.edit',$import->id)}}" class="btn btn-info">Sửa</a>
+                            <a href="{{route('admin.imports.destroy',$import->id)}}" class="btn btn-danger">Xóa</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <div class="d-flex justify-content-end">
+        {{ $imports->links() }}
+    </div>
 @endsection
