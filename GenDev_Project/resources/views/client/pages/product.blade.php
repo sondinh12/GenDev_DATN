@@ -23,18 +23,6 @@
                         </div>
                         <!-- .handheld-sidebar-toggle -->
                         <h1 class="woocommerce-products-header__title page-title">Tất cả sản phẩm</h1>
-                        <!-- .shop-view-switcher -->
-                        <form class="form-techmarket-wc-ppp" method="POST">
-                            <select class="techmarket-wc-wppp-select c-select" onchange="this.form.submit()" name="ppp">
-                                <option value="20">Hiển thị 20</option>
-                                <option value="40">Hiển thị 40</option>
-                                <option value="-1">Hiển thị tất cả</option>
-                            </select>
-                            <input type="hidden" value="5" name="shop_columns">
-                            <input type="hidden" value="15" name="shop_per_page">
-                            <input type="hidden" value="right-sidebar" name="shop_layout">
-                        </form>
-                        <!-- .form-techmarket-wc-ppp -->
                         <form method="get" class="woocommerce-ordering">
                             <select class="orderby" name="orderby">
                                 <option value="popularity">Sắp xếp theo phổ biến</option>
@@ -56,225 +44,624 @@
                         <!-- .techmarket-advanced-pagination -->
                     </div>
                     <!-- .shop-control-bar -->
-                    <div class="tab-content">
-                        <div id="grid" class="tab-pane active" role="tabpanel">
-                            <div class="woocommerce columns-5">
-                                <div class="products">
-                                    <div class="product first">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/1.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Bbd 23-Inch Screen LED-Lit Monitorss Buds</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
+                    <div id="grid-extended" class="tab-pane" role="tabpanel">
+                        <div class="woocommerce columns-7">
+                            <div class="products">
+                                <div class="product first">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
                                     </div>
-                                    <!-- .product -->
-                                    <div class="product ">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/1.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Bluetooth on-ear PureBass Headphones</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
                                         </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/2.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Bluetooth on-ear PureBass Headphones</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
+                                        <span class="review-count">(1)</span>
                                     </div>
-                                    <!-- .product -->
-                                    <div class="product ">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/3.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Smart Watches 3 SWR50</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product ">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/4.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Xtreme ultimate splashproof portable speaker</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product last">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/5.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">On-ear Wireless NXTG</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product first">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/6.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">On-ear Wireless NXTG</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product ">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/7.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Xtreme ultimate splashproof portable speaker</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product ">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/8.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Gear Virtual Reality 3D with Bluetooth Glasses</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product ">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/9.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">Watch Stainless with Grey Suture Leather Strap</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
-                                    <div class="product last">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Thêm vào yêu thích</a>
-                                        </div>
-                                        <!-- .yith-wcwl-add-to-wishlist -->
-                                        <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
-                                            <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/10.jpg">
-                                            <span class="price">
-                                                <span class="woocommerce-Price-amount amount">
-                                                    <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
-                                            </span>
-                                            <h2 class="woocommerce-loop-product__title">ZenBook 3 Ultrabook 8GB 512SSD W10</h2>
-                                        </a>
-                                        <!-- .woocommerce-LoopProduct-link -->
-                                        <div class="hover-area">
-                                            <a class="button" href="cart.html">Thêm vào giỏ hàng</a>
-                                            <a class="add-to-compare-link" href="compare.html">So sánh</a>
-                                        </div>
-                                        <!-- .hover-area -->
-                                    </div>
-                                    <!-- .product -->
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
                                 </div>
-                                <!-- .products -->
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/2.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Watch Stainless with Grey Suture Leather Strap</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/3.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Bluetooth on-ear PureBass Headphones</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/4.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">4K Action Cam with Wi-Fi & GPS</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/5.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Xtreme ultimate splashproof portable speaker</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/6.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Xtreme ultimate splashproof portable speaker</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product last">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/7.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">XONE Wireless Controller</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product first">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/8.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Bbd 23-Inch Screen LED-Lit Monitorss Buds</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/9.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Gear Virtual Reality 3D with Bluetooth Glasses</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/10.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">On-ear Wireless NXTG</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/11.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Smart Watches 3 SWR50</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/12.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Video & Air Quality Monitor</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/13.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Gear Virtual Reality 3D with Bluetooth Glasses</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product last">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/14.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">On-ear Wireless NXTG</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product first">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/15.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Xtreme ultimate splashproof portable speaker</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/16.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">4K Action Cam with Wi-Fi & GPS</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/17.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Xtreme ultimate splashproof portable speaker</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/5.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">ZenBook 3 Ultrabook 8GB 512SSD W10</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/12.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Watch Stainless with Grey Suture Leather Strap</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <!-- .woocommerce-product-details__short-description -->
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product ">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/1.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">Bbd 23-Inch Screen LED-Lit Monitorss Buds</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
+                                <div class="product last">
+                                    <div class="yith-wcwl-add-to-wishlist">
+                                        <a href="wishlist.html" rel="nofollow" class="add_to_wishlist"> Add to Wishlist</a>
+                                    </div>
+                                    <!-- .yith-wcwl-add-to-wishlist -->
+                                    <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link" href="single-product-fullwidth.html">
+                                        <img width="224" height="197" alt="" class="attachment-shop_catalog size-shop_catalog wp-post-image" src="assets/images/products/8.jpg">
+                                        <span class="price">
+                                            <span class="woocommerce-Price-amount amount">
+                                                <span class="woocommerce-Price-currencySymbol">$</span>800.00</span>
+                                        </span>
+                                        <h2 class="woocommerce-loop-product__title">On-ear Wireless NXTG</h2>
+                                    </a>
+                                    <!-- .woocommerce-LoopProduct-link -->
+                                    <div class="techmarket-product-rating">
+                                        <div title="Rated 5.00 out of 5" class="star-rating">
+                                            <span style="width:100%">
+                                                <strong class="rating">5.00</strong> out of 5</span>
+                                        </div>
+                                        <span class="review-count">(1)</span>
+                                    </div>
+                                    <!-- .techmarket-product-rating -->
+                                    <span class="sku_wrapper">SKU:
+                                        <span class="sku">5487FB8/13</span>
+                                    </span>
+                                    <!-- .woocommerce-product-details__short-description -->
+                                    <a class="button product_type_simple add_to_cart_button" href="cart.html">Add to cart</a>
+                                    <a class="add-to-compare-link" href="compare.html">Add to compare</a>
+                                </div>
+                                <!-- .product -->
                             </div>
-                            <!-- .woocommerce -->
+                            <!-- .products -->
                         </div>
+                        <!-- .woocommerce -->
                     </div>
                     <!-- .tab-content -->
                     <div class="shop-control-bar-bottom">
