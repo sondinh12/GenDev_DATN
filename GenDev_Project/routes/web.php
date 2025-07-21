@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use App\Http\Controllers\Client\ProductReviewController;
 use Illuminate\Support\Facades\Route;
@@ -63,13 +64,13 @@ Route::get('/product', function () {
 Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
-Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
-
+Route::middleware(['auth', 'check_ban'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
+    Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+    Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
+});
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
 })->name('checkout.success');
@@ -79,13 +80,15 @@ Route::get('/checkout-failed', function () {
 Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
 
 // hành dộng trang cart
-Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
+Route::middleware(['auth', 'check_ban'])->group(function () {
+    Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
-Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
-Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
-Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
+    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
+    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
+    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
+});
 // Route::get('/cart', function () {
 //     return view('client.cart.cart');
 // })->name('cart');
@@ -150,6 +153,13 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
 
+    // Đánh giá(Reviews)
+    Route::middleware(['auth', 'check_ban', 'permission:manage reviews'])->group(function () {
+        Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+        Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
+    });
+
     // Người dùng
     Route::middleware(['permission:manage users'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
@@ -167,12 +177,13 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
 });
 
 Route::resource('/product', ClientProductController::class);
-Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
+Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
     Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
     Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
+    Route::post('{order}/return', [ClientOrderController::class, 'return'])->name('return');
 });
 
 
@@ -180,10 +191,12 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
 
 
 Auth::routes(['verify' => true]); // Xác thực email
+Route::middleware(['auth', 'check_ban'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+    Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
+});
 
-Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
-Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
-Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 Route::get('/profile/change-password', function () {
     return view('auth.passwords.change_password');
 })->middleware('auth')->name('profile.change_password');

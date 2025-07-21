@@ -77,7 +77,7 @@ class UpdateCouponRequest extends FormRequest
             ],
 
             'status' => 'required|in:0,1',
-            'user_id'=>'integer'
+            'user_id' => ['required', 'integer', 'in:-1,0'],
         ];
     }
 
