@@ -26,10 +26,12 @@ use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Admin\PostCategoryController;
 
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
 Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
 
 Route::get('/about', function () {
@@ -66,11 +68,11 @@ Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::clas
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 Route::middleware(['auth', 'check_ban'])->group(function () {
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
-Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
+    Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+    Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
 });
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
@@ -82,13 +84,13 @@ Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_co
 
 // hành dộng trang cart
 Route::middleware(['auth', 'check_ban'])->group(function () {
-Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
+    Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
-Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
-Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
-Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
+    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
+    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
+    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
 });
 // Route::get('/cart', function () {
 //     return view('client.cart.cart');
@@ -153,9 +155,9 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
-    
+
     // Đánh giá(Reviews)
-    Route::middleware(['auth','check_ban','permission:manage reviews'])->group(function () {
+    Route::middleware(['auth', 'check_ban', 'permission:manage reviews'])->group(function () {
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
         Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
         Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
@@ -169,23 +171,35 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
+
+
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
         Route::resource('coupons', CouponsController::class);
         Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
         Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
+
+    // Danh mục bài viết
+    // Thùng rác
+    Route::get('post-categories/trash', [PostCategoryController::class, 'trash'])->name('post-categories.trash');
+    Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
+    Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
+    // CRUD danh mục bài viết
+    Route::resource('post-categories', PostCategoryController::class);
+
     });
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
 });
 
 Route::resource('/product', ClientProductController::class);
-Route::middleware(['auth','check_ban','verified'])->prefix('orders')->name('client.orders.')->group(function () {
+Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
     Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
     Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
+    Route::post('{order}/return', [ClientOrderController::class, 'return'])->name('return');
 });
 
 
@@ -194,9 +208,9 @@ Route::middleware(['auth','check_ban','verified'])->prefix('orders')->name('clie
 
 Auth::routes(['verify' => true]); // Xác thực email
 Route::middleware(['auth', 'check_ban'])->group(function () {
-Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
-Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
-Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
+    Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+    Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
 
 Route::get('/profile/change-password', function () {

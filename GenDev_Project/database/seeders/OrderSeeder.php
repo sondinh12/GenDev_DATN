@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Support\Carbon;
 
 class OrderSeeder extends Seeder
@@ -13,7 +14,8 @@ class OrderSeeder extends Seeder
         Order::insert([
             [
                 'user_id' => 1,
-                'coupon_id' => null,
+                'product_coupon_id' => null,
+                'shipping_coupon_id' => null,
                 'shipping_id' => 1,
                 'name' => 'Nguyễn Văn A',
                 'email' => 'a@example.com',
@@ -23,16 +25,19 @@ class OrderSeeder extends Seeder
                 'ward' => 'Phường Bến Nghé',
                 'postcode' => '70000',
                 'payment' => 'cod',
-                'total' => 150000,
-                'shipping_fee' => 20000,
-                'status' => 'pending',
                 'payment_status' => 'unpaid',
+                'subtotal' => 150000,
+                'product_discount' => 0,
+                'shipping_discount' => 0,
+                'total' => 150000,
+                'status' => 'pending',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'user_id' => 2,
-                'coupon_id' => 1,
+                'product_coupon_id' => 1,
+                'shipping_coupon_id' => null,
                 'shipping_id' => 2,
                 'name' => 'Trần Thị B',
                 'email' => 'b@example.com',
@@ -42,16 +47,19 @@ class OrderSeeder extends Seeder
                 'ward' => 'Hoàn Kiếm',
                 'postcode' => '10000',
                 'payment' => 'banking',
-                'total' => 250000,
-                'shipping_fee' => 30000,
-                'status' => 'shipped',
                 'payment_status' => 'paid',
+                'subtotal' => 300000,
+                'product_discount' => 50000,
+                'shipping_discount' => 0,
+                'total' => 250000,
+                'status' => 'shipping',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'user_id' => 3,
-                'coupon_id' => null,
+                'product_coupon_id' => null,
+                'shipping_coupon_id' => 2,
                 'shipping_id' => 3,
                 'name' => 'Lê Văn C',
                 'email' => 'c@example.com',
@@ -61,17 +69,18 @@ class OrderSeeder extends Seeder
                 'ward' => 'Hải Châu',
                 'postcode' => '550000',
                 'payment' => 'cod',
-                'total' => 180000,
-                'shipping_fee' => 25000,
-                'status' => 'completed',
                 'payment_status' => 'paid',
+                'subtotal' => 200000,
+                'product_discount' => 0,
+                'shipping_discount' => 20000,
+                'total' => 180000,
+                'status' => 'completed',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
         ]);
 
-        // Thêm seed cho order_details
-        \App\Models\OrderDetail::insert([
+        OrderDetail::insert([
             [
                 'order_id' => 1,
                 'product_id' => 1,
