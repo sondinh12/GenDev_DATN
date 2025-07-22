@@ -317,7 +317,8 @@
                 <div class="dropdown d-inline-block">
                     <button type="button" class="btn btn-sm top-icon p-0" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="rounded avatar-2xs p-0" src="{{ URL::asset('build/images/users/avatar-6.png') }}"
+                        <img class="rounded avatar-2xs p-0"
+                            src="{{ Auth::user()->avatar_url ?? asset('build/images/users/avatar-6.png') }}"
                             alt="Header Avatar">
                     </button>
                     <div
@@ -331,10 +332,13 @@
                                         </div>
                                     </div>
                                     <div class="rich-list-content">
-                                        <h3 class="rich-list-title text-white">Charlie Stone</h3>
-                                        <span class="rich-list-subtitle text-white">admin@codubucks.in</span>
+                                        <h3 class="rich-list-title text-white">{{ Auth::user()->name }}</h3>
+                                        <span class="rich-list-subtitle text-white">{{ Auth::user()->email }}</span>
                                     </div>
-                                    <div class="rich-list-append"><span class="badge badge-label-light fs-6">6+</span>
+                                    <div class="rich-list-append">
+                                        <span class="badge badge-label-light fs-6">
+                                            {{ Auth::user()->getRoleNames()->first() }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -345,33 +349,33 @@
                                             <div class="grid-nav-icon"><i class="far fa-address-card"></i></div>
                                             <span class="grid-nav-content">Hồ sơ</span>
                                         </a>
-                                        <a href="#!" class="grid-nav-item">
+                                        <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-comments"></i></div>
                                             <span class="grid-nav-content">Tin nhắn</span>
                                         </a>
-                                        <a href="#!" class="grid-nav-item">
+                                        <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-clone"></i></div>
                                             <span class="grid-nav-content">Hoạt động</span>
                                         </a>
                                     </div>
                                     <div class="grid-nav-row">
-                                        <a href="#!" class="grid-nav-item">
+                                        <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-calendar-check"></i></div>
                                             <span class="grid-nav-content">Công việc</span>
                                         </a>
-                                        <a href="#!" class="grid-nav-item">
+                                        <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-sticky-note"></i></div>
                                             <span class="grid-nav-content">Ghi chú</span>
                                         </a>
-                                        <a href="#!" class="grid-nav-item">
+                                        <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-bell"></i></div>
                                             <span class="grid-nav-content">Thông báo</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer card-footer-bordered rounded-0"><a href="{{ url('auth-login') }}"
-                                    class="btn btn-label-danger">Đăng xuất</a></div>
+                            <div class="card-footer card-footer-bordered rounded-0"><a href="{{ url('/') }}"
+                                    class="btn btn-label-danger">Về trang chủ</a></div>
                         </div>
                     </div>
                 </div>
