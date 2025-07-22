@@ -26,10 +26,12 @@ use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Admin\PostCategoryController;
 
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
 Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
 
 Route::get('/about', function () {
@@ -169,12 +171,23 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
+
+
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
         Route::resource('coupons', CouponsController::class);
         Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
         Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
+
+    // Danh mục bài viết
+    // Thùng rác
+    Route::get('post-categories/trash', [PostCategoryController::class, 'trash'])->name('post-categories.trash');
+    Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
+    Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
+    // CRUD danh mục bài viết
+    Route::resource('post-categories', PostCategoryController::class);
+
     });
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
 });
