@@ -17,10 +17,12 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        $orders = Order::with('user')
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%');
-            })
+        $orders = Order::when($request->search, function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%');
+        })
+            ->when($request->from, fn($q) => $q->whereDate('created_at', '>=', $request->from))
+            ->when($request->to, fn($q) => $q->whereDate('created_at', '<=', $request->to))
             ->orderByDesc('created_at')
             ->paginate(10);
 
