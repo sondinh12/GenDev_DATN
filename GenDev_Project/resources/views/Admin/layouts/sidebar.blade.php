@@ -76,13 +76,15 @@
                     </li>
                 @endcan
 
+                {{-- Danh mục bài viết --}}
+                @can('manage posts')
                 <li>
-
                     <a href="{{ url('/admin/post-categories') }}" class="">
                         <i class="fa-solid fa-tag"></i>
                         <span>Danh mục bài viết</span>
                     </a>
                 </li>
+                @endcan
 
                 {{-- Đánh giá --}}
                 @can('manage comments')
