@@ -134,7 +134,6 @@
                         id="autoDismissAlert"
                         style="z-index:9999; min-width:300px; max-width:90vw;">
                         <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first('email') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     @endif
                     <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
@@ -185,6 +184,15 @@
                             </button>
                         </div>
                         <!-- Social Login -->
+                        <div class="text-center my-3">
+                            <p class="text-muted mb-2">Hoặc đăng nhập với</p>
+                            <div class="d-flex justify-content-center social-btns">
+                                <a href="#" class="btn btn-facebook" title="Facebook"><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="btn btn-google" title="Google"><i class="fab fa-google"></i></a>
+                                <a href="#" class="btn btn-twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
                     </form>
                     <!-- Register Link -->
                     <div class="text-center mt-4 register-link">

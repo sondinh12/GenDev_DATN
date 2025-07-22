@@ -67,8 +67,22 @@
                             <a title="Giới thiệu" href="{{ asset('/about') }}">Giới thiệu</a>
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
-
-                            <a title="Sản phẩm" href="{{ asset('/products') }}">Sản phẩm </a>
+                            <a title="Sản phẩm" 
+                            href="{{ asset('/products') }}">Sản phẩm </a>
+                            {{-- <ul role="menu" class=" dropdown-menu">
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
+                                </li>
+                            </ul> --}}
                             <!-- .dropdown-menu -->
                         </li>
                         <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
@@ -189,17 +203,30 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ route('cart') }}" class="cart-contents"
+                    <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
                         title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
-
+                    <ul class="dropdown-menu dropdown-menu-mini-cart">
+                        <li>
+                            <div class="widget woocommerce widget_shopping_cart">
+                                <div class="widget_shopping_cart_content">
+                                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                    <p class="woocommerce-mini-cart__buttons buttons">
+                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- .widget_shopping_cart -->
+                        </li>
+                    </ul>
+                    <!-- .dropdown-menu-mini-cart -->
                 </li>
             </ul>
             <!-- .site-header-cart -->
         </div>
-
+        <!-- /.row -->
     </div>
     <!-- .col-full -->
     <div class="col-full handheld-only">

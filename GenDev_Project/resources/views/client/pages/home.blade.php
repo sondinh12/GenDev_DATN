@@ -110,7 +110,7 @@
                                         <span class="d-block text-primary mt-1">Được yêu thích nhất</span>
                                     </h2>
                                 </header>
-                                <div class="product-cards-grid">
+                                <div class="product-cards-grid">git 
                                     <div class="row row-cols-2 row-cols-md-4 g-3">
                                         @foreach($bestSellingProducts as $product)
                                             <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
@@ -139,7 +139,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
+</div>
 
                                 <!-- .features -->
                             </section>

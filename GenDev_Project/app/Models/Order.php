@@ -65,7 +65,7 @@ class Order extends Model
     // Danh sách sản phẩm trong đơn hàng
     public function orderDetails(): HasMany
     {
-        return $this->hasMany(OrderDetail::class, 'order_id');
+        return $this->hasMany(OrderDetail::class, 'order_id')->with('product');
     }
 
     // Lịch sử thay đổi trạng thái
