@@ -5,28 +5,23 @@
     <div class="col-full">
         <div class="row">
             <nav class="woocommerce-breadcrumb">
-                <a href="home-v1.html">Home</a>
+                <a href="/">Trang chủ</a>
                 <span class="delimiter">
                     <i class="tm tm-breadcrumbs-arrow-right"></i>
                 </span>
-                Contact v2
+                Liên hệ
             </nav>
             <!-- .woocommerce-breadcrumb -->
             <div id="primary" class="content-area">
                 <main id="main" class="site-main">
                     <div class="type-page hentry">
-                        <header class="entry-header">
-                            <div class="page-header-caption">
-                                <h1 class="entry-title">Contact v2</h1>
-                            </div>
-                        </header>
                         <!-- .entry-header -->
                         <div class="entry-content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="text-block">
-                                        <h2 class="contact-page-title">Leave us a Message</h2>
-                                        <p>Aenean massa diam, viverra vitae luctus sed, gravida eget est. Etiam nec ipsum porttitor, consequat libero eu, dignissim eros. Nulla auctor lacinia enim id mollis. Curabitur luctus interdum eleifend. Ut tempor lorem a turpis fermentum,.</p>
+                                        <h2 class="contact-page-title">Gửi tin nhắn cho chúng tôi</h2>
+                                        <p>Hãy để lại lời nhắn, chúng tôi sẽ phản hồi bạn sớm nhất có thể.</p>
                                     </div>
                                     <div class="contact-form">
                                         <div role="form" class="wpcf7" id="wpcf7-f425-o1" lang="en-US" dir="ltr">
@@ -41,7 +36,7 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="col-xs-12 col-md-6">
-                                                        <label>First name
+                                                        <label>Họ
                                                             <abbr title="required" class="required">*</abbr>
                                                         </label>
                                                         <br>
@@ -51,7 +46,7 @@
                                                     </div>
                                                     <!-- .col -->
                                                     <div class="col-xs-12 col-md-6">
-                                                        <label>Last name
+                                                        <label>Tên
                                                             <abbr title="required" class="required">*</abbr>
                                                         </label>
                                                         <br>
@@ -63,7 +58,7 @@
                                                 </div>
                                                 <!-- .form-group -->
                                                 <div class="form-group">
-                                                    <label>Subject</label>
+                                                    <label>Chủ đề</label>
                                                     <br>
                                                     <span class="wpcf7-form-control-wrap subject">
                                                         <input type="text" aria-invalid="false" class="wpcf7-form-control wpcf7-text input-text" size="40" value="" name="subject">
@@ -71,7 +66,7 @@
                                                 </div>
                                                 <!-- .form-group -->
                                                 <div class="form-group">
-                                                    <label>Your Message</label>
+                                                    <label>Nội dung tin nhắn</label>
                                                     <br>
                                                     <span class="wpcf7-form-control-wrap your-message">
                                                         <textarea aria-invalid="false" class="wpcf7-form-control wpcf7-textarea" rows="10" cols="40" name="your-message"></textarea>
@@ -80,7 +75,7 @@
                                                 <!-- .form-group-->
                                                 <div class="form-group clearfix">
                                                     <p>
-                                                        <input type="submit" value="Send Message" class="wpcf7-form-control wpcf7-submit" />
+                                                        <input type="submit" value="Gửi tin nhắn" class="wpcf7-form-control wpcf7-submit" />
                                                     </p>
                                                 </div>
                                                 <!-- .form-group-->
@@ -99,16 +94,16 @@
                                     </div>
                                     <!-- .google-map -->
                                     <div class="kc-elm kc-css-773435 kc_text_block">
-                                        <h2 class="contact-page-title">Our Address</h2>
+                                        <h2 class="contact-page-title">Địa chỉ của chúng tôi</h2>
                                         <p>17 Princess Road London, Greater London NW1 8JR, UK
-                                            <br> Support(+800)856 800 604
+                                            <br> Hỗ trợ: (+800)856 800 604
                                             <br> Email: <a href="mailto:contact@yourstore.com">info@electro.com</a>
                                         </p>
-                                        <h3>Opening Hours</h3>
-                                        <p class="operation-hours">Monday to Friday: 9am-9pm
-                                            <br> Saturday to Sunday: 9am-11pm</p>
-                                        <h3>Careers</h3>
-                                        <p>If you’re interested in employment opportunities at Electro, please email us: <a href="mailto:contact@yourstore.com">contact@yourstore.com</a></p>
+                                        <h3>Giờ mở cửa</h3>
+                                        <p class="operation-hours">Thứ 2 đến Thứ 6: 9h - 21h
+                                            <br> Thứ 7 & Chủ nhật: 9h - 23h</p>
+                                        <h3>Tuyển dụng</h3>
+                                        <p>Nếu bạn quan tâm đến cơ hội việc làm tại Electro, vui lòng gửi email cho chúng tôi: <a href="mailto:contact@yourstore.com">contact@yourstore.com</a></p>
                                     </div>
                                 </div>
                                 <!-- .col -->
