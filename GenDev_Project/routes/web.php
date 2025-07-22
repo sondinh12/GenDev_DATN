@@ -181,6 +181,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     });
     // Danh mục bài viết
     Route::middleware(['permission:manage posts'])->group(function () {
+        // Thùng rác
         Route::get('post-categories/trash', [PostCategoryController::class, 'trash'])->name('post-categories.trash');
         Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
