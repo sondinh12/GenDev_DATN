@@ -230,6 +230,11 @@ class CheckoutController extends Controller
 
             if ($request->payment_method === 'banking') {
                 $paymentUrl = $vnpayService->buildPaymentUrl($order);
+                $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
+                    ->whereHas('cart', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    })
+                    ->delete();
                 return redirect($paymentUrl);
             }
 

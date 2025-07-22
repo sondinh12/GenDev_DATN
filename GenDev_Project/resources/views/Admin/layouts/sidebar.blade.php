@@ -60,11 +60,19 @@
                 <li>
 
                 <li>
+
+                    <a href="{{ url('/admin/post-categories') }}" class="">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Danh mục bài viết</span>
+                    </a>
+                </li>
+
+                <li>
                     <a href="{{ url('/admin/reviews') }}" class="">
                         <i class="fa-solid fa-tag"></i>
                         <span>Đánh giá</span>
                     </a>
-                <li>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
