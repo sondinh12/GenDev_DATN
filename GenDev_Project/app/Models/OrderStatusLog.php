@@ -15,6 +15,7 @@ class OrderStatusLog extends Model
         'old_status',
         'new_status',
         'note',
+        'refund_bank_account',
         'changed_at',
     ];
 
