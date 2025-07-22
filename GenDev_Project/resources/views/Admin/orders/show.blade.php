@@ -3,113 +3,112 @@
 @section('title', 'Chi tiết đơn hàng')
 
 @section('content')
-    <div class="container-fluid py-4" style="background: #f8fafc;">
-        <div class="row justify-content-center">
-            {{-- Flash Message --}}
-          @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        @elseif(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-triangle me-1"></i> {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        @elseif(session('notification'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <i class="fas fa-info-circle me-1"></i> {{ session('notification') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        @endif
-</div>
-
-            <div class="col-lg-10">
-                <div class="card shadow mb-4">
-                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                        <h3 class="mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>Chi tiết đơn hàng
-                            #{{ $order->id }}
-                        </h3>
-                        <a href="{{ route('orders.index') }}" class="btn btn-flat-secondary btn-sm"><i
-                                class="fas fa-arrow-left"></i> Quay lại</a>
-                    </div>
-                    <div class="card-body">
-                        {{-- Trạng thái thanh toán & đơn hàng --}}
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <h5 class="fw-bold mb-2">Trạng thái thanh toán</h5>
-                                @php
-                                    $paymentClass = match ($order->payment_status) {
-                                        'paid' => 'success',
-                                        'unpaid' => 'warning',
-                                        'cancelled' => 'danger',
-                                        default => 'secondary',
-                                    };
-
-                                    $paymentLabels = [
-                                        'paid' => 'Đã thanh toán',
-                                        'unpaid' => 'Chưa thanh toán',
-                                        'cancelled' => 'Đã hủy',
-                                    ];
-                                @endphp
-                                <span class="badge bg-{{ $paymentClass }} p-2 mb-2">
-                                    {{ $paymentLabels[$order->payment_status] ?? ucfirst($order->payment_status) }}
-                                </span>
-                            </div>
-
-                            <div class="col-md-6">
-    <h5 class="fw-bold mb-2">Trạng thái đơn hàng</h5>
-
-    @php
-        $statusOrder = ['pending', 'processing', 'shipped', 'completed', 'cancelled'];
-        $statusClass = [
-            'pending' => 'secondary',
-            'processing' => 'info',
-            'shipped' => 'primary',
-            'completed' => 'success',
-            'cancelled' => 'danger',
-        ];
-        $statusLabels = [
-            'pending' => 'Chờ xử lý',
-            'processing' => 'Đang xử lý',
-            'shipped' => 'Đã giao',
-            'completed' => 'Hoàn thành',
-            'cancelled' => 'Đã hủy',
-        ];
-        $currentIndex = array_search($order->status, $statusOrder);
-    @endphp
-
-    {{-- Hiển thị trạng thái hiện tại --}}
-    <span class="badge bg-{{ $statusClass[$order->status] ?? 'dark' }} p-2 mb-2">
-        {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
-    </span>
-
-    {{-- Nếu chưa hoàn thành hoặc huỷ thì cho cập nhật --}}
-    @if (!in_array($order->status, ['shipped', 'cancelled', 'completed']))
-        <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
-            @csrf
-            @method('PUT')
-            <div class="d-flex flex-column flex-md-row align-items-start gap-2">
-                <select name="status" class="form-select form-select-sm w-auto">
-                    @foreach($statusOrder as $key => $status)
-                        {{-- Chỉ cho chuyển đến trạng thái tiếp theo và huỷ, không cho hoàn thành thủ công --}}
-                        @if(
-                            ($key > $currentIndex && $status !== 'completed') ||
-                            ($status === 'cancelled' && $order->status !== 'cancelled')
-                        )
-                            <option value="{{ $status }}">{{ $statusLabels[$status] }}</option>
-                        @endif
-                    @endforeach
-                </select>
-                <input type="text" name="note" class="form-control form-control-sm w-50"
-                       placeholder="Ghi chú (nếu có)">
-                <button class="btn btn-sm btn-outline-primary">
-                    <i class="fas fa-sync"></i> Cập nhật
-                </button>
+   <div class="container-fluid py-4" style="background: #f8fafc;">
+    <div class="row justify-content-center">
+        {{-- Flash Message --}}
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        </form>
-    @endif
-</div>
+        @elseif(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-1"></i> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @elseif(session('notification'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-info-circle me-1"></i> {{ session('notification') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+    </div>
+
+ <div class="col-lg-10">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                <h3 class="mb-0">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>Chi tiết đơn hàng #{{ $order->id }}
+                </h3>
+                <a href="{{ route('orders.index') }}" class="btn btn-flat-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+            <div class="card-body">
+                @php
+                    $statusOrder = ['pending', 'processing', 'shipping', 'shipped', 'completed', 'cancelled', 'returned'];
+                    $statusClass = [
+                        'pending' => 'secondary',
+                        'processing' => 'info',
+                        'shipping' => 'warning',
+                        'shipped' => 'primary',
+                        'completed' => 'success',
+                        'cancelled' => 'danger',
+                        'returned' => 'warning',
+                    ];
+                    $statusLabels = [
+                        'pending' => 'Chờ xử lý',
+                        'processing' => 'Đang xử lý',
+                        'shipping' => 'Đang giao',
+                        'shipped' => 'Đã giao',
+                        'completed' => 'Hoàn thành',
+                        'cancelled' => 'Đã hủy',
+                        'returned' => 'Hoàn hàng',
+                    ];
+                    $currentIndex = array_search($order->status, $statusOrder);
+                @endphp
+
+                {{-- Trạng thái thanh toán --}}
+                <h5 class="fw-bold mb-2">Trạng thái thanh toán</h5>
+                <span class="badge bg-{{ $statusClass[$order->payment_status] ?? 'secondary' }} p-2 mb-2">
+                    {{ ucfirst($order->payment_status) }}
+                </span>
+
+                {{-- Trạng thái đơn hàng --}}
+                <h5 class="fw-bold mt-3">Trạng thái đơn hàng</h5>
+                <span class="badge bg-{{ $statusClass[$order->status] ?? 'dark' }} p-2 mb-2">
+                    {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
+                </span>
+
+                @if (!in_array($order->status, ['shipped', 'cancelled', 'completed', 'returned']))
+                    <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
+                        @csrf
+                        @method('PUT')
+                        <div class="d-flex flex-column flex-md-row align-items-start gap-2">
+                            <select name="status" class="form-select form-select-sm w-auto">
+                                @foreach($statusOrder as $key => $status)
+                                    @if(
+                                        ($key === $currentIndex + 1) ||
+                                        ($status === 'cancelled' && $order->status !== 'cancelled')
+                                    )
+                                        <option value="{{ $status }}">{{ $statusLabels[$status] }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <input type="text" name="note" class="form-control form-control-sm w-50"
+                                   placeholder="Ghi chú (nếu có)">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-sync"></i> Cập nhật
+                            </button>
+                        </div>
+                    </form>
+                @endif
+
+                {{-- Số tài khoản hoàn tiền nếu applicable --}}
+                @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'returned']))
+                    @php
+                        $refundLog = $order->orderStatusLogs()
+                            ->whereNotNull('refund_bank_account')
+                            ->orderByDesc('changed_at')
+                            ->first();
+                    @endphp
+                    @if($refundLog && $refundLog->refund_bank_account)
+                        <div class="alert alert-info mt-3">
+                            <strong>Số tài khoản hoàn tiền:</strong> {{ $refundLog->refund_bank_account }}
+                        </div>
+                    @endif
+                @endif
+
 
                         {{-- Thông tin khách hàng --}}
                         <div class="card mb-4 border-start border-4 border-primary">
@@ -163,10 +162,6 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-4 fw-bold">Phí giao hàng:</div>
                                     <div class="col-sm-8">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-4 fw-bold">Mã giảm giá:</div>
-                                    <div class="col-sm-8">{{ $order->coupon->coupon_code ?? '-' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -222,56 +217,41 @@
                             </div>
                         </div>
 
-                        {{-- Tổng kết --}}
-                        @php
-                            $discount = 0;
-                            if (isset($order->coupon)) {
-                                if ($order->coupon->discount_type === 'fixed') {
-                                    $discount = $order->coupon->discount_amount;
-                                } elseif ($order->coupon->discount_type === 'percent') {
-                                    $discount = ($order->total * $order->coupon->discount_amount) / 100;
-                                    if ($order->coupon->max_coupon > 0) {
-                                        $discount = min($discount, $order->coupon->max_coupon);
-                                    }
-                                }
-                            }
-                            $discount = round($discount, -3);
-                            $subtotal = $order->orderDetails->sum(function ($detail) {
-                                return $detail->price * $detail->quantity;
-                            });
-                        @endphp
-                        <div class="card border-start border-4 border-warning mb-4">
-                            <div class="card-header bg-light fw-bold"><i class="fas fa-calculator me-2"></i>Tổng kết đơn
-                                hàng</div>
-                            <div class="card-body p-3">
-                                <div class="row mb-2">
-                                    <div class="col-sm-4 fw-bold">Tổng phụ:</div>
-                                    <div class="col-sm-8">{{ number_format($subtotal, 0, ',', '.') }} đ</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-4 fw-bold">Giảm giá:</div>
-                                    <div class="col-sm-8">
-                                        @if ($discount > 0)
-                                            -{{ number_format($discount, 0, ',', '.') }} đ
-                                        @else
-                                            0 đ
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-4 fw-bold">Phí giao hàng:</div>
-                                    <div class="col-sm-8">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-sm-4 fw-bold">Tổng tiền:</div>
-                                    <div class="col-sm-8 text-danger fw-bold" style="font-size: 1.2rem;">
-                                        {{ number_format($order->total, 0, ',', '.') }} đ
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="card border-start border-4 border-warning mb-4 mt-4">
+    <div class="card-header bg-light fw-bold">
+        <i class="fas fa-calculator me-2"></i>Tổng kết đơn hàng
+    </div>
+    <div class="card-body p-3">
+        <div class="row mb-2">
+            <div class="col-sm-4 fw-bold">Tổng phụ:</div>
+            <div class="col-sm-8">{{ number_format($order->subtotal, 0, ',', '.') }} đ</div>
+        </div>
+        @if($order->product_discount > 0)
+        <div class="row mb-2">
+            <div class="col-sm-4 fw-bold">Giảm giá sản phẩm:</div>
+            <div class="col-sm-8 text-success">-{{ number_format($order->product_discount, 0, ',', '.') }} đ</div>
+        </div>
+        @endif
+        @if($order->shipping_discount > 0)
+        <div class="row mb-2">
+            <div class="col-sm-4 fw-bold">Giảm phí vận chuyển:</div>
+            <div class="col-sm-8 text-success">-{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</div>
+        </div>
+        @endif
+        <div class="row mb-2">
+            <div class="col-sm-4 fw-bold">Phí vận chuyển:</div>
+            <div class="col-sm-8">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</div>
+        </div>
+        <div class="row mb-2 border-top pt-2">
+            <div class="col-sm-4 fw-bold">Tổng tiền thanh toán:</div>
+            <div class="col-sm-8 text-danger fw-bold" style="font-size: 1.2rem;">
+                {{ number_format($order->total, 0, ',', '.') }} đ
+            </div>
+        </div>
+    </div>
+</div>
 
-                        {{-- Lịch sử trạng thái --}}
+
                         {{-- Lịch sử trạng thái --}}
                         <div class="card mb-4 border-start border-4 border-dark">
                             <div class="card-header bg-light fw-bold">
