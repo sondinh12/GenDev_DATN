@@ -10,6 +10,7 @@ use App\Models\Import;
 use App\Models\ImportDetail;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\ProductVariantAttribute;
 use App\Models\Supplier;
 use App\Models\SupplierProductPrice;
 use DB;
@@ -229,7 +230,6 @@ class ImportController extends Controller
             'details.product',
             'supplier.productPrices'
         ])->where('id', $id)->first();
-
         if ($request->isMethod('post')) {
             $validated = $request->validate([
                 'status' => 'required|in:0,1',
@@ -238,15 +238,96 @@ class ImportController extends Controller
             $dtImport->status = $validated['status'];
             $dtImport->save();
 
+            // 👉 Chỉ xử lý khi chuyển trạng thái sang "Đã duyệt"
+            if ($dtImport->status == 1) {
+                foreach ($dtImport->details as $detail) {
+                    $product = $detail->product;
+
+                    // ✅ Tạo mới sản phẩm nếu chưa tồn tại
+                    if (!$product && $detail->product_temp_name) {
+                        $product = Product::create([
+                            'name' => $detail->product_temp_name,
+                            'quantity' => $detail->variant_data ? 0 : $detail->quantity,
+                            'price' => !$detail->variant_data ? $detail->import_price : null,
+                        ]);
+
+                        $detail->product_id = $product->id;
+                        $detail->save();
+                    }
+
+                    if ($product) {
+                        if ($product) {
+                            // ✅ Sản phẩm đơn giản → tăng số lượng
+                            $product->quantity = (int) $product->quantity + (int) $detail->quantity;
+                            $product->save();
+                        } else {
+                            // ✅ Sản phẩm có biến thể
+                            if ($detail->variant_id) {
+                                // 👉 Nếu đã có biến thể → cập nhật số lượng và giá
+                                $variant = ProductVariant::find($detail->variant_id);
+                                if ($variant) {
+                                    $variant->quantity += $detail->quantity;
+                                    $variant->price = $detail->import_price;
+                                    $variant->save();
+                                }
+                            } elseif ($detail->variant_data) {
+                                // 👉 Tạo mới biến thể từ variant_data
+                                $variant = ProductVariant::create([
+                                    'product_id' => $product->id,
+                                    'quantity' => $detail->quantity,
+                                    'price' => $detail->import_price,
+                                ]);
+
+                                foreach ($detail->variant_data as $v) {
+                                    ProductVariantAttribute::create([
+                                        'product_variant_id' => $variant->id,
+                                        'attribute_value_id' => $v['value_id'],
+                                        'attribute_id' => $v['attribute_id'], // ✅ THÊM attribute_id đầy đủ
+                                    ]);
+                                }
+
+                                // Gán lại variant_id cho chi tiết đơn nhập
+                                $detail->variant_id = $variant->id;
+                                $detail->save();
+                            }
+                        }
+                    }
+                }
+            }
+
             return redirect()->route('admin.imports.show', $id)->with('success', 'Cập nhật trạng thái thành công!');
         }
+
+
         return view('Admin.imports.show', compact('dtImport'));
     }
 
     public function edit(string $id)
     {
-        return view('Admin.imports.edit');
+        $import = Import::with([
+            'details.variant.variantAttributes.attribute',
+            'details.product',
+            'supplier',
+            'details'
+        ])->findOrFail($id);
+
+        // Chỉ cho phép sửa khi chưa xác nhận
+        if ($import->status == 1) {
+            return redirect()->back()->with('error', 'Không thể sửa phiếu nhập đã xác nhận.');
+        }
+
+        $suppliers = Supplier::all();
+        $attributes = Attribute::with('values')->get();
+        $existingProducts = Product::with(['variants.variantAttributes.attribute'])->get();
+
+        return view('Admin.imports.edit', compact(
+            'import',
+            'suppliers',
+            'attributes',
+            'existingProducts'
+        ));
     }
+
 
     public function update(ImportRequest $request)
     {
