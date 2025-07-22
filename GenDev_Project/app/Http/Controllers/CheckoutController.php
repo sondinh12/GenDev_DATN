@@ -14,10 +14,11 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Ship;
 use App\Services\VnpayService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -31,31 +32,32 @@ class CheckoutController extends Controller
             $selectedItemIds = $output['selected_items'] ?? [];
         }
 
-
-        $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+        $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
         $subtotal = $cartItems->sum(function ($item) {
             if ($item->variant) {
                 $price = $item->variant->sale_price > 0
-                ? $item->variant->sale_price
-                : $item->variant->price;
+                    ? $item->variant->sale_price
+                    : $item->variant->price;
             } else {
                 $price = $item->product->sale_price > 0
                     ? $item->product->sale_price
                     : $item->product->price;
             }
-
             return $price * $item->quantity;
         });
 
-        $user = auth()->user();
-
-        // Lấy danh sách coupon hợp lệ
-        $coupons = Coupon::where('usage_limit', '>', 0)->get();
+        $user = Auth::user();
+        $coupons = Coupon::where('usage_limit', '>', 0)
+            ->where('status', 1)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->get();
 
         return view('client.checkout.checkout', compact(
-            'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'));
+            'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'
+        ));
     }
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
@@ -66,9 +68,7 @@ class CheckoutController extends Controller
             return back()->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
-        // Truy vấn cart_details với quan hệ product và variant
-
-        $cartItems = Cartdetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+        $cartItems = CartDetail::with('product', 'cart', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
             ->get();
 
@@ -79,7 +79,6 @@ class CheckoutController extends Controller
         DB::beginTransaction();
 
         try {
-            // Tính tổng tiền sản phẩm
             $subtotal = $cartItems->sum(function ($item) {
                 if ($item->variant) {
                     $price = $item->variant->sale_price > 0
@@ -90,24 +89,22 @@ class CheckoutController extends Controller
                         ? $item->product->sale_price
                         : $item->product->price;
                 }
-
                 return $price * $item->quantity;
             });
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
-            // Áp dụng mã giảm giá nếu có
-            $discount = 0;
-            $couponId = null;
-            $userId = auth()->id();
-            if (session()->has('applied_coupon')) {
-                $applied = session('applied_coupon');
-                $discount = $applied['discount'];
-                $couponId = $applied['id'];
+
+            $orderDiscount = 0;
+            $orderCouponId = null;
+            $userId = Auth::id();
+            if (session()->has('applied_order_coupon')) {
+                $applied = session('applied_order_coupon');
+                $orderDiscount = $applied['discount'];
+                $orderCouponId = $applied['id'];
                 $userIdFromSession = $applied['user_id'];
                 if ($userIdFromSession) {
-                    $coupon = Coupon::find($couponId);
+                    $coupon = Coupon::find($orderCouponId);
                     $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
-
                     if ($couponUser) {
                         $currentTimesUsed = $couponUser->pivot->times_used;
                         $coupon->users()->updateExistingPivot($userIdFromSession, [
@@ -121,11 +118,35 @@ class CheckoutController extends Controller
                 }
             }
 
-            $total = $subtotal - $discount + $shippingFee;
-            if ($total < 0)
-                $total = 0;
+            $shippingDiscount = 0;
+            $shippingCouponId = null;
+            if (session()->has('applied_shipping_coupon')) {
+                $applied = session('applied_shipping_coupon');
+                $shippingDiscount = $applied['discount'];
+                $shippingCouponId = $applied['id'];
+                $userIdFromSession = $applied['user_id'];
+                if ($userIdFromSession) {
+                    $coupon = Coupon::find($shippingCouponId);
+                    $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
+                    if ($couponUser) {
+                        $currentTimesUsed = $couponUser->pivot->times_used;
+                        $coupon->users()->updateExistingPivot($userIdFromSession, [
+                            'times_used' => $currentTimesUsed + 1
+                        ]);
+                    } else {
+                        $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
+                    }
+                    $coupon->decrement('usage_limit');
+                    $coupon->increment('total_used');
+                }
+            }
 
-            //kiểm tra số lượng tồn khp ngay khi bấm mua
+            $finalShippingFee = max($shippingFee - $shippingDiscount, 0);
+            $total = $subtotal - $orderDiscount + $finalShippingFee;
+            if ($total < 0) {
+                $total = 0;
+            }
+
             foreach ($cartItems as $item) {
                 if ($item->variant_id) {
                     $variant = ProductVariant::find($item->variant_id);
@@ -140,11 +161,11 @@ class CheckoutController extends Controller
                 }
             }
 
-            // Tạo đơn hàng
             $txnCode = 'ORD' . strtoupper(uniqid());
             $order = Order::create([
-                'user_id' => auth()->id(),
-                'coupon_id' => $couponId,
+                'user_id' => Auth::id(),
+                'product_coupon_id' => $orderCouponId,
+                'shipping_coupon_id' => $shippingCouponId,
                 'shipping_id' => $shipping->id,
                 'shipping_fee' => $shippingFee,
                 'name' => $request->name,
@@ -157,22 +178,14 @@ class CheckoutController extends Controller
                 'payment' => $request->payment_method,
                 'payment_status' => 'unpaid',
                 'payment_expired_at' => $request->payment_method === 'banking' ? now()->addMinutes(30) : null,
+                'subtotal' => $subtotal,
+                'product_discount' => $orderDiscount,
+                'shipping_discount' => $shippingDiscount,
                 'total' => $total,
                 'transaction_code' => $txnCode,
                 'status' => 'pending',
             ]);
             $note = $request->note ?? null;
-            // Lưu từng sản phẩm vào chi tiết đơn hàng
-
-            if ($item->variant) {
-                $price = $item->variant->sale_price > 0
-                    ? $item->variant->sale_price
-                    : $item->variant->price;
-            } else {
-                $price = $item->product->sale_price > 0
-                    ? $item->product->sale_price
-                    : $item->product->price;
-            }
 
             foreach ($cartItems as $item) {
                 if ($item->variant) {
@@ -193,18 +206,17 @@ class CheckoutController extends Controller
                     'note' => $note
                 ]);
 
-                // Nếu có thuộc tính, lưu vào order_detail_attributes
-                if (!empty($item['attributes'])) {
-                    foreach ($item['attributes'] as $attr) {
+                if (!empty($item->variant->variantAttributes)) {
+                    foreach ($item->variant->variantAttributes as $attr) {
                         OrderDetailAttribute::create([
                             'order_detail_id' => $detail->id,
-                            'attribute_name' => $attr['attribute_name'],
-                            'attribute_value' => $attr['value'],
+                            'attribute_name' => $attr->attribute->name,
+                            'attribute_value' => $attr->value->value,
                         ]);
                     }
                 }
+
                 if ($request->payment_method === 'cod') {
-                    //trừ số lượng sau khi mua
                     if ($item->variant_id) {
                         $variant = ProductVariant::find($item->variant_id);
                         $variant->decrement('quantity', $item->quantity);
@@ -213,24 +225,22 @@ class CheckoutController extends Controller
                         $product->decrement('quantity', $item->quantity);
                     }
                 }
-
             }
 
             if ($request->payment_method === 'cod') {
-                session()->forget('applied_coupon');
-
-                $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
+                session()->forget('applied_order_coupon');
+                session()->forget('applied_shipping_coupon');
+                CartDetail::whereIn('id', $selectedItemIds)
                     ->whereHas('cart', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     })
                     ->delete();
-                Log::info('CheckoutController::store - Deleted cart items:', ['deleted_rows' => $deletedRows]);
             }
             DB::commit();
 
             if ($request->payment_method === 'banking') {
                 $paymentUrl = $vnpayService->buildPaymentUrl($order);
-                $deletedRows = CartDetail::whereIn('id', $selectedItemIds)
+                CartDetail::whereIn('id', $selectedItemIds)
                     ->whereHas('cart', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     })
@@ -248,14 +258,13 @@ class CheckoutController extends Controller
 
     public function retryPayment($orderId, VnpayService $vnpayService)
     {
-        $userId = auth()->id();
-
+        $userId = Auth::id();
         $order = Order::with('orderDetails.product', 'orderDetails.variant')
             ->where('id', $orderId)
             ->where('user_id', $userId)
             ->where('payment', 'banking')
-            ->whereIn('status', ['cancelled','pending'])
-            ->where('payment_status','unpaid')
+            ->whereIn('status', ['cancelled', 'pending'])
+            ->where('payment_status', 'unpaid')
             ->first();
 
         if (!$order) {
@@ -279,5 +288,4 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
-
 }
