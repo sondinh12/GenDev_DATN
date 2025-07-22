@@ -32,7 +32,6 @@ use App\Http\Controllers\Admin\PostCategoryController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
-Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
 
 Route::get('/about', function () {
     return view('client.pages.about');
