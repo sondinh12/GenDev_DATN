@@ -1,5 +1,7 @@
 @extends('client.layout.master')
 
+
+
 @section('styles')
 <style>
     .gallery-nav-btn {
