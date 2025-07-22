@@ -68,7 +68,7 @@
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" 
-                            href="{{ asset('/products') }}">Sản phẩm </a>
+                            href="{{ asset('/shop') }}">Sản phẩm </a>
                             {{-- <ul role="menu" class=" dropdown-menu">
                                 <li class="menu-item animate-dropdown">
                                     <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
