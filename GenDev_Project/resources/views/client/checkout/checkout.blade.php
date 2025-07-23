@@ -46,8 +46,6 @@
                                             {{ session('success_shipping_coupon') }}
                                         </div>
                                     @endif
-
-
                                     <div class="woocommerce-info">
                                         Bạn có mã giảm giá không?
                                         <a data-toggle="collapse" href="#checkoutCouponForm" aria-expanded="false" aria-controls="checkoutCouponForm" class="showlogin">
@@ -343,7 +341,6 @@
                                                         </tr>
                                                     </tfoot>
                                                 </table>
-
                                                 <div class="woocommerce-checkout-payment" id="payment">
                                                     <ul class="wc_payment_methods payment_methods methods">
                                                         <li class="wc_payment_method payment_method_cod">

@@ -76,6 +76,7 @@
                     </li>
                 @endcan
 
+
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -85,21 +86,15 @@
                     </a>
                 </li>
                 @endcan
-
-                <li>
-
-                    <a href="{{ url('/admin/post-categories') }}" class="">
-                        <i class="fa-solid fa-tag"></i>
-                        <span>Danh mục bài viết</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ url('/admin/reviews') }}" class="">
-                        <i class="fa-solid fa-tag"></i>
-                        <span>Đánh giá</span>
-                    </a>
-                </li>
+                {{-- Đánh giá --}}
+                @can('manage comments')
+                    <li>
+                        <a href="{{ url('/admin/reviews') }}">
+                            <i class="fa-solid fa-tag"></i>
+                            <span>Đánh giá</span>
+                        </a>
+                    </li>
+                @endcan
 
             </ul>
         </div>
