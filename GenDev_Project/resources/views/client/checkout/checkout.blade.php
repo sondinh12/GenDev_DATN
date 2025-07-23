@@ -11,7 +11,6 @@
                     </span>
                     Thanh toán
                 </nav>
-
                 <div class="content-area" id="primary">
                     <main class="site-main" id="main">
                         <div class="type-page hentry">
@@ -47,7 +46,6 @@
                                             {{ session('success_shipping_coupon') }}
                                         </div>
                                     @endif
-
                                     <div class="woocommerce-info">
                                         Bạn có mã giảm giá không?
                                         <a data-toggle="collapse" href="#checkoutCouponForm" aria-expanded="false" aria-controls="checkoutCouponForm" class="showlogin">
@@ -344,6 +342,7 @@
                                                     </tfoot>
                                                 </table>
 
+<<<<<<< HEAD
                                                 <div class="woocommerce-checkout-payment" id="payment">
                                                     <ul class="wc_payment_methods payment_methods methods">
                                                         <li class="wc_payment_method payment_method_cod">
@@ -374,6 +373,60 @@
                                                         </p>
                                                         <button type="submit" class="button wc-forward text-center">Đặt hàng</button>
                                                     </div>
+=======
+                                                    <!-- <tr class="order-total">
+                                                        <th>Tổng cộng</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span class="woocommerce-Price-amount amount">
+                                                                    <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr> -->
+                                                     <tr class="order-total">
+                                                        <th>Total</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                            <!-- /.woocommerce-checkout-review-order-table -->
+                                            <div class="woocommerce-checkout-payment" id="payment">
+                                                <ul class="wc_payment_methods payment_methods methods">
+                                                    <li class="wc_payment_method payment_method_cod">
+                                                        <input type="radio" data-order_button_text="" id="payment_method_cod" value="cod" name="payment_method" class="input-radio">
+                                                        <label for="payment_method_cod">Thanh toán khi nhận hàng</label>
+                                                    </li>
+                                                    <li class="wc_payment_method payment_method_bank">
+                                                        <input type="radio" data-order_button_text="" id="payment_method_bank" checked="checked" value="banking" name="payment_method" class="input-radio">
+                                                        <label for="payment_method_bank">Chuyển khoản ngân hàng</label>
+                                                    </li>
+                                                    {{-- <li class="wc_payment_method payment_method_cod">
+                                                        <input type="radio" data-order_button_text="" value="momo" name="payment_method" class="input-radio">
+                                                        <label for="payment_method_cod">Cash on deliver</label>
+                                                    </li> --}}
+                                                </ul>
+                                                @foreach($ships as $ship)
+                                                    <label>
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}" {{ $loop->first ? 'checked' : '' }}>
+                                                        {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
+                                                    </label><br>
+                                                @endforeach
+                                                </select>
+                                                <div class="form-row place-order">
+                                                    <p class="form-row terms wc-terms-and-conditions woocommerce-validated">
+                                                        <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+                                                            <input type="checkbox" id="terms" name="terms" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox">
+                                                            <span>Tôi đã đọc và đồng ý với các điều khoản & điều kiện</span>
+                                                            <span class="required">*</span>
+                                                        </label>
+                                                        <input type="hidden" value="1" name="terms-field">
+                                                    </p>
+                                                    <button type="submit" class="button wc-forward text-center">Đặt hàng</button>
+>>>>>>> origin/viethoang
                                                 </div>
                                             </div>
                                         </div>
