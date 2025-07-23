@@ -169,6 +169,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
     // Mã giảm giá
     Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
     Route::resource('coupons', CouponsController::class);
@@ -180,6 +181,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
     Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
     Route::resource('post-categories', PostCategoryController::class);
+
 });
 
 Route::resource('/product', ClientProductController::class);

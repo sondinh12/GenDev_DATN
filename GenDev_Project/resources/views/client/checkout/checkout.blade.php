@@ -11,7 +11,6 @@
                     </span>
                     Thanh toán
                 </nav>
-
                 <div class="content-area" id="primary">
                     <main class="site-main" id="main">
                         <div class="type-page hentry">
@@ -47,6 +46,7 @@
                                             {{ session('success_shipping_coupon') }}
                                         </div>
                                     @endif
+
 
                                     <div class="woocommerce-info">
                                         Bạn có mã giảm giá không?
@@ -362,7 +362,6 @@
                                                             {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
                                                         </label><br>
                                                     @endforeach
-
                                                     <div class="form-row place-order">
                                                         <p class="form-row terms wc-terms-and-conditions">
                                                             <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
@@ -374,6 +373,7 @@
                                                         </p>
                                                         <button type="submit" class="button wc-forward text-center">Đặt hàng</button>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>

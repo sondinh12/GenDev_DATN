@@ -208,8 +208,8 @@
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
-
                     <!-- .dropdown-menu-mini-cart -->
+
                 </li>
             </ul>
             <!-- .site-header-cart -->
