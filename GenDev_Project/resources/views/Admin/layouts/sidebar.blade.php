@@ -76,6 +76,7 @@
                     </li>
                 @endcan
 
+
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -85,7 +86,6 @@
                     </a>
                 </li>
                 @endcan
-
                 {{-- Đánh giá --}}
                 @can('manage comments')
                     <li>
@@ -95,6 +95,7 @@
                         </a>
                     </li>
                 @endcan
+
             </ul>
         </div>
         <!-- Sidebar -->

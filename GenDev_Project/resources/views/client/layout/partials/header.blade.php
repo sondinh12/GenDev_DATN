@@ -208,7 +208,6 @@
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
-
                 </li>
             </ul>
             <!-- .site-header-cart -->
