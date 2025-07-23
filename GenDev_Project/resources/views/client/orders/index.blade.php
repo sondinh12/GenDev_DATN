@@ -134,6 +134,7 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
+
                 <div class="d-flex gap-2">
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
@@ -147,6 +148,7 @@
                     @endif
                     <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
                 </div>
+
             </div>
         </div>
         @endforeach
@@ -164,7 +166,9 @@
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
             @csrf
+
             @method('put')
+
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">

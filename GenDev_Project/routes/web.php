@@ -66,6 +66,7 @@ Route::get('/product', function () {
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
+
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
@@ -74,6 +75,7 @@ Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vn
 Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
 // mua lại
 // Route::get('/reorder/{orderId}', [CheckoutController::class, 'checkoutFromOrder'])->name('checkout.reorder');
+
 
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
@@ -88,10 +90,12 @@ Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
+
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail');
     Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update');
     Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy');
+
 });
 
 Route::get('/order', function () {
@@ -218,7 +222,9 @@ Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('cl
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
     Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
     Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
+
     Route::put('{order}/return', [ClientOrderController::class, 'return'])->name('return');
+
 });
 
 // ================= TÀI KHOẢN =================
@@ -227,6 +233,7 @@ Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
 
