@@ -13,6 +13,7 @@ class Order extends Model
         'product_coupon_id',
         'shipping_coupon_id',
         'shipping_id',
+        'shipping_fee',
         'name',
         'email',
         'phone',
@@ -25,6 +26,7 @@ class Order extends Model
         'product_discount',
         'shipping_discount',
         'total',
+        'transaction_code',
         'status',
         'payment_status',
         'payment_expired_at',
@@ -65,7 +67,7 @@ class Order extends Model
     // Danh sách sản phẩm trong đơn hàng
     public function orderDetails(): HasMany
     {
-        return $this->hasMany(OrderDetail::class, 'order_id');
+        return $this->hasMany(OrderDetail::class, 'order_id')->with('product');
     }
 
     // Lịch sử thay đổi trạng thái

@@ -49,7 +49,7 @@ Manage
         <td>
             <img src="{{asset('storage/'.$pro->image)}}" alt="Ảnh" width="100px">
         </td>
-        <td>{{$pro->category->name}}</td>
+        <td>{{$pro->category->name ?? 'Không có'}}</td>
         <td>
             @if($pro->variants && $pro->variants->count())
                 @php

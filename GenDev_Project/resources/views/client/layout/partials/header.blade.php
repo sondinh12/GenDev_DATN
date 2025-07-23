@@ -67,8 +67,23 @@
                             <a title="Giới thiệu" href="{{ asset('/about') }}">Giới thiệu</a>
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
+                            <a title="Sản phẩm" 
+                            href="{{ asset('/shop') }}">Sản phẩm </a>
 
-                            <a title="Sản phẩm" href="{{ asset('/products') }}">Sản phẩm </a>
+                            {{-- <ul role="menu" class=" dropdown-menu">
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
+                                </li>
+                                <li class="menu-item animate-dropdown">
+                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
+                                </li>
+                            </ul> --}}
                             <!-- .dropdown-menu -->
                         </li>
                         <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
@@ -189,17 +204,15 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ route('cart') }}" class="cart-contents"
-                        title="View your shopping cart">
+                    <a href="{{ asset('cart') }}" class="cart-contents" title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
-
                 </li>
             </ul>
             <!-- .site-header-cart -->
         </div>
-
+        <!-- /.row -->
     </div>
     <!-- .col-full -->
     <div class="col-full handheld-only">
@@ -267,18 +280,18 @@
                                 <i class="tm tm-login-register"></i>
                             </a>
                         </li>
-                        <li class="wishlist">
+                        <!-- <li class="wishlist">
                             <a href="{{ asset('wishlist.html') }}" class="has-icon">
                                 <i class="tm tm-favorites"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li>
-                        <li class="compare">
+                        </li> -->
+                        <!-- <li class="compare">
                             <a href="{{ asset('compare.html') }}" class="has-icon">
                                 <i class="tm tm-compare"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                     <!-- .columns-3 -->
                 </div>

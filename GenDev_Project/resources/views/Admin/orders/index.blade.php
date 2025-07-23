@@ -74,7 +74,7 @@
                                     'shipped' => 'primary',
                                     'completed' => 'success',
                                     'cancelled' => 'danger',
-                                    'returned' => 'dark'
+                                    'return_requested' => 'dark'
                                 ];
                                 $statusLabel = [
                                     'pending' => 'Chờ xác nhận',
@@ -83,7 +83,7 @@
                                     'shipped' => 'Đã giao',
                                     'completed' => 'Hoàn thành',
                                     'cancelled' => 'Đã huỷ',
-                                    'returned' => 'Hoàn hàng'
+                                    'return_requested' => 'Hoàn hàng'
                                 ];
                             @endphp
                             <span class="badge bg-{{ $statusClass[$order->status] ?? 'secondary' }}">

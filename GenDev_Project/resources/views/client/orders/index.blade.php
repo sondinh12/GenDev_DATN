@@ -20,6 +20,7 @@
                 'all' => 'Tất cả đơn',
                 'pending' => 'Chờ xác nhận',
                 'processing' => 'Đang xử lý',
+                'return_requested' => 'Đã hoàn',
                 'shipping' => 'Đang giao',
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
@@ -45,7 +46,7 @@
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã hủy',
-                'return_requested' => 'Yêu cầu hoàn hàng',
+                'return_requested' => 'Hoàn hàng',
                 default => ucfirst($status),
             };
         }
