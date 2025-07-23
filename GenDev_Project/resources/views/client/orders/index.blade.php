@@ -20,6 +20,7 @@
                 'all' => 'Tất cả đơn',
                 'pending' => 'Chờ xác nhận',
                 'processing' => 'Đang xử lý',
+                'return_requested' => 'Đã hoàn',
                 'shipping' => 'Đang giao',
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
@@ -45,7 +46,7 @@
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã hủy',
-                'return_requested' => 'Yêu cầu hoàn hàng',
+                'return_requested' => 'Hoàn hàng',
                 default => ucfirst($status),
             };
         }
@@ -134,19 +135,7 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-                <div class="d-flex gap-2">
-                    {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
-                        <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-redo-alt me-1"></i> Mua lại
-                        </a>
-                    @endif --}}
-                    @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
-                        <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
-                        </a>
-                    @endif
-                    <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
-                </div>
+                <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
             </div>
         </div>
         @endforeach
@@ -164,7 +153,7 @@
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
             @csrf
-            @method('put')
+            @method('PUT')
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">
