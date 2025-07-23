@@ -181,20 +181,18 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     });
 
 
-    // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
-    // Route::middleware(['permission:manage imports'])->group(function () {
-    Route::get('/imports', [ImportController::class, 'index'])->name('admin.imports.index');
-    Route::get('/imports/show/{id}', [ImportController::class, 'show'])->name('admin.imports.show');
-    Route::get('/imports/create', [ImportController::class, 'create'])->name('admin.imports.create');
-    Route::post('/imports/store', [ImportController::class, 'store'])->name('admin.imports.store');
-    Route::get('/imports/edit/{id}', [ImportController::class, 'edit'])->name('admin.imports.edit');
-    Route::put('/imports/upadte/{id}', [ImportController::class, 'update'])->name('admin.imports.update');
-    Route::post('/imports/updateStatus/{id}', [ImportController::class, 'show'])->name('admin.imports.updateStatus');
-    Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
-    Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
-
-    // });
+    Route::middleware(['permission:manage imports'])->group(function () {
+        Route::get('/imports', [ImportController::class, 'index'])->name('admin.imports.index');
+        Route::get('/imports/show/{id}', [ImportController::class, 'show'])->name('admin.imports.show');
+        Route::get('/imports/create', [ImportController::class, 'create'])->name('admin.imports.create');
+        Route::post('/imports/store', [ImportController::class, 'store'])->name('admin.imports.store');
+        Route::get('/imports/edit/{id}', [ImportController::class, 'edit'])->name('admin.imports.edit');
+        Route::put('/imports/upadte/{id}', [ImportController::class, 'update'])->name('admin.imports.update');
+        Route::post('/imports/updateStatus/{id}', [ImportController::class, 'show'])->name('admin.imports.updateStatus');
+        Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
+        Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
+    });
 
     //Nhà cung cấp
     Route::middleware(['permission:manage suppliers'])->group(function () {

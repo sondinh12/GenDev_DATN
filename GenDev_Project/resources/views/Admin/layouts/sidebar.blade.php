@@ -85,22 +85,28 @@
                         <span>Danh mục bài viết</span>
                     </a>
                 <li>
+                @endcan
 
+                {{-- Nhà cung cấp --}}
+                @can('manage suppliers')
                 <li>
                     <a href="{{ url('/admin/suppliers') }}" class="">
                         <i class="fa-solid fa-building"></i>
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
+                @endcan
 
+                {{-- Hóa đơn nhập hàng --}}
+                @can('manage imports')
                 <li>
                     <a href="{{ url('/admin/imports') }}" class="">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Hóa đơn</span>
                     </a>
                 <li>
-                </li>
                 @endcan
+
                 {{-- Đánh giá --}}
                 @can('manage comments')
                     <li>
