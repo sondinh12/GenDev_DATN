@@ -15,6 +15,8 @@ use App\Models\Supplier;
 use App\Models\SupplierProductPrice;
 use DB;
 use Illuminate\Http\Request;
+use App\Exports\ImportExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ImportController extends Controller
 {
@@ -249,6 +251,7 @@ class ImportController extends Controller
                             'name' => $detail->product_temp_name,
                             'quantity' => $detail->variant_data ? 0 : $detail->quantity,
                             'price' => !$detail->variant_data ? $detail->import_price : null,
+                            'status'=> 0
                         ]);
 
                         $detail->product_id = $product->id;
@@ -276,13 +279,14 @@ class ImportController extends Controller
                                     'product_id' => $product->id,
                                     'quantity' => $detail->quantity,
                                     'price' => $detail->import_price,
+                                    'status'=> 0
                                 ]);
 
                                 foreach ($detail->variant_data as $v) {
                                     ProductVariantAttribute::create([
                                         'product_variant_id' => $variant->id,
                                         'attribute_value_id' => $v['value_id'],
-                                        'attribute_id' => $v['attribute_id'], // ✅ THÊM attribute_id đầy đủ
+                                        'attribute_id' => $v['attribute_id'],
                                     ]);
                                 }
 
@@ -302,31 +306,80 @@ class ImportController extends Controller
         return view('Admin.imports.show', compact('dtImport'));
     }
 
+    // public function edit(string $id)
+    // {
+    //     $import = Import::with([
+    //         'details.variant.variantAttributes.attribute',
+    //         'details.product',
+    //         'supplier',
+    //         'details'
+    //     ])->findOrFail($id);
+
+    //     // Chỉ cho phép sửa khi chưa xác nhận
+    //     if ($import->status == 1) {
+    //         return redirect()->back()->with('error', 'Không thể sửa phiếu nhập đã xác nhận.');
+    //     }
+
+    //     $suppliers = Supplier::all();
+    //     $attributes = Attribute::with('values')->get();
+    //     $existingProducts = Product::with(['variants.variantAttributes.attribute'])->get();
+
+    //     return view('Admin.imports.edit', compact(
+    //         'import',
+    //         'suppliers',
+    //         'attributes',
+    //         'existingProducts'
+    //     ));
+    // }
+
     public function edit(string $id)
-    {
-        $import = Import::with([
-            'details.variant.variantAttributes.attribute',
-            'details.product',
-            'supplier',
-            'details'
-        ])->findOrFail($id);
-
-        // Chỉ cho phép sửa khi chưa xác nhận
-        if ($import->status == 1) {
-            return redirect()->back()->with('error', 'Không thể sửa phiếu nhập đã xác nhận.');
-        }
-
-        $suppliers = Supplier::all();
-        $attributes = Attribute::with('values')->get();
-        $existingProducts = Product::with(['variants.variantAttributes.attribute'])->get();
-
-        return view('Admin.imports.edit', compact(
-            'import',
-            'suppliers',
-            'attributes',
-            'existingProducts'
-        ));
+{
+    $import = Import::with([
+    'details',
+    'details.product',
+    'details.variant.variantAttributes.attribute',
+    'details.product.variants.variantAttributes.attribute',
+    'supplier',
+])->findOrFail($id);
+    $import->import_date = \Carbon\Carbon::parse($import->import_date);
+    $existingProducts = Product::with([
+    'variants.variantAttributes.attribute',
+    'variants.variantAttributes.value'
+])->get();
+    // Chỉ cho phép sửa khi chưa xác nhận
+    if ($import->status == 1) {
+        return redirect()->back()->with('error', 'Không thể sửa phiếu nhập đã xác nhận.');
     }
+
+    $suppliers = Supplier::all();
+    $attributes = Attribute::with('values')->get();
+    // $existingProducts = Product::with(['variants.variantAttributes.attribute'])->get();
+
+    // Xử lý variant data để truyền xuống blade bằng @json
+    $variantData = $existingProducts->mapWithKeys(function ($product) {
+        return [
+            $product->id => $product->variants->map(function ($variant) {
+                $attrString = $variant->variantAttributes->map(function ($att) {
+                    return $att->attribute->name . ': ' . $att->value->value;
+                })->implode(', ');
+
+                return [
+                    'id' => $variant->id,
+                    'label' => $attrString ?: 'Mặc định',
+                ];
+            })
+        ];
+    });
+
+    return view('Admin.imports.edit', compact(
+        'import',
+        'suppliers',
+        'attributes',
+        'existingProducts',
+        'variantData' // Truyền sang view
+    ));
+}
+
 
 
     public function update(ImportRequest $request)
@@ -338,4 +391,16 @@ class ImportController extends Controller
     {
 
     }
+
+    public function export($id)
+{
+    $import = Import::with([
+        'details.product',
+        'details.variant.variantAttributes.attribute',
+        'details.variant.variantAttributes.value'
+    ])->findOrFail($id);
+
+    $fileName = 'phieu-nhap-' . $import->id . '.xlsx';
+    return Excel::download(new ImportExport($import), $fileName);
+}
 }

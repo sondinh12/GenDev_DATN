@@ -1,262 +1,208 @@
+{{-- filepath: d:\Picture\laragon\www\DATN\GenDev_Project\resources\views\Admin\imports\edit.blade.php --}}
 @extends('Admin.layouts.master')
-@section('title', 'Tạo phiếu nhập hàng')
+@section('title', 'Sửa phiếu nhập hàng')
 
 @section('content')
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{session('error')}}
-        </div>
-    @endif
-    <form action="{{ route('admin.imports.store') }}" method="post">
-        @csrf
-        @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $err)
-                <li>{{ $err }}</li>
-            @endforeach
-        </ul>
-    </div>
+@if (session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
-        <div class="container mt-4">
-            <h2 class="mb-4">Tạo phiếu nhập hàng</h2>
 
-            {{-- Nhà cung cấp --}}
-            <div class="form-group mb-3">
-                <label for="supplier_id">Nhà cung cấp:</label>
-                <select name="supplier_id" class="form-control">
-                    <option value="">-- Chọn --</option>
-                    @foreach($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                    @endforeach
-                </select>
-                @error('supplier_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+<form action="{{ route('admin.imports.update', $import->id) }}" method="POST">
+    @csrf
+    @method('PUT')
 
-            {{-- Ngày nhập --}}
-            <div class="form-group mb-3">
-                <label for="import_date">Ngày nhập:</label>
-                <input type="date" name="import_date" class="form-control" value="{{ old('import_date') }}">
-                @error('import_date')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+    <div class="container mt-4">
+        <h2 class="mb-4">Sửa phiếu nhập hàng</h2>
 
-            {{-- Ghi chú --}}
-            <div class="form-group mb-4">
-                <label for="note">Ghi chú:</label>
-                <textarea name="note" rows="3" class="form-control"></textarea>
-            </div>
-
-            <hr>
-
-            {{-- Khu vực sản phẩm --}}
-            <div id="product-items-wrapper"></div>
-            <button type="button" class="btn btn-outline-success mb-3" id="add-product-btn">➕ Thêm sản phẩm</button>
+        {{-- Nhà cung cấp --}}
+        <div class="form-group mb-3">
+            <label for="supplier_id">Nhà cung cấp:</label>
+            <select name="supplier_id" class="form-control">
+                <option value="">-- Chọn --</option>
+                @foreach($suppliers as $supplier)
+                    <option value="{{ $supplier->id }}" {{ $supplier->id == $import->supplier_id ? 'selected' : '' }}>
+                        {{ $supplier->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
-        {{-- Template sản phẩm --}}
-        <template id="product-item-template">
-            <div class="card border mb-4 product-item">
-                <div class="card-body">
-                    <button type="button" class="btn-close float-end remove-product-btn" aria-label="Close"></button>
+        {{-- Ngày nhập --}}
+        <div class="form-group mb-3">
+            <label for="import_date">Ngày nhập:</label>
+            <input type="date" name="import_date" class="form-control" value="{{ $import->import_date->format('Y-m-d') }}">
+        </div>
 
-                    {{-- Chọn loại sản phẩm --}}
-                    <div class="form-group mb-2">
-                        <label><strong>Loại sản phẩm:</strong></label><br>
-                        <label class="me-3">
-                            <input type="radio" name="products[__INDEX__][source]" value="existing"
-                                class="product-source-toggle" checked>
-                            Chọn sản phẩm có sẵn
-                        </label>
-                        <label>
-                            <input type="radio" name="products[__INDEX__][source]" value="new"
-                                class="product-source-toggle">
-                            Tạo sản phẩm mới
-                        </label>
-                    </div>
+        {{-- Ghi chú --}}
+        <div class="form-group mb-4">
+            <label for="note">Ghi chú:</label>
+            <textarea name="note" rows="3" class="form-control">{{ $import->note }}</textarea>
+        </div>
 
-                    {{-- Sản phẩm có sẵn --}}
-                    <div class="existing-product-section">
-                        <div class="form-group">
-                            <label>Sản phẩm có sẵn:</label>
-                            <select name="products[__INDEX__][product_id]" class="form-control existing-product-selector">
-                                <option value="">-- Chọn --</option>
-                                @foreach ($existingProducts as $product)
-                                    <option value="{{ $product->id }}"
-                                        data-has-variant="{{ $product->variants->count() > 0 ? '1' : '0' }}">
+        <hr>
+
+        <h5>Sản phẩm đã nhập</h5>
+        <div id="product-items-wrapper">
+            @foreach($import->details as $i => $detail)
+                <div class="border rounded p-3 mb-3 product-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Sản phẩm</label>
+                            <select class="form-control mb-1 product-select" name="products[{{ $i }}][product_id]" data-index="{{ $i }}">
+                                <option value="">-- Chọn sản phẩm --</option>
+                                @foreach($existingProducts as $product)
+                                    <option value="{{ $product->id }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
                                         {{ $product->name }}
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
-
-                        {{-- Biến thể (nếu có) --}}
-                        <div class="form-group mt-2 variant-select-wrapper d-none">
-                            <label>Chọn biến thể:</label>
-                            <select name="products[__INDEX__][variant_id]" class="form-control variant-select">
-                                <option value="">-- Chọn biến thể --</option>
-                                {{-- Options sẽ được fill bằng JS --}}
-                            </select>
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label>Giá nhập:</label>
-                            <input type="number" step="0.01" name="products[__INDEX__][existing_price]" class="form-control">
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label>Số lượng:</label>
-                            <input type="number" name="products[__INDEX__][existing_quantity]" class="form-control">
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label>Giá nhập (lịch sử nhà cung cấp - tuỳ chọn):</label>
-                            <input type="number" name="products[__INDEX__][existing_supplier_import_price]" class="form-control"
-                                step="0.01">
-                        </div>
-                        
-                        {{-- Chế độ biến thể --}}
-                        <div class="form-group mt-2">
-                            <label>Chọn cách nhập biến thể:</label><br>
-                            <label>
-                                <input type="radio" name="products[__INDEX__][variant_usage_mode]" class="variant-mode-radio" value="old" checked>
-                                Chọn biến thể có sẵn
-                            </label>
-                            &nbsp;&nbsp;
-                            <label>
-                                <input type="radio" name="products[__INDEX__][variant_usage_mode]" class="variant-mode-radio" value="new">
-                                Tạo biến thể mới
-                            </label>
-                        </div>
-
-                        {{-- Cho sản phẩm đã có – tạo biến thể mới --}}
-                        <div class="existing-product-variant-section mt-3 d-none">
-                            <label>Thuộc tính (cho biến thể mới):</label>
-                            <select class="form-control attribute-selector">
-                                <option value="">-- Chọn --</option>
-                                @foreach ($attributes as $attribute)
-                                    <option value="{{ $attribute->id }}" data-name="{{ $attribute->name }}">
-                                        {{ $attribute->name }}</option>
-                                @endforeach
-                            </select>
-
-                            <div class="mt-3 selected-attributes-container"></div>
-
-                            <button type="button" class="btn btn-sm btn-warning mt-2 generate-variants">Tạo biến
-                                thể</button>
-
-                            <div class="variant-table-container mt-3"></div>
-                        </div>
-
-                    </div>
-
-                    {{-- Sản phẩm mới --}}
-                    <div class="new-product-section d-none mt-3">
-                        <div class="form-group">
-                            <label>Tên sản phẩm:</label>
-                            <input type="text" name="products[__INDEX__][name]" class="form-control">
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label>Loại:</label>
-                            <select name="products[__INDEX__][type]" class="form-control product-type-selector">
-                                <option value="simple">Đơn giản</option>
-                                <option value="variable">Có biến thể</option>
-                            </select>
-                        </div>
-
-                        {{-- Nếu đơn giản --}}
-                        <div class="simple-fields mt-2">
-                            <div class="form-group">
-                                <label>Giá nhập:</label>
-                                <input type="number" step="0.01" name="products[__INDEX__][price]" class="form-control">
-                            </div>
-                            <div class="form-group mt-2">
-                                <label>Số lượng:</label>
-                                <input type="number" name="products[__INDEX__][quantity]" class="form-control">
-                            </div>
-                            <div class="form-group mt-2">
-                                <label>Giá nhập (lịch sử nhà cung cấp - tuỳ chọn):</label>
-                                <input type="number" name="products[__INDEX__][supplier_import_price]" class="form-control"
-                                    step="0.01">
+                            <div class="variant-select-wrapper mt-2" data-index="{{ $i }}">
+                                @php
+                                    $variants = $existingProducts->firstWhere('id', $detail->product_id)?->variants ?? [];
+                                @endphp
+                                @if(count($variants))
+                                    <label>Biến thể</label>
+                                    <select class="form-control variant-select" name="products[{{ $i }}][variant_id]">
+                                        <option value="">-- Chọn biến thể --</option>
+                                        @foreach($variants as $variant)
+                                            @php
+                                                $variantLabel = $variant->variantAttributes->map(function($va){
+                                                    return $va->attribute->name . ': ' . $va->value->value;
+                                                })->implode(', ');
+                                            @endphp
+                                            <option value="{{ $variant->id }}" {{ $detail->variant_id == $variant->id ? 'selected' : '' }}>
+                                                {{ $variantLabel ?: 'Mặc định' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @endif
                             </div>
                         </div>
-
-                        {{-- Nếu có biến thể --}}
-                        <div class="new-product-variant-section mt-3 d-none">
-                            <label>Thuộc tính:</label>
-                            <select class="form-control attribute-selector">
-                                <option value="">-- Chọn --</option>
-                                @foreach ($attributes as $attribute)
-                                    <option value="{{ $attribute->id }}" data-name="{{ $attribute->name }}">
-                                        {{ $attribute->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <div class="mt-3 selected-attributes-container"></div>
-
-                            <button type="button" class="btn btn-sm btn-warning mt-2 generate-variants">Tạo biến
-                                thể</button>
-
-                            <div class="variant-table-container mt-3"></div>
+                        <div class="col-md-2">
+                            <label>Giá nhập</label>
+                            <input type="number" class="form-control" name="products[{{ $i }}][price]" value="{{ $detail->import_price }}">
                         </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        {{-- Template thuộc tính --}}
-        <div id="attribute-values-template" style="display: none;">
-            @foreach($attributes as $attribute)
-                <div class="attribute-group border p-2 mb-2" data-attr-id="{{ $attribute->id }}">
-                    <div class="d-flex justify-content-between">
-                        <strong>{{ $attribute->name }}</strong>
-                        <button type="button" class="btn btn-danger btn-sm remove-attribute">❌</button>
-                    </div>
-                    <div class="mt-2">
-                        @foreach($attribute->values as $value)
-                            <label class="me-2">
-                                <input type="checkbox" value="{{ $value->id }}">
-                                {{ $value->value }}
-                            </label>
-                        @endforeach
+                        <div class="col-md-2">
+                            <label>Số lượng</label>
+                            <input type="number" class="form-control" name="products[{{ $i }}][quantity]" value="{{ $detail->quantity }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label>Giá NCC</label>
+                            <input type="number" class="form-control" name="products[{{ $i }}][supplier_import_price]" value="{{ $detail->supplier_import_price ?? '' }}">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger btn-sm remove-product">Xóa</button>
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
-        <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
-    </form>
-@endsection
 
-@push('scripts')
-    <script src="{{ asset('assets/js/admin/import-variant-generator.js') }}"></script>
-@endpush
+        <button type="button" class="btn btn-outline-primary mb-3" id="add-product-btn">
+            + Thêm sản phẩm
+        </button>
+        <button type="submit" class="btn btn-primary">Cập nhật phiếu nhập</button>
+    </div>
+</form>
 
-@php
-    $variantData = $existingProducts->mapWithKeys(function ($product) {
-        return [
-            $product->id => $product->variants->map(function ($variant) {
-                $attrString = $variant->variantAttributes->map(function ($att) {
-                    return $att->attribute->name . ': ' . $att->value->value;
-                })->implode(', ');
+<script>
+    // Dữ liệu sản phẩm và biến thể
+    let productIndex = {{ count($import->details) }};
+    const products = @json($existingProducts);
 
-                return [
-                    'id' => $variant->id,
-                    'label' => $attrString ?: 'Mặc định',
-                ];
-            })
-        ];
+    // Xóa sản phẩm khỏi form (chỉ xóa trên giao diện)
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-product')) {
+            e.target.closest('.product-item').remove();
+        }
     });
-@endphp
 
-@section('scripts')
-    <script src="{{ URL::asset('build/js/app.js') }}">
-    </script>
-    <script>
-        const productVariants = @json($variantData);
-    </script>
+    // Thêm sản phẩm mới (giống create)
+    document.getElementById('add-product-btn').addEventListener('click', function() {
+        let options = '<option value="">-- Chọn sản phẩm --</option>';
+        products.forEach(function(p) {
+            options += `<option value="${p.id}">${p.name}</option>`;
+        });
+
+        let html = `
+        <div class="border rounded p-3 mb-3 product-item">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Sản phẩm</label>
+                    <select class="form-control mb-1 product-select" name="products[${productIndex}][product_id]" data-index="${productIndex}">
+                        ${options}
+                    </select>
+                    <div class="variant-select-wrapper mt-2" data-index="${productIndex}"></div>
+                </div>
+                <div class="col-md-2">
+                    <label>Giá nhập</label>
+                    <input type="number" class="form-control" name="products[${productIndex}][price]" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Số lượng</label>
+                    <input type="number" class="form-control" name="products[${productIndex}][quantity]" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Giá NCC</label>
+                    <input type="number" class="form-control" name="products[${productIndex}][supplier_import_price]">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-product">Xóa</button>
+                </div>
+            </div>
+        </div>
+        `;
+        document.getElementById('product-items-wrapper').insertAdjacentHTML('beforeend', html);
+        // Gắn lại sự kiện cho select mới
+        let newSelect = document.querySelector(`select[name="products[${productIndex}][product_id]"]`);
+        newSelect.addEventListener('change', function() {
+            updateVariantSelect(this);
+        });
+        productIndex++;
+    });
+
+    // Khi chọn sản phẩm, nếu có biến thể thì hiện select biến thể
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('product-select')) {
+            updateVariantSelect(e.target);
+        }
+    });
+
+    // Hàm cập nhật select biến thể cho sản phẩm
+    function updateVariantSelect(productSelect) {
+        let index = productSelect.getAttribute('data-index');
+        let productId = productSelect.value;
+        let wrapper = document.querySelector('.variant-select-wrapper[data-index="'+index+'"]');
+        wrapper.innerHTML = '';
+        if (!productId) return;
+        let product = products.find(p => p.id == productId);
+        if (product && product.variants && product.variants.length > 0) {
+            let variantOptions = '<option value="">-- Chọn biến thể --</option>';
+            product.variants.forEach(function(variant) {
+                let label = '';
+                if (variant.variant_attributes && variant.variant_attributes.length > 0) {
+                    label = variant.variant_attributes.map(function(va){
+                        return va.attribute.name + ': ' + va.value.value;
+                    }).join(', ');
+                } else {
+                    label = 'Mặc định';
+                }
+                variantOptions += `<option value="${variant.id}">${label}</option>`;
+            });
+            wrapper.innerHTML = `
+                <label>Biến thể</label>
+                <select class="form-control" name="products[${index}][variant_id]">
+                    ${variantOptions}
+                </select>
+            `;
+        }
+    }
+
+    // Khởi tạo lại select biến thể cho các sản phẩm đã có khi load trang
+    document.querySelectorAll('.product-select').forEach(function(select) {
+        select.addEventListener('change', function() {
+            updateVariantSelect(this);
+        });
+    });
+</script>
 @endsection

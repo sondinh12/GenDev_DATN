@@ -10,28 +10,41 @@
 
     <div class="container mt-4">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
                 <h4 class="mb-0">Chi tiết đơn nhập #{{ $dtImport->id }}</h4>
-                <form action="{{route('admin.imports.updateStatus', $dtImport->id)}}" method="post">
-                    @csrf
-                    @foreach ($dtImport->details as $i => $detail)
-                        <input type="hidden" name="details[{{ $i }}][id]" value="{{ $detail->id }}">
-                        <input type="hidden" name="details[{{ $i }}][product_id]" value="{{ $detail->product_id }}">
-                        <input type="hidden" name="details[{{ $i }}][variant_id]" value="{{ $detail->variant_id }}">
-                        <input type="hidden" name="details[{{ $i }}][quantity]" value="{{ $detail->quantity }}">
-                        <input type="hidden" name="details[{{ $i }}][import_price]" value="{{ $detail->import_price }}">
-                        <input type="hidden" name="details[{{ $i }}][product_temp_name]" value="{{ $detail->product_temp_name }}">
-                        <input type="hidden" name="details[{{ $i }}][variant_data]" value="{{ json_encode($detail->variant_data) }}">
-                    @endforeach
-                    <select name="status" class="form-select">
-                        <option value="0" {{ $dtImport->status == 0 ? 'selected' : '' }}>Chưa xác nhận</option>
-                        <option value="1" {{ $dtImport->status == 1 ? 'selected' : '' }}>Đã xác nhận</option>
-                    </select>
-                    @if($dtImport->status == 0)
-                    <button type="submit">Cập nhật</button>
-                    @endif
-                </form>
+
+                <div class="d-flex gap-2">
+                    <form action="{{ route('admin.imports.updateStatus', $dtImport->id) }}" method="post"
+                        class="d-flex align-items-center">
+                        @csrf
+                        @foreach ($dtImport->details as $i => $detail)
+                            <input type="hidden" name="details[{{ $i }}][id]" value="{{ $detail->id }}">
+                            <input type="hidden" name="details[{{ $i }}][product_id]" value="{{ $detail->product_id }}">
+                            <input type="hidden" name="details[{{ $i }}][variant_id]" value="{{ $detail->variant_id }}">
+                            <input type="hidden" name="details[{{ $i }}][quantity]" value="{{ $detail->quantity }}">
+                            <input type="hidden" name="details[{{ $i }}][import_price]" value="{{ $detail->import_price }}">
+                            <input type="hidden" name="details[{{ $i }}][product_temp_name]"
+                                value="{{ $detail->product_temp_name }}">
+                            <input type="hidden" name="details[{{ $i }}][variant_data]"
+                                value="{{ json_encode($detail->variant_data) }}">
+                        @endforeach
+
+                        <select name="status" class="form-select me-2">
+                            <option value="0" {{ $dtImport->status == 0 ? 'selected' : '' }}>Chưa xác nhận</option>
+                            <option value="1" {{ $dtImport->status == 1 ? 'selected' : '' }}>Đã xác nhận</option>
+                        </select>
+
+                        @if($dtImport->status == 0)
+                            <button type="submit" class="btn btn-light">Cập nhật</button>
+                        @endif
+                    </form>
+
+                    <a href="{{ route('admin.imports.export', $dtImport->id) }}" class="btn btn-success">
+                        📥 Xuất Excel
+                    </a>
+                </div>
             </div>
+
             <div class="card-body">
 
                 {{-- Thông tin nhà cung cấp --}}
@@ -132,11 +145,11 @@
                                     </td> --}}
                                     {{-- <td>
                                         @if (is_array($variantData) && count($variantData))
-                                            @foreach ($variantData as $item)
-                                                <div>{{ $item['attribute'] ?? '' }}: {{ $item['value'] ?? '' }}</div>
-                                            @endforeach
+                                        @foreach ($variantData as $item)
+                                        <div>{{ $item['attribute'] ?? '' }}: {{ $item['value'] ?? '' }}</div>
+                                        @endforeach
                                         @else
-                                            <em class="text-muted">Không có</em>
+                                        <em class="text-muted">Không có</em>
                                         @endif
                                     </td> --}}
                                     {{-- <td>{{ $detail->quantity }}</td>
@@ -144,14 +157,15 @@
                                     <td>{{ number_format($detail->subtotal) }} VNĐ</td>
                                     <td>
                                         @if ($matchedPrice)
-                                            {{ number_format($matchedPrice->import_price) }} VNĐ <br>
-                                            <small class="text-muted">Từ ngày
-                                                {{ \Carbon\Carbon::parse($matchedPrice->start_date)->format('d/m/Y') }}</small>
+                                        {{ number_format($matchedPrice->import_price) }} VNĐ <br>
+                                        <small class="text-muted">Từ ngày
+                                            {{ \Carbon\Carbon::parse($matchedPrice->start_date)->format('d/m/Y') }}</small>
                                         @else
-                                            <em class="text-muted">Không có dữ liệu</em>
+                                        <em class="text-muted">Không có dữ liệu</em>
                                         @endif
                                     </td> --}}
-                                {{-- </tr> --}}
+                                    {{--
+                                </tr> --}}
                                 {{-- @endif --}}
                             @endforeach
                         </tbody>

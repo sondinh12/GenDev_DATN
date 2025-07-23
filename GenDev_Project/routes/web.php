@@ -180,6 +180,8 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::put('/imports/upadte/{id}',[ImportController::class,'update'])->name('admin.imports.update');
         Route::post('/imports/updateStatus/{id}',[ImportController::class,'show'])->name('admin.imports.updateStatus');
         Route::delete('/imports/destroy/{id}',[ImportController::class,'destroy'])->name('admin.imports.destroy');
+        Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
+
     // });
     
     //Nhà cung cấp
