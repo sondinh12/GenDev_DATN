@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ImportController;
+use App\Http\Controllers\Admin\SupplierController;
 session_start();
 
 use App\Http\Controllers\PaymentController;
@@ -63,13 +65,15 @@ Route::get('/product', function () {
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-Route::middleware(['auth', 'check_ban'])->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-    Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
-    Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
-});
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+//mua tiếp nếu trong thời gian còn mã
+Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
+// mua lại
+// Route::get('/reorder/{orderId}', [CheckoutController::class, 'checkoutFromOrder'])->name('checkout.reorder');
+
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
 })->name('checkout.success');
@@ -174,6 +178,33 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
         Route::resource('post-categories', PostCategoryController::class);
+    });
+
+    // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
+    //Quản lý hóa đơn nhập hàng
+    // Route::middleware(['permission:manage imports'])->group(function () {
+        Route::get('/imports',[ImportController::class,'index'])->name('admin.imports.index');
+        Route::get('/imports/show/{id}',[ImportController::class,'show'])->name('admin.imports.show');
+        Route::get('/imports/create',[ImportController::class,'create'])->name('admin.imports.create');
+        Route::post('/imports/store',[ImportController::class,'store'])->name('admin.imports.store');
+        Route::get('/imports/edit/{id}',[ImportController::class,'edit'])->name('admin.imports.edit');
+        Route::put('/imports/upadte/{id}',[ImportController::class,'update'])->name('admin.imports.update');
+        Route::post('/imports/updateStatus/{id}',[ImportController::class,'show'])->name('admin.imports.updateStatus');
+        Route::delete('/imports/destroy/{id}',[ImportController::class,'destroy'])->name('admin.imports.destroy');
+        Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
+
+    // });
+    
+    //Nhà cung cấp
+    Route::middleware(['permission:manage suppliers'])->group(function () {
+        Route::get('/suppliers',[SupplierController::class,'index'])->name('admin.suppliers.index');
+        Route::get('/suppliers/show/{id}',[SupplierController::class,'show'])->name('admin.suppliers.show');
+        Route::get('/suppliers/create',[SupplierController::class,'create'])->name('admin.suppliers.create');
+        Route::post('/suppliers/store',[SupplierController::class,'store'])->name('admin.suppliers.store');
+        Route::get('/suppliers/edit/{id}',[SupplierController::class,'edit'])->name('admin.suppliers.edit');
+        Route::put('/suppliers/upadte/{id}',[SupplierController::class,'update'])->name('admin.suppliers.update');
+        Route::delete('/suppliers/destroy/{id}',[SupplierController::class,'destroy'])->name('admin.suppliers.destroy');
+
     });
 });
 

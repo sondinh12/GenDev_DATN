@@ -118,6 +118,10 @@
                                 <!-- .collapse -->
                                 <form action="{{route('checkout.submit')}}" class="checkout woocommerce-checkout" method="post" name="checkout">
                                     @csrf
+                                    @if(isset($reorder_mode) && $reorder_mode)
+                                        <input type="hidden" name="reorder_mode" value="1">
+                                        <input type="hidden" name="reorder_cart_items" value="{{ htmlentities(json_encode($cartItems)) }}">
+                                    @endif
                                     <div id="customer_details" class="col2-set">
                                         <div class="col-1">
                                             <div class="woocommerce-billing-fields">
@@ -326,7 +330,7 @@
                                                         <input type="hidden" name="selected_items[]" value="{{ $id }}">
                                                     @endforeach
 
-                                                    @foreach ($cartItems as $item)
+                                                    @foreach ($cartItems as $item)    
                                                         @php
                                                             if ($item->variant) {
                                                                 $price = $item->variant->sale_price && $item->variant->sale_price > 0
@@ -338,24 +342,35 @@
                                                                     : $item->product->price;
                                                             }
                                                         @endphp
+                                                        {{-- @php
+                                                            if (!empty($item['variant']) && $item['variant']['sale_price'] > 0) {
+                                                                $price = $item['variant']['sale_price'];
+                                                            } elseif (!empty($item['variant'])) {
+                                                                $price = $item['variant']['price'];
+                                                            } elseif (!empty($item['product']['sale_price']) && $item['product']['sale_price'] > 0) {
+                                                                $price = $item['product']['sale_price'];
+                                                            } else {
+                                                                $price = $item['product']['price'];
+                                                            }
+                                                        @endphp --}}
                                                         <tr>
                                                             <td colspan="2">
                                                                 <div class="d-flex justify-content-between align-items-start">
                                                                     <div>
-                                                                        <div class="fw-bold">{{ $item->product->name }}</div>
-                                                                        <div class="text-muted small">Số lượng: {{ $item->quantity }}</div>
+                                                                        <div class="fw-bold">{{ $item['product']['name'] }}</div>
+                                                                        <div class="text-muted small">Số lượng: {{ $item['quantity'] }}</div>
                                                                         <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
-
                                                                         @if ($item->variant && $item->variant->variantAttributes)
+
                                                                             <div class="text-muted small">
-                                                                                @foreach ($item->variant->variantAttributes as $att)
-                                                                                    <div>{{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }}</div>
+                                                                                @foreach ($item['variant']['variantAttributes'] as $att)
+                                                                                    <div>{{ $att['attribute']['name'] ?? '' }}: {{ $att['value']['value'] ?? '' }}</div>
                                                                                 @endforeach
                                                                             </div>
                                                                         @endif
                                                                     </div>
 
-                                                                    <div class="fw-bold text-end">{{ number_format($price * $item->quantity) }} VNĐ</div>
+                                                                    <div class="fw-bold text-end">{{ number_format($price * $item['quantity']) }} VNĐ</div>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -383,6 +398,7 @@
                                                             </span>
                                                         </td>
                                                     </tr>
+
                                                     <tr class="order-total">
                                                         <th>Tổng cộng</th>
                                                         <td>
@@ -391,6 +407,14 @@
                                                             </strong>
                                                         </td>
                                                     </tr>
+                                                     {{-- <tr class="order-total">
+                                                        <th>Total</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr> --}}
                                                 </tfoot>
                                             </table>
                                             <!-- /.woocommerce-checkout-review-order-table -->
