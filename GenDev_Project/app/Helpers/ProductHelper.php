@@ -123,4 +123,16 @@ class ProductHelper
         $priceInfo = self::getProductPriceInfo($product);
         return $priceInfo['display_price'];
     }
+
+    /**
+     * Lấy phần trăm giảm giá của biến thể đầu tiên (nếu có)
+     */
+    public static function getFirstVariantDiscountPercent($product)
+    {
+        $variant = $product->variants->first();
+        if ($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
+            return round(100 - ($variant->sale_price / $variant->price * 100));
+        }
+        return null;
+    }
 }

@@ -2,12 +2,14 @@
 
 @section('content')
 @if(session('error'))
-<div class="alert alert-danger alert-dismissible fade show fixed-top m-3 shadow" role="alert" style="z-index: 1050;">
-    {{ session('error') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
+        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert-danger').alert('close');
+        }, 2500);
+    </script>
 @endif
 <div id="content" class="site-content" tabindex="-1">
     <div class="col-full">
@@ -66,7 +68,7 @@
                                     @foreach($categories as $category)
                                     <div class="product-category product">
                                         <a href="{{ route('shop', ['category' => $category->id]) }}">
-                                            <img width="224" height="197" alt="{{ $category->name }}"
+                                            <img width="400" height="200" alt="{{ $category->name }}"
                                                 src="{{ asset('storage/' . $category->image) }}">
                                             <h2 class="woocommerce-loop-category__title">{{ $category->name }}</h2>
                                         </a>
@@ -267,4 +269,4 @@
         }
     }
 </style>
-@endsection
+@endsection 

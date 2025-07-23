@@ -68,7 +68,8 @@
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" 
-                            href="{{ asset('/products') }}">Sản phẩm </a>
+                            href="{{ asset('/shop') }}">Sản phẩm </a>
+
                             {{-- <ul role="menu" class=" dropdown-menu">
                                 <li class="menu-item animate-dropdown">
                                     <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
@@ -203,28 +204,11 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ asset('cart.html') }}" class="cart-contents" data-toggle="dropdown"
-                        title="View your shopping cart">
+                    <a href="{{ asset('cart') }}" class="cart-contents" title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-mini-cart">
-                        <li>
-                            <div class="widget woocommerce widget_shopping_cart">
-                                <div class="widget_shopping_cart_content">
-                                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-                                    <p class="woocommerce-mini-cart__buttons buttons">
-                                        <a href="{{ route('cart') }}" class="button wc-forward">View cart</a>
-                                        <a href="{{ asset('checkout.html') }}"
 
-                                            class="button checkout wc-forward">Checkout</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- .widget_shopping_cart -->
-                        </li>
-                    </ul>
-                    <!-- .dropdown-menu-mini-cart -->
                 </li>
             </ul>
             <!-- .site-header-cart -->
@@ -297,18 +281,18 @@
                                 <i class="tm tm-login-register"></i>
                             </a>
                         </li>
-                        <li class="wishlist">
+                        <!-- <li class="wishlist">
                             <a href="{{ asset('wishlist.html') }}" class="has-icon">
                                 <i class="tm tm-favorites"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li>
-                        <li class="compare">
+                        </li> -->
+                        <!-- <li class="compare">
                             <a href="{{ asset('compare.html') }}" class="has-icon">
                                 <i class="tm tm-compare"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                     <!-- .columns-3 -->
                 </div>

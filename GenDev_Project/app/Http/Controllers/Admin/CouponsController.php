@@ -34,14 +34,22 @@ class CouponsController extends Controller
     public function store(StoreCouponRequest $request)
     {
         $data = $request->validated();
-        // $data['user_id'] = Auth::id();
         $data['total_used'] = 0;
         $data['status'] = $request->input('status', 1);
 
-        Coupon::create($data);
+        if ($data['type'] === 'shipping') {
+            // Shipping thì lưu shipping_code
+            $data['shipping_code'] = $data['coupon_code'];
+            $data['coupon_code'] = null;
+            $data['discount_type'] = 'fixed'; // luôn là fixed cho ship
+        } else {
+            $data['shipping_code'] = null;
+        }
 
+        Coupon::create($data);
         return redirect()->route('coupons.index')->with('success', 'Tạo mã giảm giá thành công!');
     }
+
 
     public function trashed()
     {
@@ -93,6 +101,12 @@ class CouponsController extends Controller
     public function edit(string $id)
     {
         $coupon = Coupon::findOrFail($id);
+        
+        // Nếu là shipping type, khôi phục shipping_code từ discount_type
+        if ($coupon->type === 'shipping') {
+            $coupon->shipping_code = $coupon->discount_type;
+        }
+        
         return view('admin.coupons.edit', compact('coupon'));
     }
 
@@ -100,12 +114,18 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
         $data = $request->validated();
-
-
         $data['status'] = $request->input('status', $coupon->status);
 
-        $coupon->update($data);
+        if ($data['type'] === 'shipping') {
+            $data['shipping_code'] = $data['coupon_code'];
+            $data['coupon_code'] = null;
+            $data['discount_type'] = 'fixed';
+        } else {
+            $data['shipping_code'] = null;
+        }
 
+        $coupon->update($data);
         return redirect()->route('coupons.index')->with('success', 'Cập nhật mã giảm giá thành công!');
     }
+
 }

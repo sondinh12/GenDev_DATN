@@ -259,7 +259,7 @@ class ImportController extends Controller
                     }
 
                     if ($product) {
-                        if ($product) {
+                        if (!$detail->variant_id && !$detail->variant_data) {
                             // ✅ Sản phẩm đơn giản → tăng số lượng
                             $product->quantity = (int) $product->quantity + (int) $detail->quantity;
                             $product->save();
@@ -270,7 +270,7 @@ class ImportController extends Controller
                                 $variant = ProductVariant::find($detail->variant_id);
                                 if ($variant) {
                                     $variant->quantity += $detail->quantity;
-                                    $variant->price = $detail->import_price;
+                                    // $variant->price = $detail->import_price;
                                     $variant->save();
                                 }
                             } elseif ($detail->variant_data) {
@@ -279,7 +279,7 @@ class ImportController extends Controller
                                     'product_id' => $product->id,
                                     'quantity' => $detail->quantity,
                                     'price' => $detail->import_price,
-                                    'status'=> 0
+                                    // 'status'=> 0
                                 ]);
 
                                 foreach ($detail->variant_data as $v) {

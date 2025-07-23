@@ -28,7 +28,7 @@
                     <div class="type-page hentry">
                         <div class="entry-content">
                             <div class="woocommerce">
-                                <div class="woocommerce-info">Bạn đã có tài khoản? <a data-toggle="collapse" href="#login-form" aria-expanded="false" aria-controls="login-form" class="showlogin">Nhấn vào đây để đăng nhập</a></div>
+                                <!-- <div class="woocommerce-info">Bạn đã có tài khoản? <a data-toggle="collapse" href="#login-form" aria-expanded="false" aria-controls="login-form" class="showlogin">Nhấn vào đây để đăng nhập</a></div> -->
                                 <div class="collapse" id="login-form">
                                     {{-- <form method="post" class="woocomerce-form woocommerce-form-login login">
                                         <p class="before-login-text">
@@ -397,6 +397,7 @@
                                                             </strong>
                                                         </td>
                                                     </tr> --}}
+
                                                      <tr class="order-total">
                                                         <th>Total</th>
                                                         <td>
@@ -433,7 +434,7 @@
                                                 </ul>
                                                 @foreach($ships as $ship)
                                                     <label>
-                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}">
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}" {{ $loop->first ? 'checked' : '' }}>
                                                         {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
                                                     </label><br>
                                                 @endforeach
