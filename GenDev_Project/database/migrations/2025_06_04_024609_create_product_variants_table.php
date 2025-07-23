@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->decimal("price", 10,2);
-            $table->decimal("sale_price",10,2);
-            $table->integer("quantity");
+            $table->decimal("price", 10,2)->nullable();
+            $table->decimal("sale_price",10,2)->nullable();
+            $table->integer("quantity")->nullable();
             $table->tinyInteger("status")->default(1);
-            $table->unsignedBigInteger("product_id");
+            $table->unsignedBigInteger("product_id")->nullable();
             $table->timestamps();
         });
     }
