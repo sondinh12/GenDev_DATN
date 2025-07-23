@@ -86,7 +86,7 @@
                 </li>
                 @endcan
 
- </li>
+
                 {{-- Đánh giá --}}
                 @can('manage comments')
                     <li>
