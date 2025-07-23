@@ -1,7 +1,5 @@
 <?php
 
-
-
 session_start();
 
 use App\Http\Controllers\PaymentController;
@@ -22,7 +20,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Client\CartDetailController;
-use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
@@ -31,7 +28,7 @@ use App\Http\Controllers\Admin\PostCategoryController;
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home'); // để tương thích với route auth của Laravel
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     return view('client.pages.about');
@@ -63,7 +60,7 @@ Route::get('/product', function () {
     return view('client.product.product');
 })->name('product');
 
-Route::get('/product/{id}', [App\Http\Controllers\Client\ProductController::class, 'show'])->name('client.product.show');
+Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 Route::middleware(['auth', 'check_ban'])->group(function () {
@@ -79,26 +76,19 @@ Route::get('/checkout-success', function () {
 Route::get('/checkout-failed', function () {
     return view('client.checkout.checkout-failed');
 })->name('checkout.failed');
-Route::post('/apply_coupon', [CouponController::class, 'apply'])->name('apply_coupon');
+Route::post('/apply-coupon', [CouponController::class, 'apply'])->name('apply_coupon');
+Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
 
-// hành dộng trang cart
+// Hành động trang cart
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
-
-    Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
-    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
-    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
-    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail');
+    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update');
+    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy');
 });
-// Route::get('/cart', function () {
-//     return view('client.cart.cart');
-// })->name('cart');
-// Route::get('/wishlist', function () {
-//     return view('client.cart.wishlist');
-// })->name('wishlist');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::get('/order', function () {
     return view('client.checkout.order');
 })->name('order');
@@ -123,7 +113,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('attributes/trash/{id}', [ProductController::class, 'trashAttribute'])->name('admin.attributes.trash');
         Route::get('/attribute-values/{id}/edit', [ProductController::class, 'editAttributeValue'])->name('admin.attribute_values.edit');
         Route::put('/attribute-values/{id}', [ProductController::class, 'updateAttributeValue'])->name('admin.attribute_values.update');
-        Route::post('/admin/attributes/restore/{id}', [ProductController::class, 'restoreAttribute'])->name('admin.attributes.restore');
+        Route::post('/attributes/restore/{id}', [ProductController::class, 'restoreAttribute'])->name('admin.attributes.restore');
         Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
         Route::get('/attributes/trash', [ProductController::class, 'trashList'])->name('admin.attributes.trashList');
         Route::delete('/attributes/force-delete/{id}', [ProductController::class, 'forceDeleteAttribute'])->name('admin.attributes.forceDelete');
@@ -136,7 +126,6 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
         Route::put('orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.update-payment-status');
     });
-
 
     // Danh mục
     Route::middleware(['permission:manage categories'])->group(function () {
@@ -167,10 +156,9 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
         Route::put('/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
-        Route::post('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
-        Route::post('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+        Route::post('/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+        Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
-
 
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
@@ -179,17 +167,14 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
         Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
     });
+
     // Danh mục bài viết
     Route::middleware(['permission:manage posts'])->group(function () {
-        // Thùng rác
         Route::get('post-categories/trash', [PostCategoryController::class, 'trash'])->name('post-categories.trash');
         Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
-        // CRUD danh mục bài viết
         Route::resource('post-categories', PostCategoryController::class);
     });
-
-    // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
 });
 
 Route::resource('/product', ClientProductController::class);
@@ -202,14 +187,12 @@ Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('cl
     Route::post('{order}/return', [ClientOrderController::class, 'return'])->name('return');
 });
 
-
 // ================= TÀI KHOẢN =================
 
-
-Auth::routes(['verify' => true]); // Xác thực email
+Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'check_ban'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
-    Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
 
@@ -217,13 +200,10 @@ Route::get('/profile/change-password', function () {
     return view('auth.passwords.change_password');
 })->middleware('auth')->name('profile.change_password');
 Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->middleware('auth')->name('profile.change_password.update');
-
-
 // Giao diện nhập email để gửi OTP
 Route::get('/forgot-password', function () {
     return view('auth.passwords.reset'); // form gửi OTP
 })->name('password.request');
-
 
 // Gửi OTP
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'])->name('password.email');
