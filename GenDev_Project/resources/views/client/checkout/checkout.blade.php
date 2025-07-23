@@ -1,15 +1,15 @@
 @extends('client.layout.master')
 
 @section('content')
-    @if (session('error'))
+    @if (session('error_order_coupon') || session('error_shipping_coupon'))
         <div class="alert alert-danger">
-            {{ session('error') }}
+            {{ session('error_order_coupon') ?? session('error_shipping_coupon') }}
         </div>
     @endif
 
-    @if (session('success'))
+    @if (session('success_order_coupon') || session('success_shipping_coupon'))
         <div class="alert alert-success">
-            {{ session('success') }}
+            {{ session('success_order_coupon') ?? session('success_shipping_coupon') }}
         </div>
     @endif
 <div id="content" class="site-content">
@@ -28,88 +28,100 @@
                     <div class="type-page hentry">
                         <div class="entry-content">
                             <div class="woocommerce">
-                                <div class="woocommerce-info">Bạn đã có tài khoản? <a data-toggle="collapse" href="#login-form" aria-expanded="false" aria-controls="login-form" class="showlogin">Nhấn vào đây để đăng nhập</a></div>
-                                <div class="collapse" id="login-form">
-                                    {{-- <form method="post" class="woocomerce-form woocommerce-form-login login">
-                                        <p class="before-login-text">
-                                            Vestibulum lacus magna, faucibus vitae dui eget, aliquam fringilla. In et commodo elit. Class aptent taciti sociosqu ad litora.
-                                        </p>
-                                        <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new customer, please proceed to the Billing &amp; Shipping section.</p>
-                                        <p class="form-row form-row-first">
-                                            <label for="username">Username or email
-                                                <span class="required">*</span>
-                                            </label>
-                                            <input type="text" id="username" name="username" class="input-text">
-                                        </p>
-                                        <p class="form-row form-row-last">
-                                            <label for="password">Password
-                                                <span class="required">*</span>
-                                            </label>
-                                            <input type="password" id="password" name="password" class="input-text">
-                                        </p>
-                                        <div class="clear"></div>
-                                        <p class="form-row">
-                                            <input type="submit" value="Login" name="login" class="button">
-                                            <label class="woocommerce-form__label woocommerce-form__label-for-checkbox inline">
-                                                <input type="checkbox" value="forever" id="rememberme" name="rememberme" class="woocommerce-form__input woocommerce-form__input-checkbox">
-                                                <span>Remember me</span>
-                                            </label>
-                                        </p>
-                                        <p class="lost_password">
-                                            <a href="#">Lost your password?</a>
-                                        </p>
-                                        <div class="clear"></div>
-                                    </form> --}}
-                                </div>
-                                <!-- .collapse -->
                                 <div class="woocommerce-info">Bạn có mã giảm giá không?
                                     <a data-toggle="collapse" href="#checkoutCouponForm" aria-expanded="false" aria-controls="checkoutCouponForm" class="showlogin">
                                         Nhấn vào đây để nhập mã
                                     </a>
                                 </div>
 
-                                {{-- coupon đổi thành select --}}
                                 <div class="collapse" id="checkoutCouponForm">
-                                        @if(session('applied_coupon'))
-                                            <p>Mã đã được áp dụng: <strong>{{ session('applied_coupon.code') }}</strong> – giảm {{ number_format(session('applied_coupon.discount')) }}đ</p>
-                                        @else
-                                            {{-- coupon --}}
-                                            <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
+                                    <!-- Order Coupon Form -->
+                                    @if(session('applied_order_coupon'))
+                                        <p>Mã giảm giá đơn hàng đã được áp dụng: <strong>{{ session('applied_order_coupon.code') }}</strong> – giảm {{ number_format(session('applied_order_coupon.discount')) }}đ 
+                                            <form method="post" action="{{ route('coupon.remove') }}" style="display:inline;">
                                                 @csrf
-                                                <div style="position: relative;">
-                                                    <input type="text" id="coupon_code" placeholder="Nhập mã giảm giá" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list').style.display='block'">
-                                                    <div id="coupon-list" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
-                                                        @foreach($coupons as $coupon)
-                                                            <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list').style.display='none'">
-                                                                <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                                <script>
-                                                    // Ẩn dropdown khi click ra ngoài
-                                                    document.addEventListener('click', function(e) {
-                                                        var couponInput = document.getElementById('coupon_code');
-                                                        var couponList = document.getElementById('coupon-list');
-                                                        if (!couponInput.contains(e.target) && !couponList.contains(e.target)) {
-                                                            couponList.style.display = 'none';
-                                                        }
-                                                    });
-                                                </script>
-                                                <input type="hidden" name="subtotal" value="{{$subtotal}}">
-                                                <p class="form-row form-row-last">
-                                                    <button type="submit" class="button">Áp dụng</button>
-                                                </p>
-                                                <div class="clear"></div>
+                                                <input type="hidden" name="type" value="order">
+                                                <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
                                             </form>
-                                        @endif
+                                        </p>
+                                    @else
+                                        <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
+                                            @csrf
+                                            <div style="position: relative; margin-bottom: 15px;">
+                                                <input type="text" id="coupon_code_order" placeholder="Nhập mã giảm giá đơn hàng" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list-order').style.display='block'">
+                                                <div id="coupon-list-order" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
+                                                    @foreach($coupons->where('type', 'order') as $coupon)
+                                                        <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_order').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-order').style.display='none'">
+                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="subtotal" value="{{$subtotal}}">
+                                            <input type="hidden" name="coupon_type" value="order">
+                                            <input type="hidden" name="shipping_fee" value="0">
+                                            <p class="form-row form-row-last">
+                                                <button type="submit" class="button">Áp dụng mã đơn hàng</button>
+                                            </p>
+                                            <div class="clear"></div>
+                                        </form>
+                                    @endif
 
-                                    @if(session('error')) <p style="color: red">{{ session('error') }}</p> @endif
-                                    @if(session('success')) <p style="color: green">{{ session('success') }}</p> @endif
+                                    <!-- Shipping Coupon Form -->
+                                    @if(session('applied_shipping_coupon'))
+                                        <p>Mã giảm giá vận chuyển đã được áp dụng: <strong>{{ session('applied_shipping_coupon.code') }}</strong> – giảm {{ number_format(session('applied_shipping_coupon.discount')) }}đ 
+                                            <form method="post" action="{{ route('coupon.remove') }}" style="display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="type" value="shipping">
+                                                <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
+                                            </form>
+                                        </p>
+                                    @else
+                                        <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
+                                            @csrf
+                                            <div style="position: relative; margin-bottom: 15px;">
+                                                <input type="text" id="coupon_code_shipping" placeholder="Nhập mã giảm giá vận chuyển" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list-shipping').style.display='block'">
+                                                <div id="coupon-list-shipping" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
+                                                    @foreach($coupons->where('type', 'shipping') as $coupon)
+                                                        <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_shipping').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-shipping').style.display='none'">
+                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="subtotal" value="{{$subtotal}}">
+                                            <input type="hidden" name="coupon_type" value="shipping">
+                                            <input type="hidden" name="shipping_fee" value="0">
+                                            <p class="form-row form-row-last">
+                                                <button type="submit" class="button">Áp dụng mã vận chuyển</button>
+                                            </p>
+                                            <div class="clear"></div>
+                                        </form>
+                                    @endif
+
+                                    <script>
+                                        // Ẩn dropdown khi click ra ngoài
+                                        document.addEventListener('click', function(e) {
+                                            var couponInputOrder = document.getElementById('coupon_code_order');
+                                            var couponListOrder = document.getElementById('coupon-list-order');
+                                            var couponInputShipping = document.getElementById('coupon_code_shipping');
+                                            var couponListShipping = document.getElementById('coupon-list-shipping');
+                                            if (couponInputOrder && !couponInputOrder.contains(e.target) && couponListOrder && !couponListOrder.contains(e.target)) {
+                                                couponListOrder.style.display = 'none';
+                                            }
+                                            if (couponInputShipping && !couponInputShipping.contains(e.target) && couponListShipping && !couponListShipping.contains(e.target)) {
+                                                couponListShipping.style.display = 'none';
+                                            }
+                                        });
+                                    </script>
                                 </div>
                                 <!-- .collapse -->
                                 <form action="{{route('checkout.submit')}}" class="checkout woocommerce-checkout" method="post" name="checkout">
                                     @csrf
+                                    @if(isset($reorder_mode) && $reorder_mode)
+                                        <input type="hidden" name="reorder_mode" value="1">
+                                        <input type="hidden" name="reorder_cart_items" value="{{ htmlentities(json_encode($cartItems)) }}">
+                                    @endif
                                     <div id="customer_details" class="col2-set">
                                         <div class="col-1">
                                             <div class="woocommerce-billing-fields">
@@ -318,7 +330,7 @@
                                                         <input type="hidden" name="selected_items[]" value="{{ $id }}">
                                                     @endforeach
 
-                                                    @foreach ($cartItems as $item)
+                                                    @foreach ($cartItems as $item)    
                                                         @php
                                                             if ($item->variant) {
                                                                 $price = $item->variant->sale_price && $item->variant->sale_price > 0
@@ -330,25 +342,36 @@
                                                                     : $item->product->price;
                                                             }
                                                         @endphp
+                                                        {{-- @php
+                                                            if (!empty($item['variant']) && $item['variant']['sale_price'] > 0) {
+                                                                $price = $item['variant']['sale_price'];
+                                                            } elseif (!empty($item['variant'])) {
+                                                                $price = $item['variant']['price'];
+                                                            } elseif (!empty($item['product']['sale_price']) && $item['product']['sale_price'] > 0) {
+                                                                $price = $item['product']['sale_price'];
+                                                            } else {
+                                                                $price = $item['product']['price'];
+                                                            }
+                                                        @endphp --}}
                                                         <tr>
                                                             <td colspan="2">
                                                                 <div class="d-flex justify-content-between align-items-start">
                                                                     <div>
-                                                                        <div class="fw-bold">{{ $item->product->name }}</div>
-                                                                        <div class="text-muted small">Số lượng: {{ $item->quantity }}</div>
+                                                                        <div class="fw-bold">{{ $item['product']['name'] }}</div>
+                                                                        <div class="text-muted small">Số lượng: {{ $item['quantity'] }}</div>
                                                                         <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
 
-                                                                        {{-- Biến thể --}}
                                                                         @if ($item->variant && $item->variant->variantAttributes)
+
                                                                             <div class="text-muted small">
-                                                                                @foreach ($item->variant->variantAttributes as $att)
-                                                                                    <div>{{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }}</div>
+                                                                                @foreach ($item['variant']['variantAttributes'] as $att)
+                                                                                    <div>{{ $att['attribute']['name'] ?? '' }}: {{ $att['value']['value'] ?? '' }}</div>
                                                                                 @endforeach
                                                                             </div>
                                                                         @endif
                                                                     </div>
 
-                                                                    <div class="fw-bold text-end">{{ number_format($price * $item->quantity) }} VNĐ</div>
+                                                                    <div class="fw-bold text-end">{{ number_format($price * $item['quantity']) }} VNĐ</div>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -361,34 +384,38 @@
                                                             <span id="subtotal" data-value="{{ $subtotal }}">{{ number_format($subtotal) }} VNĐ</span>
                                                         </td>
                                                     </tr>
-                                                    
+                                                    <tr class="shipping-fee">
+                                                        <th>Phí vận chuyển</th>
+                                                        <td>
+                                                            <span id="shipping-fee" data-value="0">{{ number_format(0) }} VNĐ</span>
+                                                        </td>
+                                                    </tr>
                                                     <tr class="discount-row">
-                                                        <th>Discount</th>
+                                                        <th>Giảm giá</th>
                                                         <td>
                                                             <span id="discount-amount"
-                                                                data-value="{{ session('applied_coupon.discount') ?? 0 }}">
-                                                                {{ number_format(session('applied_coupon.discount') ?? 0) }} VNĐ
+                                                                data-value="{{ (session('applied_order_coupon.discount') ?? 0) + (session('applied_shipping_coupon.discount') ?? 0) }}">
+                                                                {{ number_format((session('applied_order_coupon.discount') ?? 0) + (session('applied_shipping_coupon.discount') ?? 0)) }} VNĐ
                                                             </span>
                                                         </td>
                                                     </tr>
 
-                                                    <!-- <tr class="order-total">
+                                                    <tr class="order-total">
                                                         <th>Tổng cộng</th>
-                                                        <td>
-                                                            <strong>
-                                                                <span class="woocommerce-Price-amount amount">
-                                                                    <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
-                                                            </strong>
-                                                        </td>
-                                                    </tr> -->
-                                                     <tr class="order-total">
-                                                        <th>Total</th>
                                                         <td>
                                                             <strong>
                                                                 <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
                                                             </strong>
                                                         </td>
                                                     </tr>
+                                                     {{-- <tr class="order-total">
+                                                        <th>Total</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr> --}}
                                                 </tfoot>
                                             </table>
                                             <!-- /.woocommerce-checkout-review-order-table -->
@@ -402,18 +429,13 @@
                                                         <input type="radio" data-order_button_text="" id="payment_method_bank" checked="checked" value="banking" name="payment_method" class="input-radio">
                                                         <label for="payment_method_bank">Chuyển khoản ngân hàng</label>
                                                     </li>
-                                                    {{-- <li class="wc_payment_method payment_method_cod">
-                                                        <input type="radio" data-order_button_text="" value="momo" name="payment_method" class="input-radio">
-                                                        <label for="payment_method_cod">Cash on deliver</label>
-                                                    </li> --}}
                                                 </ul>
                                                 @foreach($ships as $ship)
                                                     <label>
-                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}">
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}" {{ $loop->first ? 'checked' : '' }}>
                                                         {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
                                                     </label><br>
                                                 @endforeach
-                                                </select>
                                                 <div class="form-row place-order">
                                                     <p class="form-row terms wc-terms-and-conditions woocommerce-validated">
                                                         <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
@@ -452,7 +474,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const subtotal = parseInt(document.getElementById('subtotal').dataset.value);
-    let shipping = 0;
+    let shipping = parseInt(document.querySelector('.ship-option:checked').dataset.price) || 0;
     let discount = parseInt(document.getElementById('discount-amount').dataset.value) || 0;
 
     const totalEl = document.getElementById('total-amount');
@@ -464,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTotal() {
-        const total = Math.max(subtotal + shipping - discount, 0);
+        const total = Math.max(subtotal + shipping - discount, 0);  
         totalEl.textContent = formatVND(total);
         shippingEl.textContent = formatVND(shipping);
         discountEl.textContent = formatVND(discount);
@@ -473,6 +495,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.ship-option').forEach(function (radio) {
         radio.addEventListener('change', function () {
             shipping = parseInt(this.dataset.price) || 0;
+            document.querySelectorAll('input[name="shipping_fee"]').forEach(function(input) {
+                input.value = shipping;
+            });
             updateTotal();
         });
     });
