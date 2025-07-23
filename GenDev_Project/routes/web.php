@@ -215,7 +215,7 @@ Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('cl
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
     Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
     Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
-    Route::post('{order}/return', [ClientOrderController::class, 'return'])->name('return');
+    Route::put('{order}/return', [ClientOrderController::class, 'return'])->name('return');
 });
 
 // ================= TÀI KHOẢN =================
