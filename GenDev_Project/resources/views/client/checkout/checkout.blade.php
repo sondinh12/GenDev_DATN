@@ -359,7 +359,6 @@
                                                             {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
                                                         </label><br>
                                                     @endforeach
-
                                                     <div class="form-row place-order">
                                                         <p class="form-row terms wc-terms-and-conditions">
                                                             <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
