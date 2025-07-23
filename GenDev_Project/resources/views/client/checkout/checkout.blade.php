@@ -387,16 +387,16 @@
                                                         </td>
                                                     </tr>
 
+                                                    
                                                     {{-- <tr class="order-total">
                                                         <th>Tổng cộng</th>
-
                                                         <td>
                                                             <strong>
                                                                 <span class="woocommerce-Price-amount amount">
                                                                     <span class="woocommerce-Price-currencySymbol"></span>{{$subtotal}} VNĐ</span>
                                                             </strong>
                                                         </td>
-                                                    </tr> --}}
+                                                    </tr>  --}}
 
                                                      <tr class="order-total">
                                                         <th>Total</th>
