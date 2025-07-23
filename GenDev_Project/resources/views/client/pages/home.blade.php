@@ -8,7 +8,7 @@
     <script>
         setTimeout(function() {
             $('.alert-danger').alert('close');
-        }, 2500);
+        }, 50   00);
     </script>
 @endif
 <div id="content" class="site-content" tabindex="-1">
