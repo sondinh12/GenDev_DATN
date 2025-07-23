@@ -62,6 +62,7 @@ class CheckoutController extends Controller
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
     {
+        // dd($request->all());
         $selectedItemIds = $request->input('selected_items', []);
 
         if (empty($selectedItemIds)) {

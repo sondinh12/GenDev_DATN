@@ -1,430 +1,484 @@
 @extends('client.layout.master')
 
 @section('content')
-    <div id="content" class="site-content">
-        <div class="col-full">
-            <div class="row">
-                <nav class="woocommerce-breadcrumb">
-                    <a href="{{ route('home') }}">Trang chủ</a>
-                    <span class="delimiter">
-                        <i class="tm tm-breadcrumbs-arrow-right"></i>
-                    </span>
-                    Thanh toán
-                </nav>
-                <div class="content-area" id="primary">
-                    <main class="site-main" id="main">
-                        <div class="type-page hentry">
-                            <div class="entry-content">
-                                <div class="woocommerce">
-                                    @if (session('error'))
-                                        <div class="alert alert-danger">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif
-                                    @if (session('success'))
-                                        <div class="alert alert-success">
-                                            {{ session('success') }}
-                                        </div>
-                                    @endif
-                                    @if (session('error_order_coupon'))
-                                        <div class="alert alert-danger">
-                                            {{ session('error_order_coupon') }}
-                                        </div>
-                                    @endif
-                                    @if (session('success_order_coupon'))
-                                        <div class="alert alert-success">
-                                            {{ session('success_order_coupon') }}
-                                        </div>
-                                    @endif
-                                    @if (session('error_shipping_coupon'))
-                                        <div class="alert alert-danger">
-                                            {{ session('error_shipping_coupon') }}
-                                        </div>
-                                    @endif
-                                    @if (session('success_shipping_coupon'))
-                                        <div class="alert alert-success">
-                                            {{ session('success_shipping_coupon') }}
-                                        </div>
-                                    @endif
-                                    <div class="woocommerce-info">
-                                        Bạn có mã giảm giá không?
-                                        <a data-toggle="collapse" href="#checkoutCouponForm" aria-expanded="false" aria-controls="checkoutCouponForm" class="showlogin">
-                                            Nhấn vào đây để nhập mã
-                                        </a>
-                                    </div>
+    @if (session('error_order_coupon') || session('error_shipping_coupon'))
+        <div class="alert alert-danger">
+            {{ session('error_order_coupon') ?? session('error_shipping_coupon') }}
+        </div>
+    @endif
 
-                                    <div class="collapse" id="checkoutCouponForm">
-                                        @if(session('applied_order_coupon'))
-                                            <p>Mã giảm giá đơn hàng: <strong>{{ session('applied_order_coupon.code') }}</strong> – giảm {{ number_format(session('applied_order_coupon.discount')) }}đ
-                                            <form method="POST" action="{{ route('coupon.remove') }}" style="display:inline;">
+    @if (session('success_order_coupon') || session('success_shipping_coupon'))
+        <div class="alert alert-success">
+            {{ session('success_order_coupon') ?? session('success_shipping_coupon') }}
+        </div>
+    @endif
+<div id="content" class="site-content">
+    <div class="col-full">
+        <div class="row">
+            <nav class="woocommerce-breadcrumb">
+                <a href="/">Trang chủ</a>
+                <span class="delimiter">
+                    <i class="tm tm-breadcrumbs-arrow-right"></i>
+                </span>
+                Thanh toán
+            </nav>
+            <!-- .woocommerce-breadcrumb -->
+            <div class="content-area" id="primary">
+                <main class="site-main" id="main">
+                    <div class="type-page hentry">
+                        <div class="entry-content">
+                            <div class="woocommerce">
+                                <div class="woocommerce-info">Bạn có mã giảm giá không?
+                                    <a data-toggle="collapse" href="#checkoutCouponForm" aria-expanded="false" aria-controls="checkoutCouponForm" class="showlogin">
+                                        Nhấn vào đây để nhập mã
+                                    </a>
+                                </div>
+
+                                <div class="collapse" id="checkoutCouponForm">
+                                    <!-- Order Coupon Form -->
+                                    @if(session('applied_order_coupon'))
+                                        <p>Mã giảm giá đơn hàng đã được áp dụng: <strong>{{ session('applied_order_coupon.code') }}</strong> – giảm {{ number_format(session('applied_order_coupon.discount')) }}đ 
+                                            <form method="post" action="{{ route('coupon.remove') }}" style="display:inline;">
                                                 @csrf
-                                                @method('POST')
                                                 <input type="hidden" name="type" value="order">
-                                                <button type="submit" class="button">Xóa</button>
-                                            </form></p>
-                                        @endif
-                                        @if(session('applied_shipping_coupon'))
-                                            <p>Mã giảm giá phí ship: <strong>{{ session('applied_shipping_coupon.code') }}</strong> – giảm {{ number_format(session('applied_shipping_coupon.discount')) }}đ
-                                            <form method="POST" action="{{ route('coupon.remove') }}" style="display:inline;">
+                                                <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
+                                            </form>
+                                        </p>
+                                    @else
+                                        <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
+                                            @csrf
+                                            <div style="position: relative; margin-bottom: 15px;">
+                                                <input type="text" id="coupon_code_order" placeholder="Nhập mã giảm giá đơn hàng" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list-order').style.display='block'">
+                                                <div id="coupon-list-order" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
+                                                    @foreach($coupons->where('type', 'order') as $coupon)
+                                                        <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_order').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-order').style.display='none'">
+                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="subtotal" value="{{$subtotal}}">
+                                            <input type="hidden" name="coupon_type" value="order">
+                                            <input type="hidden" name="shipping_fee" value="0">
+                                            <p class="form-row form-row-last">
+                                                <button type="submit" class="button">Áp dụng mã đơn hàng</button>
+                                            </p>
+                                            <div class="clear"></div>
+                                        </form>
+                                    @endif
+
+                                    <!-- Shipping Coupon Form -->
+                                    @if(session('applied_shipping_coupon'))
+                                        <p>Mã giảm giá vận chuyển đã được áp dụng: <strong>{{ session('applied_shipping_coupon.code') }}</strong> – giảm {{ number_format(session('applied_shipping_coupon.discount')) }}đ 
+                                            <form method="post" action="{{ route('coupon.remove') }}" style="display:inline;">
                                                 @csrf
-                                                @method('POST')
                                                 <input type="hidden" name="type" value="shipping">
-                                                <button type="submit" class="button">Xóa</button>
-                                            </form></p>
-                                        @endif
-
-                                        <form method="POST" class="checkout_coupon" action="{{ route('apply_coupon') }}">
+                                                <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
+                                            </form>
+                                        </p>
+                                    @else
+                                        <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
                                             @csrf
-                                            <div style="margin-bottom: 10px;">
-                                                <label for="order_coupon_code">Mã giảm giá đơn hàng:</label>
-                                                <div style="position: relative; display: inline-block;">
-                                                    <select id="order_coupon_code" name="coupon_code" class="input-text" style="width:350px;">
-                                                        <!-- <option value="">Chọn mã giảm giá đơn hàng</option> -->
-                                                        @foreach($coupons as $coupon)
-                                                            @if($coupon->type == 'order')
-                                                                <option value="{{ $coupon->coupon_code }}" {{ session('applied_order_coupon.code') == $coupon->coupon_code ? 'selected' : '' }}>
-                                                                    {{ $coupon->coupon_code }} - {{ $coupon->name }} (Đơn hàng)
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                    <input type="hidden" name="type" value="order">
+                                            <div style="position: relative; margin-bottom: 15px;">
+                                                <input type="text" id="coupon_code_shipping" placeholder="Nhập mã giảm giá vận chuyển" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list-shipping').style.display='block'">
+                                                <div id="coupon-list-shipping" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
+                                                    @foreach($coupons->where('type', 'shipping') as $coupon)
+                                                        <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_shipping').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-shipping').style.display='none'">
+                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                                <input type="hidden" name="subtotal" value="{{ $subtotal }}">
-                                                <button type="submit" class="button">Áp dụng</button>
                                             </div>
+                                            <input type="hidden" name="subtotal" value="{{$subtotal}}">
+                                            <input type="hidden" name="coupon_type" value="shipping">
+                                            <input type="hidden" name="shipping_fee" value="0">
+                                            <p class="form-row form-row-last">
+                                                <button type="submit" class="button">Áp dụng mã vận chuyển</button>
+                                            </p>
+                                            <div class="clear"></div>
                                         </form>
+                                    @endif
 
-                                        <form method="POST" class="checkout_coupon" action="{{ route('apply_coupon') }}">
-                                            @csrf
-                                            <div>
-                                                <label for="shipping_coupon_code">Mã giảm giá phí ship:</label>
-                                                <div style="position: relative; display: inline-block;">
-                                                    <select id="shipping_coupon_code" name="coupon_code" class="input-text" style="width:350px;">
-                                                        <!-- <option value="">Chọn mã giảm giá phí ship</option> -->
-                                                        @foreach($coupons as $coupon)
-                                                            @if($coupon->type == 'shipping')
-                                                                <option value="{{ $coupon->shipping_code }}" {{ session('applied_shipping_coupon.code') == $coupon->shipping_code ? 'selected' : '' }}>
-                                                                    {{ $coupon->shipping_code }} - {{ $coupon->name }} (Phí ship)
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                    <input type="hidden" name="type" value="shipping">
-                                                </div>
-                                                <input type="hidden" name="subtotal" value="{{ $subtotal }}">
-                                                <input type="hidden" name="shipping_fee" id="shipping_fee_input" value="{{ $ships->first()->shipping_price ?? 0 }}">
-                                                <button type="submit" class="button">Áp dụng</button>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <form action="{{ route('checkout.submit') }}" class="checkout woocommerce-checkout" method="POST" name="checkout">
-                                        @csrf
-                                        <div id="customer_details" class="col2-set">
-                                            <div class="col-1">
-                                                <div class="woocommerce-billing-fields">
-                                                    <h3>Thông tin thanh toán</h3>
+                                    <script>
+                                        // Ẩn dropdown khi click ra ngoài
+                                        document.addEventListener('click', function(e) {
+                                            var couponInputOrder = document.getElementById('coupon_code_order');
+                                            var couponListOrder = document.getElementById('coupon-list-order');
+                                            var couponInputShipping = document.getElementById('coupon_code_shipping');
+                                            var couponListShipping = document.getElementById('coupon-list-shipping');
+                                            if (couponInputOrder && !couponInputOrder.contains(e.target) && couponListOrder && !couponListOrder.contains(e.target)) {
+                                                couponListOrder.style.display = 'none';
+                                            }
+                                            if (couponInputShipping && !couponInputShipping.contains(e.target) && couponListShipping && !couponListShipping.contains(e.target)) {
+                                                couponListShipping.style.display = 'none';
+                                            }
+                                        });
+                                    </script>
+                                </div>
+                                <!-- .collapse -->
+                                <form action="{{route('checkout.submit')}}" class="checkout woocommerce-checkout" method="post" name="checkout">
+                                    @csrf
+                                    <div id="customer_details" class="col2-set">
+                                        <div class="col-1">
+                                            <div class="woocommerce-billing-fields">
+                                                <h3>Thông tin thanh toán</h3>
+                                                <div class="woocommerce-billing-fields__field-wrapper-outer">
                                                     <div class="woocommerce-billing-fields__field-wrapper">
-                                                        <p id="billing_first_name_field" class="form-row validate-required">
-                                                            <label for="billing_first_name">Họ và tên <span class="required">*</span></label>
-                                                            <input type="text" value="{{ old('name', $user->name) }}" placeholder="Họ và tên" id="billing_first_name" name="name" class="input-text" required>
+                                                        <p id="billing_first_name_field" class="form-row validate-required woocommerce-invalid woocommerce-invalid-required-field">
+                                                            <label class="" for="billing_first_name">Họ và tên
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" value="{{$user->name}}" placeholder="" id="billing_first_name" name="name" class="input-text ">
                                                             @error('name')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-
-                                                        <p id="billing_city_field" class="form-row form-row-wide address-field validate-required">
-                                                            <label for="billing_city">Thành phố <span class="required">*</span></label>
-                                                            <input type="text" value="{{ old('city', $user->city) }}" placeholder="Thành phố" id="billing_city" name="city" class="input-text" required>
+                                                        
+                                                        <div class="clear"></div>                      
+                                                        <p id="billing_city_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row form-row-wide address-field validate-required">
+                                                            <label class="" for="billing_city">Thành phố
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" value="{{$user->city}}" placeholder="" id="billing_city" name="city" class="input-text ">
                                                             @error('city')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-
-                                                        <p id="billing_state_field" class="form-row form-row-wide validate-required">
-                                                            <label for="billing_ward">Xã, Phường <span class="required">*</span></label>
-                                                            <input type="text" value="{{ old('ward', $user->ward) }}" placeholder="Xã, Phường" id="billing_ward" name="ward" class="input-text" required>
+                                                        <p id="billing_state_field" class="form-row form-row-wide validate-required validate-email">
+                                                            <label class="" for="billing_ward">Xã, Phường
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" value="{{$user->ward}}" placeholder="" id="billing_ward" name="ward" class="input-text ">
                                                             @error('ward')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-
                                                         <p id="billing_address_1_field" class="form-row form-row-wide address-field validate-required">
-                                                            <label for="billing_address_1">Địa chỉ cụ thể <span class="required">*</span></label>
-                                                            <input type="text" value="{{ old('address', $user->address) }}" placeholder="Địa chỉ" id="billing_address_1" name="address" class="input-text" required>
+                                                            <label class="" for="billing_address_1">Địa chỉ cụ thể
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" value="{{$user->address}}" placeholder="Address" id="billing_address_1" name="address" class="input-text ">
                                                             @error('address')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-
-
-
-                                                        <p id="billing_phone_field" class="form-row form-row-wide validate-required validate-phone">
-                                                            <label for="billing_phone">Số điện thoại <span class="required">*</span></label>
-                                                            <input type="tel" value="{{ old('phone', $user->phone) }}" placeholder="Số điện thoại" id="billing_phone" name="phone" class="input-text" required>
+                                                        <p id="billing_postcode_field" class="form-row form-row-wide address-field validate-postcode validate-required" data-o_class="form-row form-row form-row-last address-field validate-required validate-postcode">
+                                                            <label class="" for="billing_postcode">Mã bưu điện
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" value="{{$user->postcode}}" placeholder="" id="billing_postcode" name="postcode" class="input-text ">
+                                                            @error('postcode')
+                                                                <div class="text-danger">{{ $message }}</div>
+                                                            @enderror
+                                                        </p>
+                                                        <p id="billing_phone_field" class="form-row form-row-last validate-required validate-phone">
+                                                            <label class="" for="billing_phone">Số điện thoại
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="tel" value="{{$user->phone}}" placeholder="" id="phone" name="phone" class="input-text ">
                                                             @error('phone')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-
-                                                        <p id="billing_email_field" class="form-row form-row-wide validate-required validate-email">
-                                                            <label for="billing_email">Email <span class="required">*</span></label>
-                                                            <input type="email" value="{{ old('email', $user->email) }}" placeholder="Email" id="billing_email" name="email" class="input-text" required>
+                                                        <p id="billing_email_field" class="form-row form-row-first validate-required validate-email">
+                                                            <label class="" for="billing_email">Email
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="email" value="{{$user->email}}" placeholder="" id="email" name="email" class="input-text ">
                                                             @error('email')
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-
-                                                        <p id="billing_note_field" class="form-row form-row-wide">
-                                                            <label for="billing_note">Ghi chú</label>
-                                                            <textarea name="note" placeholder="Nhập ghi chú của bạn" rows="4" cols="50">{{ old('note') }}</textarea>
+                                                        <p id="billing_note_field" class="form-row form-row-wide address-field validate-postcode validate-required" data-o_class="form-row form-row form-row-last address-field">
+                                                            <label class="" for="billing_note">Ghi chú</label>
+                                                            <textarea name="note" placeholder="Nhập ghi chú của bạn" rows="4" cols="50"></textarea>
                                                         </p>
                                                     </div>
                                                 </div>
-
-                                                <div class="woocommerce-account-fields">
-
-
-                                                    <div class="create-account collapse" id="createLogin">
-                                                        <p id="account_password_field" class="form-row validate-required">
-                                                            <label for="account_password">Mật khẩu tài khoản <span class="required">*</span></label>
-                                                            <input type="password" placeholder="Mật khẩu" id="account_password" name="account_password" class="input-text">
-                                                            @error('account_password')
-                                                                <div class="text-danger">{{ $message }}</div>
-                                                            @enderror
-                                                        </p>
-                                                    </div>
+                                                <!-- .woocommerce-billing-fields__field-wrapper-outer -->
+                                            </div>
+                                            <!-- .woocommerce-billing-fields -->
+                                            <div class="woocommerce-account-fields">
+                                                <p class="form-row form-row-wide woocommerce-validated"></p>
+                                                    <label class="collapsed woocommerce-form__label woocommerce-form__label-for-checkbox checkbox" data-toggle="collapse" data-target="#createLogin" aria-controls="createLogin">
+                                                        <input type="checkbox" value="1" name="createaccount" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox">
+                                                        <span>Tạo tài khoản mới?</span>
+                                                    </label>
+                                                </p>
+                                                <div class="create-account collapse" id="createLogin">
+                                                    <p data-priority="" id="account_password_field" class="form-row validate-required woocommerce-invalid woocommerce-invalid-required-field">
+                                                        <label class="" for="account_password">Mật khẩu tài khoản
+                                                            <abbr title="required" class="required">*</abbr>
+                                                        </label>
+                                                        <input type="password" value="" placeholder="Password" id="account_password" name="account_password" class="input-text ">
+                                                    </p>
+                                                    <div class="clear"></div>
                                                 </div>
                                             </div>
-
-                                            <div class="col-2">
-                                                <div class="woocommerce-shipping-fields">
-                                                 
-
-                                                    <div class="shipping_address collapse" id="shipping-address">
-                                                        <div class="woocommerce-shipping-fields__field-wrapper">
-                                                            <p id="shipping_first_name_field" class="form-row form-row-first validate-required">
-                                                                <label for="shipping_first_name">Họ <span class="required">*</span></label>
-                                                                <input type="text" value="{{ old('shipping_first_name') }}" placeholder="Họ" id="shipping_first_name" name="shipping_first_name" class="input-text">
-                                                            </p>
-
-                                                            <p id="shipping_last_name_field" class="form-row form-row-last validate-required">
-                                                                <label for="shipping_last_name">Tên <span class="required">*</span></label>
-                                                                <input type="text" value="{{ old('shipping_last_name') }}" placeholder="Tên" id="shipping_last_name" name="shipping_last_name" class="input-text">
-                                                            </p>
-
-                                                            <p id="shipping_company_field" class="form-row form-row-wide">
-                                                                <label for="shipping_company">Tên công ty</label>
-                                                                <input type="text" value="{{ old('shipping_company') }}" placeholder="Tên công ty" id="shipping_company" name="shipping_company" class="input-text">
-                                                            </p>
-
-                                                            <p id="shipping_country_field" class="form-row form-row-wide validate-required">
-                                                                <label for="shipping_country">Quốc gia <span class="required">*</span></label>
-                                                                <select id="shipping_country" name="shipping_country" class="country_to_state country_select">
-                                                                    <option value="">Chọn quốc gia...</option>
-                                                                    <option value="VN" {{ old('shipping_country') == 'VN' ? 'selected' : '' }}>Vietnam</option>
-                                                                </select>
-                                                            </p>
-
-                                                            <p id="shipping_address_1_field" class="form-row form-row-wide address-field validate-required">
-                                                                <label for="shipping_address_1">Địa chỉ <span class="required">*</span></label>
-                                                                <input type="text" value="{{ old('shipping_address_1') }}" placeholder="Số nhà và tên đường" id="shipping_address_1" name="shipping_address_1" class="input-text">
-                                                            </p>
-
-                                                            <p id="shipping_address_2_field" class="form-row form-row-wide address-field">
-                                                                <label for="shipping_address_2">Địa chỉ 2</label>
-                                                                <input type="text" value="{{ old('shipping_address_2') }}" placeholder="Căn hộ, phòng, đơn vị..." id="shipping_address_2" name="shipping_address_2" class="input-text">
-                                                            </p>
-
-                                                            <p id="shipping_city_field" class="form-row form-row-wide address-field validate-required">
-                                                                <label for="shipping_city">Thành phố <span class="required">*</span></label>
-                                                                <input type="text" value="{{ old('shipping_city') }}" placeholder="Thành phố" id="shipping_city" name="shipping_city" class="input-text">
-                                                            </p>
-
-                                                            <p id="shipping_state_field" class="form-row form-row-wide address-field validate-required">
-                                                                <label for="shipping_state">Tỉnh / Huyện <span class="required">*</span></label>
-                                                                <input type="text" value="{{ old('shipping_state') }}" placeholder="Tỉnh / Huyện" id="shipping_state" name="shipping_state" class="input-text">
-                                                            </p>
-
-                                                           
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="woocommerce-additional-fields">
-                                                    <div class="woocommerce-additional-fields__field-wrapper">
-                                                       
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <!-- .woocommerce-account-fields -->
                                         </div>
-
-                                        <div class="woocommerce-checkout-review-order" id="order_review">
-                                            <div class="order-review-wrapper">
-                                                <h3 class="order_review_heading">Đơn hàng của bạn</h3>
-                                                <table class="shop_table woocommerce-checkout-review-order-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="product-name">Sản phẩm</th>
-                                                            <th class="product-total">Thành tiền</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($selectedItemIds as $id)
-                                                            <input type="hidden" name="selected_items[]" value="{{ $id }}">
-                                                        @endforeach
-
-                                                        @foreach ($cartItems as $item)
-                                                            @php
-                                                                $price = $item->variant
-                                                                    ? ($item->variant->sale_price && $item->variant->sale_price > 0 ? $item->variant->sale_price : $item->variant->price)
-                                                                    : ($item->product->sale_price && $item->product->sale_price > 0 ? $item->product->sale_price : $item->product->price);
-                                                            @endphp
-                                                            <tr>
-                                                                <td colspan="2">
-                                                                    <div class="d-flex justify-content-between align-items-start">
-                                                                        <div>
-                                                                            <div class="fw-bold">{{ $item->product->name }}</div>
-                                                                            <div class="text-muted small">Số lượng: {{ $item->quantity }}</div>
-                                                                            <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
-                                                                            @if ($item->variant && $item->variant->variantAttributes)
-                                                                                <div class="text-muted small">
-                                                                                    @foreach ($item->variant->variantAttributes as $att)
-                                                                                        <div>{{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }}</div>
-                                                                                    @endforeach
-                                                                                </div>
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="fw-bold text-end">{{ number_format($price * $item->quantity) }} VNĐ</div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr class="cart-subtotal">
-                                                            <th>Tạm tính</th>
-                                                            <td>
-                                                                <span id="subtotal" data-value="{{ $subtotal }}">{{ number_format($subtotal) }} VNĐ</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="shipping-fee">
-                                                            <th>Phí vận chuyển</th>
-                                                            <td>
-                                                                <span id="shipping-fee" data-value="{{ $ships->first()->shipping_price ?? 0 }}">{{ number_format($ships->first()->shipping_price ?? 0) }} VNĐ</span>
-                                                            </td>
-                                                        </tr>
-                                                        @if(session('applied_order_coupon'))
-                                                            <tr class="discount-row order-discount">
-                                                                <th>Giảm giá đơn hàng</th>
-                                                                <td>
-                                                                    <span id="order-discount" data-value="{{ session('applied_order_coupon.discount') }}">{{ number_format(session('applied_order_coupon.discount')) }} VNĐ</span>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                        @if(session('applied_shipping_coupon'))
-                                                            <tr class="discount-row shipping-discount">
-                                                                <th>Giảm giá phí ship</th>
-                                                                <td>
-                                                                    <span id="shipping-discount" data-value="{{ session('applied_shipping_coupon.discount') }}">{{ number_format(session('applied_shipping_coupon.discount')) }} VNĐ</span>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                        <tr class="order-total">
-                                                            <th>Tổng cộng</th>
-                                                            <td>
-                                                                <strong>
-                                                                    <span id="total-amount" data-value="{{ $subtotal + ($ships->first()->shipping_price ?? 0) - (session('applied_order_coupon.discount') ?? 0) - (session('applied_shipping_coupon.discount') ?? 0) }}">{{ number_format($subtotal + ($ships->first()->shipping_price ?? 0) - (session('applied_order_coupon.discount') ?? 0) - (session('applied_shipping_coupon.discount') ?? 0)) }} VNĐ</span>
-                                                                </strong>
-                                                            </td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                                <div class="woocommerce-checkout-payment" id="payment">
-                                                    <ul class="wc_payment_methods payment_methods methods">
-                                                        <li class="wc_payment_method payment_method_cod">
-                                                            <input type="radio" id="payment_method_cod" value="cod" name="payment_method" class="input-radio">
-                                                            <label for="payment_method_cod">Thanh toán khi nhận hàng</label>
-                                                        </li>
-                                                        <li class="wc_payment_method payment_method_bank">
-                                                            <input type="radio" id="payment_method_bank" value="banking" name="payment_method" class="input-radio" checked>
-                                                            <label for="payment_method_bank">Chuyển khoản ngân hàng</label>
-                                                        </li>
-                                                    </ul>
-
-                                                    @foreach($ships as $ship)
-                                                        <label>
-                                                            <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}" {{ $loop->first ? 'checked' : '' }}>
-                                                            {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
-                                                        </label><br>
-                                                    @endforeach
-                                                    <div class="form-row place-order">
-                                                        <p class="form-row terms wc-terms-and-conditions">
-                                                            <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
-                                                                <input type="checkbox" id="terms" name="terms" class="woocommerce-form__input woocommerce-form__input-checkbox" required>
-                                                                <span>Tôi đã đọc và đồng ý với các điều khoản & điều kiện</span>
-                                                                <span class="required">*</span>
+                                        <!-- .col-1 -->
+                                        <div class="col-2">
+                                            <div class="woocommerce-shipping-fields">
+                                                <h3 id="ship-to-different-address">
+                                                    <label class="collapsed woocommerce-form__label woocommerce-form__label-for-checkbox checkbox" data-toggle="collapse" data-target="#shipping-address" aria-controls="shipping-address">
+                                                        <input id="ship-to-different-address-checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" type="checkbox" value="1" name="ship_to_different_address">
+                                                        <span>Giao hàng tới địa chỉ khác?</span>
+                                                    </label>
+                                                </h3>
+                                                <div class="shipping_address collapse" id="shipping-address">
+                                                    <div class="woocommerce-shipping-fields__field-wrapper">
+                                                        <p id="shipping_first_name_field" class="form-row form-row-first validate-required">
+                                                            <label class="" for="shipping_first_name">Họ
+                                                                <abbr title="required" class="required">*</abbr>
                                                             </label>
-                                                            <input type="hidden" value="1" name="terms-field">
+                                                            <input type="text" autofocus="autofocus" autocomplete="given-name" value="" placeholder="" id="shipping_first_name" name="shipping_first_name" class="input-text ">
                                                         </p>
-                                                        <button type="submit" class="button wc-forward text-center">Đặt hàng</button>
+                                                        <p id="shipping_last_name_field" class="form-row form-row-last validate-required">
+                                                            <label class="" for="shipping_last_name">Tên
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" autocomplete="family-name" value="" placeholder="" id="shipping_last_name" name="shipping_last_name" class="input-text ">
+                                                        </p>
+                                                        <p id="shipping_company_field" class="form-row form-row-wide">
+                                                            <label class="" for="shipping_company">Tên công ty</label>
+                                                            <input type="text" autocomplete="organization" value="" placeholder="" id="shipping_company" name="shipping_company" class="input-text ">
+                                                        </p>
+                                                        <p id="shipping_country_field" class="form-row form-row-wide address-field update_totals_on_change validate-required woocommerce-validated">
+                                                            <label class="" for="shipping_country">Quốc gia
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <select autocomplete="country" class="country_to_state country_select select2-hidden-accessible" id="shipping_country" name="shipping_country" tabindex="-1" aria-hidden="true">
+                                                                <option value="">Chọn quốc gia...</option>                                                              
+                                                                <option value="VN">Vietnam</option>
+                                                                <option value="WF">Wallis and Futuna</option>
+                                                                <option value="EH">Western Sahara</option>
+                                                                <option value="YE">Yemen</option>
+                                                                <option value="ZM">Zambia</option>
+                                                                <option value="ZW">Zimbabwe</option>
+                                                            </select>
+                                                        </p>
+                                                        <p id="shipping_address_1_field" class="form-row form-row-wide address-field validate-required">
+                                                            <label class="" for="shipping_address_1">Địa chỉ
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" autocomplete="address-line1" value="" placeholder="Số nhà và tên đường" id="shipping_address_1" name="shipping_address_1" class="input-text ">
+                                                        </p>
+                                                        <p id="shipping_address_2_field" class="form-row form-row-wide address-field">
+                                                            <input type="text" autocomplete="address-line2" value="" placeholder="Căn hộ, phòng, đơn vị... (không bắt buộc)" id="shipping_address_2" name="shipping_address_2" class="input-text ">
+                                                        </p>
+                                                        <p id="shipping_city_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row-wide address-field validate-required">
+                                                            <label class="" for="shipping_city">Thành phố
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" autocomplete="address-level2" value="" placeholder="" id="shipping_city" name="shipping_city" class="input-text ">
+                                                        </p>
+                                                        <p id="shipping_state_field" class="form-row form-row-wide address-field validate-state woocommerce-invalid woocommerce-invalid-required-field validate-required" data-o_class="form-row form-row-wide address-field validate-required validate-state woocommerce-invalid woocommerce-invalid-required-field">
+                                                            <label class="" for="shipping_state">Tỉnh / Huyện
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <select data-placeholder="" autocomplete="address-level1" class="state_select select2-hidden-accessible" id="shipping_state" name="shipping_state" tabindex="-1" aria-hidden="true">
+                                                                <option value="">Chọn...</option>
+                                                                <option value="AP">Andhra Pradesh</option>                                                             
+                                                                <option value="DL">Delhi</option>
+                                                                <option value="LD">Lakshadeep</option>
+                                                                <option value="PY">Pondicherry (Puducherry)</option>
+                                                            </select>
+                                                        </p>
+                                                        <p data-priority="90" id="shipping_postcode_field" class="form-row form-row-wide address-field validate-postcode validate-required" data-o_class="form-row form-row-wide address-field validate-required validate-postcode">
+                                                            <label class="" for="shipping_postcode">Mã bưu điện
+                                                                <abbr title="required" class="required">*</abbr>
+                                                            </label>
+                                                            <input type="text" autocomplete="postal-code" value="" placeholder="" id="shipping_postcode" name="shipping_postcode" class="input-text ">
+                                                        </p>
                                                     </div>
+                                                    <!-- .woocommerce-shipping-fields__field-wrapper -->
+                                                </div>
+                                                <!-- .shipping_address -->
+                                            </div>
+                                            <!-- .woocommerce-shipping-fields -->
+                                            <div class="woocommerce-additional-fields">
+                                                <div class="woocommerce-additional-fields__field-wrapper">
+                                                    <p id="order_comments_field" class="form-row notes">
+                                                        <label class="" for="order_comments">Ghi chú về đơn hàng</label>
+                                                        <textarea cols="5" rows="2" placeholder="Ghi chú về đơn hàng, ví dụ: lưu ý giao hàng." id="order_comments" class="input-text " name="order_comments"></textarea>
+                                                    </p>
+                                                </div>
+                                                <!-- .woocommerce-additional-fields__field-wrapper-->
+                                            </div>
+                                            <!-- .woocommerce-additional-fields -->
+                                        </div>
+                                        <!-- .col-2 -->
+                                    </div>
+                                    <!-- .col2-set -->
+                                    <div class="woocommerce-checkout-review-order" id="order_review">
+                                        <div class="order-review-wrapper">
+                                            <h3 class="order_review_heading">Đơn hàng của bạn</h3>
+                                            <table class="shop_table woocommerce-checkout-review-order-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="product-name">Sản phẩm</th>
+                                                        <th class="product-total">Thành tiền</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($selectedItemIds as $id)
+                                                        <input type="hidden" name="selected_items[]" value="{{ $id }}">
+                                                    @endforeach
 
+                                                    @foreach ($cartItems as $item)
+                                                        @php
+                                                            if ($item->variant) {
+                                                                $price = $item->variant->sale_price && $item->variant->sale_price > 0
+                                                                    ? $item->variant->sale_price
+                                                                    : $item->variant->price;
+                                                            } else {
+                                                                $price = $item->product->sale_price && $item->product->sale_price > 0
+                                                                    ? $item->product->sale_price
+                                                                    : $item->product->price;
+                                                            }
+                                                        @endphp
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <div class="d-flex justify-content-between align-items-start">
+                                                                    <div>
+                                                                        <div class="fw-bold">{{ $item->product->name }}</div>
+                                                                        <div class="text-muted small">Số lượng: {{ $item->quantity }}</div>
+                                                                        <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
+
+                                                                        @if ($item->variant && $item->variant->variantAttributes)
+                                                                            <div class="text-muted small">
+                                                                                @foreach ($item->variant->variantAttributes as $att)
+                                                                                    <div>{{ $att->attribute->name ?? '' }}: {{ $att->value->value ?? '' }}</div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+
+                                                                    <div class="fw-bold text-end">{{ number_format($price * $item->quantity) }} VNĐ</div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="cart-subtotal">
+                                                        <th>Tạm tính</th>
+                                                        <td>
+                                                            <span id="subtotal" data-value="{{ $subtotal }}">{{ number_format($subtotal) }} VNĐ</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="shipping-fee">
+                                                        <th>Phí vận chuyển</th>
+                                                        <td>
+                                                            <span id="shipping-fee" data-value="0">{{ number_format(0) }} VNĐ</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="discount-row">
+                                                        <th>Giảm giá</th>
+                                                        <td>
+                                                            <span id="discount-amount"
+                                                                data-value="{{ (session('applied_order_coupon.discount') ?? 0) + (session('applied_shipping_coupon.discount') ?? 0) }}">
+                                                                {{ number_format((session('applied_order_coupon.discount') ?? 0) + (session('applied_shipping_coupon.discount') ?? 0)) }} VNĐ
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="order-total">
+                                                        <th>Tổng cộng</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                            <!-- /.woocommerce-checkout-review-order-table -->
+                                            <div class="woocommerce-checkout-payment" id="payment">
+                                                <ul class="wc_payment_methods payment_methods methods">
+                                                    <li class="wc_payment_method payment_method_cod">
+                                                        <input type="radio" data-order_button_text="" id="payment_method_cod" value="cod" name="payment_method" class="input-radio">
+                                                        <label for="payment_method_cod">Thanh toán khi nhận hàng</label>
+                                                    </li>
+                                                    <li class="wc_payment_method payment_method_bank">
+                                                        <input type="radio" data-order_button_text="" id="payment_method_bank" checked="checked" value="banking" name="payment_method" class="input-radio">
+                                                        <label for="payment_method_bank">Chuyển khoản ngân hàng</label>
+                                                    </li>
+                                                </ul>
+                                                @foreach($ships as $ship)
+                                                    <label>
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}" {{ $loop->first ? 'checked' : '' }}>
+                                                        {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
+                                                    </label><br>
+                                                @endforeach
+                                                <div class="form-row place-order">
+                                                    <p class="form-row terms wc-terms-and-conditions woocommerce-validated">
+                                                        <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+                                                            <input type="checkbox" id="terms" name="terms" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox">
+                                                            <span>Tôi đã đọc và đồng ý với các điều khoản & điều kiện</span>
+                                                            <span class="required">*</span>
+                                                        </label>
+                                                        <input type="hidden" value="1" name="terms-field">
+                                                    </p>
+                                                    <button type="submit" class="button wc-forward text-center">Đặt hàng</button>
                                                 </div>
                                             </div>
+                                            <!-- /.woocommerce-checkout-payment -->
                                         </div>
-                                    </form>
-                                </div>
+                                        <!-- /.order-review-wrapper -->
+                                    </div>
+                                    <!-- .woocommerce-checkout-review-order -->
+                                </form>
+                                <!-- .woocommerce-checkout -->
                             </div>
+                            <!-- .woocommerce -->
                         </div>
-                    </main>
-                </div>
+                        <!-- .entry-content -->
+                    </div>
+                    <!-- #post-## -->
+                </main>
+                <!-- #main -->
             </div>
+            <!-- #primary -->
         </div>
+        <!-- .row -->
     </div>
+    <!-- .col-full -->
+</div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const subtotal = parseInt(document.getElementById('subtotal').dataset.value);
-        let shipping = parseInt(document.querySelector('.ship-option:checked').dataset.price) || 0;
-        let orderDiscount = parseInt(document.getElementById('order-discount')?.dataset.value || 0);
-        let shippingDiscount = parseInt(document.getElementById('shipping-discount')?.dataset.value || 0);
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const subtotal = parseInt(document.getElementById('subtotal').dataset.value);
+    let shipping = parseInt(document.querySelector('.ship-option:checked').dataset.price) || 0;
+    let discount = parseInt(document.getElementById('discount-amount').dataset.value) || 0;
 
-        const totalEl = document.getElementById('total-amount');
-        const shippingEl = document.getElementById('shipping-fee');
-        const orderDiscountEl = document.getElementById('order-discount');
-        const shippingDiscountEl = document.getElementById('shipping-discount');
-        const shippingFeeInput = document.getElementById('shipping_fee_input');
+    const totalEl = document.getElementById('total-amount');
+    const shippingEl = document.getElementById('shipping-fee');
+    const discountEl = document.getElementById('discount-amount');
 
-        function formatVND(number) {
-            return new Intl.NumberFormat('vi-VN').format(number) + ' VNĐ';
-        }
+    function formatVND(number) {
+        return new Intl.NumberFormat('vi-VN').format(number) + ' VNĐ';
+    }
 
-        function updateTotal() {
-            const finalShipping = Math.max(shipping - shippingDiscount, 0);
-            const total = Math.max(subtotal + finalShipping - orderDiscount, 0);
-            totalEl.textContent = formatVND(total);
-            totalEl.dataset.value = total;
-            shippingEl.textContent = formatVND(finalShipping);
-            shippingEl.dataset.value = finalShipping;
-            if (orderDiscountEl) {
-                orderDiscountEl.textContent = formatVND(orderDiscount);
-            }
-            if (shippingDiscountEl) {
-                shippingDiscountEl.textContent = formatVND(shippingDiscount);
-            }
-        }
+    function updateTotal() {
+        const total = Math.max(subtotal + shipping - discount, 0);  
+        totalEl.textContent = formatVND(total);
+        shippingEl.textContent = formatVND(shipping);
+        discountEl.textContent = formatVND(discount);
+    }
 
-        document.querySelectorAll('.ship-option').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                shipping = parseInt(this.dataset.price) || 0;
-                shippingFeeInput.value = shipping;
-                updateTotal();
+    document.querySelectorAll('.ship-option').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            shipping = parseInt(this.dataset.price) || 0;
+            document.querySelectorAll('input[name="shipping_fee"]').forEach(function(input) {
+                input.value = shipping;
             });
+            updateTotal();
         });
-
-        updateTotal();
     });
-    </script>
+
+    updateTotal();
+});
+</script>
+
 @endsection

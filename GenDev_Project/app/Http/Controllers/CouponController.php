@@ -10,29 +10,26 @@ class CouponController extends Controller
 {
     public function apply(Request $request)
     {
+        $request->validate([
+            'coupon_code' => 'required|string',
+            'coupon_type' => 'required|in:order,shipping',
+            'subtotal' => 'required|numeric',
+            'shipping_fee' => 'nullable|numeric'
+        ]);
+
         $code = $request->coupon_code;
-        $couponType = $request->type ?? 'order';
+        $couponType = $request->coupon_type;
         $subtotal = $request->subtotal;
         $shippingFee = $request->shipping_fee ?? 0;
 
         // Lấy coupon theo loại
-        if ($couponType === 'shipping') {
-            $coupon = Coupon::whereRaw('LOWER(shipping_code) = ?', [strtolower(trim($code))])
-                ->where('type', 'shipping')
-                ->where('status', 1)
-                ->where('usage_limit', '>', 0)
-                ->whereDate('start_date', '<=', now())
-                ->whereDate('end_date', '>=', now())
-                ->first();
-        } else {
-            $coupon = Coupon::whereRaw('LOWER(coupon_code) = ?', [strtolower(trim($code))])
-                ->where('type', 'order')
-                ->where('status', 1)
-                ->where('usage_limit', '>', 0)
-                ->whereDate('start_date', '<=', now())
-                ->whereDate('end_date', '>=', now())
-                ->first();
-        }
+        $coupon = Coupon::whereRaw('LOWER(coupon_code) = ?', [strtolower(trim($code))])
+            ->where('type', $couponType)
+            ->where('status', 1)
+            ->where('usage_limit', '>', 0)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->first();
 
         if (!$coupon) {
             return back()->with($couponType === 'shipping' ? 'error_shipping_coupon' : 'error_order_coupon', 'Mã giảm giá không hợp lệ hoặc đã hết hạn');
@@ -62,7 +59,7 @@ class CouponController extends Controller
                 : $coupon->discount_amount;
             session()->put('applied_shipping_coupon', [
                 'id' => $coupon->id,
-                'code' => $coupon->shipping_code,
+                'code' => $coupon->coupon_code,
                 'discount' => $discount,
                 'user_id' => $userId
             ]);
@@ -86,7 +83,11 @@ class CouponController extends Controller
 
     public function remove(Request $request)
     {
-        $couponType = $request->input('type', 'order');
+        $request->validate([
+            'type' => 'required|in:order,shipping'
+        ]);
+
+        $couponType = $request->input('type');
         if ($couponType === 'shipping') {
             session()->forget('applied_shipping_coupon');
             return redirect()->back()->with('success_shipping_coupon', 'Đã xóa mã giảm giá phí ship');
