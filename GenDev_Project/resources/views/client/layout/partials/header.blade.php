@@ -70,7 +70,6 @@
                             <a title="Sản phẩm" 
                             href="{{ asset('/shop') }}">Sản phẩm </a>
 
-
                             {{-- <ul role="menu" class=" dropdown-menu">
                                 <li class="menu-item animate-dropdown">
                                     <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
