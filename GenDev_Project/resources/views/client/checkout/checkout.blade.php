@@ -360,6 +360,7 @@
                                                                         <div class="fw-bold">{{ $item['product']['name'] }}</div>
                                                                         <div class="text-muted small">Số lượng: {{ $item['quantity'] }}</div>
                                                                         <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
+
                                                                         @if ($item->variant && $item->variant->variantAttributes)
 
                                                                             <div class="text-muted small">

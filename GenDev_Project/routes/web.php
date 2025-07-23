@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
 session_start();
@@ -180,6 +181,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::resource('post-categories', PostCategoryController::class);
     });
 
+
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
     // Route::middleware(['permission:manage imports'])->group(function () {
@@ -206,6 +208,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::delete('/suppliers/destroy/{id}',[SupplierController::class,'destroy'])->name('admin.suppliers.destroy');
 
     });
+
 });
 
 Route::resource('/product', ClientProductController::class);

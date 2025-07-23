@@ -13,6 +13,7 @@ class Order extends Model
         'product_coupon_id',
         'shipping_coupon_id',
         'shipping_id',
+        'shipping_fee',
         'name',
         'email',
         'phone',
