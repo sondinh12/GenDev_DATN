@@ -94,7 +94,6 @@ class CheckoutController extends Controller
             });
             $shipping = Ship::findOrFail($request->ship_id);
             $shippingFee = $shipping->shipping_price;
-
             $orderDiscount = 0;
             $orderCouponId = null;
             $userId = Auth::id();
