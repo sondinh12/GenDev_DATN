@@ -34,7 +34,7 @@
                 @forelse($trashedCoupons as $index => $coupon)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $coupon->coupon_code }}</td>
+                    <td>{{ $coupon->type === 'shipping' ? $coupon->shipping_code : $coupon->coupon_code }}</td>
                     <td>{{ $coupon->name }}</td>
                     <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
                     <td>
@@ -93,7 +93,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="11" class="text-center">Không có mã trong thùng rác</td>
+                    <td colspan="13" class="text-center">Không có mã trong thùng rác</td>
                 </tr>
                 @endforelse
             </tbody>

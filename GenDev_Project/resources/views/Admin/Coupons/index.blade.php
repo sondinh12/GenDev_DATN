@@ -4,8 +4,7 @@
 
 @section('content')
 <div class="container mt-4">
-
-    <h4 class="mb-4">Danh sách mã giảm giá</h2>
+    <h4 class="mb-4">Danh sách mã giảm giá</h4>
 
     <div class="d-flex justify-content-between mb-3">
         <a href="{{ route('coupons.create') }}" class="btn btn-primary">
@@ -45,7 +44,9 @@
                 @foreach($coupons as $index => $coupon)
                 <tr>
                     <td>{{ $index + $coupons->firstItem() }}</td>
-                    <td>{{ $coupon->coupon_code ?? $coupon->shipping_code }}</td>
+                    <td>
+                        {{ $coupon->coupon_code ?? 'Chưa có mã' }} <!-- Sử dụng coupon_code cho cả hai loại -->
+                    </td>
                     <td>{{ $coupon->name }}</td>
                     <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
                     <td>
@@ -104,7 +105,7 @@
 
                 @if($coupons->isEmpty())
                     <tr>
-                        <td colspan="12" class="text-center">Không có mã nào</td>
+                        <td colspan="13" class="text-center">Không có mã nào</td>
                     </tr>
                 @endif
             </tbody>
