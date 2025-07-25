@@ -42,43 +42,32 @@
     </div>
     <br>
 
-    @php
-        $statusVi = [
-            'pending' => 'Chờ xử lý',
-            'processing' => 'Đang xử lý',
-            'shipped' => 'Đang giao hàng',
-            'completed' => 'Hoàn tất',
-            'cancelled' => 'Đã hủy',
-        ][$order->status] ?? ucfirst($order->status);
+   @php
+    $statusVi = [
+        'pending'   => 'Chờ xử lý',
+        'processing'=> 'Đang xử lý',
+        'shipping'  => 'Đang giao hàng',
+        'shipped'   => 'Đã giao',
+        'completed' => 'Hoàn tất',
+        'cancelled' => 'Đã hủy',
+        'return_requested'  => 'Hoàn hàng',
+    ][$order->status] ?? ucfirst($order->status);
 
-        $paymentStatusClass = match($order->payment_status) {
-            'paid' => 'success',
-            'unpaid' => 'warning',
-            'cancelled' => 'danger',
-            default => 'secondary',
-        };
+    $paymentStatusClass = match($order->payment_status) {
+        'paid'     => 'success',
+        'unpaid'   => 'warning',
+        'cancelled'=> 'danger',
+        default    => 'secondary',
+    };
 
-        $paymentStatusText = match($order->payment_status) {
-            'paid' => 'Đã thanh toán',
-            'unpaid' => 'Chưa thanh toán',
-            'cancelled' => 'Đã hủy',
-            default => ucfirst($order->payment_status),
-        };
+    $paymentStatusText = match($order->payment_status) {
+        'paid'     => 'Đã thanh toán',
+        'unpaid'   => 'Chưa thanh toán',
+        'cancelled'=> 'Đã hủy',
+        default    => ucfirst($order->payment_status),
+    };
+@endphp
 
-        $tamTinh = $order->total - $order->shipping_fee;
-        $discount = 0;
-
-        if ($order->coupon) {
-            if ($order->coupon->discount_type === 'fixed') {
-                $discount = $order->coupon->discount_amount;
-            } elseif ($order->coupon->discount_type === 'percent') {
-                $discount = $tamTinh * $order->coupon->discount_amount / 100;
-                if ($order->coupon->max_coupon > 0) {
-                    $discount = min($discount, $order->coupon->max_coupon);
-                }
-            }
-        }
-    @endphp
 
     <h5 class="mb-4">
         Chi tiết đơn hàng #{{ $order->id }} -
@@ -106,7 +95,6 @@
                 <h6 class="fw-bold mb-2">HÌNH THỨC GIAO HÀNG</h6>
                 <p class="mb-1">{{ $order->ship->name ?? 'FAST Giao Tiết Kiệm' }}</p>
                 <p class="mb-1">Ngày đặt hàng: {{ $order->created_at->format('H:i d/m/Y') }}</p>
-                <p class="mb-0">Phí vận chuyển: {{ number_format($order->shipping_fee, 0, ',', '.') }} đ</p>
             </div>
         </div>
         <div class="col-md-4">
@@ -157,43 +145,27 @@
         </div>
         @endforeach
 
-        <div class="text-end mt-4">
-            <div>Tạm tính: <strong>{{ number_format($tamTinh + $discount, 0, ',', '.') }} đ</strong></div>
+      {{-- TỔNG KẾT --}}
+<div class="text-end mt-4">
+    <div>Tạm tính: <strong>{{ number_format($order->subtotal, 0, ',', '.') }} đ</strong></div>
 
-            @if($order->coupon)
-                <div>Mã giảm giá: <strong>{{ $order->coupon->coupon_code }}</strong></div>
-                <div class="text-success">Giảm: -{{ number_format($discount, 0, ',', '.') }} đ</div>
-            @endif
+    @if($order->productCoupon)
+        <div>Mã giảm giá sản phẩm: <strong>{{ $order->productCoupon->coupon_code }}</strong></div>
+        <div class="text-success">Giảm sản phẩm: -{{ number_format($order->product_discount, 0, ',', '.') }} đ</div>
+    @endif
+    <div>Phí vận chuyển: <strong>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</strong></div>
 
-            <div>Phí vận chuyển: <strong>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</strong></div>
+    @if($order->shippingCoupon)
+        <div>Mã giảm giá vận chuyển: <strong>{{ $order->shippingCoupon->coupon_code }}</strong></div>
+        <div class="text-success">Giảm phí vận chuyển: -{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</div>
+    @endif
 
-            <div class="fs-5 fw-bold text-danger">
-                Tổng cộng: {{ number_format($order->total, 0, ',', '.') }} đ
-            </div>
-        </div>
+
+    <div class="fs-5 fw-bold text-danger mt-2">
+        Tổng cộng: {{ number_format($order->total, 0, ',', '.') }} đ
     </div>
+</div>
 
-    {{-- Hành động --}}
-    <div class="d-flex gap-2">
-        @if($order->status === 'pending')
-            <form action="{{ route('client.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
-                @csrf
-                @method('PUT')
-                <button class="btn btn-outline-danger">
-                    <i class="fa fa-times me-1"></i> Hủy đơn hàng
-                </button>
-            </form>
-        @endif
-
-        @if($order->status === 'shipped')
-            <form action="{{ route('client.orders.complete', $order->id) }}" method="POST" onsubmit="return confirm('Bạn xác nhận đã nhận hàng và muốn hoàn thành đơn này?');">
-                @csrf
-                @method('PUT')
-                <button class="btn btn-outline-success">
-                    <i class="fa fa-check me-1"></i> Đã nhận hàng
-                </button>
-            </form>
-        @endif
     </div>
 </div>
 @endsection

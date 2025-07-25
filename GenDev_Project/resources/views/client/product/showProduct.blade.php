@@ -1,5 +1,7 @@
 @extends('client.layout.master')
 
+
+
 @section('styles')
 <style>
     .gallery-nav-btn {
@@ -343,7 +345,7 @@
                     <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
                     @endauth
                     <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                    @php $reviews = $product->reviews()->with('user')->latest()->take(5)->get(); @endphp
+                    @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                     <div class="row g-3">
                         @forelse($reviews as $review)
                         <div class="col-12 col-md-6">
@@ -969,10 +971,26 @@
         // Sự kiện tăng/giảm số lượng
         $('.btn-qty-plus').on('click', function() {
             var $qtyInput = $('#quantity-input');
-            var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
             var val = parseInt($qtyInput.val()) || 1;
-            if (val < max) {
-                $qtyInput.val(val + 1);
+            // Nếu có biến thể
+            if (Object.keys(variantMap).length) {
+                if (!allAttrSelected()) {
+                    // Chưa chọn đủ thuộc tính, không tăng
+                    $qtyInput.val(1);
+                    return;
+                }
+                var key = getSelectedKey();
+                var info = variantMap[key];
+                var max = info ? parseInt(info.quantity) : 1;
+                if (val < max) {
+                    $qtyInput.val(val + 1);
+                }
+            } else {
+                // Không có biến thể, dùng số lượng sản phẩm
+                var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
+                if (val < max) {
+                    $qtyInput.val(val + 1);
+                }
             }
         });
         $('.btn-qty-minus').on('click', function() {

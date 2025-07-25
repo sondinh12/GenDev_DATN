@@ -72,7 +72,8 @@
                                         </span>
                                     </td>
                                     <td>
-                                        @foreach ($variant->variantAttributes as $attr)
+                                        {{-- {{dd($variant->variantAttributes)}} --}}
+                                        @foreach ($variant->variantAttributes as $attr)                               
                                             <span class="badge bg-info text-dark me-1">
                                                 {{ $attr->attribute->name }}: {{ $attr->value->value }}
                                             </span>

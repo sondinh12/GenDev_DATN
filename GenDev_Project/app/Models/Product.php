@@ -45,4 +45,14 @@ class Product extends Model
     {
         return $this->hasMany(ProductReview::class, 'product_id');
     }
+
+    public function supplierPrices()
+    {
+        return $this->hasMany(SupplierProductPrice::class);
+    }
+
+    public function importDetails()
+    {
+        return $this->hasMany(ImportDetail::class);
+    }
 }
