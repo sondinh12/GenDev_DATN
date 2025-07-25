@@ -45,7 +45,7 @@
                 <tr>
                     <td>{{ $index + $coupons->firstItem() }}</td>
                     <td>
-                        {{ $coupon->coupon_code ?? 'Chưa có mã' }} <!-- Sử dụng coupon_code cho cả hai loại -->
+                        {{ $coupon->coupon_code ?? 'Chưa có mã' }}
                     </td>
                     <td>{{ $coupon->name }}</td>
                     <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
@@ -94,7 +94,7 @@
                     <td class="d-flex gap-1">
                         <a href="{{ route('coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">Sửa</a>
 
-                        <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')" style="display:inline-block;">
+                        <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST" class="delete-form" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
@@ -122,29 +122,63 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success'))
+        // Khởi tạo tooltip nếu có
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Áp dụng xác nhận trước khi xóa (chuyển vào thùng rác)
+        document.querySelectorAll('form[method="POST"]').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                // Kiểm tra nếu đây là form xóa coupon
+                if (form.querySelector('button[type="submit"]').classList.contains('btn-danger')) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Xác nhận xóa',
+                        text: 'Mã giảm giá sẽ được chuyển vào thùng rác!',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Xác nhận',
+                        cancelButtonText: 'Hủy bỏ',
+                        reverseButtons: true,
+                        backdrop: `rgba(0,0,0,0.2)`
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                }
+            });
+        });
+
+        // Hiển thị thông báo thành công (nếu có) sau khi thực hiện các hành động khác
+        @if (session('success'))
             Swal.fire({
                 icon: 'success',
                 title: 'Thành công!',
                 text: '{{ session('success') }}',
-                timer: 2500,
+                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
                 showConfirmButton: false,
-                timerProgressBar: true
-            }).then(() => {
-                window.location.href = window.location.href;
+                timer: 3000
             });
         @endif
 
-        @if(session('error'))
+        // Hiển thị thông báo lỗi (nếu có)
+        @if (session('error'))
             Swal.fire({
                 icon: 'error',
-                title: 'Thất bại!',
+                title: 'Lỗi!',
                 text: '{{ session('error') }}',
-                timer: 3000,
+                confirmButtonColor: '#d33',
+                toast: true,
+                position: 'top-end',
                 showConfirmButton: false,
-                timerProgressBar: true
-            }).then(() => {
-                window.location.href = window.location.href;
+                timer: 3000
             });
         @endif
     });
