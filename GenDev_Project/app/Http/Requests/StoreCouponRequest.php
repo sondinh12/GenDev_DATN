@@ -18,8 +18,9 @@ class StoreCouponRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-
-            'coupon_code' => 'required|string|max:20|unique:coupons,coupon_code,' . $couponId,
+            'type' => 'required|in:order,shipping', // ✅ Bổ sung để tránh lỗi
+            'coupon_code' => 'nullable|string|max:20|unique:coupons,coupon_code,' . $couponId,
+            'shipping_code' => 'nullable|string|max:50',
 
             'discount_type' => 'required|in:percent,fixed',
 
@@ -43,7 +44,6 @@ class StoreCouponRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $start = Carbon::parse(request('start_date'));
                     $end = Carbon::parse($value);
-
                     if ($start->diffInDays($end) > 365) {
                         $fail('Thời hạn mã giảm giá không được vượt quá 1 năm.');
                     }
@@ -52,7 +52,6 @@ class StoreCouponRequest extends FormRequest
 
             'usage_limit' => 'nullable|integer|min:1|max:10000',
             'per_use_limit' => 'nullable|integer|min:1|max:10',
-
             'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
 
             'max_coupon' => [
@@ -60,16 +59,12 @@ class StoreCouponRequest extends FormRequest
                 'numeric',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    $discountType = request('discount_type');
                     $discount = request('discount_amount');
                     $min = request('min_coupon');
 
-                    // Nếu max và min đều có, thì max phải >= min
                     if (!is_null($min) && $value < $min) {
                         $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
                     }
-
-                    // Nếu max và discount_amount đều có, thì max phải >= discount_amount
                     if (!is_null($discount) && $value < $discount) {
                         $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
                     }
@@ -83,13 +78,15 @@ class StoreCouponRequest extends FormRequest
 
     public function messages(): array
     {
-        return [
-            'name.required' => 'Tên mã giảm giá là bắt buộc.',
+return [
+'name.required' => 'Tên mã giảm giá là bắt buộc.',
             'name.max' => 'Tên mã giảm giá không được vượt quá 255 ký tự.',
 
-            'coupon_code.required' => 'Mã giảm giá là bắt buộc.',
-            'coupon_code.unique' => 'Mã giảm giá này đã tồn tại.',
             'coupon_code.max' => 'Mã giảm giá không được vượt quá 20 ký tự.',
+            'coupon_code.unique' => 'Mã giảm giá này đã tồn tại.',
+
+            'type.required' => 'Vui lòng chọn loại mã.',
+            'type.in' => 'Loại mã không hợp lệ.',
 
             'discount_type.required' => 'Vui lòng chọn loại giảm.',
             'discount_type.in' => 'Loại giảm không hợp lệ.',
@@ -124,7 +121,7 @@ class StoreCouponRequest extends FormRequest
             'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
 
             'status.in' => 'Trạng thái không hợp lệ.',
-            'user_id.integer'=> 'Giá trị phải là 1 số'
+            'user_id.integer' => 'Giá trị phải là 1 số.'
         ];
     }
 }

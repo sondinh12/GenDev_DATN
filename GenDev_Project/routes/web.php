@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
+
 session_start();
 
 use App\Http\Controllers\PaymentController;
@@ -87,10 +88,11 @@ Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
 
-    Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail');
-    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update');
-    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy');
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
+    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
+    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
+    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
 });
 
 Route::get('/order', function () {
@@ -204,6 +206,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::get('/suppliers/edit/{id}',[SupplierController::class,'edit'])->name('admin.suppliers.edit');
         Route::put('/suppliers/upadte/{id}',[SupplierController::class,'update'])->name('admin.suppliers.update');
         Route::delete('/suppliers/destroy/{id}',[SupplierController::class,'destroy'])->name('admin.suppliers.destroy');
+
 
     });
 });

@@ -18,7 +18,7 @@ class UpdateCouponRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'type' => 'required|in:order,shipping', 
+            'type' => 'required|in:order,shipping', // ✅ Bổ sung để tránh lỗi
             'coupon_code' => 'nullable|string|max:20|unique:coupons,coupon_code,' . $couponId,
             'shipping_code' => 'nullable|string|max:50',
 
@@ -78,8 +78,8 @@ class UpdateCouponRequest extends FormRequest
 
     public function messages(): array
     {
-        return [
-            'name.required' => 'Tên mã giảm giá là bắt buộc.',
+return [
+'name.required' => 'Tên mã giảm giá là bắt buộc.',
             'name.max' => 'Tên mã giảm giá không được vượt quá 255 ký tự.',
 
             'coupon_code.max' => 'Mã giảm giá không được vượt quá 20 ký tự.',
