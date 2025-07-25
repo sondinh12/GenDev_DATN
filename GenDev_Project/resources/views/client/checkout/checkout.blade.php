@@ -53,7 +53,7 @@
                                                 <div id="coupon-list-order" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
                                                     @foreach($coupons->where('type', 'order') as $coupon)
                                                         <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_order').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-order').style.display='none'">
-                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }} (Min: {{ number_format($coupon->min_coupon) }} VNĐ, Max: {{ number_format($coupon->max_coupon) }} VNĐ)
+                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -86,7 +86,7 @@
                                                 <div id="coupon-list-shipping" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
                                                     @foreach($coupons->where('type', 'shipping') as $coupon)
                                                         <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_shipping').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-shipping').style.display='none'">
-                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }} (Min: {{ number_format($coupon->min_coupon) }} VNĐ, Max: {{ number_format($coupon->max_coupon) }} VNĐ)
+                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
                                                         </div>
                                                     @endforeach
                                                 </div>
