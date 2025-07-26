@@ -14,68 +14,76 @@ class StoreCouponRequest extends FormRequest
 
     public function rules(): array
     {
-        $couponId = $this->route('coupon');
+        $type = $this->input('type');
 
         return [
             'name' => 'required|string|max:255',
-
-            'coupon_code' => 'required|string|max:20|unique:coupons,coupon_code,' . $couponId,
-
-            'discount_type' => 'required|in:percent,fixed',
-
+            'type' => 'required|in:order,shipping',
+            'coupon_code' => [
+                'required',
+                'string',
+                'max:50',
+                'unique:coupons,coupon_code',
+            ],
+            'discount_type' => [
+                'required',
+                'in:percent,fixed',
+                function ($attribute, $value, $fail) use ($type) {
+                    if ($type === 'shipping' && $value !== 'fixed') {
+                        $fail('Mã giảm phí ship chỉ được sử dụng kiểu giảm cố định.');
+                    }
+                },
+            ],
             'discount_amount' => [
                 'required',
                 'numeric',
                 'min:0.01',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    if (request('discount_type') === 'percent' && $value > 100) {
+                    if ($this->input('discount_type') === 'percent' && $value > 100) {
                         $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
                     }
-                }
+                    if ($this->input('type') === 'shipping' && $value <= 0) {
+                        $fail('Số tiền giảm phí ship phải lớn hơn 0.');
+                    }
+                },
             ],
-
-            'start_date' => 'required|date|before_or_equal:end_date',
+            'start_date' => [
+                'required',
+                'date',
+                'after_or_equal:' . now()->toDateTimeString(),
+                'before_or_equal:end_date',
+            ],
             'end_date' => [
                 'required',
                 'date',
                 'after_or_equal:start_date',
                 function ($attribute, $value, $fail) {
-                    $start = Carbon::parse(request('start_date'));
+                    $start = Carbon::parse($this->input('start_date'));
                     $end = Carbon::parse($value);
-
                     if ($start->diffInDays($end) > 365) {
                         $fail('Thời hạn mã giảm giá không được vượt quá 1 năm.');
                     }
-                }
+                },
             ],
-
             'usage_limit' => 'nullable|integer|min:1|max:10000',
             'per_use_limit' => 'nullable|integer|min:1|max:10',
-
             'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
-
             'max_coupon' => [
                 'nullable',
                 'numeric',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    $discountType = request('discount_type');
-                    $discount = request('discount_amount');
-                    $min = request('min_coupon');
-
-                    // Nếu max và min đều có, thì max phải >= min
-                    if (!is_null($min) && $value < $min) {
+                    $discount = $this->input('discount_amount');
+                    $min = $this->input('min_coupon');
+                    if (!is_null($min) && !is_null($value) && $value < $min) {
                         $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
                     }
-
-                    // Nếu max và discount_amount đều có, thì max phải >= discount_amount
-                    if (!is_null($discount) && $value < $discount) {
+                    if (!is_null($discount) && !is_null($value) && $value < $discount) {
                         $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
                     }
-                }
+                },
             ],
-
             'status' => 'required|in:0,1',
             'user_id' => ['required', 'integer', 'in:-1,0'],
         ];
@@ -86,45 +94,38 @@ class StoreCouponRequest extends FormRequest
         return [
             'name.required' => 'Tên mã giảm giá là bắt buộc.',
             'name.max' => 'Tên mã giảm giá không được vượt quá 255 ký tự.',
-
+            'type.required' => 'Loại mã là bắt buộc.',
+            'type.in' => 'Loại mã không hợp lệ.',
             'coupon_code.required' => 'Mã giảm giá là bắt buộc.',
             'coupon_code.unique' => 'Mã giảm giá này đã tồn tại.',
-            'coupon_code.max' => 'Mã giảm giá không được vượt quá 20 ký tự.',
-
+            'coupon_code.max' => 'Mã giảm giá không được vượt quá 50 ký tự.',
             'discount_type.required' => 'Vui lòng chọn loại giảm.',
             'discount_type.in' => 'Loại giảm không hợp lệ.',
-
             'discount_amount.required' => 'Vui lòng nhập giá trị giảm.',
             'discount_amount.numeric' => 'Giá trị giảm phải là số.',
             'discount_amount.min' => 'Giá trị giảm phải lớn hơn 0.',
             'discount_amount.max' => 'Giá trị giảm không được vượt quá 99,999,999.99.',
-
             'start_date.required' => 'Vui lòng nhập ngày bắt đầu.',
             'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
+            'start_date.after_or_equal' => 'Ngày bắt đầu phải từ ngày hiện tại trở đi.',
             'start_date.before_or_equal' => 'Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.',
-
             'end_date.required' => 'Vui lòng nhập ngày kết thúc.',
             'end_date.date' => 'Ngày kết thúc không hợp lệ.',
             'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
             'end_date.*' => 'Thời hạn mã giảm giá không được vượt quá 1 năm.',
-
-            'usage_limit.max' => 'Giới hạn sử dụng không được vượt quá 10.000.',
+            'usage_limit.max' => 'Giới hạn sử dụng không được vượt quá 10,000.',
             'usage_limit.integer' => 'Giới hạn tổng sử dụng phải là số nguyên.',
             'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn 0.',
-
             'per_use_limit.integer' => 'Giới hạn mỗi người dùng phải là số nguyên.',
             'per_use_limit.min' => 'Giới hạn mỗi người dùng không hợp lệ.',
             'per_use_limit.max' => 'Mỗi người chỉ được sử dụng mã này tối đa 10 lần.',
-
             'min_coupon.max' => 'Giá trị đơn hàng tối thiểu không được vượt quá 99,999,999.99.',
             'min_coupon.numeric' => 'Giá trị đơn hàng tối thiểu phải là số.',
             'min_coupon.min' => 'Giá trị đơn hàng tối thiểu không được âm.',
-
             'max_coupon.numeric' => 'Giá trị đơn hàng tối đa phải là số.',
             'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
-
             'status.in' => 'Trạng thái không hợp lệ.',
-            'user_id.integer'=> 'Giá trị phải là 1 số'
+            'user_id.integer' => 'Giá trị phải là một số.',
         ];
     }
 }

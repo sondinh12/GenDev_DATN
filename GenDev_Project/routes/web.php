@@ -169,6 +169,7 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
@@ -184,6 +185,8 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
         Route::resource('post-categories', PostCategoryController::class);
     });
+
+
 
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
