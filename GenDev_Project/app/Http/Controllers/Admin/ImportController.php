@@ -9,6 +9,7 @@ use App\Models\Attribute;
 use App\Models\Import;
 
 use App\Models\ImportDetail;
+use App\Models\ImportLog;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantAttribute;
@@ -234,6 +235,7 @@ class ImportController extends Controller
             'details.product',
             'supplier.productPrices'
         ])->where('id', $id)->first();
+        $logs = ImportLog::with('user')->where('import_id', $dtImport->id)->latest()->get();
         if ($request->isMethod('post')) {
             $validated = $request->validate([
                 'status' => 'required|in:0,1',
@@ -305,7 +307,7 @@ class ImportController extends Controller
         }
 
 
-        return view('Admin.imports.show', compact('dtImport'));
+        return view('Admin.imports.show', compact('dtImport', 'logs'));
     }
 
     public function edit($id)
@@ -353,6 +355,7 @@ class ImportController extends Controller
             }
 
             return [
+                'id' => $detail->id,
                 'product_id' => $detail->product_id,
                 'variant_id' => $detail->variant_id,
                 'name' => $detail->product_temp_name ?? '',
@@ -378,14 +381,12 @@ class ImportController extends Controller
 
     public function update(UpdateImportRequest $request, $id)
 {
-    // dd($request->all());
-    // dd('Laravel nhận request OK', request()->all());
     DB::beginTransaction();
 
     try {
         $import = Import::findOrFail($id);
         $import->supplier_id = $request->supplier_id;
-        $import->import_date = Carbon::parse($request->import_date);
+        $import->import_date = \Carbon\Carbon::parse($request->import_date);
         $import->note = $request->note;
         $import->save();
 
@@ -402,33 +403,94 @@ class ImportController extends Controller
                 $detail->import_id = $import->id;
             }
 
-            // Sản phẩm có sẵn
-            $detail->product_id = $item['product_id'];
-            $detail->price = $item['existing_price'];
-            $detail->quantity = $item['existing_quantity'];
-            $detail->supplier_import_price = $item['existing_supplier_import_price'] ?? null;
-
-            $detail->product_temp_name = $item['product_name'] ?? null; // optional backup
+            $source = $item['source'] ?? 'existing';
             $detail->variant_id = $item['variant_id'] ?? null;
+            $detail->product_temp_name = $item['product_temp_name'] ?? ($item['name'] ?? null);
 
-            // Nếu có variant_data
-            if (!empty($item['variant_data'])) {
-                $detail->variant_data = $item['variant_data'];
+            if ($source === 'existing') {
+                $detail->product_id = $item['product_id'] ?? null;
+                $detail->import_price = $item['existing_price'] ?? 0;
+                $detail->quantity = $item['existing_quantity'] ?? 0;
+
+                // 💡 Cập nhật hoặc thêm giá nhập nhà cung cấp
+                if (!empty($item['supplier_import_price']) && !empty($item['product_id'])) {
+                    SupplierProductPrice::updateOrCreate(
+                        [
+                            'supplier_id' => $request->supplier_id,
+                            'product_id' => $item['product_id'],
+                        ],
+                        [
+                            'import_price' => $item['supplier_import_price'],
+                            'start_date' => $request->import_date,
+                        ]
+                    );
+                }
+            } else {
+                // Sản phẩm mới (chưa có product_id)
+                $detail->product_id = null;
+                $detail->import_price = $item['price'] ?? 0;
+                $detail->quantity = $item['quantity'] ?? 0;
+
+                // 💡 Lưu giá nhập nhà cung cấp nếu có (dù product_id là null → chưa có Product)
+                if (!empty($item['supplier_import_price'])) {
+                    SupplierProductPrice::create([
+                        'supplier_id' => $request->supplier_id,
+                        'product_id' => null, // sản phẩm mới, chưa tồn tại
+                        'import_price' => $item['supplier_import_price'],
+                        'start_date' => $request->import_date,
+                    ]);
+                }
             }
 
-            // Tính lại thành tiền
-            $detail->subtotal = $detail->price * $detail->quantity;
+            $detail->subtotal = $detail->import_price * $detail->quantity;
+
+            // Giải mã variant_data nếu có
+            $detail->variant_data = collect($item['variant_data'] ?? [])
+                ->map(function ($v) {
+                    if (is_string($v)) {
+                        $decoded = json_decode($v, true);
+                        return is_array($decoded) ? $decoded : null;
+                    }
+                    return is_array($v) ? $v : null;
+                })
+                ->filter()
+                ->values()
+                ->toArray();
 
             $detail->save();
             $updatedDetailIds[] = $detail->id;
             $totalCost += $detail->subtotal;
         }
 
-        // Xoá những dòng đã bị loại khỏi form
+        // Xoá chi tiết không còn tồn tại
         $toDelete = array_diff($existingDetailIds, $updatedDetailIds);
         ImportDetail::whereIn('id', $toDelete)->delete();
 
+        // Cập nhật tổng tiền
         $import->update(['total_cost' => $totalCost]);
+
+        // Ghi log thay đổi nếu có
+        $changes = [];
+        if ($import->wasChanged()) {
+            $changes['import'] = $import->getChanges();
+        }
+
+        foreach ($import->details as $detail) {
+            if ($detail->wasChanged()) {
+                $changes['details'][] = [
+                    'id' => $detail->id,
+                    'changes' => $detail->getChanges(),
+                ];
+            }
+        }
+
+        if (!empty($changes)) {
+            ImportLog::create([
+                'import_id' => $import->id,
+                'user_id' => auth()->id(),
+                'changes' => json_encode($changes, JSON_UNESCAPED_UNICODE),
+            ]);
+        }
 
         DB::commit();
         return redirect()->route('admin.imports.index')->with('success', 'Cập nhật phiếu nhập thành công!');

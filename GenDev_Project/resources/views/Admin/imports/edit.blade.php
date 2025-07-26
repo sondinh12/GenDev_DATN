@@ -182,6 +182,13 @@
                     });
                 }
             }
+            if (detail.id) {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = `products[${productIndex}][id]`;
+                hidden.value = detail.id;
+                div.querySelector('div').appendChild(hidden);
+            }
 
             wrapper.appendChild(div);
             productIndex++;
