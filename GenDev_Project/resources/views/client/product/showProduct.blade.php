@@ -25,7 +25,6 @@
         transition: opacity 0.3s ease;
     }
 
-    /* Xóa các custom style cho quantity-group, quantity-wrapper, btn-qty, qty-input để trả lại mặc định */
     .quantity-wrapper {
         gap: 10px;
     }
@@ -51,6 +50,13 @@
         box-shadow: 0 4px 16px rgba(33, 150, 243, 0.16);
     }
 
+    .btn-qty:disabled {
+        background: #f0f0f0;
+        border-color: #ccc;
+        color: #ccc;
+        cursor: not-allowed;
+    }
+
     .qty-input {
         width: 38px;
         height: 36px;
@@ -61,7 +67,13 @@
         border-radius: 8px;
         background: #f8fafc;
         color: #222;
-        pointer-events: none;
+    }
+
+    .qty-input:disabled {
+        background: #f0f0f0;
+        border-color: #ccc;
+        color: #ccc;
+        cursor: not-allowed;
     }
 
     .btn-qty-minus {
@@ -109,7 +121,7 @@
     <script>
         setTimeout(function() {
             $('.alert-danger').alert('close');
-        }, 2500);
+        }, 5000);
     </script>
 @endif
 <div id="content" class="site-content py-4" tabindex="-1" style="min-height: 100vh;" data-gallery-images="{{ json_encode($galleryImageUrls) }}">
@@ -231,11 +243,11 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <div class="quantity-wrapper d-flex align-items-center mb-3">
-                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-left justify-content-left" tabindex="-1">
+                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-center justify-content-center" tabindex="-1" disabled>
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="number" name="quantity" id="quantity-input" class="qty-input" value="{{ old('quantity', 1) }}" min="1" readonly style="text-align: center;">
-                                    <button type="button" class="btn btn-qty btn-qty-plus d-flex align-items-left justify-content-left" tabindex="-1">
+                                    <input type="number" name="quantity" id="quantity-input" class="qty-input" value="{{ old('quantity', 1) }}" min="1" step="1" style="text-align: center;" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" disabled>
+                                    <button type="button" class="btn btn-qty btn-qty-plus d-flex align-items-center justify-content-center" tabindex="-1" disabled>
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
@@ -508,7 +520,6 @@
         }
     }
 
-    /* Căn chỉnh sản phẩm liên quan đều đẹp */
     .container-fluid .product-card {
         margin-bottom: 0 !important;
         box-sizing: border-box;
@@ -729,7 +740,6 @@
         margin-right: auto;
     }
 
-    /* Sản phẩm liên quan */
     .related-card {
         transition: transform 0.2s, box-shadow 0.2s;
         border-radius: 1rem !important;
@@ -844,39 +854,16 @@
         }
 
         function updateVariantInfo() {
-            if (allAttrSelected()) {
-                var key = getSelectedKey();
-                var info = variantMap[key];
-                if (info) {
-                    if (info.price != info.origin_price) {
-                        $('#variant-origin-price').text(formatPrice(info.origin_price)).show();
-                        // Tính phần trăm giảm giá
-                        var percent = Math.round(100 * (info.origin_price - info.price) / info.origin_price);
-                        if (percent > 0) {
-                            // Hiển thị phần trăm giảm giá cạnh giá sale
-                            $('#variant-sale-price').html(
-                                formatPrice(info.price) + ' <span class="badge bg-danger ms-2">-' + percent + '%</span>'
-                            );
-                        } else {
-                            $('#variant-sale-price').text(formatPrice(info.price));
-                        }
-                    } else {
-                        $('#variant-origin-price').hide();
-                        $('#variant-sale-price').text(formatPrice(info.price));
-                    }
-                    $('#variant-quantity').text(info.quantity);
+            var $qtyInput = $('#quantity-input');
+            var $btnMinus = $('.btn-qty-minus');
+            var $btnPlus = $('.btn-qty-plus');
+            var hasVariants = Object.keys(variantMap).length > 0;
 
-                    // Tình trạng và nút thêm vào giỏ
-                    if (info.quantity > 0) {
-                        $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
-                        $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
-                    } else {
-                        $('#variant-status').removeClass('bg-success').addClass('bg-danger').text('Hết hàng');
-                        $('#add-to-cart-btn').removeClass('btn-primary').addClass('btn-secondary').prop('disabled', true);
-                    }
-                }
-            } else {
-                // Nếu chưa chọn đủ thuộc tính, luôn hiển thị giá từ min đến max
+            if (hasVariants && !allAttrSelected()) {
+                // Nếu sản phẩm có biến thể nhưng chưa chọn đủ thuộc tính
+                $qtyInput.prop('disabled', true);
+                $btnMinus.prop('disabled', true);
+                $btnPlus.prop('disabled', true);
                 var min = null, max = null;
                 Object.values(variantMap).forEach(function(v) {
                     var display = parseInt(v.price);
@@ -892,12 +879,78 @@
                 $('#variant-quantity').text('--');
                 $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
                 $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
+            } else {
+                // Nếu không có biến thể hoặc đã chọn đủ thuộc tính
+                $qtyInput.prop('disabled', false);
+                $btnMinus.prop('disabled', false);
+                $btnPlus.prop('disabled', false);
+                if (hasVariants) {
+                    var key = getSelectedKey();
+                    var info = variantMap[key];
+                    if (info) {
+                        if (info.price != info.origin_price) {
+                            $('#variant-origin-price').text(formatPrice(info.origin_price)).show();
+                            var percent = Math.round(100 * (info.origin_price - info.price) / info.origin_price);
+                            if (percent > 0) {
+                                $('#variant-sale-price').html(
+                                    formatPrice(info.price) + ' <span class="badge bg-danger ms-2">-' + percent + '%</span>'
+                                );
+                            } else {
+                                $('#variant-sale-price').text(formatPrice(info.price));
+                            }
+                        } else {
+                            $('#variant-origin-price').hide();
+                            $('#variant-sale-price').text(formatPrice(info.price));
+                        }
+                        $('#variant-quantity').text(info.quantity);
+                        if (info.quantity > 0) {
+                            $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
+                            $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
+                        } else {
+                            $('#variant-status').removeClass('bg-success').addClass('bg-danger').text('Hết hàng');
+                            $('#add-to-cart-btn').removeClass('btn-primary').addClass('btn-secondary').prop('disabled', true);
+                            $qtyInput.prop('disabled', true);
+                            $btnMinus.prop('disabled', true);
+                            $btnPlus.prop('disabled', true);
+                        }
+                    }
+                } else {
+                    // Không có biến thể
+                    var price = parseInt('{{ $product->sale_price ?: $product->price }}');
+                    var originPrice = parseInt('{{ $product->price }}');
+                    if (price != originPrice && '{{ $product->sale_price }}') {
+                        $('#variant-origin-price').text(formatPrice(originPrice)).show();
+                        var percent = Math.round(100 * (originPrice - price) / originPrice);
+                        if (percent > 0) {
+                            $('#variant-sale-price').html(
+                                formatPrice(price) + ' <span class="badge bg-danger ms-2">-' + percent + '%</span>'
+                            );
+                        } else {
+                            $('#variant-sale-price').text(formatPrice(price));
+                        }
+                    } else {
+                        $('#variant-origin-price').hide();
+                        $('#variant-sale-price').text(formatPrice(price));
+                    }
+                    $('#variant-quantity').text('{{ $product->quantity ?? 0 }}');
+                    if ('{{ $product->quantity ?? 0 }}' > 0) {
+                        $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
+                        $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
+                    } else {
+                        $('#variant-status').removeClass('bg-success').addClass('bg-danger').text('Hết hàng');
+                        $('#add-to-cart-btn').removeClass('btn-primary').addClass('btn-secondary').prop('disabled', true);
+                        $qtyInput.prop('disabled', true);
+                        $btnMinus.prop('disabled', true);
+                        $btnPlus.prop('disabled', true);
+                    }
+                }
             }
+            updateQtyInputMax();
         }
+
         $('.variant-select').on('change', updateVariantInfo);
         updateVariantInfo();
 
-        // Nếu có giá trị old (tức là vừa submit xong), trigger lại sự kiện change để cập nhật giá/số lượng đúng
         $('.variant-select').each(function() {
             if ($(this).val()) {
                 $(this).trigger('change');
@@ -941,15 +994,13 @@
         });
         updateStars(selected);
 
-        // Số lượng tối đa hiện tại
+        // Quantity input logic
         function getMaxQuantity() {
-            // Nếu có biến thể
             if (Object.keys(variantMap).length && allAttrSelected()) {
                 var key = getSelectedKey();
                 var info = variantMap[key];
                 if (info) return info.quantity;
             }
-            // Nếu không có biến thể
             var q = parseInt(JSON.parse('{{ $product->quantity ?? 0 }}'));
             return isNaN(q) ? 1 : q;
         }
@@ -958,25 +1009,22 @@
             var maxQty = getMaxQuantity();
             var $qtyInput = $('#quantity-input');
             $qtyInput.attr('max', maxQty > 0 ? maxQty : 1);
-            // Nếu giá trị hiện tại lớn hơn max thì set lại
-            if (parseInt($qtyInput.val()) > maxQty) {
+            var currentVal = parseInt($qtyInput.val()) || 1;
+            if (currentVal > maxQty) {
                 $qtyInput.val(maxQty > 0 ? maxQty : 1);
             }
-            // Nếu nhỏ hơn 1 thì set lại
-            if (parseInt($qtyInput.val()) < 1) {
+            if (currentVal < 1 || isNaN(currentVal)) {
                 $qtyInput.val(1);
             }
         }
 
-        // Sự kiện tăng/giảm số lượng
         $('.btn-qty-plus').on('click', function() {
             var $qtyInput = $('#quantity-input');
             var val = parseInt($qtyInput.val()) || 1;
-            // Nếu có biến thể
             if (Object.keys(variantMap).length) {
                 if (!allAttrSelected()) {
-                    // Chưa chọn đủ thuộc tính, không tăng
                     $qtyInput.val(1);
+                    alert('Vui lòng chọn đầy đủ các thuộc tính sản phẩm trước khi thay đổi số lượng.');
                     return;
                 }
                 var key = getSelectedKey();
@@ -984,15 +1032,19 @@
                 var max = info ? parseInt(info.quantity) : 1;
                 if (val < max) {
                     $qtyInput.val(val + 1);
+                } else {
+                    alert('Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.');
                 }
             } else {
-                // Không có biến thể, dùng số lượng sản phẩm
                 var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
                 if (val < max) {
                     $qtyInput.val(val + 1);
+                } else {
+                    alert('Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.');
                 }
             }
         });
+
         $('.btn-qty-minus').on('click', function() {
             var $qtyInput = $('#quantity-input');
             var val = parseInt($qtyInput.val()) || 1;
@@ -1000,13 +1052,22 @@
                 $qtyInput.val(val - 1);
             }
         });
+
         $('#quantity-input').on('input change', function() {
+            var $qtyInput = $(this);
+            var val = $qtyInput.val();
+            // Chỉ cho phép số, loại bỏ các ký tự không phải số
+            val = val.replace(/[^0-9]/g, '');
+            $qtyInput.val(val);
+            // Đảm bảo giá trị tối thiểu là 1
+            if (val === '' || parseInt(val) < 1) {
+                $qtyInput.val(1);
+            }
             updateQtyInputMax();
         });
 
-        // Khi thay đổi biến thể thì cập nhật lại số lượng tối đa
         $('.variant-select').on('change', function() {
-            setTimeout(updateQtyInputMax, 100); // Đợi updateVariantInfo xong
+            setTimeout(updateVariantInfo, 100);
         });
         updateQtyInputMax();
     });
