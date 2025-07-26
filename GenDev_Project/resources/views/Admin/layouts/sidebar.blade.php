@@ -56,6 +56,16 @@
                     </li>
                 @endcan
 
+                {{-- Vai trò --}}
+                @can('manage roles')
+                    <li>
+                        <a href="{{ url('/admin/roles') }}">
+                            <i class="fa-solid fa-users"></i>
+                            <span>Vai trò</span>
+                        </a>
+                    </li>
+                @endcan
+
                 {{-- Đơn hàng --}}
                 @can('manage orders')
                     <li>
@@ -108,7 +118,7 @@
                 @endcan
 
                 {{-- Đánh giá --}}
-                @can('manage comments')
+                @can('manage reviews')
                     <li>
                         <a href="{{ url('/admin/reviews') }}">
                             <i class="fa-solid fa-tag"></i>

@@ -28,7 +28,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
-
+use App\Http\Controllers\Admin\RoleController;
+use Spatie\Permission\Models\Role;
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -102,7 +103,9 @@ Route::get('/track-order', function () {
 
 // ================= ADMIN =================
 
-Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
+// Lấy danh sách role name admin từ DB
+$adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
+Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->group(function () {
     Route::view('/', 'admin.index')->name('admin.dashboard');
     // Sản phẩm
     Route::middleware(['permission:manage products'])->group(function () {
@@ -158,12 +161,18 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
     // Người dùng
     Route::middleware(['permission:manage users'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::post('/users/store', [UserController::class, 'store'])->name('admin.users.store');
         Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
         Route::put('/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
         Route::post('/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+    // Vai trò
+    Route::middleware(['permission:manage roles'])->group(function () {
+        Route::resource('roles', RoleController::class);
+    });
+    
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
