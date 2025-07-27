@@ -193,7 +193,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
         Route::resource('post-categories', PostCategoryController::class);
     });
-
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
     // Route::middleware(['permission:manage imports'])->group(function () {
@@ -232,7 +231,6 @@ Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('cl
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
     Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
     Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
-
     Route::put('{order}/return', [ClientOrderController::class, 'return'])->name('return');
 
 });
