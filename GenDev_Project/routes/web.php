@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
-
 session_start();
 
 use App\Http\Controllers\PaymentController;
@@ -222,6 +221,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
 
+    });
 });
 
 Route::resource('/product', ClientProductController::class);
