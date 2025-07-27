@@ -343,6 +343,17 @@
                                                                     : $item->product->price;
                                                             }
                                                         @endphp
+                                                        {{-- @php
+                                                            if (!empty($item['variant']) && $item['variant']['sale_price'] > 0) {
+                                                                $price = $item['variant']['sale_price'];
+                                                            } elseif (!empty($item['variant'])) {
+                                                                $price = $item['variant']['price'];
+                                                            } elseif (!empty($item['product']['sale_price']) && $item['product']['sale_price'] > 0) {
+                                                                $price = $item['product']['sale_price'];
+                                                            } else {
+                                                                $price = $item['product']['price'];
+                                                            }
+                                                        @endphp --}}
                                                         <tr>
                                                             <td colspan="2">
                                                                 <div class="d-flex justify-content-between align-items-start">
@@ -350,8 +361,8 @@
                                                                         <div class="fw-bold">{{ $item['product']['name'] }}</div>
                                                                         <div class="text-muted small">Số lượng: {{ $item['quantity'] }}</div>
                                                                         <div class="text-muted small">Giá: {{ number_format($price) }} VNĐ</div>
-
                                                                         @if ($item->variant && $item->variant->variantAttributes)
+
                                                                             <div class="text-muted small">
                                                                                 @foreach ($item['variant']['variantAttributes'] as $att)
                                                                                     <div>{{ $att['attribute']['name'] ?? '' }}: {{ $att['value']['value'] ?? '' }}</div>
@@ -388,6 +399,7 @@
                                                             </span>
                                                         </td>
                                                     </tr>
+
                                                     <tr class="order-total">
                                                         <th>Tổng cộng</th>
                                                         <td>
@@ -396,6 +408,14 @@
                                                             </strong>
                                                         </td>
                                                     </tr>
+                                                     {{-- <tr class="order-total">
+                                                        <th>Total</th>
+                                                        <td>
+                                                            <strong>
+                                                                <span id="total-amount">{{ number_format($subtotal) }} VNĐ</span>
+                                                            </strong>
+                                                        </td>
+                                                    </tr> --}}
                                                 </tfoot>
                                             </table>
                                             <!-- /.woocommerce-checkout-review-order-table -->
