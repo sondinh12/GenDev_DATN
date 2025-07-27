@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
 session_start();
@@ -204,7 +204,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::get('/imports/create',[ImportController::class,'create'])->name('admin.imports.create');
         Route::post('/imports/store',[ImportController::class,'store'])->name('admin.imports.store');
         Route::get('/imports/edit/{id}',[ImportController::class,'edit'])->name('admin.imports.edit');
-        Route::put('/imports/upadte/{id}',[ImportController::class,'update'])->name('admin.imports.update');
+        Route::put('/imports/update/{id}',[ImportController::class,'update'])->name('admin.imports.update');
         Route::post('/imports/updateStatus/{id}',[ImportController::class,'show'])->name('admin.imports.updateStatus');
         Route::delete('/imports/destroy/{id}',[ImportController::class,'destroy'])->name('admin.imports.destroy');
         Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
@@ -220,6 +220,10 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::get('/suppliers/edit/{id}',[SupplierController::class,'edit'])->name('admin.suppliers.edit');
         Route::put('/suppliers/upadte/{id}',[SupplierController::class,'update'])->name('admin.suppliers.update');
         Route::delete('/suppliers/destroy/{id}',[SupplierController::class,'destroy'])->name('admin.suppliers.destroy');
+        Route::get('admin/imports/trash', [ImportController::class, 'trash'])->name('admin.imports.trash');
+        Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
+        Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
+    });
 
     });
 });
