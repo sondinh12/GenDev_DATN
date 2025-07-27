@@ -12,7 +12,6 @@ class CouponsController extends Controller
 {
     public function index()
     {
-       
         Coupon::where('status', '!=', 2)
             ->where('end_date', '<', now())
             ->update(['status' => 2]);
