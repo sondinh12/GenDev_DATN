@@ -27,12 +27,6 @@ use App\Http\Controllers\Client\CartDetailController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
-<<<<<<< HEAD
-
-// ================= TRANG CHÍNH =================
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-=======
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use Spatie\Permission\Models\Role;
@@ -40,7 +34,6 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
 
 Route::get('/about', function () {
     return view('client.pages.about');
@@ -79,13 +72,6 @@ Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::cla
 
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-<<<<<<< HEAD
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
-Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
-=======
 
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
@@ -97,7 +83,6 @@ Route::middleware(['auth', 'check_ban'])->group(function () {
     // mua lại
     // Route::get('/reorder/{orderId}', [CheckoutController::class, 'checkoutFromOrder'])->name('checkout.reorder');
 });
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
 
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
@@ -108,22 +93,6 @@ Route::get('/checkout-failed', function () {
 Route::post('/apply-coupon', [CouponController::class, 'apply'])->name('apply_coupon');
 Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
 
-<<<<<<< HEAD
-// hành dộng trang cart
-Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
-
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
-Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
-Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
-Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
-// Route::get('/cart', function () {
-//     return view('client.cart.cart');
-// })->name('cart');
-// Route::get('/wishlist', function () {
-//     return view('client.cart.wishlist');
-// })->name('wishlist');
-=======
 // Hành động trang cart
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
@@ -133,7 +102,6 @@ Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy');
 
 });
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
 
 Route::get('/order', function () {
     return view('client.checkout.order');
@@ -143,14 +111,10 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
-<<<<<<< HEAD
-Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
-=======
 
 // Lấy danh sách role name admin từ DB
 $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
 Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->group(function () {
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
     Route::view('/', 'admin.index')->name('admin.dashboard');
     // Sản phẩm
     Route::middleware(['permission:manage products'])->group(function () {
@@ -233,14 +197,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
         Route::resource('post-categories', PostCategoryController::class);
     });
-<<<<<<< HEAD
-    Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
-    Route::resource('coupons', CouponsController::class);
-    Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
-    Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
-=======
-
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
@@ -276,21 +232,11 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
     Route::get('/retry/{orderId}', [ClientOrderController::class, 'retry'])->name('order.retry');
     Route::put('{order}/complete', [ClientOrderController::class, 'markAsCompleted'])->name('complete');
-<<<<<<< HEAD
-});
-=======
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
-
     Route::put('{order}/return', [ClientOrderController::class, 'return'])->name('return');
 
 });
 
 // ================= TÀI KHOẢN =================
-
-<<<<<<< HEAD
-
-Auth::routes(['verify' => true]); // Xác thực email
-=======
 Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -298,7 +244,6 @@ Route::middleware(['auth', 'check_ban'])->group(function () {
 
     Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
->>>>>>> 6f2a15e5c87d6574c9d198d6bc8a1d4302533dd7
 
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
 Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
