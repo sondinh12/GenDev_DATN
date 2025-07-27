@@ -131,42 +131,6 @@
                                         @endif
                                     </td>
                                 </tr>
-                                {{-- @else --}}
-                                {{-- <tr> --}}
-                                    {{-- <td>{{ $detail->product_temp_name}}</td> --}}
-                                    {{-- <td>
-                                        @if (is_array($variantData) && count($variantData))
-                                        @foreach ($variantData as $item)
-                                        <div>{{ $item['attribute'] ?? '' }}: {{ $item['value'] ?? '' }}</div>
-                                        @endforeach
-                                        @else
-                                        <em class="text-muted">Không có</em>
-                                        @endif
-                                    </td> --}}
-                                    {{-- <td>
-                                        @if (is_array($variantData) && count($variantData))
-                                        @foreach ($variantData as $item)
-                                        <div>{{ $item['attribute'] ?? '' }}: {{ $item['value'] ?? '' }}</div>
-                                        @endforeach
-                                        @else
-                                        <em class="text-muted">Không có</em>
-                                        @endif
-                                    </td> --}}
-                                    {{-- <td>{{ $detail->quantity }}</td>
-                                    <td>{{ number_format($detail->import_price) }} VNĐ</td>
-                                    <td>{{ number_format($detail->subtotal) }} VNĐ</td>
-                                    <td>
-                                        @if ($matchedPrice)
-                                        {{ number_format($matchedPrice->import_price) }} VNĐ <br>
-                                        <small class="text-muted">Từ ngày
-                                            {{ \Carbon\Carbon::parse($matchedPrice->start_date)->format('d/m/Y') }}</small>
-                                        @else
-                                        <em class="text-muted">Không có dữ liệu</em>
-                                        @endif
-                                    </td> --}}
-                                    {{--
-                                </tr> --}}
-                                {{-- @endif --}}
                             @endforeach
                         </tbody>
                         <tfoot class="table-light">
@@ -182,5 +146,33 @@
             </div>
         </div>
     </div>
+    <hr>
+    <h4>Lịch sử cập nhật</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Thời gian</th>
+                <th>Người cập nhật</th>
+                <th>Thay đổi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($logs as $log)
+                <tr>
+                    <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
+                    <td>{{ $log->user->name ?? 'N/A' }}</td>
+                    <td>
+                        <pre
+                            style="white-space: pre-wrap">{{ json_encode(json_decode($log->changes, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3">Chưa có thay đổi nào.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
     <a href="{{ route('admin.imports.index') }}" class="btn btn-secondary">Quay lại</a>
 @endsection

@@ -355,7 +355,7 @@
         vertical-align: middle !important;
     }
 </style>
-<script>
+{{-- <script>
     setTimeout(() => {
         const alert = document.querySelector('.alert');
         if (alert) {
@@ -363,4 +363,4 @@
             alert.classList.add('fade');
         }
     }, 5000);
-</script>
+</script> --}}
