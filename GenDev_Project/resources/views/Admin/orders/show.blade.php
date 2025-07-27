@@ -36,7 +36,9 @@
             </div>
             <div class="card-body">
                 @php
+
                     $statusOrder = ['pending', 'processing', 'shipping', 'shipped', 'completed', 'cancelled', 'return_requested'];
+
                     $statusClass = [
                         'pending' => 'secondary',
                         'processing' => 'info',
@@ -45,6 +47,7 @@
                         'completed' => 'success',
                         'cancelled' => 'danger',
                         'return_requested' => 'warning',
+
                     ];
                     $statusLabels = [
                         'pending' => 'Chờ xử lý',
@@ -52,8 +55,9 @@
                         'shipping' => 'Đang giao',
                         'shipped' => 'Đã giao',
                         'completed' => 'Hoàn thành',
-                        'cancelled' => 'Hủy',
+                        'cancelled' => 'Đã hủy',
                         'return_requested' => 'Hoàn hàng',
+
                     ];
                     $currentIndex = array_search($order->status, $statusOrder);
                 @endphp
@@ -70,7 +74,9 @@
                     {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
                 </span>
 
+
                 @if (!in_array($order->status, ['shipped', 'cancelled', 'completed', 'return_requested']))
+
                     <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
                         @csrf
                         @method('PUT')
@@ -95,7 +101,9 @@
                 @endif
 
                 {{-- Số tài khoản hoàn tiền nếu applicable --}}
+
                 @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+
                     @php
                         $refundLog = $order->orderStatusLogs()
                             ->whereNotNull('refund_bank_account')
