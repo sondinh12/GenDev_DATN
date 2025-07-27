@@ -49,10 +49,13 @@ class CouponController extends Controller
             return back()->with($couponType === 'shipping' ? 'error_shipping_coupon' : 'error_order_coupon', 'Bạn đã vượt quá số lần sử dụng mã này!');
         }
 
-        // Kiểm tra điều kiện giá trị tối thiểu
+        // Kiểm tra điều kiện giá trị tối thiểu và tối đa
         if ($couponType === 'shipping') {
             if ($shippingFee < $coupon->min_coupon) {
                 return back()->with('error_shipping_coupon', 'Phí ship chưa đủ giá trị tối thiểu để áp dụng mã này');
+            }
+            if ($coupon->max_coupon && $shippingFee > $coupon->max_coupon) {
+                return back()->with('error_shipping_coupon', 'Phí ship vượt quá giá trị tối đa để áp dụng mã này');
             }
             $discount = $coupon->discount_type === 'percent'
                 ? min($shippingFee * ($coupon->discount_amount / 100), $coupon->max_coupon)
@@ -61,12 +64,17 @@ class CouponController extends Controller
                 'id' => $coupon->id,
                 'code' => $coupon->coupon_code,
                 'discount' => $discount,
-                'user_id' => $userId
+                'user_id' => $userId,
+                'min_coupon' => $coupon->min_coupon,
+                'max_coupon' => $coupon->max_coupon
             ]);
             return back()->with('success_shipping_coupon', 'Áp dụng mã giảm giá phí ship thành công');
         } else {
             if ($subtotal < $coupon->min_coupon) {
                 return back()->with('error_order_coupon', 'Đơn hàng chưa đủ giá trị tối thiểu để áp dụng mã này');
+            }
+            if ($coupon->max_coupon && $subtotal > $coupon->max_coupon) {
+                return back()->with('error_order_coupon', 'Đơn hàng vượt quá giá trị tối đa để áp dụng mã này');
             }
             $discount = $coupon->discount_type === 'percent'
                 ? min($subtotal * ($coupon->discount_amount / 100), $coupon->max_coupon)
@@ -75,7 +83,9 @@ class CouponController extends Controller
                 'id' => $coupon->id,
                 'code' => $coupon->coupon_code,
                 'discount' => $discount,
-                'user_id' => $userId
+                'user_id' => $userId,
+                'min_coupon' => $coupon->min_coupon,
+                'max_coupon' => $coupon->max_coupon
             ]);
             return back()->with('success_order_coupon', 'Áp dụng mã giảm giá đơn hàng thành công');
         }

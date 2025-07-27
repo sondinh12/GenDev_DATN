@@ -89,22 +89,22 @@
                                 </div>
                                 <!-- .col -->
                                 <div class="col-md-6 store-info store-info-v2">
-                                    <div class="google-map">
-                                        <iframe height="288" allowfullscreen="" style="border:0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.593303940039!2d-0.15470444843858283!3d51.53901886611164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761ae62edd5771%3A0x27f2d823e2be0249!2sPrincess+Rd%2C+London+NW1+8JR%2C+UK!5e0!3m2!1sen!2s!4v1458827996435"></iframe>
+                                    <div class="google-map mb-3">
+                                        <iframe height="288" style="border:0; width: 100%" allowfullscreen="" loading="lazy"
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.013745295738!2d105.78071631540276!3d21.03292279312942!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab3d0e85ec01%3A0x3a40744d38a55826!2zMTAgxJAuIE5ndXnhu4VuIFThuqVuLCBD4buZIE5naOG7hyBQaMO6LCBUw6JuIFBoxrDGoW5nLCBIw6AgTuG7mWksIFZpZXRuYW0!5e0!3m2!1svi!2s!4v1699546178901"></iframe>
                                     </div>
-                                    <!-- .google-map -->
-                                    <div class="kc-elm kc-css-773435 kc_text_block">
-                                        <h2 class="contact-page-title">Địa chỉ của chúng tôi</h2>
-                                        <p>17 Princess Road London, Greater London NW1 8JR, UK
-                                            <br> Hỗ trợ: (+800)856 800 604
-                                            <br> Email: <a href="mailto:contact@yourstore.com">info@electro.com</a>
-                                        </p>
-                                        <h3>Giờ mở cửa</h3>
-                                        <p class="operation-hours">Thứ 2 đến Thứ 6: 9h - 21h
-                                            <br> Thứ 7 & Chủ nhật: 9h - 23h</p>
-                                        <h3>Tuyển dụng</h3>
-                                        <p>Nếu bạn quan tâm đến cơ hội việc làm tại Electro, vui lòng gửi email cho chúng tôi: <a href="mailto:contact@yourstore.com">contact@yourstore.com</a></p>
-                                    </div>
+
+                                    <h3>Địa chỉ của chúng tôi</h3>
+                                    <p>10 Nguyễn Tuân, Cầu Giấy, Hà Nội<br>
+                                        SĐT: (+84) 912 345 678<br>
+                                        Email: <a href="mailto:gendev@gmail.com">gendev@gmail.com</a></p>
+
+                                    <h3>Giờ làm việc</h3>
+                                    <p>Thứ 2 - Thứ 6: 8h - 18h<br>
+                                    Thứ 7 & Chủ nhật: 9h - 17h</p>
+
+                                    <h3>Hợp tác & Tuyển dụng</h3>
+                                    <p>Nếu bạn muốn hợp tác hoặc ứng tuyển, vui lòng gửi CV đến: <a href="mailto:gendev@gmail.com">gendev@gmail.com</a></p>
                                 </div>
                                 <!-- .col -->
                             </div>

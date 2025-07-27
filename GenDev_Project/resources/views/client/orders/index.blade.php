@@ -20,6 +20,7 @@
                 'all' => 'Tất cả đơn',
                 'pending' => 'Chờ xác nhận',
                 'processing' => 'Đang xử lý',
+                'return_requested' => 'Đã hoàn',
                 'shipping' => 'Đang giao',
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
@@ -45,7 +46,7 @@
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã hủy',
-                'return_requested' => 'Yêu cầu hoàn hàng',
+                'return_requested' => 'Hoàn hàng',
                 default => ucfirst($status),
             };
         }
@@ -134,7 +135,7 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-                <div class="d-flex gap-2">
+             <div class="d-flex gap-2">
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại

@@ -43,6 +43,7 @@
                                                 <input type="hidden" name="type" value="order">
                                                 <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
                                             </form>
+                                            <span id="order-coupon-status" class="text-danger" style="display:none;"></span>
                                         </p>
                                     @else
                                         <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
@@ -75,6 +76,7 @@
                                                 <input type="hidden" name="type" value="shipping">
                                                 <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
                                             </form>
+                                            <span id="shipping-coupon-status" class="text-danger" style="display:none;"></span>
                                         </p>
                                     @else
                                         <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
@@ -137,7 +139,6 @@
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-                                                        
                                                         <div class="clear"></div>                      
                                                         <p id="billing_city_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row form-row-wide address-field validate-required">
                                                             <label class="" for="billing_city">Thành phố
@@ -479,6 +480,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalEl = document.getElementById('total-amount');
     const shippingEl = document.getElementById('shipping-fee');
     const discountEl = document.getElementById('discount-amount');
+    const orderCouponStatus = document.getElementById('order-coupon-status');
+    const shippingCouponStatus = document.getElementById('shipping-coupon-status');
 
     function formatVND(number) {
         return new Intl.NumberFormat('vi-VN').format(number) + ' VNĐ';
@@ -491,6 +494,57 @@ document.addEventListener('DOMContentLoaded', function () {
         discountEl.textContent = formatVND(discount);
     }
 
+    // Kiểm tra mã giảm giá hợp lệ
+    function checkCouponValidity() {
+        @if(session('applied_order_coupon'))
+            const orderCoupon = {
+                code: '{{ session('applied_order_coupon.code') }}',
+                min_coupon: {{ session('applied_order_coupon.min_coupon') ?? 0 }},
+                max_coupon: {{ session('applied_order_coupon.max_coupon') ?? 'Infinity' }},
+                discount: {{ session('applied_order_coupon.discount') ?? 0 }}
+            };
+            if (subtotal < orderCoupon.min_coupon || (orderCoupon.max_coupon !== 'Infinity' && subtotal > orderCoupon.max_coupon)) {
+                orderCouponStatus.textContent = `Mã ${orderCoupon.code} không hợp lệ do tổng đơn hàng không đáp ứng điều kiện (Min: ${formatVND(orderCoupon.min_coupon)}, Max: ${formatVND(orderCoupon.max_coupon)}).`;
+                orderCouponStatus.style.display = 'inline';
+                fetch('{{ route('coupon.remove') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: 'type=order'
+                }).then(() => {
+                    discount -= orderCoupon.discount;
+                    updateTotal();
+                });
+            }
+        @endif
+
+        @if(session('applied_shipping_coupon'))
+            const shippingCoupon = {
+                code: '{{ session('applied_shipping_coupon.code') }}',
+                min_coupon: {{ session('applied_shipping_coupon.min_coupon') ?? 0 }},
+                max_coupon: {{ session('applied_shipping_coupon.max_coupon') ?? 'Infinity' }},
+                discount: {{ session('applied_shipping_coupon.discount') ?? 0 }}
+            };
+            if (shipping < shippingCoupon.min_coupon || (shippingCoupon.max_coupon !== 'Infinity' && shipping > shippingCoupon.max_coupon)) {
+                shippingCouponStatus.textContent = `Mã ${shippingCoupon.code} không hợp lệ do phí vận chuyển không đáp ứng điều kiện (Min: ${formatVND(shippingCoupon.min_coupon)}, Max: ${formatVND(shippingCoupon.max_coupon)}).`;
+                shippingCouponStatus.style.display = 'inline';
+                fetch('{{ route('coupon.remove') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: 'type=shipping'
+                }).then(() => {
+                    discount -= shippingCoupon.discount;
+                    updateTotal();
+                });
+            }
+        @endif
+    }
+
     document.querySelectorAll('.ship-option').forEach(function (radio) {
         radio.addEventListener('change', function () {
             shipping = parseInt(this.dataset.price) || 0;
@@ -498,10 +552,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = shipping;
             });
             updateTotal();
+            checkCouponValidity(); // Kiểm tra lại mã khi thay đổi phí vận chuyển
         });
     });
 
     updateTotal();
+    checkCouponValidity(); // Kiểm tra mã giảm giá khi tải trang
 });
 </script>
 

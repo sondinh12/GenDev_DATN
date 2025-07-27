@@ -36,7 +36,9 @@
             </div>
             <div class="card-body">
                 @php
+
                     $statusOrder = ['pending', 'processing', 'shipping', 'shipped', 'completed', 'cancelled', 'return_requested'];
+
                     $statusClass = [
                         'pending' => 'secondary',
                         'processing' => 'info',
@@ -70,7 +72,9 @@
                     {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
                 </span>
 
+
                 @if (!in_array($order->status, ['shipped', 'cancelled', 'completed', 'return_requested']))
+
                     <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
                         @csrf
                         @method('PUT')
@@ -96,6 +100,7 @@
 
                 {{-- Số tài khoản hoàn tiền nếu applicable --}}
                 @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+
                     @php
                         $refundLog = $order->orderStatusLogs()
                             ->whereNotNull('refund_bank_account')
@@ -163,6 +168,12 @@
                                     <div class="col-sm-4 fw-bold">Phí giao hàng:</div>
                                     <div class="col-sm-8">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</div>
                                 </div>
+                                @if($order->shipping_discount > 0)
+        <div class="row mb-2">
+            <div class="col-sm-4 fw-bold">Giảm phí vận chuyển:</div>
+            <div class="col-sm-8 text-success">-{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</div>
+        </div>
+        @endif
                             </div>
                         </div>
 
@@ -232,16 +243,12 @@
             <div class="col-sm-8 text-success">-{{ number_format($order->product_discount, 0, ',', '.') }} đ</div>
         </div>
         @endif
-        @if($order->shipping_discount > 0)
-        <div class="row mb-2">
-            <div class="col-sm-4 fw-bold">Giảm phí vận chuyển:</div>
-            <div class="col-sm-8 text-success">-{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</div>
-        </div>
-        @endif
-        <div class="row mb-2">
+         {{-- <div class="row mb-2">
             <div class="col-sm-4 fw-bold">Phí vận chuyển:</div>
             <div class="col-sm-8">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</div>
-        </div>
+        </div> --}}
+
+
         <div class="row mb-2 border-top pt-2">
             <div class="col-sm-4 fw-bold">Tổng tiền thanh toán:</div>
             <div class="col-sm-8 text-danger fw-bold" style="font-size: 1.2rem;">
@@ -258,23 +265,28 @@
                                 <i class="fas fa-history me-2"></i>Lịch sử trạng thái đơn hàng
                             </div>
                             <div class="card-body p-3">
-                                @php
-                                    $badgeColors = [
-                                        'pending' => 'secondary',
-                                        'processing' => 'info',
-                                        'shipped' => 'primary',
-                                        'completed' => 'success',
-                                        'cancelled' => 'danger',
-                                    ];
+                              @php
+    $badgeColors = [
+        'pending' => 'secondary',
+        'processing' => 'info',
+        'shipping' => 'warning',
+        'shipped' => 'primary',
+        'completed' => 'success',
+        'cancelled' => 'danger',
+        'return_requested' => 'dark',
+    ];
 
-                                    $statusLabels = [
-                                        'pending' => 'Chờ xử lý',
-                                        'processing' => 'Đang xử lý',
-                                        'shipped' => 'Đã giao',
-                                        'completed' => 'Hoàn thành',
-                                        'cancelled' => 'Đã huỷ',
-                                    ];
-                                @endphp
+    $statusLabels = [
+        'pending' => 'Chờ xử lý',
+        'processing' => 'Đang xử lý',
+        'shipping' => 'Đang giao',
+        'shipped' => 'Đã giao',
+        'completed' => 'Hoàn thành',
+        'cancelled' => 'Đã huỷ',
+        'return_requested' => 'Hoàn hàng',
+    ];
+@endphp
+
 
                                 @if ($order->orderStatusLogs && $order->orderStatusLogs->isNotEmpty())
                                     <div class="table-responsive">
