@@ -69,11 +69,6 @@
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" href="{{ asset('/shop') }}">Sản phẩm </a>
                         </li>
-                        <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
-                            <a title="Pages" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
-                                href="#">Pages <span class="caret"></span></a>
-                            <!-- .dropdown-menu -->
-                        </li>
                         <li class="menu-item animate-dropdown">
                             <a title="Tin tức" href="{{ asset('product-category.html') }}">Tin tức</a>
                         </li>
