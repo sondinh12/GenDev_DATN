@@ -8,16 +8,16 @@ use App\Models\User;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class Coupon extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'coupon_code',
         'discount_type',
         'discount_amount',
+        'type',
         'start_date',
         'end_date',
         'status',
@@ -26,16 +26,18 @@ class Coupon extends Model
         'usage_limit',
         'per_use_limit',
         'total_used',
-        'user_id'
+        'user_id',
     ];
-
-
-    
-    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
-
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'max_coupon' => 'decimal:2',
+        'min_coupon' => 'decimal:2',
+        'status' => 'boolean',
+    ];
 
     /**
      * Mỗi coupon có thể được sử dụng trong nhiều đơn hàng
@@ -62,12 +64,4 @@ class Coupon extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
-        'max_coupon' => 'decimal:2',
-        'min_coupon' => 'decimal:2',
-        'status' => 'boolean',
-    ];
-
 }

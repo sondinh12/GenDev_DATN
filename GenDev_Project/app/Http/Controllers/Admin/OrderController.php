@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['role:admin|staff']);
-    }
+    // Bỏ middleware role cứng
 
     // Hiển thị danh sách đơn hàng
     public function index(Request $request)

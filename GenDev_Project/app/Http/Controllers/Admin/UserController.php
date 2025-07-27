@@ -12,6 +12,8 @@ use App\Mail\UserUnbanned;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -19,21 +21,64 @@ class UserController extends Controller
     {
         $query = User::query();
 
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where('name', 'like', "%{$search}%");
         }
 
-        $users = $query->paginate(10);
+        if ($request->filled('role')) {
+            $role = $request->get('role');
+            // Lấy user id theo role từ bảng model_has_roles
+            $userIds = DB::table('model_has_roles')
+                ->where('role_id', function ($q) use ($role) {
+                    $q->select('id')->from('roles')->where('name', $role)->limit(1);
+                })
+                ->pluck('model_id');
+            $query->whereIn('id', $userIds);
+        }
+
+        $users = $query->paginate(10)->appends($request->all());
+        $roles = Role::all();
+        $permissions = Permission::all();
 
         // auth()->loginUsingId(1);
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'roles', 'permissions'));
     }
+    public function store(Request $request)
+    {
+        // Lấy danh sách role name từ DB, tự động map index
+        $roles = Role::orderBy('id')->pluck('name')->toArray();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'gender' => 'required|in:Nam,Nữ,Khác',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:' . implode(',', $roles),
+            'status' => 'required|in:0,1',
+        ]);
 
+        $roleIndex = array_search($request->role, $roles); // Lưu số thứ tự role
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'password' => Hash::make($request->password),
+            'status' => $request->status,
+            'role' => $roleIndex,
+        ]);
+
+        // Gán vai trò Spatie
+        $user->assignRole($request->role);
+
+        return redirect()->route('admin.users.index')->with('success', 'Thêm tài khoản thành công!');
+    }
     public function show(User $user)
     {
-        return view('admin.users.show', compact('user'));
+        $roles = Role::all();
+        return view('admin.users.show', compact('user', 'roles'));
     }
     public function update(Request $request, User $user)
     {
@@ -52,23 +97,31 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Bạn không thể tự thay đổi vai trò của chính mình.');
         }
 
-        // Validate và cập nhật role
+
+
+        // Lấy danh sách role name từ DB, tự động map index
+        $roles = Role::orderBy('id')->pluck('name')->toArray();
         $request->validate([
-            'role' => 'required|in:0,1,2',
+            'role' => 'required|in:' . implode(',', $roles),
+            // permissions là optional, là mảng các tên quyền
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
         ]);
 
-        // Map giá trị role số sang tên role Spatie
-        $roleMap = [
-            '0' => 'admin',
-            '1' => 'staff',
-            '2' => 'user',
-        ];
-        $roleName = $roleMap[$request->role];
-        $user->syncRoles($roleName);
-        $user->role = $request->role; // Đồng bộ trường role số
+        $roleIndex = array_search($request->role, $roles);
+        $user->syncRoles($request->role);
+        $user->role = $roleIndex;
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'Đã cập nhật vai trò người dùng.');
+        // Xử lý gán quyền riêng cho user
+        if ($request->has('permissions')) {
+            $user->syncPermissions($request->permissions);
+        } else {
+            // Nếu không chọn quyền riêng, xóa hết quyền riêng (chỉ giữ quyền theo role)
+            $user->syncPermissions([]);
+        }
+
+        return redirect()->route('admin.users.index')->with('success', 'Đã cập nhật vai trò và quyền người dùng.');
     }
     public function ban(User $user)
     {

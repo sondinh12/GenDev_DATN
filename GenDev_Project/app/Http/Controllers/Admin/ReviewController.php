@@ -11,10 +11,7 @@ use App\Mail\UserTemporaryBanNotice;
 
 class ReviewController extends Controller
 {   
-    public function __construct()
-    {
-        $this->middleware(['auth', 'check_ban']);
-    }
+    // Bỏ middleware cứng, quyền sẽ kiểm soát qua middleware permission ở routes/web.php
 
     public function index(){
         $reviews = ProductReview::with('user','product')->latest()->paginate(10);

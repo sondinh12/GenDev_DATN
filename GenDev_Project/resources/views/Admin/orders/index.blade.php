@@ -72,16 +72,16 @@
                                     'shipped' => 'primary',
                                     'completed' => 'success',
                                     'cancelled' => 'danger',
-                                    default => 'dark'
+                                    'return_requested' => 'dark'
                                 };
-                                $statusLabel = match ($order->status) {
+                                $statusLabel = [
                                     'pending' => 'Chờ xác nhận',
                                     'processing' => 'Đang xử lý',
                                     'shipped' => 'Đã giao',
                                     'completed' => 'Hoàn thành',
                                     'cancelled' => 'Đã huỷ',
-                                    default => 'Không rõ'
-                                };
+                                    'return_requested' => 'Hoàn hàng'
+                                ];
                             @endphp
                             <span class="badge bg-{{ $statusClass }}">{{ $statusLabel }}</span>
                         </td>

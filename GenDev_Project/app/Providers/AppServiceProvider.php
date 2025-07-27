@@ -7,7 +7,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Models\CategoryMini;
 use App\Models\Category;
 
 class AppServiceProvider extends ServiceProvider
@@ -40,11 +39,9 @@ class AppServiceProvider extends ServiceProvider
 
         // View Composer cho header client
         View::composer('client.layout.partials.header', function ($view) {
-            $categories = Category::with('children')->whereNull('parent_id')->get();
+            $categories = Category::where('status', 1)->orderBy('name')->get();
             $view->with('categories', $categories);
         });
-
         Paginator::useBootstrap();
-
     }
 }

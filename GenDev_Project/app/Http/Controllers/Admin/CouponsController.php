@@ -12,7 +12,6 @@ class CouponsController extends Controller
 {
     public function index()
     {
-       
         Coupon::where('status', '!=', 2)
             ->where('end_date', '<', now())
             ->update(['status' => 2]);
@@ -34,12 +33,16 @@ class CouponsController extends Controller
     public function store(StoreCouponRequest $request)
     {
         $data = $request->validated();
-        // $data['user_id'] = Auth::id();
         $data['total_used'] = 0;
         $data['status'] = $request->input('status', 1);
 
-        Coupon::create($data);
+        // Đảm bảo discount_type là fixed cho shipping
+        if ($data['type'] === 'shipping') {
+            $data['discount_type'] = 'fixed';
+        }
 
+        // Không cần gán shipping_code, giữ coupon_code như bình thường
+        Coupon::create($data);
         return redirect()->route('coupons.index')->with('success', 'Tạo mã giảm giá thành công!');
     }
 
@@ -84,7 +87,6 @@ class CouponsController extends Controller
         return redirect()->route('coupons.index')->with('success', 'Đã chuyển vào thùng rác và dừng hoạt động');
     }
 
-
     public function show(string $id)
     {
         //
@@ -100,12 +102,13 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
         $data = $request->validated();
-
-
         $data['status'] = $request->input('status', $coupon->status);
 
-        $coupon->update($data);
+        if ($data['type'] === 'shipping') {
+            $data['discount_type'] = 'fixed';
+        }
 
+        $coupon->update($data);
         return redirect()->route('coupons.index')->with('success', 'Cập nhật mã giảm giá thành công!');
     }
 }

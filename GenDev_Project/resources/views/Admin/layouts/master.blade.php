@@ -68,6 +68,7 @@
 
     <!-- vendor-scripts -->
     @include('Admin.layouts.vendor-scripts')
+    @stack('scripts')
 
 </body>
 
