@@ -20,6 +20,8 @@
                 'all' => 'Tất cả đơn',
                 'pending' => 'Chờ xác nhận',
                 'processing' => 'Đang xử lý',
+                'return_requested' => 'Đã hoàn',
+                'shipping' => 'Đang giao',
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã huỷ',
@@ -44,6 +46,7 @@
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã hủy',
+                'return_requested' => 'Hoàn hàng',
                 default => ucfirst($status),
             };
         }
@@ -108,10 +111,16 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-                <div class="d-flex gap-2">
-                    @if($order->status === 'cancelled' || ($order->status === 'pending' && $order->payment_status === 'unpaid' ))
-                        <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
+
+            <div class="d-flex gap-2">
+                    {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
+                        <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại
+                        </a>
+                    @endif --}}
+                    @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
+                        <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
                         </a>
                     @endif
                     <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
@@ -126,6 +135,37 @@
     @else
         <div class="alert alert-info text-center">Bạn chưa có đơn hàng nào.</div>
     @endif
+</div>
+
+<!-- Modal hoàn hàng / hoàn tiền -->
+<div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="returnForm">
+            @csrf
+            @method('put')
+            <input type="hidden" name="order_id" id="returnOrderId">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="returnModalLabel">Lý do</h5>
+                    {{-- <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Đóng"></button> --}}
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Lý do</label>
+                        <textarea name="reason" id="reason" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3 d-none" id="bankInfo">
+                        <label for="bank_account" class="form-label">Số tài khoản nhận hoàn tiền</label>
+                        <input type="text" name="bank_account" id="bank_account" class="form-control" placeholder="Ví dụ: 123456789 - Vietcombank">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection
 

@@ -12,6 +12,7 @@ class Order extends Model
         'user_id',
         'coupon_id',
         'shipping_id',
+        'shipping_fee',
         'name',
         'email',
         'phone',
@@ -21,7 +22,6 @@ class Order extends Model
         'postcode',
         'payment',
         'total',
-        'shipping_fee',
         'transaction_code',
         'status',
         'payment_status',
@@ -36,18 +36,30 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    public function coupon()
+    // Mã giảm giá cho sản phẩm
+    public function productCoupon(): BelongsTo
     {
         return $this->belongsTo(Coupon::class, 'coupon_id');
     }
 
-    public function ship()
+
+    // Mã giảm giá cho phí vận chuyển
+    public function shippingCoupon(): BelongsTo
+    {
+        return $this->belongsTo(Coupon::class, 'shipping_coupon_id');
+    }
+
+
+    // Phương thức giao hàng
+    public function ship(): BelongsTo
     {
         return $this->belongsTo(Ship::class, 'shipping_id');
     }
 
-    public function orderDetails()
+
+    // Danh sách sản phẩm 
+    // 'transaction_code',ong đơn hàng
+    public function orderDetails(): HasMany
     {
         return $this->hasMany(OrderDetail::class, 'order_id');
     }

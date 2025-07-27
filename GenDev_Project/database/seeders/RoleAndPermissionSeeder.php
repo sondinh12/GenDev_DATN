@@ -30,6 +30,9 @@ class RoleAndPermissionSeeder extends Seeder
             'manage users',
             'manage reviews',
             'view statistics',
+            'manage imports',
+            'manage suppliers',
+            'manage roles',
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);

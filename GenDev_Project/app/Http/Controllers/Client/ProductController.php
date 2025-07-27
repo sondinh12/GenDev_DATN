@@ -246,7 +246,7 @@ class ProductController extends Controller
         ")[0];
 
         // Phân trang
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
         return view('client.product.shop', compact('products', 'categories', 'priceRange'));
     }

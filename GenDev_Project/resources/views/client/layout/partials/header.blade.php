@@ -67,8 +67,7 @@
                             <a title="Giới thiệu" href="{{ asset('/about') }}">Giới thiệu</a>
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
-                            <a title="Sản phẩm" href="{{ asset('/products') }}">Sản phẩm </a>
-                            <!-- .dropdown-menu -->
+                            <a title="Sản phẩm" href="{{ asset('/shop') }}">Sản phẩm </a>
                         </li>
                         <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Pages" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
@@ -184,7 +183,7 @@
                     <input type="text" id="search" class="form-control search-field product-search-field"
                         dir="ltr" value="" name="s" placeholder="Tìm kiếm sản phẩm" />
                     <div class="input-group-btn">
-                        <input type="hidden" id="search-param" name="post_type" value="product" />
+                        <!-- <input type="hidden" id="search-param" name="post_type" value="product" /> -->
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i>
                             <span class="search-btn">Tìm kiếm</span>

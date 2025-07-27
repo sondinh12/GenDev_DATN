@@ -82,12 +82,12 @@ class CartDetailController extends Controller
 
             // Kiểm tra số lượng tồn kho của biến thể
             if ($matchedVariant->quantity < $quantity) {
-                return back()->with('error', 'Số lượng vượt quá tồn kho hiện có.');
+                return back()->with('error', 'Hiện tại kho chỉ còn đủ ' . $matchedVariant->quantity . ' sản phẩm. Vui lòng cập nhật lại số lượng.');
             }
         } else {
             // Trường hợp không có biến thể, kiểm tra số lượng tồn kho của sản phẩm
             if ($product->quantity < $quantity) {
-                return back()->with('error', 'Số lượng vượt quá tồn kho hiện có.');
+                return back()->with('error', 'Hiện tại kho chỉ còn đủ ' . $product->quantity . ' sản phẩm. Vui lòng cập nhật lại số lượng.');
             }
         }
 
@@ -95,6 +95,7 @@ class CartDetailController extends Controller
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
         // Kiểm tra sản phẩm đã có trong giỏ hàng
+        $stockQty = $matchedVariant ? $matchedVariant->quantity : $product->quantity;
         $cartDetail = CartDetail::where('cart_id', $cart->id)
             ->where('product_id', $productId)
             ->when($matchedVariant, function ($query) use ($matchedVariant) {
@@ -104,9 +105,8 @@ class CartDetailController extends Controller
 
         $inCartQty = $cartDetail ? $cartDetail->quantity : 0;
         $totalQty = $inCartQty + $quantity;
-        $stockQty = $matchedVariant ? $matchedVariant->quantity : $product->quantity;
         if ($totalQty > $stockQty) {
-            return back()->withInput()->with('error', 'Số lượng vượt quá tồn kho hiện có là ' . $stockQty . '.');
+            return back()->withInput()->with('error','Chúng tôi rất tiếc! Số lượng bạn chọn vượt quá tồn kho vì bạn đã thêm tối đa số lượng là ' . $stockQty . '  sản phẩm vào giỏ hàng.');
         }
         if ($cartDetail) {
             // Cập nhật số lượng nếu sản phẩm đã có trong giỏ

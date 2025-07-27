@@ -144,7 +144,7 @@
                     <div class="timeline-item">
                         <span class="timeline-time">10:00</span>
                         <div class="timeline-pin"><i class="marker marker-circle text-primary"></i></div>
-                        <div class="timeline-content">
+                        {{-- <div class="timeline-content">
                             <div>
                                 <span>Họp với</span>
                                 <div class="avatar-group ms-2">
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="timeline-item">
                         <span class="timeline-time">12:45</span>

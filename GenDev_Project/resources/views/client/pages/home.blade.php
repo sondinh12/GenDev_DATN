@@ -2503,7 +2503,6 @@
                         </div>
                         <!-- .tab-content -->
                     </section>
-                    <!-- .section-products-carousel-tabs-->
                 </main>
                 <!-- #main -->
             </div>

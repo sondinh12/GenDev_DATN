@@ -14,7 +14,6 @@ class CouponSeeder extends Seeder
             [
                 'name' => 'Giảm 50K đơn từ 200K',
                 'coupon_code' => 'GIAM50K',
-                'shipping_code' => null,
                 'discount_type' => 'fixed',
                 'discount_amount' => 50000,
                 'type' => 'order',
@@ -30,7 +29,6 @@ class CouponSeeder extends Seeder
             [
                 'name' => 'Giảm 20K toàn bộ đơn hàng',
                 'coupon_code' => 'SALE20K',
-                'shipping_code' => null,
                 'discount_type' => 'fixed',
                 'discount_amount' => 20000,
                 'type' => 'order',
@@ -46,7 +44,6 @@ class CouponSeeder extends Seeder
             [
                 'name' => 'Giảm 10%',
                 'coupon_code' => 'GIAM10',
-                'shipping_code' => null,
                 'discount_type' => 'percent',
                 'discount_amount' => 10,
                 'type' => 'order',
@@ -61,8 +58,7 @@ class CouponSeeder extends Seeder
             ],
             [
                 'name' => 'Giảm 100% phí ship',
-                'coupon_code' => null,
-                'shipping_code' => 'FREESHIP',
+                'coupon_code' => 'FREESHIP',
                 'discount_type' => 'fixed',
                 'discount_amount' => 30000,
                 'type' => 'shipping',
@@ -77,8 +73,7 @@ class CouponSeeder extends Seeder
             ],
             [
                 'name' => 'Giảm 20K phí ship',
-                'coupon_code' => null,
-                'shipping_code' => 'SHIP20K',
+                'coupon_code' => 'SHIP20K',
                 'discount_type' => 'fixed',
                 'discount_amount' => 20000,
                 'type' => 'shipping',

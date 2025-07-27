@@ -21,8 +21,8 @@
                     <th>Loại mã</th>
                     <th>Kiểu giảm</th>
                     <th>Giá trị</th>
-                    <th>Ngày tạo</th> 
-                    <th>Hết hạn</th>   
+                    <th>Ngày tạo</th>
+                    <th>Hết hạn</th>
                     <th>Người sử dụng</th>
                     <th>Đã dùng</th>
                     <th>Số lượng</th>
@@ -34,7 +34,7 @@
                 @forelse($trashedCoupons as $index => $coupon)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $coupon->coupon_code }}</td>
+                    <td>{{ $coupon->coupon_code ?? $coupon->shipping_code ?? 'Chưa có mã' }}</td>
                     <td>{{ $coupon->name }}</td>
                     <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
                     <td>
@@ -52,7 +52,7 @@
                         @endif
                     </td>
                     <td>{{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i:s') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>    
+                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>
                     <td>
                         @if($coupon->user_id == -1)
                             Toàn bộ hệ thống
@@ -84,7 +84,7 @@
                             @csrf
                             <button type="submit" class="btn btn-sm btn-success">Khôi phục</button>
                         </form>
-                        <form action="{{ route('coupons.forceDelete', $coupon->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa vĩnh viễn?')">
+                        <form action="{{ route('coupons.forceDelete', $coupon->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Xoá vĩnh viễn</button>
@@ -93,7 +93,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="11" class="text-center">Không có mã trong thùng rác</td>
+                    <td colspan="13" class="text-center">Không có mã trong thùng rác</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -104,20 +104,86 @@
 {{-- Thư viện SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-{{-- Hiển thị thông báo popup nếu có session success --}}
-@if(session('success'))
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: '{{ session('success') }}',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Đóng',
-            timer: 2000,
-            timerProgressBar: true
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xác nhận khôi phục – chọn form có nút btn-success (khôi phục)
+        document.querySelectorAll('form').forEach(form => {
+            const restoreBtn = form.querySelector('button.btn-success');
+            if (restoreBtn) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Xác nhận khôi phục',
+                        text: 'Bạn có chắc chắn muốn khôi phục mã giảm giá này?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#198754',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Khôi phục',
+                        cancelButtonText: 'Hủy bỏ',
+                        reverseButtons: true,
+                        backdrop: 'rgba(0,0,0,0.2)'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            }
+
+            // Xác nhận xoá vĩnh viễn – chọn form có nút btn-danger (xoá)
+            const deleteBtn = form.querySelector('button.btn-danger');
+            if (deleteBtn) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Xác nhận xóa vĩnh viễn',
+                        text: 'Mã giảm giá sẽ bị xoá vĩnh viễn và không thể khôi phục!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Xoá vĩnh viễn',
+                        cancelButtonText: 'Hủy bỏ',
+                        reverseButtons: true,
+                        backdrop: 'rgba(0,0,0,0.2)'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            }
         });
+
+        // Hiển thị thông báo thành công (nếu có)
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
+
+        // Hiển thị thông báo lỗi (nếu có)
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
     });
 </script>
-@endif
+
 @endsection
