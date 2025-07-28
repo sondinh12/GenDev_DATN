@@ -76,7 +76,6 @@
                     </li>
                 @endcan
 
-
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -85,7 +84,10 @@
                         <span>Danh mục bài viết</span>
                     </a>
                 <li>
+                @endcan
 
+                {{-- Nhà cung cấp --}}
+                @can('manage suppliers')
                 <li>
                     <a href="{{ url('/admin/suppliers') }}" class="">
                         <i class="fa-solid fa-building"></i>
@@ -101,8 +103,19 @@
                 <li>
                 </li>
                 @endcan
+
+                {{-- Hóa đơn nhập hàng --}}
+                @can('manage imports')
+                <li>
+                    <a href="{{ url('/admin/imports') }}" class="">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>Hóa đơn</span>
+                    </a>
+                <li>
+                @endcan
+
                 {{-- Đánh giá --}}
-                @can('manage comments')
+                @can('manage reviews')
                     <li>
                         <a href="{{ url('/admin/reviews') }}">
                             <i class="fa-solid fa-tag"></i>
@@ -110,7 +123,6 @@
                         </a>
                     </li>
                 @endcan
-
             </ul>
         </div>
         <!-- Sidebar -->
