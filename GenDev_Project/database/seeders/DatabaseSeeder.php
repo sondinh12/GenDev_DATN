@@ -28,14 +28,14 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ShipSeeder::class,
             CouponSeeder::class,
-            OrderSeeder::class,
-            OrderDetailAttributeSeeder::class,
-            OrderStatusLogSeeder::class,
-            SupplierSeeder::class,
-            SupplierProductPriceSeeder::class,
-            ImportSeeder::class,
-            ImportDetailSeeder::class,
-            PostCategorySeeder::class
+            // OrderSeeder::class,
+            // OrderDetailAttributeSeeder::class,
+            // OrderStatusLogSeeder::class,
+            // SupplierSeeder::class,
+            // // SupplierProductPriceSeeder::class,
+            // ImportSeeder::class,
+            // ImportDetailSeeder::class,
+            // PostCategorySeeder::class
         ]);
     }
 }

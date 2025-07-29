@@ -56,6 +56,16 @@
                     </li>
                 @endcan
 
+                {{-- Vai trò --}}
+                @can('manage roles')
+                    <li>
+                        <a href="{{ url('/admin/roles') }}">
+                            <i class="fa-solid fa-users"></i>
+                            <span>Vai trò</span>
+                        </a>
+                    </li>
+                @endcan
+
                 {{-- Đơn hàng --}}
                 @can('manage orders')
                     <li>
@@ -76,16 +86,38 @@
                     </li>
                 @endcan
 
+
+                {{-- Danh mục bài viết --}}
+                @can('manage posts')
+
                 <li>
                     <a href="{{ url('/admin/suppliers') }}" class="">
                         <i class="fa-solid fa-building"></i>
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
+
                 <li>
                     <a href="{{ url('/admin/imports') }}" class="">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Hóa đơn</span>
+                    </a>
+                <li>
+                </li>
+                @endcan
+                {{-- Đánh giá --}}
+                @can('manage comments')
+                    <li>
+                        <a href="{{ url('/admin/reviews') }}">
+                            <i class="fa-solid fa-tag"></i>
+                            <span>Đánh giá</span>
+                        </a>
+                    </li>
+                @endcan
+                <li>
+                    <a href="{{ url('/admin/imports') }}" class="">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>Quản lý banner</span>
                     </a>
                 <li>
             </ul>

@@ -51,9 +51,11 @@ class PaymentController extends Controller
                     }
                 }
 
-                   
+                    Cartdetail::whereHas('cart', function ($q) use ($order) {
+                        $q->where('user_id', $order->user_id);
+                    })->delete();
                     $order->update([
-                        'status' => 'pending', // đã xác nhận
+                        'status' => 'processing', // đã xác nhận
                         'payment_status' => 'paid' // đã thanh toán
                     ]);
                     Mail::to($order->email)->send(new OrderConfirmation($order));
@@ -66,9 +68,6 @@ class PaymentController extends Controller
                     return redirect()->route('checkout.failed')->with('error', 'Thanh toán thất bại!');
                 }
             }
-            //  Cartdetail::whereHas('cart', function ($q) use ($order) {
-            //             $q->where('user_id', $order->user_id);
-            //         })->delete();
         }
 
         return redirect()->route('home')->with('error', 'Xác minh chữ ký thất bại!');

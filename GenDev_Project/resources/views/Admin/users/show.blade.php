@@ -46,13 +46,27 @@
                                 </div>
                                 <h4 class="mt-3 mb-1">{{ $user->name }}</h4>
                                 <p class="text-muted mb-0">
-                                    @if ($user->role == 0)
-                                        <span class="badge bg-primary">Admin</span>
-                                    @elseif($user->role == 1)
-                                        <span class="badge bg-success">Nhân viên</span>
-                                    @elseif($user->role == 2)
-                                        <span class="badge bg-success">Người dùng</span>
-                                    @endif
+                                    @php
+                                        $roleName = $user->getRoleNames()->first();
+                                        // Lấy danh sách roles từ controller truyền qua view (giống index)
+                                        $roleObj = isset($roles) ? $roles->firstWhere('name', $roleName) : null;
+                                        $label =
+                                            $roleObj && isset($roleObj->display_name)
+                                                ? $roleObj->display_name
+                                                : ($roleObj
+                                                    ? ucfirst($roleObj->name)
+                                                    : 'Không rõ');
+                                        $defaultColors = [
+                                            'admin' => 'success',
+                                            'staff' => 'primary',
+                                            'user' => 'secondary',
+                                        ];
+                                        $class =
+                                            $roleObj && isset($roleObj->color) && $roleObj->color
+                                                ? $roleObj->color
+                                                : $defaultColors[$roleName] ?? 'info';
+                                    @endphp
+                                    <span class="badge bg-{{ $class }}">{{ $label }}</span>
                                 </p>
                             </div>
                             <div class="col-md-8">

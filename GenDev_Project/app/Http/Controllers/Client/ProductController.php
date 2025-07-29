@@ -52,9 +52,9 @@ class ProductController extends Controller
         $canReview = false;
         if (Auth::check()) {
             $userId = Auth::id();
-            $canReview = \App\Models\OrderDetail::whereHas('order', function ($q) use ($userId) {
+            $canReview = \App\Models\OrderDetail::whereHas('order', function($q) use ($userId) {
                 $q->where('user_id', $userId)
-                    ->where('payment_status', 'paid'); // status: success = đã thanh toán thành công
+                  ->where('payment_status', 'paid'); // status: success = đã thanh toán thành công
             })->where('product_id', $product->id)->exists();
         }
         return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
@@ -85,32 +85,77 @@ class ProductController extends Controller
             $query->where('category_mini_id', $request->category_mini);
         }
 
-        // Lọc theo khoảng giá dựa trên giá hiển thị (biến thể đầu tiên hoặc giá sản phẩm)
-        if (($request->has('min_price') && $request->min_price !== null && $request->min_price !== '') ||
-            ($request->has('max_price') && $request->max_price !== null && $request->max_price !== '')
-        ) {
-            $min = $request->min_price !== null && $request->min_price !== '' ? (float)$request->min_price : 0;
-            $max = $request->max_price !== null && $request->max_price !== '' ? (float)$request->max_price : null;
+        // Lọc theo khoảng giá (ưu tiên sale_price nếu có, áp dụng đúng cho cả sản phẩm có biến thể và không biến thể)
+        if ($request->has('min_price') && $request->min_price) {
+            $query->where(function ($q) use ($request) {
+                // Sản phẩm không có biến thể: lọc theo giá chính (ưu tiên sale_price nếu có)
+                $q->where(function ($noVariantQ) use ($request) {
+                    $noVariantQ->whereDoesntHave('variants')
+                        ->where(function ($subQ) use ($request) {
+                            $subQ->where(function ($saleQ) use ($request) {
+                                $saleQ->where('sale_price', '>', 0)
+                                    ->where('sale_price', '>=', $request->min_price);
+                            })
+                                ->orWhere(function ($priceQ) use ($request) {
+                                    $priceQ->where(function ($q2) {
+                                        $q2->whereNull('sale_price')->orWhere('sale_price', 0);
+                                    })
+                                        ->where('price', '>=', $request->min_price);
+                                });
+                        });
+                })
+                    // Sản phẩm có biến thể: chỉ lọc theo giá của các biến thể (ưu tiên sale_price nếu có)
+                    ->orWhere(function ($hasVariantQ) use ($request) {
+                        $hasVariantQ->whereHas('variants', function ($variantQuery) use ($request) {
+                            $variantQuery->where(function ($vQ) use ($request) {
+                                $vQ->where('sale_price', '>', 0)
+                                    ->where('sale_price', '>=', $request->min_price);
+                            })
+                                ->orWhere(function ($vQ) use ($request) {
+                                    $vQ->where(function ($q2) {
+                                        $q2->whereNull('sale_price')->orWhere('sale_price', 0);
+                                    })
+                                        ->where('price', '>=', $request->min_price);
+                                });
+                        });
+                    });
+            });
+        }
 
-            // Lấy danh sách id sản phẩm thỏa mãn điều kiện giá hiển thị
-            $productIds = Product::with(['variants' => function ($q) {
-                $q->orderBy('id');
-            }])->where('status', 1)->get()->filter(function ($product) use ($min, $max) {
-                // Lấy giá hiển thị giống giao diện (biến thể đầu tiên hoặc giá sản phẩm)
-                if ($product->variants && $product->variants->count() > 0) {
-                    $variant = $product->variants->first();
-                    $price = ($variant->sale_price && $variant->sale_price > 0) ? $variant->sale_price : $variant->price;
-                } else {
-                    $price = ($product->sale_price && $product->sale_price > 0) ? $product->sale_price : $product->price;
-                }
-                if ($max !== null) {
-                    return $price >= $min && $price <= $max;
-                } else {
-                    return $price >= $min;
-                }
-            })->pluck('id')->toArray();
-
-            $query->whereIn('id', $productIds);
+        if ($request->has('max_price') && $request->max_price) {
+            $query->where(function ($q) use ($request) {
+                // Sản phẩm không có biến thể: lọc theo giá chính (ưu tiên sale_price nếu có)
+                $q->where(function ($noVariantQ) use ($request) {
+                    $noVariantQ->whereDoesntHave('variants')
+                        ->where(function ($subQ) use ($request) {
+                            $subQ->where(function ($saleQ) use ($request) {
+                                $saleQ->where('sale_price', '>', 0)
+                                    ->where('sale_price', '<=', $request->max_price);
+                            })
+                                ->orWhere(function ($priceQ) use ($request) {
+                                    $priceQ->where(function ($q2) {
+                                        $q2->whereNull('sale_price')->orWhere('sale_price', 0);
+                                    })
+                                        ->where('price', '<=', $request->max_price);
+                                });
+                        });
+                })
+                    // Sản phẩm có biến thể: chỉ lọc theo giá của các biến thể (ưu tiên sale_price nếu có)
+                    ->orWhere(function ($hasVariantQ) use ($request) {
+                        $hasVariantQ->whereHas('variants', function ($variantQuery) use ($request) {
+                            $variantQuery->where(function ($vQ) use ($request) {
+                                $vQ->where('sale_price', '>', 0)
+                                    ->where('sale_price', '<=', $request->max_price);
+                            })
+                                ->orWhere(function ($vQ) use ($request) {
+                                    $vQ->where(function ($q2) {
+                                        $q2->whereNull('sale_price')->orWhere('sale_price', 0);
+                                    })
+                                        ->where('price', '<=', $request->max_price);
+                                });
+                        });
+                    });
+            });
         }
 
         // Lọc sản phẩm khuyến mãi
@@ -201,8 +246,10 @@ class ProductController extends Controller
         ")[0];
 
         // Phân trang
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(10)->withQueryString();
 
         return view('client.product.shop', compact('products', 'categories', 'priceRange'));
     }
+
+
 }

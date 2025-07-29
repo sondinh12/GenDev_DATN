@@ -13,6 +13,7 @@ class Category extends Model
         'name',
         'status',
         'image',
+        'parent_id',
     ];
 
     public function products(){
@@ -21,5 +22,10 @@ class Category extends Model
 
     public function categoryMinis(){
         return $this->hasMany(CategoryMini::class);
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
     }
 }
