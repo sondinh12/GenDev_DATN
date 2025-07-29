@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
+use App\Http\Requests\UpdateImportRequest;
 use App\Models\Attribute;
 use App\Models\Import;
 
 use App\Models\ImportDetail;
+use App\Models\ImportLog;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantAttribute;
 use App\Models\Supplier;
 use App\Models\SupplierProductPrice;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use App\Exports\ImportExport;
@@ -232,6 +235,7 @@ class ImportController extends Controller
             'details.product',
             'supplier.productPrices'
         ])->where('id', $id)->first();
+        $logs = ImportLog::with('user')->where('import_id', $dtImport->id)->latest()->get();
         if ($request->isMethod('post')) {
             $validated = $request->validate([
                 'status' => 'required|in:0,1',
@@ -251,7 +255,7 @@ class ImportController extends Controller
                             'name' => $detail->product_temp_name,
                             'quantity' => $detail->variant_data ? 0 : $detail->quantity,
                             'price' => !$detail->variant_data ? $detail->import_price : null,
-                            'status'=> 0
+                            'status' => 0
                         ]);
 
                         $detail->product_id = $product->id;
@@ -303,104 +307,244 @@ class ImportController extends Controller
         }
 
 
-        return view('Admin.imports.show', compact('dtImport'));
+        return view('Admin.imports.show', compact('dtImport', 'logs'));
     }
 
-    // public function edit(string $id)
-    // {
-    //     $import = Import::with([
-    //         'details.variant.variantAttributes.attribute',
-    //         'details.product',
-    //         'supplier',
-    //         'details'
-    //     ])->findOrFail($id);
+    public function edit($id)
+    {
+        $import = Import::with([
+            'details',
+            'details.variant.variantAttributes.attribute',
+            'details.variant.variantAttributes.value',
+            'details.product',
+            'supplier',
+            'supplier.productPrices'
+        ])->findOrFail($id);
 
-    //     // Chỉ cho phép sửa khi chưa xác nhận
-    //     if ($import->status == 1) {
-    //         return redirect()->back()->with('error', 'Không thể sửa phiếu nhập đã xác nhận.');
-    //     }
+        $import->import_date = Carbon::parse($import->import_date);
 
-    //     $suppliers = Supplier::all();
-    //     $attributes = Attribute::with('values')->get();
-    //     $existingProducts = Product::with(['variants.variantAttributes.attribute'])->get();
+        $suppliers = Supplier::all();
+        $attributes = Attribute::with('values')->get();
+        $existingProducts = Product::all();
 
-    //     return view('Admin.imports.edit', compact(
-    //         'import',
-    //         'suppliers',
-    //         'attributes',
-    //         'existingProducts'
-    //     ));
-    // }
+        // Dữ liệu chi tiết để load lại vào form
+        $preloadDetails = $import->details->map(function ($detail) use ($import) {
+            // Tìm giá lịch sử từ nhà cung cấp
+            $matchedPrice = $import->supplier->productPrices
+                ->where('product_id', $detail->product_id)
+                ->filter(function ($price) use ($import) {
+                    return $price->start_date <= $import->import_date &&
+                        (is_null($price->end_date) || $price->end_date >= $import->import_date);
+                })
+                ->sortByDesc('start_date')
+                ->first();
 
-    public function edit(string $id)
+            // Chuẩn bị variant_data nếu là sản phẩm có sẵn và có variant thực tế
+            $variantData = null;
+            if ($detail->variant && $detail->variant->variantAttributes->count()) {
+                $variantData = $detail->variant->variantAttributes->map(function ($attr) {
+                    return [
+                        'attribute' => $attr->attribute->name ?? '',
+                        'attribute_id' => $attr->attribute->id ?? '',
+                        'value' => $attr->value->value ?? '',
+                        'value_id' => $attr->value->id ?? '',
+                    ];
+                })->toArray();
+            } elseif (is_array($detail->variant_data)) {
+                $variantData = $detail->variant_data;
+            }
+
+            return [
+                'id' => $detail->id,
+                'product_id' => $detail->product_id,
+                'variant_id' => $detail->variant_id,
+                'name' => $detail->product_temp_name ?? '',
+                'type' => $variantData ? 'variant' : 'simple',
+                'price' => $detail->import_price,
+                'quantity' => $detail->quantity,
+                'supplier_import_price' => $matchedPrice?->import_price ?? null,
+                'variant_data' => $variantData,
+            ];
+        });
+
+        return view('Admin.imports.edit', compact(
+            'import',
+            'suppliers',
+            'attributes',
+            'existingProducts',
+            'preloadDetails'
+        ));
+    }
+
+
+
+
+    public function update(UpdateImportRequest $request, $id)
 {
-    $import = Import::with([
-    'details',
-    'details.product',
-    'details.variant.variantAttributes.attribute',
-    'details.product.variants.variantAttributes.attribute',
-    'supplier',
-])->findOrFail($id);
-    $import->import_date = \Carbon\Carbon::parse($import->import_date);
-    $existingProducts = Product::with([
-    'variants.variantAttributes.attribute',
-    'variants.variantAttributes.value'
-])->get();
-    // Chỉ cho phép sửa khi chưa xác nhận
-    if ($import->status == 1) {
-        return redirect()->back()->with('error', 'Không thể sửa phiếu nhập đã xác nhận.');
-    }
+    DB::beginTransaction();
 
-    $suppliers = Supplier::all();
-    $attributes = Attribute::with('values')->get();
-    // $existingProducts = Product::with(['variants.variantAttributes.attribute'])->get();
+    try {
+        $import = Import::findOrFail($id);
+        $import->supplier_id = $request->supplier_id;
+        $import->import_date = \Carbon\Carbon::parse($request->import_date);
+        $import->note = $request->note;
+        $import->save();
 
-    // Xử lý variant data để truyền xuống blade bằng @json
-    $variantData = $existingProducts->mapWithKeys(function ($product) {
-        return [
-            $product->id => $product->variants->map(function ($variant) {
-                $attrString = $variant->variantAttributes->map(function ($att) {
-                    return $att->attribute->name . ': ' . $att->value->value;
-                })->implode(', ');
+        $existingDetailIds = $import->details->pluck('id')->toArray();
+        $updatedDetailIds = [];
+        $totalCost = 0;
 
-                return [
-                    'id' => $variant->id,
-                    'label' => $attrString ?: 'Mặc định',
+        foreach ($request->products as $item) {
+            if (!empty($item['id'])) {
+                $detail = ImportDetail::find($item['id']);
+                if (!$detail) continue;
+            } else {
+                $detail = new ImportDetail();
+                $detail->import_id = $import->id;
+            }
+
+            $source = $item['source'] ?? 'existing';
+            $detail->variant_id = $item['variant_id'] ?? null;
+            $detail->product_temp_name = $item['product_temp_name'] ?? ($item['name'] ?? null);
+
+            if ($source === 'existing') {
+                $detail->product_id = $item['product_id'] ?? null;
+                $detail->import_price = $item['existing_price'] ?? 0;
+                $detail->quantity = $item['existing_quantity'] ?? 0;
+
+                // 💡 Cập nhật hoặc thêm giá nhập nhà cung cấp
+                if (!empty($item['supplier_import_price']) && !empty($item['product_id'])) {
+                    SupplierProductPrice::updateOrCreate(
+                        [
+                            'supplier_id' => $request->supplier_id,
+                            'product_id' => $item['product_id'],
+                        ],
+                        [
+                            'import_price' => $item['supplier_import_price'],
+                            'start_date' => $request->import_date,
+                        ]
+                    );
+                }
+            } else {
+                // Sản phẩm mới (chưa có product_id)
+                $detail->product_id = null;
+                $detail->import_price = $item['price'] ?? 0;
+                $detail->quantity = $item['quantity'] ?? 0;
+
+                // 💡 Lưu giá nhập nhà cung cấp nếu có (dù product_id là null → chưa có Product)
+                if (!empty($item['supplier_import_price'])) {
+                    SupplierProductPrice::create([
+                        'supplier_id' => $request->supplier_id,
+                        'product_id' => null, // sản phẩm mới, chưa tồn tại
+                        'import_price' => $item['supplier_import_price'],
+                        'start_date' => $request->import_date,
+                    ]);
+                }
+            }
+
+            $detail->subtotal = $detail->import_price * $detail->quantity;
+
+            // Giải mã variant_data nếu có
+            $detail->variant_data = collect($item['variant_data'] ?? [])
+                ->map(function ($v) {
+                    if (is_string($v)) {
+                        $decoded = json_decode($v, true);
+                        return is_array($decoded) ? $decoded : null;
+                    }
+                    return is_array($v) ? $v : null;
+                })
+                ->filter()
+                ->values()
+                ->toArray();
+
+            $detail->save();
+            $updatedDetailIds[] = $detail->id;
+            $totalCost += $detail->subtotal;
+        }
+
+        // Xoá chi tiết không còn tồn tại
+        $toDelete = array_diff($existingDetailIds, $updatedDetailIds);
+        ImportDetail::whereIn('id', $toDelete)->delete();
+
+        // Cập nhật tổng tiền
+        $import->update(['total_cost' => $totalCost]);
+
+        // Ghi log thay đổi nếu có
+        $changes = [];
+        if ($import->wasChanged()) {
+            $changes['import'] = $import->getChanges();
+        }
+
+        foreach ($import->details as $detail) {
+            if ($detail->wasChanged()) {
+                $changes['details'][] = [
+                    'id' => $detail->id,
+                    'changes' => $detail->getChanges(),
                 ];
-            })
-        ];
-    });
+            }
+        }
 
-    return view('Admin.imports.edit', compact(
-        'import',
-        'suppliers',
-        'attributes',
-        'existingProducts',
-        'variantData' // Truyền sang view
-    ));
+        if (!empty($changes)) {
+            ImportLog::create([
+                'import_id' => $import->id,
+                'user_id' => auth()->id(),
+                'changes' => json_encode($changes, JSON_UNESCAPED_UNICODE),
+            ]);
+        }
+
+        DB::commit();
+        return redirect()->route('admin.imports.index')->with('success', 'Cập nhật phiếu nhập thành công!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Lỗi cập nhật: ' . $e->getMessage());
+    }
 }
 
 
-
-    public function update(ImportRequest $request)
+    public function destroy($id)
     {
+        $import = Import::findOrFail($id);
 
+        if ($import->status == 1) {
+            return redirect()->back()->with('error', 'Không thể xóa phiếu đã xác nhận.');
+        }
+
+        $import->delete();
+        return redirect()->route('admin.imports.index')->with('success', 'Phiếu nhập đã được đưa vào thùng rác.');
     }
 
-    public function destroy()
+    public function trash()
     {
-
+        $imports = Import::onlyTrashed()->get();
+        return view('Admin.imports.trash', compact('imports'));
     }
+
+    public function restore($id)
+    {
+        $import = Import::onlyTrashed()->findOrFail($id);
+        $import->restore();
+
+        return redirect()->route('admin.imports.trash')->with('success', 'Khôi phục thành công!');
+    }
+
+    public function forceDelete($id)
+    {
+        $import = Import::onlyTrashed()->findOrFail($id);
+        $import->forceDelete();
+
+        return redirect()->route('admin.imports.trash')->with('success', 'Xóa vĩnh viễn thành công!');
+    }
+
 
     public function export($id)
-{
-    $import = Import::with([
-        'details.product',
-        'details.variant.variantAttributes.attribute',
-        'details.variant.variantAttributes.value'
-    ])->findOrFail($id);
+    {
+        $import = Import::with([
+            'details.product',
+            'details.variant.variantAttributes.attribute',
+            'details.variant.variantAttributes.value'
+        ])->findOrFail($id);
 
-    $fileName = 'phieu-nhap-' . $import->id . '.xlsx';
-    return Excel::download(new ImportExport($import), $fileName);
-}
+        $fileName = 'phieu-nhap-' . $import->id . '.xlsx';
+        return Excel::download(new ImportExport($import), $fileName);
+    }
 }

@@ -2,16 +2,11 @@
 
 namespace Database\Seeders;
 
-use DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB as FacadesDB;
 
 class ProductGallerySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         FacadesDB::table('product_galleries')->insert([

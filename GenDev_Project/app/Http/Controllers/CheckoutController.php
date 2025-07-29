@@ -92,6 +92,33 @@ class CheckoutController extends Controller
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
         }
+        // $reorderMode = $request->input('reorder_mode', false);
+        // $userId = auth()->id();
+
+        // if ($reorderMode) {
+        //     $rawItems = json_decode($request->input('reorder_cart_items'), true);
+
+        //     if (empty($rawItems)) {
+        //         return back()->with('error', 'Không tìm thấy sản phẩm mua lại.');
+        //     }
+
+        //     $cartItems = $rawItems; // Dùng mảng luôn
+        // } else {
+        //     $selectedItemIds = $request->input('selected_items', []);
+
+        //     if (empty($selectedItemIds)) {
+        //         return back()->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        //     }
+
+        //     $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+        //         ->whereIn('id', $selectedItemIds)
+        //         ->get()
+        //         ->toArray();
+
+        //     if (empty($cartItems)) {
+        //         return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
+        //     }
+        // }
 
         DB::beginTransaction();
 
@@ -315,8 +342,6 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
-
-
     // public function checkoutFromOrder($orderId)
     // {
     //     $order = Order::with([
@@ -374,5 +399,4 @@ class CheckoutController extends Controller
     //     'reorder_mode' => true, // optional flag
     // ]);;
     // }
-
 }
