@@ -42,8 +42,6 @@ class AppServiceProvider extends ServiceProvider
             $categories = Category::where('status', 1)->orderBy('name')->get();
             $view->with('categories', $categories);
         });
-
         Paginator::useBootstrap();
-
     }
 }

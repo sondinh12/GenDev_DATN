@@ -376,15 +376,12 @@ class ImportController extends Controller
         ));
     }
 
-
-
-
     public function update(UpdateImportRequest $request, $id)
     {
         DB::beginTransaction();
 
         try {
-            
+
             $import = Import::findOrFail($id);
             $import->supplier_id = $request->supplier_id;
             $import->import_date = \Carbon\Carbon::parse($request->import_date);
@@ -392,10 +389,10 @@ class ImportController extends Controller
             $import->save();
             $originalImport = $import->getOriginal(); // lưu bản gốc import
 
-$originalDetails = []; // lưu bản gốc các chi tiết
-foreach ($import->details as $d) {
-    $originalDetails[$d->id] = $d->getOriginal();
-}
+            $originalDetails = []; // lưu bản gốc các chi tiết
+            foreach ($import->details as $d) {
+                $originalDetails[$d->id] = $d->getOriginal();
+            }
             $existingDetailIds = $import->details->pluck('id')->toArray();
             $updatedDetailIds = [];
             $totalCost = 0;
@@ -479,40 +476,40 @@ foreach ($import->details as $d) {
             // Ghi log thay đổi nếu có
             $changes = [];
 
-        // 🔹 Log thay đổi Import
-        if ($import->wasChanged()) {
-            $changes['import'] = [];
-            foreach ($import->getChanges() as $key => $newVal) {
-                $changes['import'][] = [
-                    'field' => $key,
-                    'old' => $originalImport[$key] ?? null,
-                    'new' => $newVal,
-                ];
-            }
-        }
-
-        // 🔹 Log thay đổi Detail
-        foreach ($import->details as $detail) {
-            if ($detail->wasChanged()) {
-                $original = $originalDetails[$detail->id] ?? [];
-                foreach ($detail->getChanges() as $key => $newVal) {
-                    $changes['details'][] = [
-                        'id' => $detail->id,
+            // 🔹 Log thay đổi Import
+            if ($import->wasChanged()) {
+                $changes['import'] = [];
+                foreach ($import->getChanges() as $key => $newVal) {
+                    $changes['import'][] = [
                         'field' => $key,
-                        'old' => $original[$key] ?? null,
+                        'old' => $originalImport[$key] ?? null,
                         'new' => $newVal,
                     ];
                 }
             }
-        }
 
-        if (!empty($changes)) {
-            ImportLog::create([
-                'import_id' => $import->id,
-                'user_id' => auth()->id(),
-                'changes' => json_encode($changes, JSON_UNESCAPED_UNICODE),
-            ]);
-        }
+            // 🔹 Log thay đổi Detail
+            foreach ($import->details as $detail) {
+                if ($detail->wasChanged()) {
+                    $original = $originalDetails[$detail->id] ?? [];
+                    foreach ($detail->getChanges() as $key => $newVal) {
+                        $changes['details'][] = [
+                            'id' => $detail->id,
+                            'field' => $key,
+                            'old' => $original[$key] ?? null,
+                            'new' => $newVal,
+                        ];
+                    }
+                }
+            }
+
+            if (!empty($changes)) {
+                ImportLog::create([
+                    'import_id' => $import->id,
+                    'user_id' => auth()->id(),
+                    'changes' => json_encode($changes, JSON_UNESCAPED_UNICODE),
+                ]);
+            }
 
             DB::commit();
             return redirect()->route('admin.imports.index')->with('success', 'Cập nhật phiếu nhập thành công!');

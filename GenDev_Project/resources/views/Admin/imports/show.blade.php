@@ -198,7 +198,6 @@
                             @endforeach
                         @endif
                     </td>
-
                 </tr>
             @empty
                 <tr>
@@ -207,8 +206,6 @@
             @endforelse
         </tbody>
     </table>
-
-
 
     <a href="{{ route('admin.imports.index') }}" class="btn btn-secondary">Quay lại</a>
 @endsection
