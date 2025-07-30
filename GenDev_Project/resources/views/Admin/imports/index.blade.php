@@ -9,7 +9,13 @@
     </div>
     @endif
     <h2>Nguồn nhập</h2>
-    <a href="{{route('admin.imports.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ route('admin.imports.create') }}" class="btn btn-outline-primary">➕ Thêm</a>
+
+        <a href="{{ route('admin.imports.trash') }}" class="btn btn-outline-secondary">🗑 Thùng rác</a>
+    </div>
+    
     <table class="table">
         <thead>
             <tr>
@@ -33,7 +39,11 @@
                         <a href="{{route('admin.imports.show',$import->id)}}" class="btn btn-primary">Xem</a>
                         @if ($import->status == 0)                          
                             <a href="{{route('admin.imports.edit',$import->id)}}" class="btn btn-info">Sửa</a>
-                            <a href="{{route('admin.imports.destroy',$import->id)}}" class="btn btn-danger">Xóa</a>
+                            <form action="{{ route('admin.imports.destroy', $import->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc muốn xóa phiếu này không?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">🗑 Xóa</button>
+                            </form>
                         @endif
                     </td>
                 </tr>

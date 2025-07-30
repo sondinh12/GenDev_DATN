@@ -148,8 +148,6 @@
                     @endif
                     <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
                 </div>
-
-
             </div>
         </div>
         @endforeach

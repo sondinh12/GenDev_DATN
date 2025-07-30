@@ -10,7 +10,7 @@
             <ul class="left-menu list-unstyled" id="side-menu">
                 {{-- Trang chủ: ai cũng thấy --}}
                 <li>
-                    <a href="{{ url('/admin') }}">
+                    <a href="{{ url('/admin/dashboard') }}">
                         <i class="fas fa-desktop"></i>
                         <span>Trang chủ</span>
                     </a>
@@ -86,8 +86,6 @@
                     </li>
                 @endcan
 
-
-
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -106,6 +104,8 @@
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
+
+
 
                 @endcan
 
@@ -130,6 +130,7 @@
                         </a>
                     </li>
                 @endcan
+
             </ul>
         </div>
         <!-- Sidebar -->

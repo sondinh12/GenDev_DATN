@@ -67,10 +67,8 @@ class Order extends Model
     }
 
 
-
     // Danh sách sản phẩm 
     // 'transaction_code',ong đơn hàng
-
 
     public function orderDetails(): HasMany
     {
