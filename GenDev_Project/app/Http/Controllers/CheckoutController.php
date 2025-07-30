@@ -24,6 +24,9 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
+        // Xóa session mã giảm giá khi bắt đầu phiên thanh toán mới
+        session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');
 
@@ -31,6 +34,12 @@ class CheckoutController extends Controller
             parse_str($selectedItemIds, $output);
             $selectedItemIds = $output['selected_items'] ?? [];
         }
+
+        // Kiểm tra nếu danh sách sản phẩm thay đổi, xóa session mã giảm giá
+        if (session()->has('last_selected_items') && session('last_selected_items') !== $selectedItemIds) {
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+        }
+        session()->put('last_selected_items', $selectedItemIds);
 
         $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
@@ -54,23 +63,6 @@ class CheckoutController extends Controller
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->get();
-
-        // Kiểm tra lại mã giảm giá trong session
-        if (session()->has('applied_order_coupon')) {
-            $coupon = Coupon::find(session('applied_order_coupon.id'));
-            if ($coupon && ($subtotal < $coupon->min_coupon || ($coupon->max_coupon && $subtotal > $coupon->max_coupon))) {
-                session()->forget('applied_order_coupon');
-                session()->flash('error_order_coupon', 'Mã giảm giá đơn hàng không còn hợp lệ do thay đổi tổng đơn hàng.');
-            }
-        }
-        if (session()->has('applied_shipping_coupon')) {
-            $coupon = Coupon::find(session('applied_shipping_coupon.id'));
-            $shippingFee = $ships->first()->shipping_price ?? 0;
-            if ($coupon && ($shippingFee < $coupon->min_coupon || ($coupon->max_coupon && $shippingFee > $coupon->max_coupon))) {
-                session()->forget('applied_shipping_coupon');
-                session()->flash('error_shipping_coupon', 'Mã giảm giá phí ship không còn hợp lệ do thay đổi phí vận chuyển.');
-            }
-        }
 
         return view('client.checkout.checkout', compact(
             'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'
@@ -281,15 +273,17 @@ class CheckoutController extends Controller
                 }
             }
 
+            // Xóa session mã giảm giá sau khi hoàn tất đơn hàng
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+
             if ($request->payment_method === 'cod') {
-                session()->forget('applied_order_coupon');
-                session()->forget('applied_shipping_coupon');
                 CartDetail::whereIn('id', $selectedItemIds)
                     ->whereHas('cart', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     })
                     ->delete();
             }
+
             DB::commit();
 
             if ($request->payment_method === 'banking') {
