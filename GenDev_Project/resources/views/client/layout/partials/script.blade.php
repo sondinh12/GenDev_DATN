@@ -12,7 +12,9 @@
 <script type="text/javascript" src="{{ asset('assets/js/pace.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/scripts.js') }}"></script>
+
 <script src="https://unpkg.com/sweetalert2@11"></script>
+
 <script>
     @if (session('success'))
         Swal.fire({

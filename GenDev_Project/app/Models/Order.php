@@ -48,7 +48,6 @@ class Order extends Model
 
     // Mã giảm giá cho sản phẩm
     public function productCoupon(): BelongsTo
-
     {
         return $this->belongsTo(Coupon::class, 'product_coupon_id');
     }
@@ -65,11 +64,8 @@ class Order extends Model
     {
         return $this->belongsTo(Ship::class, 'shipping_id');
     }
-
-
     // Danh sách sản phẩm 
     // 'transaction_code',ong đơn hàng
-
     public function orderDetails(): HasMany
     {
         return $this->hasMany(OrderDetail::class, 'order_id')->with('product');

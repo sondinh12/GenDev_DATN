@@ -1,6 +1,16 @@
 @extends('client.layout.master')
 
 @section('content')
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
+        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert-danger').alert('close');
+        }, 2500);
+    </script>
+@endif
 <div id="content" class="site-content" tabindex="-1">
     <div class="col-full">
         <div class="row">

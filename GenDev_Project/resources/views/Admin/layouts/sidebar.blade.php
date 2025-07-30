@@ -96,8 +96,6 @@
                     </a>
                 <li>
 
-
-
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}

@@ -5,8 +5,6 @@
 @section('content')
 <div class="container py-5">
     <h3 class="mb-4"><i class="fa fa-box me-2 text-primary"></i>Đơn hàng của tôi</h3>
-
-
     {{-- Tabs lọc --}}
     <ul class="nav nav-tabs mb-4" role="tablist">
         @php
@@ -130,7 +128,13 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
+<<<<<<< HEAD
              <div class="d-flex gap-2">
+=======
+
+
+            <div class="d-flex gap-2">
+>>>>>>> c098c0655c901199ed04a5109ac98528f7206974
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại
@@ -143,7 +147,6 @@
                     @endif
                     <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
                 </div>
-
             </div>
         </div>
         @endforeach

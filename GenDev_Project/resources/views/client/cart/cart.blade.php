@@ -294,7 +294,7 @@
         updateTotals();
     });
 
-
+    // Xoá sản phẩm khỏi giỏ hàng
     function deleteCartItem(button) {
         if (confirm("Bạn có chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng không?")) {
             const form = document.getElementById('delete-cart-item-form');
@@ -302,5 +302,4 @@
             form.submit();
         }
     }
-
 </script>
