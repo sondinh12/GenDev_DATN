@@ -115,8 +115,8 @@
                     </li>
                 @endcan
                 <li>
-                    <a href="{{ url('/admin/imports') }}" class="">
-                        <i class="fa-solid fa-receipt"></i>
+                    <a href="{{ url('/admin/banner') }}" class="">
+                      <i class="fa-solid fa-images"></i>
                         <span>Quản lý banner</span>
                     </a>
                 <li>

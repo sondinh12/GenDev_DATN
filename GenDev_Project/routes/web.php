@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
 session_start();
@@ -192,6 +193,11 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::resource('post-categories', PostCategoryController::class);
     });
 
+    // quan lý banner
+    Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
+    Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
+    Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
+    Route::resource('banner', BannerController::class);
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
