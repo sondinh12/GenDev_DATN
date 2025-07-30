@@ -114,16 +114,7 @@
                                                     {{ $label }}
                                                 </span>
                                             </td>
-                                            @push('scripts')
-                                                <script>
-                                                    document.addEventListener('DOMContentLoaded', function() {
-                                                        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                                                        tooltipTriggerList.forEach(function(tooltipTriggerEl) {
-                                                            new bootstrap.Tooltip(tooltipTriggerEl);
-                                                        });
-                                                    });
-                                                </script>
-                                            @endpush
+                               {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
                                             <td>
                                                 @if ($user->status == 1)
                                                     <span class="badge bg-success">Hoạt động</span>
@@ -312,3 +303,41 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        // Lấy mapping role -> permissions từ backend
+        window.rolePermissionsMap = @json(
+            \Spatie\Permission\Models\Role::with('permissions')->get()->mapWithKeys(function ($role) {
+                    return [$role->name => $role->permissions->pluck('name')->toArray()];
+                }));
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tooltip
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Tự động tích quyền khi chọn vai trò trong modal sửa user
+            document.querySelectorAll('[id^="role-"]').forEach(function(select) {
+                select.addEventListener('change', function() {
+                    var userId = this.id.replace('role-', '');
+                    var roleName = this.value;
+                    var permList = window.rolePermissionsMap[roleName] || [];
+                    // Bỏ tích hết
+                    document.querySelectorAll('#editRoleModal-' + userId +
+                        ' input[name="permissions[]"]').forEach(function(cb) {
+                        cb.checked = false;
+                    });
+                    // Tích các quyền của role
+                    permList.forEach(function(permName) {
+                        var cb = document.querySelector('#editRoleModal-' + userId +
+                            ' input[name="permissions[]"][value="' + permName + '"]');
+                        if (cb) cb.checked = true;
+                    });
+                });
+            });
+        });
+    </script>
+@endpush

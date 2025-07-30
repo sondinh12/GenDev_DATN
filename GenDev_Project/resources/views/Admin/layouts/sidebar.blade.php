@@ -86,7 +86,6 @@
                     </li>
                 @endcan
 
-
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -105,17 +104,21 @@
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
-                </li>
+
+
+
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
                 @can('manage imports')
+
                 <li>
                     <a href="{{ url('/admin/imports') }}" class="">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Hóa đơn</span>
                     </a>
                 <li>
+
                 @endcan
 
                 {{-- Đánh giá --}}

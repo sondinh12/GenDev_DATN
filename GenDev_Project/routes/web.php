@@ -1,10 +1,8 @@
 <?php
-
+session_start();
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
-session_start();
-
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -111,6 +109,7 @@ Route::get('/track-order', function () {
 $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
 Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->group(function () {
     Route::get('/dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
+
     // Sản phẩm
     Route::middleware(['permission:manage products'])->group(function () {
         Route::resource('/products', ProductController::class);
@@ -172,11 +171,13 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
     // Vai trò
     Route::middleware(['permission:manage roles'])->group(function () {
         Route::resource('roles', RoleController::class);
     });
     
+
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
@@ -192,21 +193,23 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
         Route::resource('post-categories', PostCategoryController::class);
     });
+
+
+
+
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
-    // Route::middleware(['permission:manage imports'])->group(function () {
-        Route::get('/imports',[ImportController::class,'index'])->name('admin.imports.index');
-        Route::get('/imports/show/{id}',[ImportController::class,'show'])->name('admin.imports.show');
-        Route::get('/imports/create',[ImportController::class,'create'])->name('admin.imports.create');
-        Route::post('/imports/store',[ImportController::class,'store'])->name('admin.imports.store');
-        Route::get('/imports/edit/{id}',[ImportController::class,'edit'])->name('admin.imports.edit');
-        Route::put('/imports/update/{id}',[ImportController::class,'update'])->name('admin.imports.update');
-        Route::post('/imports/updateStatus/{id}',[ImportController::class,'show'])->name('admin.imports.updateStatus');
-        Route::delete('/imports/destroy/{id}',[ImportController::class,'destroy'])->name('admin.imports.destroy');
+    Route::middleware(['permission:manage imports'])->group(function () {
+        Route::get('/imports', [ImportController::class, 'index'])->name('admin.imports.index');
+        Route::get('/imports/show/{id}', [ImportController::class, 'show'])->name('admin.imports.show');
+        Route::get('/imports/create', [ImportController::class, 'create'])->name('admin.imports.create');
+        Route::post('/imports/store', [ImportController::class, 'store'])->name('admin.imports.store');
+        Route::get('/imports/edit/{id}', [ImportController::class, 'edit'])->name('admin.imports.edit');
+        Route::put('/imports/upadte/{id}', [ImportController::class, 'update'])->name('admin.imports.update');
+        Route::post('/imports/updateStatus/{id}', [ImportController::class, 'show'])->name('admin.imports.updateStatus');
+        Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
         Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
-
-    // });
-    
+    });
     //Nhà cung cấp
     Route::middleware(['permission:manage suppliers'])->group(function () {
         Route::get('/suppliers',[SupplierController::class,'index'])->name('admin.suppliers.index');
