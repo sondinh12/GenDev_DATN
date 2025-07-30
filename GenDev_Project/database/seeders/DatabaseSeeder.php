@@ -37,5 +37,6 @@ class DatabaseSeeder extends Seeder
             ImportDetailSeeder::class,
             PostCategorySeeder::class
         ]);
+        
     }
 }
