@@ -111,7 +111,7 @@ Route::get('/track-order', function () {
 // Lấy danh sách role name admin từ DB
 $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
 Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->group(function () {
-    Route::view('/', 'admin.index')->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
     // Sản phẩm
     Route::middleware(['permission:manage products'])->group(function () {
         Route::resource('/products', ProductController::class);
