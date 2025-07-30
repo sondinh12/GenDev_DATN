@@ -47,7 +47,6 @@
                         'completed' => 'success',
                         'cancelled' => 'danger',
                         'return_requested' => 'warning',
-
                     ];
                     $statusLabels = [
                         'pending' => 'Chờ xử lý',
@@ -57,7 +56,6 @@
                         'completed' => 'Hoàn thành',
                         'cancelled' => 'Đã hủy',
                         'return_requested' => 'Hoàn hàng',
-
                     ];
                     $currentIndex = array_search($order->status, $statusOrder);
                 @endphp
@@ -101,7 +99,6 @@
                 @endif
 
                 {{-- Số tài khoản hoàn tiền nếu applicable --}}
-
                 @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
 
                     @php
@@ -358,7 +355,7 @@
         vertical-align: middle !important;
     }
 </style>
-<script>
+{{-- <script>
     setTimeout(() => {
         const alert = document.querySelector('.alert');
         if (alert) {
@@ -366,4 +363,4 @@
             alert.classList.add('fade');
         }
     }, 5000);
-</script>
+</script> --}}

@@ -10,7 +10,7 @@
             <ul class="left-menu list-unstyled" id="side-menu">
                 {{-- Trang chủ: ai cũng thấy --}}
                 <li>
-                    <a href="{{ url('/admin') }}">
+                    <a href="{{ url('/admin/dashboard') }}">
                         <i class="fas fa-desktop"></i>
                         <span>Trang chủ</span>
                     </a>
@@ -86,7 +86,6 @@
                     </li>
                 @endcan
 
-
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -105,16 +104,21 @@
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
+
+
+
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
                 @can('manage imports')
+
                 <li>
                     <a href="{{ url('/admin/imports') }}" class="">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Hóa đơn</span>
                     </a>
                 <li>
+
                 @endcan
 
                 {{-- Đánh giá --}}

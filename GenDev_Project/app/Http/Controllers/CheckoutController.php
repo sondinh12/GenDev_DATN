@@ -24,6 +24,9 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
+        // Xóa session mã giảm giá khi bắt đầu phiên thanh toán mới
+        session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');
 
@@ -31,6 +34,12 @@ class CheckoutController extends Controller
             parse_str($selectedItemIds, $output);
             $selectedItemIds = $output['selected_items'] ?? [];
         }
+
+        // Kiểm tra nếu danh sách sản phẩm thay đổi, xóa session mã giảm giá
+        if (session()->has('last_selected_items') && session('last_selected_items') !== $selectedItemIds) {
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+        }
+        session()->put('last_selected_items', $selectedItemIds);
 
         $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
@@ -55,23 +64,6 @@ class CheckoutController extends Controller
             ->whereDate('end_date', '>=', now())
             ->get();
 
-        // Kiểm tra lại mã giảm giá trong session
-        if (session()->has('applied_order_coupon')) {
-            $coupon = Coupon::find(session('applied_order_coupon.id'));
-            if ($coupon && ($subtotal < $coupon->min_coupon || ($coupon->max_coupon && $subtotal > $coupon->max_coupon))) {
-                session()->forget('applied_order_coupon');
-                session()->flash('error_order_coupon', 'Mã giảm giá đơn hàng không còn hợp lệ do thay đổi tổng đơn hàng.');
-            }
-        }
-        if (session()->has('applied_shipping_coupon')) {
-            $coupon = Coupon::find(session('applied_shipping_coupon.id'));
-            $shippingFee = $ships->first()->shipping_price ?? 0;
-            if ($coupon && ($shippingFee < $coupon->min_coupon || ($coupon->max_coupon && $shippingFee > $coupon->max_coupon))) {
-                session()->forget('applied_shipping_coupon');
-                session()->flash('error_shipping_coupon', 'Mã giảm giá phí ship không còn hợp lệ do thay đổi phí vận chuyển.');
-            }
-        }
-
         return view('client.checkout.checkout', compact(
             'ships', 'subtotal', 'cartItems', 'selectedItemIds', 'user', 'coupons'
         ));
@@ -92,6 +84,33 @@ class CheckoutController extends Controller
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
         }
+        // $reorderMode = $request->input('reorder_mode', false);
+        // $userId = auth()->id();
+
+        // if ($reorderMode) {
+        //     $rawItems = json_decode($request->input('reorder_cart_items'), true);
+
+        //     if (empty($rawItems)) {
+        //         return back()->with('error', 'Không tìm thấy sản phẩm mua lại.');
+        //     }
+
+        //     $cartItems = $rawItems; // Dùng mảng luôn
+        // } else {
+        //     $selectedItemIds = $request->input('selected_items', []);
+
+        //     if (empty($selectedItemIds)) {
+        //         return back()->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        //     }
+
+        //     $cartItems = Cartdetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
+        //         ->whereIn('id', $selectedItemIds)
+        //         ->get()
+        //         ->toArray();
+
+        //     if (empty($cartItems)) {
+        //         return back()->with('error', 'Không tìm thấy sản phẩm được chọn.');
+        //     }
+        // }
 
         DB::beginTransaction();
 
@@ -254,15 +273,17 @@ class CheckoutController extends Controller
                 }
             }
 
+            // Xóa session mã giảm giá sau khi hoàn tất đơn hàng
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+
             if ($request->payment_method === 'cod') {
-                session()->forget('applied_order_coupon');
-                session()->forget('applied_shipping_coupon');
                 CartDetail::whereIn('id', $selectedItemIds)
                     ->whereHas('cart', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     })
                     ->delete();
             }
+
             DB::commit();
 
             if ($request->payment_method === 'banking') {
@@ -315,4 +336,65 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
+
+    // public function checkoutFromOrder($orderId)
+    // {
+    //     $order = Order::with([
+    //         'orderDetails.product',
+    //         // 'orderDetails.variant.variantAttributes.attribute',
+    //         // 'orderDetails.variant.variantAttributes.value'
+    //         'orderDetails.attributes'
+    //     ])->findOrFail($orderId);
+        
+    //     $selectedItemIds = $order->orderDetails->pluck('id')->toArray();
+    //     $cartItems = [];
+    //     $subtotal = 0;
+
+    //     foreach ($order->orderDetails as $item) {
+    //         $product = $item->product;
+    //         $variant = $item->variant;
+
+    //         $price = $variant
+    //             ? ($variant->sale_price > 0 ? $variant->sale_price : $variant->price)
+    //             : ($product->sale_price > 0 ? $product->sale_price : $product->price);
+
+    //         $subtotal += $price * $item->quantity;
+    //         $coupons = Coupon::all(); 
+    //         $user = auth()->user();
+    //         // $reorderMode = true;
+    //         $originalOrder = $order;
+
+    //         $cartItems[] = [
+    //             'product_id' => $product->id,
+    //             'product' => $product,
+    //             'variant_id' => $variant->id ?? null,
+    //             'variant' => $variant,
+    //             'quantity' => $item->quantity,
+    //             'attributes' => $item->attributes->map(function ($att) {
+    //                 return [
+    //                     'attribute_name' => $att->attribute_name,
+    //                     'value' => $att->attribute_value,
+    //                 ];
+    //             })->toArray(),
+    //         ];
+    //     }
+
+    //     $ships = Ship::all(); // bạn cần load danh sách ship ở đây
+
+    //     return view('client.checkout.checkout', compact(
+    //         'cartItems',
+    //         'subtotal',
+    //         // 'reorderMode',
+    //         'originalOrder',
+    //         'ships',
+    //         'coupons',
+    //         'user',
+    //         'selectedItemIds',
+    //     )) ->with([
+    //     'reorder_mode' => true, // optional flag
+    // ]);;
+    // }
+
+
+
 }

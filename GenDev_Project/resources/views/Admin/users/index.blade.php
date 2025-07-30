@@ -114,7 +114,7 @@
                                                     {{ $label }}
                                                 </span>
                                             </td>
-                                            {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
+                               {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
                                             <td>
                                                 @if ($user->status == 1)
                                                     <span class="badge bg-success">Hoạt động</span>
