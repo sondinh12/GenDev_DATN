@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Support\Carbon;
 
 class OrderSeeder extends Seeder
@@ -14,7 +15,8 @@ class OrderSeeder extends Seeder
             // Order 1: No discounts
             [
                 'user_id' => 1,
-                'coupon_id' => null,
+                'product_coupon_id' => null,
+                'shipping_coupon_id' => null,
                 'shipping_id' => 1,
                 'shipping_fee' => 20000,
                 'name' => 'Nguyễn Văn A',
@@ -37,7 +39,8 @@ class OrderSeeder extends Seeder
             // Order 2: Product discount (GIAM50K)
             [
                 'user_id' => 2,
-                'coupon_id' => 1,
+                'product_coupon_id' => 1,
+                'shipping_coupon_id' => null,
                 'shipping_id' => 2,
                 'shipping_fee' => 30000,
                 'name' => 'Trần Thị B',
@@ -271,6 +274,11 @@ class OrderSeeder extends Seeder
                 'total' => 580000,
                 'status' => 'completed',
                 'payment_status' => 'paid',
+                'subtotal' => 200000,
+                'product_discount' => 0,
+                'shipping_discount' => 20000,
+                'total' => 180000,
+                'status' => 'completed',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

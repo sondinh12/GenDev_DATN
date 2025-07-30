@@ -15,17 +15,13 @@
 <div id="content" class="site-content">
     <div class="col-full">
         <div class="row">
-            <nav class="woocommerce-breadcrumb custom-breadcrumb mb-4">
-    <a href="/" class="breadcrumb-link"></i> Trang chủ</a>
-    <span class="breadcrumb-separator">
-        <i class="fa fa-angle-right"></i>
-    </span>
-    <a href="/cart" class="breadcrumb-link"></i> Giỏ hàng</a>
-    <span class="breadcrumb-separator">
-        <i class="fa fa-angle-right"></i>
-    </span>
-    <span class="breadcrumb-current"></i> Thanh toán</span>
-</nav>
+            <nav class="woocommerce-breadcrumb">
+                <a href="/">Trang chủ</a>
+                <span class="delimiter">
+                    <i class="tm tm-breadcrumbs-arrow-right"></i>
+                </span>
+                Thanh toán
+            </nav>
             <!-- .woocommerce-breadcrumb -->
             <div class="content-area" id="primary">
                 <main class="site-main" id="main">
@@ -436,7 +432,7 @@
                                                 </ul>
                                                 @foreach($ships as $ship)
                                                     <label>
-                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}">
+                                                        <input type="radio" name="ship_id" value="{{ $ship->id }}" class="ship-option" data-price="{{ $ship->shipping_price }}" {{ $loop->first ? 'checked' : '' }}>
                                                         {{ $ship->name }} - {{ number_format($ship->shipping_price) }} VNĐ
                                                     </label><br>
                                                 @endforeach

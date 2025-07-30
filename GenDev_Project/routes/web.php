@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\PaymentController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -23,6 +23,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Client\CartDetailController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
@@ -64,10 +65,6 @@ Route::get('/product', function () {
 })->name('product');
 
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
-
-// Thêm route hiển thị sản phẩm theo danh mục
-Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::class, 'category'])->name('product.category');
-
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
@@ -218,10 +215,11 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
         Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
-});
+
+    });
 
 Route::resource('/product', ClientProductController::class);
-Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
+Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
@@ -231,6 +229,7 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
 });
 
 // ================= TÀI KHOẢN =================
+
 Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -239,9 +238,6 @@ Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
 
-Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
-Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
-Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 Route::get('/profile/change-password', function () {
     return view('auth.passwords.change_password');
 })->middleware('auth')->name('profile.change_password');

@@ -116,7 +116,7 @@
                                     aliquid enim, laborum aliquam. Quod, perferendis unde.
                                 </p>
                                 <div class="mt-3">
-                                    <a href="{{ url('auth-login') }}" class="btn btn-dark btn-wider">Đăng nhập</a>
+                                    <!-- <a href="{{ url('auth-login') }}" class="btn btn-dark btn-wider">Đăng nhập</a> -->
                                 </div>
                             </div>
                             <div class="dropdown-col border-start border-primary border-opacity-50">
