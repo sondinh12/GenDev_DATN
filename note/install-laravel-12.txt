@@ -1,0 +1,9 @@
+1. để khởi taon mã nguồn trong laravel:
+composer create-project "laravel/laravel:^12.0" example-app
+2. cd vào thư mục vừa tạo
+3. sử dụng lệnh php artisan ser/serve để khởi tạo ứng dụng với cổng 8000
+4. nếu không muốn dùng cổng mặc định thì chạy lệnh php artisan ser --post=****
+
+could not find driver (Connection: sqlite, SQL: select * from "sessions" where "id" = 7VeQOWJ6zbs7RnKN24K9egGqxrKJDzeUFh6Ajwm6 limit 1)
+GET 127.0.0.1:8000
+lỗi này thì vào phần .env sửa SESSION_DRIVER=database thành SESSION_DRIVER=file
