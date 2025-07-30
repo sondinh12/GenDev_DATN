@@ -28,6 +28,7 @@ use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use Spatie\Permission\Models\Role;
+
 // ================= TRANG CHÍNH =================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -186,7 +187,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
         Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
     });
-
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
     Route::middleware(['permission:manage imports'])->group(function () {
@@ -200,6 +200,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
         Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
     });
+
     //Nhà cung cấp
     Route::middleware(['permission:manage suppliers'])->group(function () {
         Route::get('/suppliers',[SupplierController::class,'index'])->name('admin.suppliers.index');
