@@ -42,40 +42,38 @@
     </div>
     <br>
 
-    @php
-        $statusVi = [
-            'pending' => 'Chờ xử lý',
-            'processing' => 'Đang xử lý',
-            'shipped' => 'Đang giao hàng',
-            'completed' => 'Hoàn tất',
-            'cancelled' => 'Đã hủy',
-        ][$order->status] ?? ucfirst($order->status);
+   @php
+    $statusVi = [
+        'pending'   => 'Chờ xử lý',
+        'processing'=> 'Đang xử lý',
+        'shipping'  => 'Đang giao hàng',
+        'shipped'   => 'Đã giao',
+        'completed' => 'Hoàn tất',
+        'cancelled' => 'Đã hủy',
+        'return_requested'  => 'Hoàn hàng',
+    ][$order->status] ?? ucfirst($order->status);
 
-        $paymentStatusClass = match($order->payment_status) {
-            'paid' => 'success',
-            'unpaid' => 'warning',
-            'cancelled' => 'danger',
-            default => 'secondary',
-        };
+    $paymentStatusClass = match($order->payment_status) {
+        'paid'     => 'success',
+        'unpaid'   => 'warning',
+        'cancelled'=> 'danger',
+        default    => 'secondary',
+    };
 
-        $paymentStatusText = match($order->payment_status) {
-            'paid' => 'Đã thanh toán',
-            'unpaid' => 'Chưa thanh toán',
-            'cancelled' => 'Đã hủy',
-            default => ucfirst($order->payment_status),
-        };
-    @endphp
+    $paymentStatusText = match($order->payment_status) {
+        'paid'     => 'Đã thanh toán',
+        'unpaid'   => 'Chưa thanh toán',
+        'cancelled'=> 'Đã hủy',
+        default    => ucfirst($order->payment_status),
+    };
+@endphp
+
 
     <h5 class="mb-4">
         Chi tiết đơn hàng #{{ $order->id }} -
         <span class="text-danger text-uppercase">{{ $statusVi }}</span>
     </h5>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
 
     {{-- THÔNG TIN --}}
     <div class="row mb-4">
@@ -142,24 +140,27 @@
         </div>
         @endforeach
 
-        {{-- TỔNG KẾT --}}
-        <div class="text-end mt-4">
-            <div>Tạm tính: <strong>{{ number_format($order->subtotal, 0, ',', '.') }} đ</strong></div>
+      {{-- TỔNG KẾT --}}
+<div class="text-end mt-4">
+    <div>Tạm tính: <strong>{{ number_format($order->subtotal, 0, ',', '.') }} đ</strong></div>
 
-            @if($order->productCoupon)
-                <div>Mã giảm giá sản phẩm: <strong>{{ $order->productCoupon->coupon_code }}</strong></div>
-                <div class="text-success">Giảm sản phẩm: -{{ number_format($order->product_discount, 0, ',', '.') }} đ</div>
-            @endif
+    @if($order->productCoupon)
+        <div>Mã giảm giá sản phẩm: <strong>{{ $order->productCoupon->coupon_code }}</strong></div>
+        <div class="text-success">Giảm sản phẩm: -{{ number_format($order->product_discount, 0, ',', '.') }} đ</div>
+    @endif
+    <div>Phí vận chuyển: <strong>{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</strong></div>
 
-            @if($order->shippingCoupon)
-                <div>Mã giảm giá vận chuyển: <strong>{{ $order->shippingCoupon->coupon_code }}</strong></div>
-                <div class="text-success">Giảm phí vận chuyển: -{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</div>
-            @endif
+    @if($order->shippingCoupon)
+        <div>Mã giảm giá vận chuyển: <strong>{{ $order->shippingCoupon->coupon_code }}</strong></div>
+        <div class="text-success">Giảm phí vận chuyển: -{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</div>
+    @endif
 
-            <div class="fs-5 fw-bold text-danger mt-2">
-                Tổng cộng: {{ number_format($order->total, 0, ',', '.') }} đ
-            </div>
-        </div>
+
+    <div class="fs-5 fw-bold text-danger mt-2">
+        Tổng cộng: {{ number_format($order->total, 0, ',', '.') }} đ
+    </div>
+</div>
+
     </div>
 </div>
 @endsection

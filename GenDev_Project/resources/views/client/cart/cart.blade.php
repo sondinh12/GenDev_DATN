@@ -13,22 +13,6 @@
                     Giỏ hàng
                 </nav>
                 <!-- .woocommerce-breadcrumb -->
-                @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                </div>
-                @endif
-                @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                </div>
-                @endif
-
-                @if(session('warning'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    {{ session('warning') }}
-                </div>
-                @endif
                 <div id="primary" class="content-area">
                     <main id="main" class="site-main">
                         <div class="type-page hentry">
@@ -65,8 +49,8 @@
                                                                     $cartSubtotal += $item->price * $item->quantity;
                                                                 }
                                                             @endphp
-                                                            @if($cart->details->isEmpty())
-                                                            <tr>
+                                                            @if($cart?->details->isEmpty())
+                                                               <tr>
                                                                     <td colspan="6" style="text-align: center; padding: 50px;">
                                                                         <p><strong>Chưa có sản phẩm nào trong giỏ hàng.</strong></p>
                                                                         <a href="{{ route('home') }}" class="button">Mua ngay</a>

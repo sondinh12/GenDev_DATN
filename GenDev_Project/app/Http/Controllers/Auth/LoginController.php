@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class LoginController extends Controller
 {
@@ -39,8 +40,11 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $user = Auth::user();
-        if ($user && $user->hasAnyRole(['admin', 'staff'])) {
-            return '/admin';
+        $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
+        if ($user && $user->hasAnyRole($adminRoles)) {
+
+            return '/admin/dashboard';
+
         }
         return '/';
     }

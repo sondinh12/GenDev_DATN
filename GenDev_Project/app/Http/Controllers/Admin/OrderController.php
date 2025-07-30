@@ -10,10 +10,7 @@ use App\Models\OrderStatusLog;
 
 class OrderController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['role:admin|staff']);
-    }
+    // Bỏ middleware role cứng
 
     public function index(Request $request)
     {

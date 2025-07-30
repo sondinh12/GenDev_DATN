@@ -229,6 +229,7 @@
             @endforeach
         </div>
         <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
+        <a href="{{ route('admin.imports.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>
 @endsection
 

@@ -43,6 +43,7 @@
                                                 <input type="hidden" name="type" value="order">
                                                 <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
                                             </form>
+                                            <span id="order-coupon-status" class="text-danger" style="display:none;"></span>
                                         </p>
                                     @else
                                         <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
@@ -75,6 +76,7 @@
                                                 <input type="hidden" name="type" value="shipping">
                                                 <button type="submit" class="text-danger" style="background:none;border:none;padding:0;">Xóa</button>
                                             </form>
+                                            <span id="shipping-coupon-status" class="text-danger" style="display:none;"></span>
                                         </p>
                                     @else
                                         <form method="post" class="checkout_coupon" action="{{route('apply_coupon')}}">
@@ -137,7 +139,6 @@
                                                                 <div class="text-danger">{{ $message }}</div>
                                                             @enderror
                                                         </p>
-                                                        
                                                         <div class="clear"></div>                      
                                                         <p id="billing_city_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row form-row-wide address-field validate-required">
                                                             <label class="" for="billing_city">Thành phố
@@ -473,36 +474,128 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const subtotal = parseInt(document.getElementById('subtotal').dataset.value);
-    let shipping = parseInt(document.querySelector('.ship-option:checked').dataset.price) || 0;
-    let discount = parseInt(document.getElementById('discount-amount').dataset.value) || 0;
-
-    const totalEl = document.getElementById('total-amount');
+    // Lấy các phần tử DOM và kiểm tra sự tồn tại
+    const subtotalEl = document.getElementById('subtotal');
     const shippingEl = document.getElementById('shipping-fee');
     const discountEl = document.getElementById('discount-amount');
+    const totalEl = document.getElementById('total-amount');
+    const orderCouponStatus = document.getElementById('order-coupon-status');
+    const shippingCouponStatus = document.getElementById('shipping-coupon-status');
 
-    function formatVND(number) {
-        return new Intl.NumberFormat('vi-VN').format(number) + ' VNĐ';
+    // Kiểm tra nếu các phần tử cần thiết không tồn tại
+    if (!subtotalEl || !shippingEl || !discountEl || !totalEl) {
+        console.error('Một hoặc nhiều phần tử DOM không được tìm thấy.');
+        return;
     }
 
+    // Lấy giá trị ban đầu và đảm bảo chúng là số hợp lệ
+    let subtotal = parseInt(subtotalEl.dataset.value) || 0;
+    let shipping = 0;
+    const selectedShipOption = document.querySelector('.ship-option:checked');
+    if (selectedShipOption) {
+        shipping = parseInt(selectedShipOption.dataset.price) || 0;
+    }
+    let discount = parseInt(discountEl.dataset.value) || 0;
+
+    // Hàm định dạng tiền tệ VNĐ
+    function formatVND(number) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+    }
+
+    // Hàm cập nhật tổng giá trị
     function updateTotal() {
-        const total = Math.max(subtotal + shipping - discount, 0);  
+        const total = Math.max(subtotal + shipping - discount, 0);
         totalEl.textContent = formatVND(total);
         shippingEl.textContent = formatVND(shipping);
         discountEl.textContent = formatVND(discount);
+
+        // Cập nhật giá trị shipping_fee cho các input hidden
+        document.querySelectorAll('input[name="shipping_fee"]').forEach(function(input) {
+            input.value = shipping;
+        });
     }
 
+    // Hàm kiểm tra mã giảm giá hợp lệ
+    function checkCouponValidity() {
+        @if(session('applied_order_coupon'))
+            const orderCoupon = {
+                code: '{{ session('applied_order_coupon.code') }}',
+                min_coupon: {{ session('applied_order_coupon.min_coupon') ?? 0 }},
+                max_coupon: {{ session('applied_order_coupon.max_coupon') ?? 'Infinity' }},
+                discount: {{ session('applied_order_coupon.discount') ?? 0 }}
+            };
+
+            if (subtotal < orderCoupon.min_coupon || (orderCoupon.max_coupon !== 'Infinity' && subtotal > orderCoupon.max_coupon)) {
+                if (orderCouponStatus) {
+                    orderCouponStatus.textContent = `Mã ${orderCoupon.code} không hợp lệ do tổng đơn hàng không đáp ứng điều kiện (Min: ${formatVND(orderCoupon.min_coupon)}, Max: ${orderCoupon.max_coupon === 'Infinity' ? 'Không giới hạn' : formatVND(orderCoupon.max_coupon)}).`;
+                    orderCouponStatus.style.display = 'inline';
+                }
+
+                fetch('{{ route('coupon.remove') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: 'type=order'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        discount -= orderCoupon.discount;
+                        updateTotal();
+                    }
+                })
+                .catch(error => console.error('Lỗi khi xóa mã giảm giá đơn hàng:', error));
+            }
+        @endif
+
+        @if(session('applied_shipping_coupon'))
+            const shippingCoupon = {
+                code: '{{ session('applied_shipping_coupon.code') }}',
+                min_coupon: {{ session('applied_shipping_coupon.min_coupon') ?? 0 }},
+                max_coupon: {{ session('applied_shipping_coupon.max_coupon') ?? 'Infinity' }},
+                discount: {{ session('applied_shipping_coupon.discount') ?? 0 }}
+            };
+
+            if (shipping < shippingCoupon.min_coupon || (shippingCoupon.max_coupon !== 'Infinity' && shipping > shippingCoupon.max_coupon)) {
+                if (shippingCouponStatus) {
+                    shippingCouponStatus.textContent = `Mã ${shippingCoupon.code} không hợp lệ do phí vận chuyển không đáp ứng điều kiện (Min: ${formatVND(shippingCoupon.min_coupon)}, Max: ${shippingCoupon.max_coupon === 'Infinity' ? 'Không giới hạn' : formatVND(shippingCoupon.max_coupon)}).`;
+                    shippingCouponStatus.style.display = 'inline';
+                }
+
+                fetch('{{ route('coupon.remove') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: 'type=shipping'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        discount -= shippingCoupon.discount;
+                        updateTotal();
+                    }
+                })
+                .catch(error => console.error('Lỗi khi xóa mã giảm giá vận chuyển:', error));
+            }
+        @endif
+    }
+
+    // Gắn sự kiện cho các radio button vận chuyển
     document.querySelectorAll('.ship-option').forEach(function (radio) {
         radio.addEventListener('change', function () {
             shipping = parseInt(this.dataset.price) || 0;
-            document.querySelectorAll('input[name="shipping_fee"]').forEach(function(input) {
-                input.value = shipping;
-            });
             updateTotal();
+            checkCouponValidity();
         });
     });
 
+    // Cập nhật lần đầu khi tải trang
     updateTotal();
+    checkCouponValidity();
 });
 </script>
 
