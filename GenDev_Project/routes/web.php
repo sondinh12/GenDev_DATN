@@ -110,6 +110,8 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
+//
+
 
 // Lấy danh sách role name admin từ DB
 $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
