@@ -34,7 +34,7 @@ class UpdateCouponRequest extends FormRequest
                     }
                 },
             ],
-                'discount_amount' => [
+            'discount_amount' => [
                 'required',
                 'numeric',
                 'min:1', // Thay min:0.01 bằng min:1 để khớp với step=1
@@ -61,7 +61,6 @@ class UpdateCouponRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $start = Carbon::parse($this->input('start_date'));
                     $end = Carbon::parse($value);
-
                     if ($start->diffInDays($end) > 365) {
                         $fail('Thời hạn mã giảm giá không được vượt quá 1 năm.');
                     }
@@ -69,7 +68,6 @@ class UpdateCouponRequest extends FormRequest
             ],
             'usage_limit' => 'nullable|integer|min:1|max:10000',
             'per_use_limit' => 'nullable|integer|min:1|max:10',
-
             'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
             'max_coupon' => [
                 'nullable',

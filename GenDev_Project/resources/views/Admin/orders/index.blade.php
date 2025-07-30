@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <!-- Thông báo -->
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @elseif(session('error'))
@@ -14,11 +13,13 @@
     @endif
 
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <h5 class="mb-0">Danh sách đơn hàng</h5>
-            <form method="GET" class="d-flex">
-                <input type="text" name="search" class="form-control me-2" placeholder="Tìm kiếm theo tên...">
-                <button class="btn btn-primary">Tìm kiếm</button>
+            <form method="GET" class="d-flex flex-wrap gap-2">
+                <input type="text" name="search" class="form-control" placeholder="Tên hoặc SĐT..." value="{{ request('search') }}">
+                <input type="date" name="from" class="form-control" value="{{ request('from') }}">
+                <input type="date" name="to" class="form-control" value="{{ request('to') }}">
+                <button class="btn btn-primary"><i class="fas fa-search"></i> Lọc</button>
             </form>
         </div>
 
@@ -66,24 +67,28 @@
                         </td>
                         <td>
                             @php
-                                $statusClass = match ($order->status) {
+                                $statusClass = [
                                     'pending' => 'secondary',
                                     'processing' => 'info',
+                                    'shipping' => 'warning',
                                     'shipped' => 'primary',
                                     'completed' => 'success',
                                     'cancelled' => 'danger',
                                     'return_requested' => 'dark'
-                                };
+                                ];
                                 $statusLabel = [
                                     'pending' => 'Chờ xác nhận',
                                     'processing' => 'Đang xử lý',
+                                    'shipping' => 'Đang giao',
                                     'shipped' => 'Đã giao',
                                     'completed' => 'Hoàn thành',
                                     'cancelled' => 'Đã huỷ',
                                     'return_requested' => 'Hoàn hàng'
                                 ];
                             @endphp
-                            <span class="badge bg-{{ $statusClass }}">{{ $statusLabel }}</span>
+                            <span class="badge bg-{{ $statusClass[$order->status] ?? 'secondary' }}">
+                                {{ $statusLabel[$order->status] ?? ucfirst($order->status) }}
+                            </span>
                         </td>
                         <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                         <td>
@@ -102,7 +107,7 @@
         </div>
 
         <div class="card-footer d-flex justify-content-center">
-            {{ $orders->links() }}
+            {{ $orders->withQueryString()->links() }}
         </div>
     </div>
 </div>

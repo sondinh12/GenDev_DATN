@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
+use App\Models\CategoryMini;
 
 class HomeController extends Controller
 {
@@ -14,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -24,7 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = Category::all(); // hoặc whereNull('parent_id') nếu chỉ lấy danh mục cha
-        return view('client.pages.home', compact('categories'));
+        $categoriesMini = CategoryMini::all();
+        dd($categoriesMini); // Thêm dòng này để kiểm tra dữ liệu
+        return view('client.pages.home', compact('categoriesMini'));
     }
 }

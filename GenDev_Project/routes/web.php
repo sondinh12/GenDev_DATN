@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
 session_start();
@@ -10,7 +10,6 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -25,6 +24,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Client\CartDetailController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
@@ -65,10 +65,6 @@ Route::get('/product', function () {
 })->name('product');
 
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
-
-// Thêm route hiển thị sản phẩm theo danh mục
-Route::get('/category/{id}', [App\Http\Controllers\Client\ProductController::class, 'category'])->name('product.category');
-
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 
@@ -114,8 +110,7 @@ Route::get('/track-order', function () {
 // Lấy danh sách role name admin từ DB
 $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
 Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->group(function () {
-    // Route::view('/', 'admin.index')->name('admin.dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
     // Sản phẩm
     Route::middleware(['permission:manage products'])->group(function () {
         Route::resource('/products', ProductController::class);
@@ -159,9 +154,9 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::patch('admin/categories/minis/{id}/restore', [CategoryMiniController::class, 'restore'])->name('categories_mini.restore');
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
-    
+
     // Đánh giá(Reviews)
-    Route::middleware(['auth','check_ban','permission:manage reviews'])->group(function () {
+    Route::middleware(['auth', 'check_ban', 'permission:manage reviews'])->group(function () {
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
         Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
         Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
@@ -229,7 +224,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
 });
 
 Route::resource('/product', ClientProductController::class);
-Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
+Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {
     Route::get('/', [ClientOrderController::class, 'index'])->name('index');
     Route::get('/{order}', [ClientOrderController::class, 'show'])->name('show');
     Route::put('/{order}/cancel', [ClientOrderController::class, 'cancel'])->name('cancel');
@@ -240,6 +235,7 @@ Route::middleware(['auth', 'verified'])->prefix('orders')->name('client.orders.'
 });
 
 // ================= TÀI KHOẢN =================
+
 Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -248,9 +244,6 @@ Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
 
-Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
-Route::put('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
-Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 Route::get('/profile/change-password', function () {
     return view('auth.passwords.change_password');
 })->middleware('auth')->name('profile.change_password');

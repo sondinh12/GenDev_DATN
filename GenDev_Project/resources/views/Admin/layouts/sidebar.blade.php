@@ -86,6 +86,7 @@
                     </li>
                 @endcan
 
+
                 {{-- Danh mục bài viết --}}
                 @can('manage posts')
                 <li>
@@ -104,6 +105,7 @@
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
+                </li>
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
@@ -125,6 +127,7 @@
                         </a>
                     </li>
                 @endcan
+
             </ul>
         </div>
         <!-- Sidebar -->
