@@ -5,13 +5,6 @@
 @section('content')
 <div class="container py-5">
     <h3 class="mb-4"><i class="fa fa-box me-2 text-primary"></i>Đơn hàng của tôi</h3>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
     {{-- Tabs lọc --}}
     <ul class="nav nav-tabs mb-4" role="tablist">
         @php
@@ -111,7 +104,6 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-
             <div class="d-flex gap-2">
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
@@ -142,7 +134,9 @@
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
             @csrf
+
             @method('put')
+
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">

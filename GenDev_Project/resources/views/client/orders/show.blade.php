@@ -34,11 +34,56 @@
 @endpush
 
 @section('content')
-    <div class="container py-4">
-        <div>
-            <a href="{{ route('client.orders.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Quay lại đơn hàng của tôi
-            </a>
+<div class="container py-4">
+    <div>
+        <a href="{{ route('client.orders.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại đơn hàng của tôi
+        </a>
+    </div>
+    <br>
+
+   @php
+    $statusVi = [
+        'pending'   => 'Chờ xử lý',
+        'processing'=> 'Đang xử lý',
+        'shipping'  => 'Đang giao hàng',
+        'shipped'   => 'Đã giao',
+        'completed' => 'Hoàn tất',
+        'cancelled' => 'Đã hủy',
+        'return_requested'  => 'Hoàn hàng',
+    ][$order->status] ?? ucfirst($order->status);
+
+    $paymentStatusClass = match($order->payment_status) {
+        'paid'     => 'success',
+        'unpaid'   => 'warning',
+        'cancelled'=> 'danger',
+        default    => 'secondary',
+    };
+
+    $paymentStatusText = match($order->payment_status) {
+        'paid'     => 'Đã thanh toán',
+        'unpaid'   => 'Chưa thanh toán',
+        'cancelled'=> 'Đã hủy',
+        default    => ucfirst($order->payment_status),
+    };
+@endphp
+
+
+    <h5 class="mb-4">
+        Chi tiết đơn hàng #{{ $order->id }} -
+        <span class="text-danger text-uppercase">{{ $statusVi }}</span>
+    </h5>
+
+
+    {{-- THÔNG TIN --}}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="info-box">
+                <h6 class="fw-bold mb-2">ĐỊA CHỈ NGƯỜI NHẬN</h6>
+                <p class="mb-1">{{ strtoupper($order->name) }}</p>
+                <p class="mb-1">Địa chỉ: {{ $order->address }}, {{ $order->ward }}, {{ $order->city }}</p>
+                <p class="mb-0">Điện thoại: {{ $order->phone }}</p>
+            </div>
         </div>
         <br>
 

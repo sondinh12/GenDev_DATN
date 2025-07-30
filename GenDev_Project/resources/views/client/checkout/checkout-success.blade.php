@@ -3,13 +3,6 @@
 @section('title', 'Thanh toán thành công')
 
 @section('content')
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-        {{ session('success') }}
-    </div>
-@endif
-
-{{-- <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
             <div class="card shadow p-4">
