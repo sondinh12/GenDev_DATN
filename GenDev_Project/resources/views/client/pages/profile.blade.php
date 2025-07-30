@@ -1,12 +1,6 @@
 @extends('client.layout.master')
 
 @section('content')
-@if(session('success'))
-<div class="alert alert-success alert-dismissible fade show position-fixed"
-    style="top: 20px; right: 20px; z-index: 9999;">
-    <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
-</div>
-@endif
 @if($errors->any())
 <div class="alert alert-danger alert-dismissible fade show position-fixed"
     style="top: 70px; right: 20px; z-index: 9999;">

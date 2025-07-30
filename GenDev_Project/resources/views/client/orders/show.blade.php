@@ -74,11 +74,6 @@
         <span class="text-danger text-uppercase">{{ $statusVi }}</span>
     </h5>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
 
     {{-- THÔNG TIN --}}
     <div class="row mb-4">

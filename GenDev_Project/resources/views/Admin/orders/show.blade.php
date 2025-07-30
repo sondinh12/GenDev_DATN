@@ -55,6 +55,7 @@
                         'shipped' => 'Đã giao',
                         'completed' => 'Hoàn thành',
                         'cancelled' => 'Đã hủy',
+
                         'return_requested' => 'Hoàn hàng',
                     ];
                     $currentIndex = array_search($order->status, $statusOrder);

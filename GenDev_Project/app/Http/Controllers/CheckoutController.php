@@ -336,7 +336,6 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
-
     // public function checkoutFromOrder($orderId)
     // {
     //     $order = Order::with([
@@ -394,7 +393,4 @@ class CheckoutController extends Controller
     //     'reorder_mode' => true, // optional flag
     // ]);;
     // }
-
-
-
 }
