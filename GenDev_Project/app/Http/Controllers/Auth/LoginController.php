@@ -30,7 +30,7 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $user = Auth::user();
-        $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
+        $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%nhan vien%')->pluck('name')->toArray();
         if ($user && $user->hasAnyRole($adminRoles)) {
 
             return '/admin/dashboard';
