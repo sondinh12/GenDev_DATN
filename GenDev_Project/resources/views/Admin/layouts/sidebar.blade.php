@@ -1,9 +1,7 @@
 @include('Admin.layouts.head-css')
 <!-- ========== Left Sidebar Start ========== -->
 <div class="sidebar-left">
-
     <div data-simplebar class="h-100">
-
         <!--- Sidebar-menu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
@@ -86,32 +84,28 @@
                     </li>
                 @endcan
 
-
                 {{-- Nhà cung cấp --}}
                 @can('manage suppliers')
-                <li>
-                    <a href="{{ url('/admin/suppliers') }}" class="">
-                        <i class="fa-solid fa-building"></i>
-                        <span>Nhà cung cấp</span>
-                    </a>
-                <li>
-
+                    <li>
+                        <a href="{{ url('/admin/suppliers') }}" class="">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Nhà cung cấp</span>
+                        </a>
+                    </li>
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
                 @can('manage imports')
-
-                <li>
-                    <a href="{{ url('/admin/imports') }}" class="">
-                        <i class="fa-solid fa-receipt"></i>
-                        <span>Hóa đơn</span>
-                    </a>
-                <li>
-
+                    <li>
+                        <a href="{{ url('/admin/imports') }}" class="">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Hóa đơn</span>
+                        </a>
+                    </li>
                 @endcan
 
                 {{-- Đánh giá --}}
-                @can('manage reviews')
+                @can('manage comments')
                     <li>
                         <a href="{{ url('/admin/reviews') }}">
                             <i class="fa-solid fa-tag"></i>
@@ -120,6 +114,13 @@
                     </li>
                 @endcan
 
+                {{-- Quản lý banner --}}
+                <li>
+                    <a href="{{ url('/admin/banner') }}" class="">
+                        <i class="fa-solid fa-images"></i>
+                        <span>Quản lý banner</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

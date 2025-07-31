@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
             ShipSeeder::class,
             CouponSeeder::class,
             OrderSeeder::class,
-            OrderDetailSeeder::class,
             OrderDetailAttributeSeeder::class,
             OrderStatusLogSeeder::class,
             SupplierSeeder::class,
@@ -38,5 +37,6 @@ class DatabaseSeeder extends Seeder
             ImportDetailSeeder::class,
             PostCategorySeeder::class
         ]);
+        
     }
 }

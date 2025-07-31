@@ -128,13 +128,8 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-<<<<<<< HEAD
-             <div class="d-flex gap-2">
-=======
-
 
             <div class="d-flex gap-2">
->>>>>>> c098c0655c901199ed04a5109ac98528f7206974
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại

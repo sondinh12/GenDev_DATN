@@ -4,24 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
 
     use AuthenticatesUsers;
 
@@ -42,9 +32,7 @@ class LoginController extends Controller
         $user = Auth::user();
         $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
         if ($user && $user->hasAnyRole($adminRoles)) {
-
             return '/admin/dashboard';
-
         }
         return '/';
     }
@@ -62,10 +50,9 @@ class LoginController extends Controller
 
     protected function attemptLogin(Request $request)
     {
-        $user = \App\Models\User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if ($user) {
-
             // Chặn đăng nhập nếu user đã bị ban vĩnh viễn (status = 0)
             if ($user->status == 0) {
                 return false;
