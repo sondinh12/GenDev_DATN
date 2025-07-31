@@ -35,7 +35,7 @@
                         </select>
 
                         @if($dtImport->status == 0)
-                            <button type="submit" class="btn btn-light">Cập nhật</button>
+                            <button type="submit" class="btn btn-info">Cập nhật</button>
                         @endif
                     </form>
 
@@ -158,12 +158,45 @@
         </thead>
         <tbody>
             @forelse($logs as $log)
+                @php
+                    $changes = json_decode($log->changes, true);
+                @endphp
                 <tr>
                     <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
                     <td>{{ $log->user->name ?? 'N/A' }}</td>
                     <td>
-                        <pre
-                            style="white-space: pre-wrap">{{ json_encode(json_decode($log->changes, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                        @if(isset($changes['import']))
+                            <strong>Phiếu nhập:</strong>
+                            <ul>
+                                @foreach($changes['import'] as $change)
+                                    <li>
+                                        <strong>{{ ucfirst($change['field']) }}:</strong>
+                                        từ <span class="text-danger">{{ $change['old'] ?? 'null' }}</span>
+                                        thành <span class="text-success">{{ $change['new'] ?? 'null' }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if(isset($changes['details']))
+                            <strong>Chi tiết sản phẩm:</strong>
+                            @foreach($changes['details'] as $detail)
+                                <div class="mb-2">
+                                    <em>ID chi tiết: {{ $detail['id'] }}</em>
+                                    <ul>
+                                        <li>
+                                            @foreach(['field', 'old', 'new'] as $key)
+                                                @continue(!isset($detail[$key]))
+                                            @endforeach
+
+                                            <strong>{{ ucfirst($detail['field']) }}:</strong>
+                                            từ <span class="text-danger">{{ $detail['old'] ?? 'null' }}</span>
+                                            thành <span class="text-success">{{ $detail['new'] ?? 'null' }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endforeach
+                        @endif
                     </td>
                 </tr>
             @empty

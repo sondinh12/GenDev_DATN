@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('old_status');
             $table->string('new_status');
             $table->text('note')->nullable();
+            $table->string('refund_bank_account')->nullable();
             $table->timestamp('changed_at')->useCurrent();
         });
     }

@@ -1,16 +1,14 @@
 @include('Admin.layouts.head-css')
 <!-- ========== Left Sidebar Start ========== -->
 <div class="sidebar-left">
-
     <div data-simplebar class="h-100">
-
         <!--- Sidebar-menu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="left-menu list-unstyled" id="side-menu">
                 {{-- Trang chủ: ai cũng thấy --}}
                 <li>
-                    <a href="{{ url('/admin') }}">
+                    <a href="{{ url('/admin/dashboard') }}">
                         <i class="fas fa-desktop"></i>
                         <span>Trang chủ</span>
                     </a>
@@ -86,25 +84,26 @@
                     </li>
                 @endcan
 
-
-                {{-- Danh mục bài viết --}}
-                @can('manage posts')
-
-                <li>
-                    <a href="{{ url('/admin/suppliers') }}" class="">
-                        <i class="fa-solid fa-building"></i>
-                        <span>Nhà cung cấp</span>
-                    </a>
-                <li>
-
-                <li>
-                    <a href="{{ url('/admin/imports') }}" class="">
-                        <i class="fa-solid fa-receipt"></i>
-                        <span>Hóa đơn</span>
-                    </a>
-                <li>
-                </li>
+                {{-- Nhà cung cấp --}}
+                @can('manage suppliers')
+                    <li>
+                        <a href="{{ url('/admin/suppliers') }}" class="">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Nhà cung cấp</span>
+                        </a>
+                    </li>
                 @endcan
+
+                {{-- Hóa đơn nhập hàng --}}
+                @can('manage imports')
+                    <li>
+                        <a href="{{ url('/admin/imports') }}" class="">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Hóa đơn</span>
+                        </a>
+                    </li>
+                @endcan
+
                 {{-- Đánh giá --}}
                 @can('manage comments')
                     <li>
@@ -114,12 +113,14 @@
                         </a>
                     </li>
                 @endcan
+
+                {{-- Quản lý banner --}}
                 <li>
                     <a href="{{ url('/admin/banner') }}" class="">
-                      <i class="fa-solid fa-images"></i>
+                        <i class="fa-solid fa-images"></i>
                         <span>Quản lý banner</span>
                     </a>
-                <li>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

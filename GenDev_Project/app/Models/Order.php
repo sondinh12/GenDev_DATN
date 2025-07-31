@@ -10,7 +10,8 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
-        'coupon_id',
+        'product_coupon_id',
+        'shipping_coupon_id',
         'shipping_id',
         'shipping_fee',
         'name',
@@ -21,27 +22,36 @@ class Order extends Model
         'ward',
         'postcode',
         'payment',
+        'subtotal',
+        'product_discount',
+        'shipping_discount',
         'total',
         'transaction_code',
         'status',
         'payment_status',
-        'payment_expired_at'
+        'payment_expired_at',
     ];
 
     protected $casts = [
         'payment_expired_at' => 'datetime',
+        'subtotal' => 'float',
+        'product_discount' => 'float',
+        'shipping_discount' => 'float',
+        'total' => 'float',
     ];
 
-    public function user()
+    // Người dùng đặt đơn hàng
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-    // Mã giảm giá cho sản phẩm
-    public function productCoupon(): BelongsTo
-    {
-        return $this->belongsTo(Coupon::class, 'coupon_id');
+        return $this->belongsTo(User::class);
     }
 
+    // Mã giảm giá cho sản phẩm
+    public function productCoupon(): BelongsTo
+
+    {
+        return $this->belongsTo(Coupon::class, 'product_coupon_id');
+    }
 
     // Mã giảm giá cho phí vận chuyển
     public function shippingCoupon(): BelongsTo
@@ -55,16 +65,27 @@ class Order extends Model
     {
         return $this->belongsTo(Ship::class, 'shipping_id');
     }
-
-
     // Danh sách sản phẩm 
     // 'transaction_code',ong đơn hàng
+
     public function orderDetails(): HasMany
     {
-        return $this->hasMany(OrderDetail::class, 'order_id');
+        return $this->hasMany(OrderDetail::class, 'order_id')->with('product');
     }
-    public function orderStatusLogs()
+
+    // Lịch sử thay đổi trạng thái
+    public function orderStatusLogs(): HasMany
     {
         return $this->hasMany(OrderStatusLog::class);
+    }
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+    public function latestRefundLog()
+    {
+        return $this->hasOne(OrderStatusLog::class)
+            ->whereNotNull('refund_bank_account')
+            ->latestOfMany('changed_at'); // ✅ KHÔNG bỏ trống
     }
 }

@@ -11,7 +11,7 @@
 @php
 $route = Route::currentRouteName();
 $bodyClass = match($route) {
-    'home' => 'woocommerce-active page-template-template-homepage-v2',
+    'home' => 'woocommerce-active page-template-template-homepage-v3',
     'blog' => 'right-sidebar blog-list',
     'blog-single' => 'right-sidebar single single-post',
     'shop', 'categories' => 'woocommerce-active left-sidebar',

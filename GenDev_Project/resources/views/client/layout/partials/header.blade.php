@@ -172,16 +172,28 @@
             </div>
             <!-- .departments-menu -->
 
-            <form class="navbar-search" method="get" action="home-v1.html">
+            <form class="navbar-search" method="get" action="{{ route('shop') }}">
                 <label class="sr-only screen-reader-text" for="search">Tìm kiếm:</label>
                 <div class="input-group">
                     <input type="text" id="search" class="form-control search-field product-search-field"
-                        dir="ltr" value="" name="s" placeholder="Tìm kiếm sản phẩm" />
+                        dir="ltr" value="{{ request('search') }}" name="search"
+                        placeholder="Tìm kiếm sản phẩm" />
+                    {{-- <div class="input-group-addon search-categories">
+                        <select name='category' id='category' class='postform resizeselect'>
+                            <option value='0' selected='selected'>Danh sách danh mục</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id }}"
+                                    {{ request('category') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div> --}}
+                    <!-- .input-group-addon -->
                     <div class="input-group-btn">
                         <!-- <input type="hidden" id="search-param" name="post_type" value="product" /> -->
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i>
-                            <span class="search-btn">Tìm kiếm</span>
+                            <span class="search-btn">Search</span>
                         </button>
                     </div>
                     <!-- .input-group-btn -->
@@ -214,6 +226,7 @@
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
+                    <!-- .dropdown-menu-mini-cart -->
                 </li>
             </ul>
             <!-- .site-header-cart -->

@@ -227,12 +227,29 @@
                                                     <span class="review-count">({{ $product->reviews_count ?? 1 }})</span>
                                                 </div>
                                                 <form action="{{ route('cart-detail') }}" method="POST"
-                                                    style="display:inline;">
+                                                    class="mt-3 w-100">
                                                     @csrf
                                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="quantity" value="1">
+
+                                                    @if ($product->variants && $product->variants->count() > 0)
+                                                        @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                            @php
+                                                                $valueId =
+                                                                    $variantAttr->attribute_value_id ??
+                                                                    ($variantAttr->value_id ??
+                                                                        optional($variantAttr->value)->id);
+                                                            @endphp
+                                                            <input type="hidden"
+                                                                name="attribute[{{ $variantAttr->attribute_id }}]"
+                                                                value="{{ $valueId }}">
+                                                        @endforeach
+                                                    @endif
+
                                                     <button type="submit"
-                                                        class="button product_type_simple add_to_cart_button">Thêm vào giỏ
-                                                        hàng</button>
+                                                        class="button product_type_simple add_to_cart_button">
+                                                        Mua ngay
+                                                    </button>
                                                 </form>
                                             </div>
                                         @endforeach
