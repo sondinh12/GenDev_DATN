@@ -1,272 +1,272 @@
 @extends('client.layout.master')
 
 @section('content')
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
-        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('.alert-danger').alert('close');
-        }, 2500);
-    </script>
-@endif
-<div id="content" class="site-content" tabindex="-1">
-    <div class="col-full">
-        <div class="row">
-            <div id="primary" class="content-area">
-                <main id="main" class="site-main">
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show fixed-top m-3 shadow" role="alert" style="z-index: 1050;">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 
-                    <!-- Hero Section với Slider -->
-                    <div class="home-v1-slider home-slider">
-                        <div class="slider-1"
-                            style="background-image: url(assets/images/slider/home-v1-background.jpg);">
-                            <img src="assets/images/slider/home-v1-img-1.png" alt="">
-                            <div class="caption">
-                                <div class="title">Xoay. Nhấn. Mở rộng. Thiết kế mô-đun thông minh giúp thêm bộ nhớ dễ
-                                    dàng cho dữ liệu ngày càng tăng.</div>
-                                <div class="sub-title">Bộ xử lý sáu nhân mạnh mẽ, hiển thị sống động 4K UHD và SSD tốc
-                                    độ cao trong thiết kế hợp kim mềm mại.</div>
-                                <div class="button">Sở hữu ngay
-                                    <i class="tm tm-long-arrow-right"></i>
-                                </div>
-                                <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
-                            </div>
-                        </div>
-                        <!-- .slider-1 -->
-                        <div class="slider-1 slider-2"
-                            style="background-image: url(assets/images/slider/home-v1-background.jpg);">
-                            <img src="assets/images/slider/home-v1-img-2.png" alt="">
-                            <div class="caption">
-                                <div class="title">Món quà công nghệ mới
-                                    <br> bạn đang mong chờ
-                                    <br> có ngay tại đây
-                                </div>
-                                <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng
-                                    <br>gọn gàng trong tay bạn.
-                                </div>
-                                <div class="button">Khám phá ngay
-                                    <i class="tm tm-long-arrow-right"></i>
-                                </div>
-                                <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
-                            </div>
-                        </div>
-                        <!-- .slider-2 -->
-                    </div>
-                    <!-- .home-v1-slider -->
+    <div id="content" class="site-content">
 
-                    <!-- Danh mục nổi bật -->
-                    <section class="section-top-categories section-categories-carousel mb-5" id="categories-carousel-3">
-                        <header class="section-header">
-                            <h2 class="section-title">Danh mục<br>nổi bật<br>tuần này</h2>
-                            <a class="readmore-link" href="{{ route('shop') }}">Xem tất cả</a>
-                        </header>
-                        <div class="product-categories product-categories-carousel" data-ride="tm-slick-carousel"
-                            data-wrap=".products">
-                            <div class="woocommerce columns-7">
-                                <div class="products">
-                                    @foreach($categories as $category)
-                                    <div class="product-category product">
-                                        <a href="{{ route('shop', ['category' => $category->id]) }}">
-                                            <img width="400" height="200" alt="{{ $category->name }}"
-                                                src="{{ asset('storage/' . $category->image) }}">
-                                            <h2 class="woocommerce-loop-category__title">{{ $category->name }}</h2>
-                                        </a>
+        <div class="col-full">
+            <div class="row">
+                <div id="primary" class="content-area">
+                    <main id="main" class="site-main">
+                        <div class="home-v1-slider home-slider">
+                            <div class="slider-1"
+                                style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                <img src="assets/images/slider/home-v1-img-1.png" alt="">
+                                <div class="caption">
+                                    <div class="title">Turn. Click. Expand. Smart modular design simplifies adding storage
+                                        for growing media.</div>
+                                    <div class="sub-title">Powerful Six Core processor, vibrant 4KUHD display output and
+                                        fast SSD elegantly cased in a soft alloy design.</div>
+                                    <div class="button">Get Yours now
+                                        <i class="tm tm-long-arrow-right"></i>
                                     </div>
-                                    @endforeach
+                                    <div class="bottom-caption">Free shipping on US Terority</div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-
-                    <!-- Sản phẩm nổi bật -->
-                    @if($featuredProducts->count() > 0)
-                    <section class="section-featured-products mb-5">
-                        <header class="section-header text-center">
-                            <h2 class="section-title">
-                                <span>🔥<span class="text-gradient">Sản phẩm nổi bật</span></span>
-                                <span class="d-block text-primary mt-1">Khuyến mãi đặc biệt</span>
-                            </h2>
-                        </header>
-                        <div class="product-cards-grid">
-                            <div class="row row-cols-2 row-cols-md-4 g-3">
-                                @foreach($featuredProducts as $product)
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
-                                    @include('client.components.product-card', ['product' => $product])
+                            <!-- .slider-1 -->
+                            <div class="slider-1 slider-2"
+                                style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                <img src="assets/images/slider/home-v1-img-2.png" alt="">
+                                <div class="caption">
+                                    <div class="title">The new-tech gift you
+                                        <br> are wishing for is
+                                        <br> right here
+                                    </div>
+                                    <div class="sub-title">Big screens in incredibly slim designs
+                                        <br>that in your hand.
+                                    </div>
+                                    <div class="button">Browse now
+                                        <i class="tm tm-long-arrow-right"></i>
+                                    </div>
+                                    <div class="bottom-caption">Free shipping on US Terority </div>
                                 </div>
-                                @endforeach
                             </div>
+                            <!-- .slider-2 -->
                         </div>
-                    </section>
-                    @endif
-
-                    <!-- Sản phẩm bán chạy -->
-                    @if($bestSellingProducts->count() > 0)
-                    <section class="section-best-selling mb-5">
-                        <header class="section-header text-center">
-                            <h2 class="section-title">
-                                <span>⭐<span class="text-gradient">Sản phẩm bán chạy</span></span>
-                                <span class="d-block text-primary mt-1">Được yêu thích nhất</span>
-                            </h2>
-                        </header>
-                        <div class="product-cards-grid">
-                            <div class="row row-cols-2 row-cols-md-4 g-3">
-                                @foreach($bestSellingProducts as $product)
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
-                                    @include('client.components.product-card', ['product' => $product])
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </section>
-                    @endif
-
-                    <!-- Sản phẩm mới nhất -->
-                    @if($newProducts->count() > 0)
-                    <section class="section-new-products mb-5">
-                        <header class="section-header text-center">
-                            <h2 class="section-title">
-                                <span>🆕<span class="text-gradient">Sản phẩm mới nhất</span></span>
-                                <span class="d-block text-primary mt-1">Cập nhật hàng ngày</span>
-                            </h2>
-                        </header>
-                        <div class="product-cards-grid">
-                            <div class="row row-cols-2 row-cols-md-4 g-3">
-                                @foreach($newProducts as $product)
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
-                                    @include('client.components.product-card', ['product' => $product])
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </section>
-                    @endif
-
-                    <!-- Sản phẩm theo danh mục -->
-                    <section class="section-3-2-3-product-cards-tabs-with-featured-product stretch-full-width py-4">
-                        <div class="col-full">
-                            <header class="section-header text-center mb-4">
-                                <h2 class="section-title h3 fw-bold">
-                                    <span class="text-gradient">Nhanh tay!</span>
-                                    <span class="d-block text-primary mt-1">Ưu đãi đặc biệt</span>
-                                </h2>
-                                <ul role="tablist" class="nav nav-pills justify-content-center mb-3">
-                                    @foreach($categories as $category)
-                                    <li class="nav-item">
-                                        <a class="nav-link {{ $loop->first ? 'active' : '' }} btn btn-sm btn-outline-primary mx-1 rounded-pill px-3"
-                                            href="#category-{{ $category->id }}" data-toggle="tab">{{ $category->name
-                                            }}</a>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </header>
-                            <div class="tab-content">
-                                @foreach($categories as $category)
-                                <div id="category-{{ $category->id }}"
-                                    class="tab-pane {{ $loop->first ? 'active' : '' }}" role="tabpanel">
-                                    <div class="product-cards-3-2-3-with-featured-product">
-                                        <div class="row row-cols-2 row-cols-md-4 g-3">
-                                            @foreach($categoryProducts[$category->id] as $product)
-                                            <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
-                                                @include('client.components.product-card', ['product' => $product])
-                                            </div>
-                                            @endforeach
+                        <!-- .home-v1-slider -->
+                        <div class="features-list">
+                            <div class="features">
+                                <div class="feature">
+                                    <div class="media">
+                                        <i class="feature-icon d-flex mr-3 tm tm-free-delivery"></i>
+                                        <div class="media-body feature-text">
+                                            <h5 class="mt-0">Free Delivery</h5>
+                                            <span>from $50</span>
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
+                                <!-- .feature -->
+                                <div class="feature">
+                                    <div class="media">
+                                        <i class="feature-icon d-flex mr-3 tm tm-feedback"></i>
+                                        <div class="media-body feature-text">
+                                            <h5 class="mt-0">99% Customer</h5>
+                                            <span>Feedbacks</span>
+                                        </div>
+                                    </div>
+                                    <!-- .media -->
+                                </div>
+                                <!-- .feature -->
+                                <div class="feature">
+                                    <div class="media">
+                                        <i class="feature-icon d-flex mr-3 tm tm-free-return"></i>
+                                        <div class="media-body feature-text">
+                                            <h5 class="mt-0">365 Days</h5>
+                                            <span>for free return</span>
+                                        </div>
+                                    </div>
+                                    <!-- .media -->
+                                </div>
+                                <!-- .feature -->
+                                <div class="feature">
+                                    <div class="media">
+                                        <i class="feature-icon d-flex mr-3 tm tm-safe-payments"></i>
+                                        <div class="media-body feature-text">
+                                            <h5 class="mt-0">Payment</h5>
+                                            <span>Secure System</span>
+                                        </div>
+                                    </div>
+                                    <!-- .media -->
+                                </div>
+                                <!-- .feature -->
+                                <div class="feature">
+                                    <div class="media">
+                                        <i class="feature-icon d-flex mr-3 tm tm-best-brands"></i>
+                                        <div class="media-body feature-text">
+                                            <h5 class="mt-0">Only Best</h5>
+                                            <span>Brands</span>
+                                        </div>
+                                    </div>
+                                    <!-- .media -->
+                                </div>
+                                <!-- .feature -->
                             </div>
+                            <!-- .features -->
                         </div>
-                    </section>
 
-                </main>
+                        <section class="section-top-categories section-categories-carousel" id="categories-carousel-1">
+                            <header class="section-header">
+                                <h2 class="section-title">Danh mục
+                                    <br>sản phẩm
+                                </h2>
+                                <nav class="custom-slick-nav"></nav>
+                                <!-- .custom-slick-nav -->
+                            </header>
+                            <!-- .section-header -->
+                            <div class="product-categories-1 product-categories-carousel" data-ride="tm-slick-carousel"
+                                data-wrap=".products"
+                                data-slick="{&quot;slidesToShow&quot;:5,&quot;slidesToScroll&quot;:1,&quot;dots&quot;:false,&quot;arrows&quot;:true,&quot;prevArrow&quot;:&quot;&lt;a href=\&quot;#\&quot;&gt;&lt;i class=\&quot;tm tm-arrow-left\&quot;&gt;&lt;\/i&gt;&lt;\/a&gt;&quot;,&quot;nextArrow&quot;:&quot;&lt;a href=\&quot;#\&quot;&gt;&lt;i class=\&quot;tm tm-arrow-right\&quot;&gt;&lt;\/i&gt;&lt;\/a&gt;&quot;,&quot;appendArrows&quot;:&quot;#categories-carousel-1 .custom-slick-nav&quot;,&quot;responsive&quot;:[{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesToScroll&quot;:2}},{&quot;breakpoint&quot;:1400,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesToScroll&quot;:4}}]}">
+                                <div class="woocommerce columns-5">
+                                    <div class="products">
+                                        @foreach ($categories as $category)
+                                            <div class="product-category product">
+                                                <a href="#">
+                                                    <img class="category-img" width="224" height="197"
+                                                        object-fit= "cover" border-radius= "12px"
+                                                        box-shadow= "0 2px 8px rgba(0,0,0,0.08)" background= "#f5f5f5"
+                                                        display= "block" margin= "0 auto" alt="{{ $category->name }}"
+                                                        src="{{ Str::startsWith($category->image, ['http://', 'https://'])
+                                                            ? $category->image
+                                                            : (file_exists(public_path($category->image))
+                                                                ? asset($category->image)
+                                                                : asset('storage/' . $category->image)) }}">
+                                                    <h2 class="woocommerce-loop-category__title">
+                                                        {{ $category->name }}
+                                                    </h2>
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <!-- .products -->
+                                </div>
+                                <!-- .woocommerce -->
+                            </div>
+                            <!-- .product-categories-carousel -->
+                        </section>
+
+                        <div class="section-deals-carousel-and-products-carousel-tabs row">
+                            <div id="grid-extended" class="tab-pane" role="tabpanel">
+                                <div class="woocommerce columns-7">
+                                    <h2 class="section-title">Sản phẩm bán chạy nhất</h2>
+                                    <div class="products">
+                                        @foreach ($products as $product)
+                                            <div
+                                                class="product {{ $loop->first ? 'dau-tien' : '' }} {{ $loop->last ? 'cuoi-cung' : '' }}">
+                                                <div class="yith-wcwl-add-to-wishlist">
+                                                    <a href="wishlist.html" rel="nofollow" class="add_to_wishlist">Thêm vào
+                                                        danh sách yêu thích</a>
+                                                </div>
+                                                @php
+                                                    $displayPrice = $product->price;
+                                                    $displaySale = $product->sale_price;
+                                                    if ($product->variants && $product->variants->count()) {
+                                                        $prices = $product->variants->map(function ($v) {
+                                                            return $v->sale_price && $v->sale_price > 0
+                                                                ? $v->sale_price
+                                                                : $v->price;
+                                                        });
+                                                        $displaySale = $prices->min();
+                                                        $displayPrice = $product->variants->min('price');
+                                                    }
+                                                @endphp
+                                                <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link"
+                                                    href="{{ route('product.show', $product->id) }}">
+                                                    <div style="position: relative; display: inline-block;">
+                                                        @if ($displaySale)
+                                                            <span
+                                                                style="position: absolute; top: 8px; left: 8px; background: #e74c3c; color: #fff; font-size: 14px; font-weight: bold; padding: 2px 8px; border-radius: 4px; z-index: 2;">
+                                                                -{{ round((100 * ($displayPrice - $displaySale)) / $displayPrice) }}%
+                                                            </span>
+                                                        @endif
+                                                        <img width="224" height="197" alt="{{ $product->name }}"
+                                                            class="attachment-shop_catalog size-shop_catalog wp-post-image"
+                                                            src="{{ $product->image }}">
+                                                        {{-- <img width="224" height="197" alt="{{ $product->name }}"
+                                                            class="attachment-shop_catalog size-shop_catalog wp-post-image"
+                                                            src="{{ asset('storage/' . $product->image) }}"> --}}
+                                                    </div>
+                                                    <span class="price">
+                                                        @if ($displaySale)
+                                                            <div>
+                                                                <del style="color: #888;">{{ number_format($displayPrice) }}
+                                                                    VNĐ</del>
+                                                            </div>
+                                                            <div>
+                                                                <span class="woocommerce-Price-amount amount"
+                                                                    style="color: #007bff;">
+                                                                    {{ number_format($displaySale) }} VNĐ
+                                                                </span>
+                                                            </div>
+                                                        @else
+                                                            <div>
+                                                                <span class="woocommerce-Price-amount amount"
+                                                                    style="color: #007bff;">
+                                                                    {{ number_format($displayPrice) }} VNĐ
+                                                                </span>
+                                                            </div>
+                                                        @endif
+                                                    </span>
+                                                    <h2 class="woocommerce-loop-product__title">{{ $product->name }}</h2>
+                                                </a>
+                                                <div class="techmarket-product-rating">
+                                                    <div title="Đánh giá {{ $product->rating ?? '5.00' }} trên 5"
+                                                        class="star-rating">
+                                                        <span style="width:{{ ($product->rating ?? 5) * 20 }}%">
+                                                            <strong
+                                                                class="rating">{{ $product->rating ?? '5.00' }}</strong>
+                                                            trên 5</span>
+                                                    </div>
+                                                    <span class="review-count">({{ $product->reviews_count ?? 1 }})</span>
+                                                </div>
+                                                <form action="{{ route('cart-detail') }}" method="POST"
+                                                    class="mt-3 w-100">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="quantity" value="1">
+
+                                                    @if ($product->variants && $product->variants->count() > 0)
+                                                        @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                                            @php
+                                                                $valueId =
+                                                                    $variantAttr->attribute_value_id ??
+                                                                    ($variantAttr->value_id ??
+                                                                        optional($variantAttr->value)->id);
+                                                            @endphp
+                                                            <input type="hidden"
+                                                                name="attribute[{{ $variantAttr->attribute_id }}]"
+                                                                value="{{ $valueId }}">
+                                                        @endforeach
+                                                    @endif
+
+                                                    <button type="submit"
+                                                        class="button product_type_simple add_to_cart_button">
+                                                        Mua ngay
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <!-- .products -->
+                                </div>
+                                <!-- .woocommerce -->
+                            </div>
+                            <!-- .section-products-carousel-tabs -->
+                        </div>
+                    </main>
+                    <!-- #main -->
+                </div>
+                <!-- #primary -->
             </div>
+            <!-- .row -->
         </div>
+        <!-- .col-full -->
     </div>
-</div>
-
-<style>
-    .text-gradient {
-        background: linear-gradient(45deg, #2196F3, #00BCD4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .product-card {
-        transition: box-shadow 0.3s, transform 0.3s;
-        border-radius: 1rem;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-        background: #fff;
-        min-height: 220px;
-        max-width: 100%;
-        width: 100%;
-        position: relative;
-    }
-
-    .product-card:hover {
-        box-shadow: 0 8px 32px rgba(33, 150, 243, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
-        transform: translateY(-6px) scale(1.02);
-        z-index: 2;
-    }
-
-    .product-image-wrapper {
-        background: linear-gradient(135deg, #f8fafc 60%, #e3f2fd 100%);
-        border-radius: 1rem 1rem 0 0;
-        min-height: unset;
-        height: 140px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .product-thumbnail {
-        transition: transform 0.4s cubic-bezier(.4, 2, .6, 1);
-        max-height: 110px;
-    }
-
-    .product-card:hover .product-thumbnail {
-        transform: scale(1.08) rotate(-2deg);
-    }
-
-    .btn-gradient {
-        background: linear-gradient(45deg, #2196F3, #00BCD4);
-        color: #fff;
-        border: none;
-        transition: background 0.3s, box-shadow 0.3s;
-        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
-    }
-
-    .btn-gradient:hover {
-        background: linear-gradient(45deg, #1976D2, #0097A7);
-        color: #fff;
-        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.16);
-    }
-
-    .btn-light.rounded-circle {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: box-shadow 0.2s, transform 0.2s;
-        background: #f8fafc;
-    }
-
-    .btn-light.rounded-circle:hover {
-        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.12);
-        transform: scale(1.12);
-    }
-
-    @media (max-width: 768px) {
-        .product-card {
-            min-height: 180px;
-        }
-
-        .btn-light.rounded-circle {
-            width: 28px;
-            height: 28px;
-        }
-    }
-</style>
-@endsection 
+@endsection

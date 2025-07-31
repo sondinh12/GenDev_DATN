@@ -15,8 +15,9 @@ class CartController extends Controller
     public function index()
     {
         $cart = Cart::with('details.product', 'details.variant.variantAttributes.attribute', 'details.variant.variantAttributes.value')
-            ->where('user_id', Auth::id())
-            ->first();
+        ->firstOrCreate([
+            'user_id' => Auth::id(),
+        ]);
         return view('client.cart.cart', compact('cart'));
     }
 

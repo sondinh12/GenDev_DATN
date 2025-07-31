@@ -65,8 +65,6 @@ class Order extends Model
     {
         return $this->belongsTo(Ship::class, 'shipping_id');
     }
-
-
     // Danh sách sản phẩm 
     // 'transaction_code',ong đơn hàng
 

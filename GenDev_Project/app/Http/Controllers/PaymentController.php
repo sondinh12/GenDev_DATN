@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderConfirmation;
-use App\Models\Cartdetail;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -51,7 +50,6 @@ class PaymentController extends Controller
                     }
                 }
 
-                   
                     $order->update([
                         'status' => 'pending', // đã xác nhận
                         'payment_status' => 'paid' // đã thanh toán
