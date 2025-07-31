@@ -8,7 +8,8 @@
                 <a title="Đảm bảo chất lượng sản phẩm" href="shop.html">Đảm bảo chất lượng sản phẩm</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Chương trình đổi trả nhanh chóng" href="track-your-order.html">Chương trình đổi trả nhanh chóng</a>
+                <a title="Chương trình đổi trả nhanh chóng" href="track-your-order.html">Chương trình đổi trả nhanh
+                    chóng</a>
             </li>
             <li class="menu-item animate-dropdown">
                 <a title="Không phụ phí" href="contact-v2.html">Không phụ phí</a>
@@ -42,7 +43,7 @@
                 <!-- .dropdown-menu -->
             </li>
             <li class="menu-item">
-                @if(Auth::check())
+                @if (Auth::check())
             <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                 <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" href="#">
                     <i class="tm tm-login-register"></i>{{ Auth::user()->name }}
@@ -50,18 +51,25 @@
                 </a>
                 <ul role="menu" class="dropdown-menu">
                     <li class="menu-item animate-dropdown">
-                        @role('admin|staff')
+                        @php
+                            $adminRoles = \Spatie\Permission\Models\Role::where('name', 'like', '%admin%')
+                                ->orWhere('name', 'like', '%nhan vien%')
+                                ->pluck('name')
+                                ->toArray();
+                        @endphp
+                        @if (auth()->check() && auth()->user()->hasAnyRole($adminRoles))
                             <a href="{{ route('admin.dashboard') }}">Quản trị</a>
-                        @endrole
+                        @endif
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="Profile" href="{{ route('profile') }}">Profile</a>
+                        <a title="Profile" href="{{ route('profile') }}">Hồ sơ</a>
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="My Orders" href="{{route('client.orders.index')}}">My Orders</a>
+                        <a title="My Orders" href="{{ route('client.orders.index') }}">Đơn hàng của tôi</a>
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="Logout" href="{{ route('logout') }}" onclick="event.preventDefault();
+                        <a title="Logout" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
                             {{ __('Logout') }}</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -71,7 +79,7 @@
                 </ul>
                 <!-- .dropdown-menu -->
             </li>
-            @else
+        @else
             <a title="Tài khoản của tôi" href="{{ route('login') }}">
                 <i class="tm tm-login-register"></i>Đăng nhập</a>
             @endif

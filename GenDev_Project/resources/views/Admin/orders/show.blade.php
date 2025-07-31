@@ -36,7 +36,9 @@
             </div>
             <div class="card-body">
                 @php
+
                     $statusOrder = ['pending', 'processing', 'shipping', 'shipped', 'completed', 'cancelled', 'return_requested'];
+
                     $statusClass = [
                         'pending' => 'secondary',
                         'processing' => 'info',
@@ -52,7 +54,8 @@
                         'shipping' => 'Đang giao',
                         'shipped' => 'Đã giao',
                         'completed' => 'Hoàn thành',
-                        'cancelled' => 'Hủy',
+                        'cancelled' => 'Đã hủy',
+
                         'return_requested' => 'Hoàn hàng',
                     ];
                     $currentIndex = array_search($order->status, $statusOrder);
@@ -70,7 +73,9 @@
                     {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
                 </span>
 
+
                 @if (!in_array($order->status, ['shipped', 'cancelled', 'completed', 'return_requested']))
+
                     <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
                         @csrf
                         @method('PUT')
@@ -95,19 +100,25 @@
                 @endif
 
                 {{-- Số tài khoản hoàn tiền nếu applicable --}}
-                @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
-                    @php
-                        $refundLog = $order->orderStatusLogs()
-                            ->whereNotNull('refund_bank_account')
-                            ->orderByDesc('changed_at')
-                            ->first();
-                    @endphp
-                    @if($refundLog && $refundLog->refund_bank_account)
-                        <div class="alert alert-info mt-3">
-                            <strong>Số tài khoản hoàn tiền:</strong> {{ $refundLog->refund_bank_account }}
-                        </div>
-                    @endif
-                @endif
+              @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+    @php
+        $refundLog = $order->orderStatusLogs()
+            ->whereNotNull('refund_bank_account')
+            ->orderByDesc('changed_at')
+            ->first();
+    @endphp
+    @if($refundLog && $refundLog->refund_bank_account)
+        <div class="p-3 mt-3 border rounded bg-light">
+            <h6 class="fw-bold mb-1 text-primary">
+                <i class="fas fa-university me-1"></i> Thông tin hoàn tiền
+            </h6>
+            <div class="mb-0">
+                <strong>Số tài khoản:</strong> {{ $refundLog->refund_bank_account }}
+            </div>
+        </div>
+    @endif
+@endif
+
 
 
                         {{-- Thông tin khách hàng --}}
@@ -350,7 +361,7 @@
         vertical-align: middle !important;
     }
 </style>
-<script>
+{{-- <script>
     setTimeout(() => {
         const alert = document.querySelector('.alert');
         if (alert) {
@@ -358,4 +369,4 @@
             alert.classList.add('fade');
         }
     }, 5000);
-</script>
+</script> --}}

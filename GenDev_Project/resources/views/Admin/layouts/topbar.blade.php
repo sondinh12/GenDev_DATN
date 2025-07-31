@@ -33,7 +33,7 @@
         <!-- Start menu -->
         <div class="d-flex justify-content-between menu-sm px-3 ms-auto">
             <div class="d-flex align-items-center gap-2">
-                <div class="dropdown d-none d-lg-block">
+                {{-- <div class="dropdown d-none d-lg-block">
                     <button type="button" class="btn btn-primary btn-sm fs-14 d-inline" data-bs-toggle="dropdown">
                         Ứng dụng
                         <i class="mdi mdi-chevron-down align-middle"></i>
@@ -172,12 +172,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Start Notification -->
-                <div class="dropdown d-inline-block">
+                {{-- <div class="dropdown d-inline-block">
                     <button type="button" class="btn btn-sm top-icon" id="page-header-notifications-dropdown"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-bell align-middle"></i>
@@ -301,16 +301,16 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- End Notification -->
 
                 <!-- Start Activities -->
-                <div class="d-inline-block activities">
+                {{-- <div class="d-inline-block activities">
                     <button type="button" class="btn btn-sm top-icon" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvas-rightsidabar">
                         <i class="fas fa-table align-middle"></i>
                     </button>
-                </div>
+                </div> --}}
                 <!-- End Activities -->
 
                 <!-- Start Profile -->
@@ -343,9 +343,9 @@
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <div class="grid-nav grid-nav-flush grid-nav-action grid-nav-no-rounded">
+                                 <div class="grid-nav grid-nav-flush grid-nav-action grid-nav-no-rounded">
                                     <div class="grid-nav-row">
-                                        <a href="{{ url('apps-contact') }}" class="grid-nav-item">
+                                        {{-- <a href="{{ url('apps-contact') }}" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-address-card"></i></div>
                                             <span class="grid-nav-content">Hồ sơ</span>
                                         </a>
@@ -356,10 +356,10 @@
                                         <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-clone"></i></div>
                                             <span class="grid-nav-content">Hoạt động</span>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                     <div class="grid-nav-row">
-                                        <a href="#" class="grid-nav-item">
+                                        {{-- <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-calendar-check"></i></div>
                                             <span class="grid-nav-content">Công việc</span>
                                         </a>
@@ -370,9 +370,10 @@
                                         <a href="#" class="grid-nav-item">
                                             <div class="grid-nav-icon"><i class="far fa-bell"></i></div>
                                             <span class="grid-nav-content">Thông báo</span>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </div>
+
                             </div>
                             <div class="card-footer card-footer-bordered rounded-0"><a href="{{ url('/') }}"
                                     class="btn btn-label-danger">Về trang chủ</a></div>

@@ -27,3 +27,5 @@
 php artisan make:controller  TenBangController --resource 
 php artisan storage:link
  chạy lệnh này để load ảnh  
+ git add -f public/storage
+ chạy lệnh này để up ảnh 

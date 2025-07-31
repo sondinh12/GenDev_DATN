@@ -24,6 +24,14 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
+        // Kiểm tra nếu không phải quay lại từ trang checkout, xóa session cũ
+        if (!$request->session()->has('checkout_visited')) {
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+        }
+
+        // Đánh dấu đã ghé thăm trang checkout
+        session()->put('checkout_visited', true);
+
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');
 
@@ -31,6 +39,12 @@ class CheckoutController extends Controller
             parse_str($selectedItemIds, $output);
             $selectedItemIds = $output['selected_items'] ?? [];
         }
+
+        // Kiểm tra nếu danh sách sản phẩm thay đổi, xóa session mã giảm giá
+        if (session()->has('last_selected_items') && session('last_selected_items') !== $selectedItemIds) {
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+        }
+        session()->put('last_selected_items', $selectedItemIds);
 
         $cartItems = CartDetail::with('product', 'variant.variantAttributes.attribute', 'variant.variantAttributes.value')
             ->whereIn('id', $selectedItemIds)
@@ -62,7 +76,6 @@ class CheckoutController extends Controller
 
     public function store(CheckoutRequest $request, VnpayService $vnpayService)
     {
-        // dd($request->all());
         $selectedItemIds = $request->input('selected_items', []);
 
         if (empty($selectedItemIds)) {
@@ -127,22 +140,27 @@ class CheckoutController extends Controller
             $userId = Auth::id();
             if (session()->has('applied_order_coupon')) {
                 $applied = session('applied_order_coupon');
-                $orderDiscount = $applied['discount'];
-                $orderCouponId = $applied['id'];
-                $userIdFromSession = $applied['user_id'];
-                if ($userIdFromSession) {
-                    $coupon = Coupon::find($orderCouponId);
-                    $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
-                    if ($couponUser) {
-                        $currentTimesUsed = $couponUser->pivot->times_used;
-                        $coupon->users()->updateExistingPivot($userIdFromSession, [
-                            'times_used' => $currentTimesUsed + 1
-                        ]);
-                    } else {
-                        $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
+                $coupon = Coupon::find($applied['id']);
+                if ($coupon && $subtotal >= $coupon->min_coupon && (!$coupon->max_coupon || $subtotal <= $coupon->max_coupon)) {
+                    $orderDiscount = $applied['discount'];
+                    $orderCouponId = $applied['id'];
+                    $userIdFromSession = $applied['user_id'];
+                    if ($userIdFromSession) {
+                        $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
+                        if ($couponUser) {
+                            $currentTimesUsed = $couponUser->pivot->times_used;
+                            $coupon->users()->updateExistingPivot($userIdFromSession, [
+                                'times_used' => $currentTimesUsed + 1
+                            ]);
+                        } else {
+                            $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
+                        }
+                        $coupon->decrement('usage_limit');
+                        $coupon->increment('total_used');
                     }
-                    $coupon->decrement('usage_limit');
-                    $coupon->increment('total_used');
+                } else {
+                    session()->forget('applied_order_coupon');
+                    return back()->with('error_order_coupon', 'Mã giảm giá đơn hàng không còn hợp lệ do thay đổi tổng đơn hàng.');
                 }
             }
 
@@ -150,22 +168,27 @@ class CheckoutController extends Controller
             $shippingCouponId = null;
             if (session()->has('applied_shipping_coupon')) {
                 $applied = session('applied_shipping_coupon');
-                $shippingDiscount = $applied['discount'];
-                $shippingCouponId = $applied['id'];
-                $userIdFromSession = $applied['user_id'];
-                if ($userIdFromSession) {
-                    $coupon = Coupon::find($shippingCouponId);
-                    $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
-                    if ($couponUser) {
-                        $currentTimesUsed = $couponUser->pivot->times_used;
-                        $coupon->users()->updateExistingPivot($userIdFromSession, [
-                            'times_used' => $currentTimesUsed + 1
-                        ]);
-                    } else {
-                        $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
+                $coupon = Coupon::find($applied['id']);
+                if ($coupon && $shippingFee >= $coupon->min_coupon && (!$coupon->max_coupon || $shippingFee <= $coupon->max_coupon)) {
+                    $shippingDiscount = $applied['discount'];
+                    $shippingCouponId = $applied['id'];
+                    $userIdFromSession = $applied['user_id'];
+                    if ($userIdFromSession) {
+                        $couponUser = $coupon->users()->where('user_id', $userIdFromSession)->first();
+                        if ($couponUser) {
+                            $currentTimesUsed = $couponUser->pivot->times_used;
+                            $coupon->users()->updateExistingPivot($userIdFromSession, [
+                                'times_used' => $currentTimesUsed + 1
+                            ]);
+                        } else {
+                            $coupon->users()->attach($userIdFromSession, ['times_used' => 1]);
+                        }
+                        $coupon->decrement('usage_limit');
+                        $coupon->increment('total_used');
                     }
-                    $coupon->decrement('usage_limit');
-                    $coupon->increment('total_used');
+                } else {
+                    session()->forget('applied_shipping_coupon');
+                    return back()->with('error_shipping_coupon', 'Mã giảm giá phí ship không còn hợp lệ do thay đổi phí vận chuyển.');
                 }
             }
 
@@ -255,15 +278,17 @@ class CheckoutController extends Controller
                 }
             }
 
+            // Xóa session mã giảm giá sau khi hoàn tất đơn hàng
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+
             if ($request->payment_method === 'cod') {
-                session()->forget('applied_order_coupon');
-                session()->forget('applied_shipping_coupon');
                 CartDetail::whereIn('id', $selectedItemIds)
                     ->whereHas('cart', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     })
                     ->delete();
             }
+
             DB::commit();
 
             if ($request->payment_method === 'banking') {
@@ -316,7 +341,6 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
-
     // public function checkoutFromOrder($orderId)
     // {
     //     $order = Order::with([
@@ -374,8 +398,4 @@ class CheckoutController extends Controller
     //     'reorder_mode' => true, // optional flag
     // ]);;
     // }
-
-
-
-
 }

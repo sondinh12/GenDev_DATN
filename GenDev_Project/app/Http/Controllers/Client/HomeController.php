@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductVariant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\ProductHelper;
@@ -96,12 +95,15 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
+        $products = Product::all();
+
         return view('client.pages.home', compact(
             'categories',
             'featuredProducts',
             'newProducts',
             'categoryProducts',
-            'bestSellingProducts'
+            'bestSellingProducts',
+            'products'
         ));
     }
 

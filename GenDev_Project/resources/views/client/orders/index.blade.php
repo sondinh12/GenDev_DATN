@@ -5,13 +5,6 @@
 @section('content')
 <div class="container py-5">
     <h3 class="mb-4"><i class="fa fa-box me-2 text-primary"></i>Đơn hàng của tôi</h3>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
     {{-- Tabs lọc --}}
     <ul class="nav nav-tabs mb-4" role="tablist">
         @php
@@ -135,7 +128,19 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-                <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+            <div class="d-flex gap-2">
+                    {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
+                        <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-redo-alt me-1"></i> Mua lại
+                        </a>
+                    @endif --}}
+                    @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
+                        <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
+                        </a>
+                    @endif
+                    <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                </div>
             </div>
         </div>
         @endforeach

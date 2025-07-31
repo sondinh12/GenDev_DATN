@@ -6,27 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
 
-            // -1 là không giới hạn người dùng, 0 là không ai được dùng
+            // -1: toàn bộ hệ thống, 0: mã tri ân
             $table->integer('user_id')->default(-1);
             $table->string("name", 255);
-            
-            // sửa lại coupon_code nullable vì type shipping không dùng
-            $table->string("coupon_code", 20)->nullable()->unique();
-            
+
+            // chỉ còn coupon_code, không cần shipping_code
+            $table->string("coupon_code", 20)->unique();
+
             $table->enum('type', ['order', 'shipping'])->default('order');
             $table->enum('discount_type', ['percent', 'fixed']);
-            
-            // shipping_code đã nullable đúng rồi, giữ nguyên
-            $table->string('shipping_code', 50)->nullable();
-            
+
             $table->decimal('discount_amount', 10, 2);
             $table->dateTime("start_date");
             $table->dateTime("end_date");
@@ -41,9 +35,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('coupons');

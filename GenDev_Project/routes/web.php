@@ -1,16 +1,15 @@
 <?php
-
-
-use App\Http\Controllers\Admin\ImportController;
-use App\Http\Controllers\Admin\SupplierController;
-
 session_start();
 
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ImportController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -28,6 +27,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\RoleController;
+use Spatie\Permission\Models\Role;
 
 // ================= TRANG CHÍNH =================
 
@@ -72,8 +73,14 @@ Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.submit');
     Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpay_return');
+    //mua tiếp nếu trong thời gian còn mã
     Route::get('/order/retry/{orderId}', [CheckoutController::class, 'retryPayment'])->name('order.retry');
+    // mua lại
+    // Route::get('/reorder/{orderId}', [CheckoutController::class, 'checkoutFromOrder'])->name('checkout.reorder');
 });
+
+
+
 Route::get('/checkout-success', function () {
     return view('client.checkout.checkout-success');
 })->name('checkout.success');
@@ -86,12 +93,10 @@ Route::post('/coupon/remove', [CouponController::class, 'remove'])->name('coupon
 // Hành động trang cart
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::match(['post', 'put'], '/handleaction', [CartDetailController::class, 'handleAction'])->name('cart.handleaction');
-
-
-    Route::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
-    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail')->middleware('auth');
-    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update')->middleware('auth');
-    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy')->middleware('auth');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart-detail', [CartDetailController::class, 'store'])->name('cart-detail');
+    Route::put('/cart-detail/update', [CartDetailController::class, 'update'])->name('update');
+    Route::delete('/cart-detail/delete/{id}', [CartDetailController::class, 'destroy'])->name('destroy');
 });
 
 Route::get('/order', function () {
@@ -102,14 +107,22 @@ Route::get('/track-order', function () {
 })->name('track-order');
 
 // ================= ADMIN =================
+//
 
-Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
-    Route::view('/', 'admin.index')->name('admin.dashboard');
+
+// Lấy danh sách role name admin từ DB
+$adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%nhan vien%')->pluck('name')->toArray();
+Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
     // Sản phẩm
-    Route::middleware(['permission:manage products'])->group(function () {
+    Route::middleware(['permission:Quản lý sản phẩm'])->group(function () {
         Route::resource('/products', ProductController::class);
         Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+        Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
+    });
+    Route::middleware(['permission:Quản lý thuộc tính'])->group(function () {
         Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
         Route::get('/attributes/create', [ProductController::class, 'createAttribute'])->name('admin.attributes.create');
         Route::post('/attributes', [ProductController::class, 'storeAttribute'])->name('admin.attributes.store');
@@ -122,18 +135,16 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::delete('/attribute-values/{id}', [ProductController::class, 'destroyAttributeValue'])->name('admin.attribute_values.destroy');
         Route::get('/attributes/trash', [ProductController::class, 'trashList'])->name('admin.attributes.trashList');
         Route::delete('/attributes/force-delete/{id}', [ProductController::class, 'forceDeleteAttribute'])->name('admin.attributes.forceDelete');
-        Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
     });
-
     // Đơn hàng
-    Route::middleware(['permission:manage orders'])->group(function () {
+    Route::middleware(['permission:Quản lý đơn hàng'])->group(function () {
         Route::resource('/orders', OrderController::class);
         Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
         Route::put('orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.update-payment-status');
     });
 
     // Danh mục
-    Route::middleware(['permission:manage categories'])->group(function () {
+    Route::middleware(['permission:Quản lý danh mục'])->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::get('admin/categories/trash', [CategoryController::class, 'trash_Category'])->name('categories.trash');
         Route::put('admin/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -149,56 +160,60 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::delete('admin/categories/minis/{id}/force-delete', [CategoryMiniController::class, 'forceDelete'])->name('categories_mini.forceDelete');
     });
 
-    // Đánh giá(Reviews)
-    Route::middleware(['auth', 'check_ban', 'permission:manage reviews'])->group(function () {
+    // Bình luận
+    Route::middleware(['auth', 'check_ban', 'permission:Quản lý bình luận'])->group(function () {
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
         Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
         Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
     });
 
-    // Người dùng
-    Route::middleware(['permission:manage users'])->group(function () {
+    // Tài khoản người dùng
+    Route::middleware(['permission:Quản lý tài khoản'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::post('/users/store', [UserController::class, 'store'])->name('admin.users.store');
         Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
         Route::put('/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
         Route::post('/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
+    // Vai trò
+    Route::middleware(['permission:Quản lý vai trò'])->group(function () {
+        Route::resource('roles', RoleController::class);
+    });
+
+
     // Mã giảm giá
-    Route::middleware(['permission:manage coupons'])->group(function () {
+    Route::middleware(['permission:Quản lý mã giảm giá'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
         Route::resource('coupons', CouponsController::class);
         Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
         Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
     });
 
-    // Danh mục bài viết
-    Route::middleware(['permission:manage posts'])->group(function () {
-        Route::get('post-categories/trash', [PostCategoryController::class, 'trash'])->name('post-categories.trash');
-        Route::put('post-categories/{id}/restore', [PostCategoryController::class, 'restore'])->name('post-categories.restore');
-        Route::delete('post-categories/{id}/force-delete', [PostCategoryController::class, 'forceDelete'])->name('post-categories.forceDelete');
-        Route::resource('post-categories', PostCategoryController::class);
+    // quan lý banner
+    Route::middleware(['permission:Quản lý banner'])->group(function () {
+        Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
+        Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
+        Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
+        Route::resource('banner', BannerController::class);
     });
-
-
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
-    // Route::middleware(['permission:manage imports'])->group(function () {
-    Route::get('/imports', [ImportController::class, 'index'])->name('admin.imports.index');
-    Route::get('/imports/show/{id}', [ImportController::class, 'show'])->name('admin.imports.show');
-    Route::get('/imports/create', [ImportController::class, 'create'])->name('admin.imports.create');
-    Route::post('/imports/store', [ImportController::class, 'store'])->name('admin.imports.store');
-    Route::get('/imports/edit/{id}', [ImportController::class, 'edit'])->name('admin.imports.edit');
-    Route::put('/imports/upadte/{id}', [ImportController::class, 'update'])->name('admin.imports.update');
-    Route::post('/imports/updateStatus/{id}', [ImportController::class, 'show'])->name('admin.imports.updateStatus');
-    Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
-    Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
-
-    // });
-
+    Route::middleware(['permission:Quản lý hóa đơn nhập hàng'])->group(function () {
+        Route::get('/imports', [ImportController::class, 'index'])->name('admin.imports.index');
+        Route::get('/imports/show/{id}', [ImportController::class, 'show'])->name('admin.imports.show');
+        Route::get('/imports/create', [ImportController::class, 'create'])->name('admin.imports.create');
+        Route::post('/imports/store', [ImportController::class, 'store'])->name('admin.imports.store');
+        Route::get('/imports/edit/{id}', [ImportController::class, 'edit'])->name('admin.imports.edit');
+        Route::put('/imports/upadte/{id}', [ImportController::class, 'update'])->name('admin.imports.update');
+        Route::post('/imports/updateStatus/{id}', [ImportController::class, 'show'])->name('admin.imports.updateStatus');
+        Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
+        Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
+    });
     //Nhà cung cấp
-    Route::middleware(['permission:manage suppliers'])->group(function () {
+    Route::middleware(['permission:Quản lý nhà cung cấp'])->group(function () {
         Route::get('/suppliers', [SupplierController::class, 'index'])->name('admin.suppliers.index');
         Route::get('/suppliers/show/{id}', [SupplierController::class, 'show'])->name('admin.suppliers.show');
         Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('admin.suppliers.create');
@@ -206,6 +221,9 @@ Route::prefix('/admin')->middleware(['role:admin|staff'])->group(function () {
         Route::get('/suppliers/edit/{id}', [SupplierController::class, 'edit'])->name('admin.suppliers.edit');
         Route::put('/suppliers/upadte/{id}', [SupplierController::class, 'update'])->name('admin.suppliers.update');
         Route::delete('/suppliers/destroy/{id}', [SupplierController::class, 'destroy'])->name('admin.suppliers.destroy');
+        Route::get('admin/imports/trash', [ImportController::class, 'trash'])->name('admin.imports.trash');
+        Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
+        Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
 });
 
@@ -225,6 +243,7 @@ Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::post('/profile/update-avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update_avatar');
 });
 
