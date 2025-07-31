@@ -1,7 +1,6 @@
 <?php
 session_start();
-
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\PaymentController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryMiniController;
 use App\Http\Controllers\Admin\CouponsController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -180,7 +180,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
     Route::middleware(['permission:manage roles'])->group(function () {
         Route::resource('roles', RoleController::class);
     });
-
+    
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
@@ -188,6 +188,13 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('coupons/{id}/restore', [CouponsController::class, 'restore'])->name('coupons.restore');
         Route::delete('coupons/{id}/force-delete', [CouponsController::class, 'forceDelete'])->name('coupons.forceDelete');
     });
+
+      // quan lý banner
+    Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
+    Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
+    Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
+    Route::resource('banner', BannerController::class);
+
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
     Route::middleware(['permission:manage imports'])->group(function () {
