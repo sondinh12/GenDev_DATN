@@ -39,4 +39,4 @@ class CheckUserBanned
         } 
         return $next($request);
     }
-}
+}  

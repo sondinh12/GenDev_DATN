@@ -5,13 +5,6 @@
 @section('content')
 <div class="container py-5">
     <h3 class="mb-4"><i class="fa fa-box me-2 text-primary"></i>Đơn hàng của tôi</h3>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @elseif(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
     {{-- Tabs lọc --}}
     <ul class="nav nav-tabs mb-4" role="tablist">
         @php
@@ -30,19 +23,19 @@
         @foreach($tabs as $key => $label)
         <li class="nav-item" role="presentation">
             <a class="nav-link {{ ($currentStatus === $key || ($key === 'all' && !$currentStatus)) ? 'active' : '' }}"
-                href="{{ route('client.orders.index', $key !== 'all' ? ['status' => $key] : []) }}">
+               href="{{ route('client.orders.index', $key !== 'all' ? ['status' => $key] : []) }}">
                 {{ $label }}
             </a>
         </li>
         @endforeach
     </ul>
 
-    {{-- Helper --}}
     @php
         function getStatusLabel($status) {
             return match($status) {
                 'pending' => 'Chờ xác nhận',
                 'processing' => 'Đang xử lý',
+                'shipping' => 'Đang giao',
                 'shipped' => 'Đã giao',
                 'completed' => 'Hoàn thành',
                 'cancelled' => 'Đã hủy',
@@ -55,23 +48,49 @@
     @if($orders->count())
         @foreach($orders as $order)
         <div class="order-card border rounded p-3 shadow-sm mb-4 bg-white">
-            {{-- Header --}}
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="fw-bold text-muted">#{{ $order->id }} • {{ $order->created_at->format('d/m/Y H:i') }}</div>
-                @php
-                    $statusClass = match($order->status) {
-                        'pending' => 'warning text-dark',
-                        'processing' => 'info',
-                        'shipped' => 'primary',
-                        'completed' => 'success',
-                        'cancelled' => 'danger',
-                        default => 'secondary'
-                    };
-                @endphp
-<span class="order-status {{ $order->status }}">{{ getStatusLabel($order->status) }}</span>
+<div class="order-header-actions">
+    @if($order->status === 'shipping')
+        <button class="btn btn-warning btn-sm text-white fw-bold shadow-sm"
+                onclick="openReturnModal({{ $order->id }}, '{{ $order->payment }}', '{{ $order->payment_status }}')">
+            <i class="fas fa-undo me-1"></i> Hoàn hàng
+        </button>
+    @endif
+
+    @if($order->status === 'pending')
+        @if($order->payment === 'banking' && $order->payment_status === 'paid')
+            <button class="btn btn-danger btn-sm fw-bold shadow-sm"
+                    onclick="openCancelModal({{ $order->id }}, '{{ $order->payment }}', '{{ $order->payment_status }}')">
+                <i class="fas fa-times me-1"></i> Hủy đơn
+            </button>
+        @else
+            <form action="{{ route('client.orders.cancel', $order->id) }}" method="POST"
+                  onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');" class="d-inline-block">
+                @csrf
+                @method('PUT')
+                <button class="btn btn-danger btn-sm fw-bold shadow-sm">
+                    <i class="fas fa-times me-1"></i> Hủy đơn
+                </button>
+            </form>
+        @endif
+    @elseif($order->status === 'shipped')
+        <form action="{{ route('client.orders.complete', $order->id) }}" method="POST"
+              onsubmit="return confirm('Xác nhận đã nhận hàng?');" class="d-inline-block">
+            @csrf
+            @method('PUT')
+            <button class="btn btn-success btn-sm fw-bold shadow-sm">
+                <i class="fas fa-check me-1"></i> Đã nhận hàng
+            </button>
+        </form>
+    @endif
+
+    {{-- Trạng thái hiển thị sau cùng --}}
+    <span class="order-status {{ $order->status }}">{{ getStatusLabel($order->status) }}</span>
+</div>
+
             </div>
 
-            {{-- Sản phẩm (giới hạn 2) --}}
             @foreach($order->orderDetails->take(2) as $detail)
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div class="d-flex">
@@ -94,7 +113,6 @@
             </div>
             @endforeach
 
-            {{-- Nếu còn sản phẩm chưa hiển thị --}}
             @if($order->orderDetails->count() > 2)
             <div class="text-end mb-3">
                 <a href="{{ route('client.orders.show', $order->id) }}" class="text-decoration-none small">
@@ -103,7 +121,6 @@
             </div>
             @endif
 
-            {{-- Tổng tiền + Action --}}
             <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
                 <div class="fw-bold text-muted">
                     Tổng tiền:
@@ -111,8 +128,13 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
+<<<<<<< HEAD
+             <div class="d-flex gap-2">
+=======
+
 
             <div class="d-flex gap-2">
+>>>>>>> c098c0655c901199ed04a5109ac98528f7206974
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại
@@ -142,7 +164,9 @@
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
             @csrf
+
             @method('put')
+
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">
@@ -171,12 +195,8 @@
 
 @push('styles')
 <style>
-.order-card {
-    transition: all 0.2s ease;
-}
-.order-card:hover {
-    box-shadow: 0 0 12px rgba(0,0,0,0.05);
-}
+.order-card { transition: all 0.2s ease; }
+.order-card:hover { box-shadow: 0 0 12px rgba(0,0,0,0.05); }
 .product-image {
     width: 80px;
     height: 80px;
@@ -194,28 +214,83 @@
     min-width: 80px;
     text-transform: uppercase;
 }
-
-.order-status.cancelled {
-    background-color: #eb5757;
-    color: #fff;
-    border: none;
-}
-.order-status.pending {
-    background-color: #f5c542;
-    color: #333;
-}
-.order-status.processing {
-    background-color: #2d9cdb;
-    color: #fff;
-}
-.order-status.shipped {
-    background-color: #9b51e0;
-    color: #fff;
-}
-.order-status.completed {
-    background-color: #27ae60;
-    color: #fff;
+.order-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
+.order-header-actions form,
+.order-header-actions button {
+    margin: 0;
+}
+
+.order-header-actions .btn {
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    padding: 4px 10px;
+}
+
+.order-status {
+    margin-left: 0 !important;
+}
+
+.order-status.cancelled { background-color: #eb5757; color: #fff; }
+.order-status.pending { background-color: #f5c542; color: #333; }
+.order-status.processing { background-color: #2d9cdb; color: #fff; }
+.order-status.shipping { background-color: #ff9800; color: #fff; }
+.order-status.shipped { background-color: #9b51e0; color: #fff; }
+.order-status.completed { background-color: #27ae60; color: #fff; }
+.order-status.return_requested { background-color: #6c757d; color: #fff; }
 </style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function openReturnModal(orderId, paymentMethod, paymentStatus) {
+    document.getElementById('returnOrderId').value = orderId;
+    const bankField = document.getElementById('bankInfo');
+    if (paymentMethod === 'banking' && paymentStatus === 'paid') {
+        bankField.classList.remove('d-none');
+    } else {
+        bankField.classList.add('d-none');
+    }
+    document.getElementById('reason').value = '';
+    const form = document.getElementById('returnForm');
+    form.action = `/orders/${orderId}/return`;
+    const methodInput = form.querySelector('input[name="_method"]');
+    if (methodInput) methodInput.value = 'PUT';
+    else {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = '_method';
+        hidden.value = 'PUT';
+        form.appendChild(hidden);
+    }
+    new bootstrap.Modal(document.getElementById('returnModal')).show();
+}
+
+function openCancelModal(orderId, paymentMethod, paymentStatus) {
+    document.getElementById('returnOrderId').value = orderId;
+    document.getElementById('reason').value = '';
+    const bankField = document.getElementById('bankInfo');
+    bankField.classList.remove('d-none');
+    const form = document.getElementById('returnForm');
+    form.action = `/orders/${orderId}/cancel`;
+    const methodInput = form.querySelector('input[name="_method"]');
+    if (methodInput) methodInput.value = 'PUT';
+    else {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = '_method';
+        hidden.value = 'PUT';
+        form.appendChild(hidden);
+    }
+    new bootstrap.Modal(document.getElementById('returnModal')).show();
+}
+</script>
 @endpush

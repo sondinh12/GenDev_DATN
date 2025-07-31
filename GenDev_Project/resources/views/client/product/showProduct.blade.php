@@ -1,5 +1,7 @@
 @extends('client.layout.master')
 
+
+
 @section('styles')
 <style>
     .gallery-nav-btn {
@@ -103,25 +105,6 @@
 @endsection
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
-        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('.alert-success').alert('close');
-        }, 2500);
-    </script>
-@elseif(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
-        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('.alert-danger').alert('close');
-        }, 5000);
-    </script>
-@endif
 <div id="content" class="site-content py-4" tabindex="-1" style="min-height: 100vh;" data-gallery-images="{{ json_encode($galleryImageUrls) }}">
     <div class="container-fluid px-0">
         <nav class="woocommerce-breadcrumb mb-4 text-center">
@@ -355,7 +338,7 @@
                     <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
                     @endauth
                     <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                    @php $reviews = $product->reviews()->with('user')->latest()->take(5)->get(); @endphp
+                    @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                     <div class="row g-3">
                         @forelse($reviews as $review)
                         <div class="col-12 col-md-6">
@@ -1018,7 +1001,6 @@
 
         $('.btn-qty-plus').on('click', function() {
             var $qtyInput = $('#quantity-input');
-            var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
             var val = parseInt($qtyInput.val()) || 1;
             if (Object.keys(variantMap).length) {
                 if (!allAttrSelected()) {
