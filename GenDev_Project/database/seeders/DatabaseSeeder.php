@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
             AttributeSeeder::class,
             AttributeValueSeeder::class,
             ProductSeeder::class,
-            ProductGallerySeeder::class,
             ProductVariantSeeder::class,
             ProductVariantAttributeSeeder::class,
             RoleAndPermissionSeeder::class,
@@ -38,6 +37,5 @@ class DatabaseSeeder extends Seeder
             ImportDetailSeeder::class,
             PostCategorySeeder::class
         ]);
-        
     }
 }
