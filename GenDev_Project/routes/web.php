@@ -176,11 +176,13 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
     // Vai trò
     Route::middleware(['permission:manage roles'])->group(function () {
         Route::resource('roles', RoleController::class);
     });
     
+
     // Mã giảm giá
     Route::middleware(['permission:manage coupons'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
@@ -208,7 +210,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::delete('/imports/destroy/{id}', [ImportController::class, 'destroy'])->name('admin.imports.destroy');
         Route::get('imports/{id}/export', [ImportController::class, 'export'])->name('admin.imports.export');
     });
-
     //Nhà cung cấp
     Route::middleware(['permission:manage suppliers'])->group(function () {
         Route::get('/suppliers', [SupplierController::class, 'index'])->name('admin.suppliers.index');
