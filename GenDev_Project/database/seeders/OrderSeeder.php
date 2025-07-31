@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Support\Carbon;
 
 class OrderSeeder extends Seeder
@@ -271,6 +272,12 @@ class OrderSeeder extends Seeder
                 'product_discount' => 60000,
                 'shipping_discount' => 0,
                 'total' => 580000,
+                'status' => 'completed',
+                'payment_status' => 'paid',
+                'subtotal' => 200000,
+                'product_discount' => 0,
+                'shipping_discount' => 20000,
+                'total' => 180000,
                 'status' => 'completed',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

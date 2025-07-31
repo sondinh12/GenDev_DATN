@@ -95,7 +95,6 @@
                         <span>Nhà cung cấp</span>
                     </a>
                 <li>
-
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
@@ -119,7 +118,6 @@
                         </a>
                     </li>
                 @endcan
-
             </ul>
         </div>
         <!-- Sidebar -->

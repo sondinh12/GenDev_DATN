@@ -68,27 +68,6 @@
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" href="{{ asset('/shop') }}">Sản phẩm </a>
-
-                            {{-- <ul role="menu" class=" dropdown-menu">
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
-                                </li>
-                            </ul> --}}
-                            <!-- .dropdown-menu -->
-                        </li>
-                        <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
-                            <a title="Pages" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
-                                href="#">Pages <span class="caret"></span></a>
-                            <!-- .dropdown-menu -->
                         </li>
                         <li class="menu-item animate-dropdown">
                             <a title="Tin tức" href="{{ asset('product-category.html') }}">Tin tức</a>
@@ -157,13 +136,49 @@
         </div>
         <!-- .techmarket-sticky-wrap -->
         <div class="row align-items-center">
+            <div id="departments-menu" class="dropdown departments-menu">
+                <button class="btn dropdown-toggle btn-block" type="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="tm tm-departments-thin"></i>
+                    <span>Danh mục sản phẩm </span>
+                </button>
+                <ul id="menu-departments-menu" class="dropdown-menu yamm departments-menu-dropdown">
+                    @foreach($categories as $category)
+                        @if($category->children->count())
+                            <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                <a title="{{ $category->name }}" data-toggle="dropdown" class="dropdown-toggle"
+                                    aria-haspopup="true" href="#">
+                                    {{ $category->name }} <span class="caret"></span>
+                                </a>
+                                <ul role="menu" class="dropdown-menu">
+                                    @foreach($category->children as $child)
+                                        <li class="menu-item animate-dropdown">
+                                            <a title="{{ $child->name }}" href="#">
+                                                {{ $child->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            <li class="menu-item animate-dropdown">
+                                <a title="{{ $category->name }}" href="#">
+                                    {{ $category->name }}
+                                </a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+            <!-- .departments-menu -->
+
             <form class="navbar-search" method="get" action="{{ route('shop') }}">
                 <label class="sr-only screen-reader-text" for="search">Tìm kiếm:</label>
                 <div class="input-group">
                     <input type="text" id="search" class="form-control search-field product-search-field"
                         dir="ltr" value="{{ request('search') }}" name="search"
                         placeholder="Tìm kiếm sản phẩm" />
-                    <div class="input-group-addon search-categories">
+                    {{-- <div class="input-group-addon search-categories">
                         <select name='category' id='category' class='postform resizeselect'>
                             <option value='0' selected='selected'>Danh sách danh mục</option>
                             @foreach ($categories as $cat)
@@ -172,7 +187,7 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <!-- .input-group-addon -->
                     <div class="input-group-btn">
                         <!-- <input type="hidden" id="search-param" name="post_type" value="product" /> -->
@@ -206,7 +221,8 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ asset('cart') }}" class="cart-contents" title="View your shopping cart">
+                    <a href="{{ route('cart') }}" class="cart-contents"
+                        title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
@@ -214,8 +230,8 @@
                 </li>
             </ul>
             <!-- .site-header-cart -->
+            <!-- .site-header-cart -->
         </div>
-        <!-- /.row -->
     </div>
     <!-- .col-full -->
     <div class="col-full handheld-only">
@@ -283,18 +299,18 @@
                                 <i class="tm tm-login-register"></i>
                             </a>
                         </li>
-                        <!-- <li class="wishlist">
+                        <li class="wishlist">
                             <a href="{{ asset('wishlist.html') }}" class="has-icon">
                                 <i class="tm tm-favorites"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li> -->
-                        <!-- <li class="compare">
+                        </li>
+                        <li class="compare">
                             <a href="{{ asset('compare.html') }}" class="has-icon">
                                 <i class="tm tm-compare"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li> -->
+                        </li>
                     </ul>
                     <!-- .columns-3 -->
                 </div>
