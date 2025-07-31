@@ -105,25 +105,6 @@
 @endsection
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
-        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('.alert-success').alert('close');
-        }, 2500);
-    </script>
-@elseif(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow" role="alert" style="z-index:9999; min-width:300px; max-width:90vw;">
-        <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
-    </div>
-    <script>
-        setTimeout(function() {
-            $('.alert-danger').alert('close');
-        }, 5000);
-    </script>
-@endif
 <div id="content" class="site-content py-4" tabindex="-1" style="min-height: 100vh;" data-gallery-images="{{ json_encode($galleryImageUrls) }}">
     <div class="container-fluid px-0">
         <nav class="woocommerce-breadcrumb mb-4 text-center">

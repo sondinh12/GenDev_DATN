@@ -41,7 +41,7 @@ class CheckoutController extends Controller
         }
 
         // Kiểm tra nếu danh sách sản phẩm thay đổi, xóa session mã giảm giá
-        if (session()->has('last_selected_items') && session('last_selected_items') !== $selectedItemIds ) {
+        if (session()->has('last_selected_items') && session('last_selected_items') !== $selectedItemIds) {
             session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
         }
         session()->put('last_selected_items', $selectedItemIds);
@@ -341,7 +341,6 @@ class CheckoutController extends Controller
         $paymentUrl = $vnpayService->buildPaymentUrl($order);
         return redirect($paymentUrl);
     }
-
     // public function checkoutFromOrder($orderId)
     // {
     //     $order = Order::with([
@@ -399,7 +398,4 @@ class CheckoutController extends Controller
     //     'reorder_mode' => true, // optional flag
     // ]);;
     // }
-
-
-
 }
