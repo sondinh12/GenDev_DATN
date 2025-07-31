@@ -91,8 +91,8 @@ class UpdateCouponRequest extends FormRequest
 
     public function messages(): array
     {
-return [
-'name.required' => 'Tên mã giảm giá là bắt buộc.',
+        return [
+            'name.required' => 'Tên mã giảm giá là bắt buộc.',
             'name.max' => 'Tên mã giảm giá không được vượt quá 255 ký tự.',
             'type.required' => 'Loại mã là bắt buộc.',
             'type.in' => 'Loại mã không hợp lệ.',
