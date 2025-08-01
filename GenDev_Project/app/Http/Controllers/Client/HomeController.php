@@ -95,7 +95,7 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        $products = Product::all();
+        $products = Product::all()->where('status',1);
 
         return view('client.pages.home', compact(
             'categories',
