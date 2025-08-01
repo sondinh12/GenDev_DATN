@@ -100,20 +100,25 @@
                 @endif
 
                 {{-- Số tài khoản hoàn tiền nếu applicable --}}
-                @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+              @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+    @php
+        $refundLog = $order->orderStatusLogs()
+            ->whereNotNull('refund_bank_account')
+            ->orderByDesc('changed_at')
+            ->first();
+    @endphp
+    @if($refundLog && $refundLog->refund_bank_account)
+        <div class="p-3 mt-3 border rounded bg-light">
+            <h6 class="fw-bold mb-1 text-primary">
+                <i class="fas fa-university me-1"></i> Thông tin hoàn tiền
+            </h6>
+            <div class="mb-0">
+                <strong>Số tài khoản:</strong> {{ $refundLog->refund_bank_account }}
+            </div>
+        </div>
+    @endif
+@endif
 
-                    @php
-                        $refundLog = $order->orderStatusLogs()
-                            ->whereNotNull('refund_bank_account')
-                            ->orderByDesc('changed_at')
-                            ->first();
-                    @endphp
-                    @if($refundLog && $refundLog->refund_bank_account)
-                        <div class="alert alert-info mt-3">
-                            <strong>Số tài khoản hoàn tiền:</strong> {{ $refundLog->refund_bank_account }}
-                        </div>
-                    @endif
-                @endif
 
 
                         {{-- Thông tin khách hàng --}}

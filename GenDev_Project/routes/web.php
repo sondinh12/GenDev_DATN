@@ -68,7 +68,6 @@ Route::get('/product', function () {
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
