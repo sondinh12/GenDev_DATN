@@ -805,6 +805,7 @@
 
         // Variant price/quantity logic
         var variantMap = @json($variantMap);
+
         function formatPrice(price) {
             if (typeof price === 'number') {
                 return price.toLocaleString('vi-VN') + 'đ';
@@ -845,7 +846,8 @@
                 $qtyInput.prop('disabled', true);
                 $btnMinus.prop('disabled', true);
                 $btnPlus.prop('disabled', true);
-                var min = null, max = null;
+                var min = null,
+                    max = null;
                 Object.values(variantMap).forEach(function(v) {
                     var display = parseInt(v.price);
                     if (min === null || display < min) min = display;
@@ -1005,7 +1007,13 @@
             if (Object.keys(variantMap).length) {
                 if (!allAttrSelected()) {
                     $qtyInput.val(1);
-                    alert('Vui lòng chọn đầy đủ các thuộc tính sản phẩm trước khi thay đổi số lượng.');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh báo!',
+                        text: 'Vui lòng chọn đầy đủ các thuộc tính sản phẩm trước khi thay đổi số lượng.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                     return;
                 }
                 var key = getSelectedKey();
@@ -1014,14 +1022,26 @@
                 if (val < max) {
                     $qtyInput.val(val + 1);
                 } else {
-                    alert('Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                 }
             } else {
                 var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
                 if (val < max) {
                     $qtyInput.val(val + 1);
                 } else {
-                    alert('Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                 }
             }
         });
@@ -1031,6 +1051,14 @@
             var val = parseInt($qtyInput.val()) || 1;
             if (val > 1) {
                 $qtyInput.val(val - 1);
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cảnh báo!',
+                    text: 'Số lượng tối thiểu là 1, không thể giảm thêm.',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
             }
         });
 

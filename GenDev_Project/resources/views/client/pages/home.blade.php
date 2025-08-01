@@ -186,9 +186,10 @@
                                                                 -{{ round((100 * ($displayPrice - $displaySale)) / $displayPrice) }}%
                                                             </span>
                                                         @endif
-                                                        <img width="224" height="197" alt="{{ $product->name }}"
-                                                            class="attachment-shop_catalog size-shop_catalog wp-post-image"
-                                                            src="{{ $product->image }}">
+                                                        <img width="224" height="197"
+                                                            src="{{ asset('storage/' . $product->image) }}"
+                                                            alt="{{ $product->name }}"
+                                                            class="attachment-shop_catalog size-shop_catalog wp-post-image">
                                                         {{-- <img width="224" height="197" alt="{{ $product->name }}"
                                                             class="attachment-shop_catalog size-shop_catalog wp-post-image"
                                                             src="{{ asset('storage/' . $product->image) }}"> --}}
