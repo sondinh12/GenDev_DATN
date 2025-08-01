@@ -398,6 +398,12 @@ class ProductController extends Controller
         return redirect()->route('admin.attributes.index')->with('success', 'Đã khôi phục thuộc tính!');
     }
 
+
+    public function listTrashed()
+    {
+        $products = Product::onlyTrashed()->with(['category', 'categoryMini'])->paginate(5);
+        return view('Admin.products.trash', compact('products'));
+    }
     public function trashList()
     {
         $attributes = Attribute::with('values')->where('status', 2)->get();

@@ -120,7 +120,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::resource('/products', ProductController::class);
         Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
-        Route::get('/products/trash/list', [ProductController::class, 'trashList'])->name('products.trash.list');
+        Route::get('/products/trash/list', [ProductController::class, 'listTrashed'])->name('products.trash.list');
     });
     Route::middleware(['permission:Quản lý thuộc tính'])->group(function () {
         Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
@@ -182,7 +182,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
     Route::middleware(['permission:Quản lý vai trò'])->group(function () {
         Route::resource('roles', RoleController::class);
     });
-
 
     // Mã giảm giá
     Route::middleware(['permission:Quản lý mã giảm giá'])->group(function () {
