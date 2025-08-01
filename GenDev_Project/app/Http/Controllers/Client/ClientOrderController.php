@@ -85,7 +85,7 @@ class ClientOrderController extends Controller
 
         // 6. Cập nhật trạng thái đơn hàng
         $order->status = 'cancelled';
-        $order->payment_status = 'cancelled';
+        // $order->payment_status = 'cancelled';
         $order->save();
 
         // 7. Ghi log trạng thái
