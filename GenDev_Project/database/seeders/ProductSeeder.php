@@ -19,7 +19,7 @@ class ProductSeeder extends Seeder
             // Điện thoại
             [
                 'name' => 'iPhone 15 Pro Max',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-m44io289jumne6.webp',
+                'image' => '/products/iphone_15_pro_max.png',
                 'price' => 30990000,
                 'sale_price' => 28990000,
                 'quantity' => 240,
