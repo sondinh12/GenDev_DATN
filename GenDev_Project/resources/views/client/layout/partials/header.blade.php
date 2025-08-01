@@ -147,13 +147,13 @@
                         @if($category->children->count())
                             <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
                                 <a title="{{ $category->name }}" data-toggle="dropdown" class="dropdown-toggle"
-                                    aria-haspopup="true" href="#">
+                                    aria-haspopup="true" href="{{ route('shop', ['category' => $category->id]) }}">
                                     {{ $category->name }} <span class="caret"></span>
                                 </a>
                                 <ul role="menu" class="dropdown-menu">
                                     @foreach($category->children as $child)
                                         <li class="menu-item animate-dropdown">
-                                            <a title="{{ $child->name }}" href="#">
+                                            <a title="{{ $child->name }}" href="{{ route('shop', ['category_mini' => $child->id]) }}">
                                                 {{ $child->name }}
                                             </a>
                                         </li>
@@ -162,7 +162,7 @@
                             </li>
                         @else
                             <li class="menu-item animate-dropdown">
-                                <a title="{{ $category->name }}" href="#">
+                                <a title="{{ $category->name }}" href="{{ route('shop', ['category' => $category->id]) }}">
                                     {{ $category->name }}
                                 </a>
                             </li>

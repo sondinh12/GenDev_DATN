@@ -128,7 +128,7 @@
                                     <div class="products">
                                         @foreach ($categories as $category)
                                             <div class="product-category product">
-                                                <a href="#">
+                                                <a href="{{ route('shop', ['category' => $category->id]) }}">
                                                     <img class="category-img" width="224" height="197"
                                                         object-fit= "cover" border-radius= "12px"
                                                         box-shadow= "0 2px 8px rgba(0,0,0,0.08)" background= "#f5f5f5"
@@ -186,9 +186,10 @@
                                                                 -{{ round((100 * ($displayPrice - $displaySale)) / $displayPrice) }}%
                                                             </span>
                                                         @endif
-                                                        <img width="224" height="197" alt="{{ $product->name }}"
-                                                            class="attachment-shop_catalog size-shop_catalog wp-post-image"
-                                                            src="{{ $product->image }}">
+                                                        <img width="224" height="197"
+                                                            src="{{ asset('storage/' . $product->image) }}"
+                                                            alt="{{ $product->name }}"
+                                                            class="attachment-shop_catalog size-shop_catalog wp-post-image">
                                                         {{-- <img width="224" height="197" alt="{{ $product->name }}"
                                                             class="attachment-shop_catalog size-shop_catalog wp-post-image"
                                                             src="{{ asset('storage/' . $product->image) }}"> --}}
@@ -245,11 +246,12 @@
                                                                 value="{{ $valueId }}">
                                                         @endforeach
                                                     @endif
-
-                                                    <button type="submit"
-                                                        class="button product_type_simple add_to_cart_button">
-                                                        Mua ngay
-                                                    </button>
+                                                    <div class="d-flex justify-content-center">
+                                                        <button type="submit"
+                                                            class="button product_type_simple add_to_cart_button">
+                                                            Mua ngay
+                                                        </button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         @endforeach

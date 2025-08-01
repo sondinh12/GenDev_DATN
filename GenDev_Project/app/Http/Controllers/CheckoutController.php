@@ -24,8 +24,13 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
-        // Xóa session mã giảm giá khi bắt đầu phiên thanh toán mới
-        session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+        // Kiểm tra nếu không phải quay lại từ trang checkout, xóa session cũ
+        if (!$request->session()->has('checkout_visited')) {
+            session()->forget(['applied_order_coupon', 'applied_shipping_coupon']);
+        }
+
+        // Đánh dấu đã ghé thăm trang checkout
+        session()->put('checkout_visited', true);
 
         $ships = Ship::all();
         $selectedItemIds = $request->input('selected_items');

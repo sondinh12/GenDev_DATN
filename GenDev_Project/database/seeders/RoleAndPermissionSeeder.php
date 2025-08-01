@@ -12,27 +12,26 @@ class RoleAndPermissionSeeder extends Seeder
     {
         // Tạo các role nếu chưa có
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $staffRole = Role::firstOrCreate(['name' => 'staff']);
-        $userRole = Role::firstOrCreate(['name' => 'user']);
+        $staffRole = Role::firstOrCreate(['name' => 'nhân viên']);
+        $userRole = Role::firstOrCreate(['name' => 'người dùng']);
 
         // Các quyền cho từng chức năng
         $permissions = [
             // Staff
-            'manage products',
-            'manage comments',
-            'manage orders',
-            'manage banners',
-            'manage reviews',
+            'Quản lý sản phẩm',
+            'Quản lý bình luận',
+            'Quản lý đơn hàng',
+            'Quản lý banner',
             // Admin
-            'manage posts',
-            'manage categories',
-            'manage coupons',
-            'manage users',
-            'manage reviews',
-            'view statistics',
-            'manage imports',
-            'manage suppliers',
-            'manage roles',
+            'Quản lý người dùng',
+            'Quản lý hóa đơn nhập hàng',
+            'Quản lý danh mục',
+            'Quản lý mã giảm giá',
+            'Quản lý tài khoản',
+            'Quản lý thống kê',
+            'Quản lý thuộc tính',
+            'Quản lý nhà cung cấp',
+            'Quản lý vai trò',
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
@@ -41,11 +40,10 @@ class RoleAndPermissionSeeder extends Seeder
         // Gán permission cho role
         $adminRole->syncPermissions($permissions); // admin có tất cả quyền
         $staffRole->syncPermissions([
-            'manage products',
-            'manage comments',
-            'manage orders',
-            'manage banners',
-            'manage reviews'
+            'Quản lý sản phẩm',
+            'Quản lý bình luận',
+            'Quản lý đơn hàng',
+            'Quản lý banner'
         ]); // staff chỉ có quyền quản lý sản phẩm, bình luận, đơn hàng, banner
         $userRole->syncPermissions([]); // user không có quyền đặc biệt
     }
