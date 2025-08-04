@@ -34,7 +34,7 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
+Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
@@ -68,7 +68,6 @@ Route::get('/product', function () {
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
-
 Route::middleware(['auth', 'check_ban'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'index'])->name('checkout');
