@@ -33,7 +33,7 @@
         @foreach ($roles as $key => $role)
             <tr>
                 <td>{{ ($roles->currentPage() - 1) * $roles->perPage() + $loop->iteration }}</td>
-                <td>{{ $role->name }}</td>
+                <td>{{ ucfirst($role->name) }}</td>
                 <td>
                     @if ($role->permissions->count())
                         <span class="badge bg-info">{{ $role->permissions->count() }} quyền</span>

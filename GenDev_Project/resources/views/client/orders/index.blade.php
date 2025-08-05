@@ -128,13 +128,7 @@
                         {{ number_format($order->total, 0, ',', '.') }} đ
                     </span>
                 </div>
-<<<<<<< HEAD
-             <div class="d-flex gap-2">
-=======
-
-
             <div class="d-flex gap-2">
->>>>>>> c098c0655c901199ed04a5109ac98528f7206974
                     {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
                         <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-redo-alt me-1"></i> Mua lại
@@ -164,9 +158,7 @@
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
             @csrf
-
-            @method('put')
-
+            @method('PUT')
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">

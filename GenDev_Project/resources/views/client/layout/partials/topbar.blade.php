@@ -53,7 +53,7 @@
                     <li class="menu-item animate-dropdown">
                         @php
                             $adminRoles = \Spatie\Permission\Models\Role::where('name', 'like', '%admin%')
-                                ->orWhere('name', 'like', '%staff%')
+                                ->orWhere('name', 'like', '%nhan vien%')
                                 ->pluck('name')
                                 ->toArray();
                         @endphp
@@ -62,10 +62,10 @@
                         @endif
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="Profile" href="{{ route('profile') }}">Profile</a>
+                        <a title="Profile" href="{{ route('profile') }}">Hồ sơ</a>
                     </li>
                     <li class="menu-item animate-dropdown">
-                        <a title="My Orders" href="{{ route('client.orders.index') }}">My Orders</a>
+                        <a title="My Orders" href="{{ route('client.orders.index') }}">Đơn hàng của tôi</a>
                     </li>
                     <li class="menu-item animate-dropdown">
                         <a title="Logout" href="{{ route('logout') }}"

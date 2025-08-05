@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="site-branding">
                     <a href="{{ asset('/') }}" class="custom-logo-link" rel="home">
-                        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28">
+                        {{-- <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28">
                             <defs>
                                 <style>
                                     .cls-1,
@@ -51,7 +51,11 @@
                             <polygon class="cls-1"
                                 points="15.4 27.56 9.53 27.56 9.53 5.57 9.53 0.59 9.53 0.44 24.93 0.44 24.93 5.57 15.4 5.57 15.4 27.56" />
                             <rect class="cls-2" y="0.44" width="7.19" height="5.13" />
-                        </svg>
+                        </svg> --}}
+                        <h1
+                            style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333e48; font-size: 24px;">
+                            Tech<span style="color: #3265b0;">Store</span>
+                        </h1>
                     </a>
                     <!-- /.custom-logo-link -->
                 </div>
@@ -68,27 +72,6 @@
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" href="{{ asset('/shop') }}">Sản phẩm </a>
-
-                            {{-- <ul role="menu" class=" dropdown-menu">
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Wishlist" href="{{ asset('wishlist.html') }}">Danh sách yêu thích</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Add tologout compare" href="{{ asset('compare.html') }}">Thêm để so sánh</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="About Us" href="{{ asset('about.html') }}">Về chúng tôi</a>
-                                </li>
-                                <li class="menu-item animate-dropdown">
-                                    <a title="Track Order" href="{{ asset('track-your-order.html') }}">Theo dõi đơn hàng</a>
-                                </li>
-                            </ul> --}}
-                            <!-- .dropdown-menu -->
-                        </li>
-                        <li class="yamm-fw menu-item menu-item-has-children animate-dropdown dropdown">
-                            <a title="Pages" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
-                                href="#">Pages <span class="caret"></span></a>
-                            <!-- .dropdown-menu -->
                         </li>
                         <li class="menu-item animate-dropdown">
                             <a title="Tin tức" href="{{ asset('product-category.html') }}">Tin tức</a>
@@ -115,8 +98,8 @@
                         </li>
                         <li
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-487 animate-dropdown dropdown">
-                            <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle"
-                                aria-haspopup="true" href="#">
+                            <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
+                                href="#">
                                 <i class="tm tm-dollar"></i>Dollar (US)
                                 <span class="caret"></span>
                             </a>
@@ -157,13 +140,51 @@
         </div>
         <!-- .techmarket-sticky-wrap -->
         <div class="row align-items-center">
+            <div id="departments-menu" class="dropdown departments-menu">
+                <button class="btn dropdown-toggle btn-block" type="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="tm tm-departments-thin"></i>
+                    <span>Danh mục sản phẩm </span>
+                </button>
+                <ul id="menu-departments-menu" class="dropdown-menu yamm departments-menu-dropdown">
+                    @foreach ($categories as $category)
+                        @if ($category->children->count())
+                            <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
+                                <a title="{{ $category->name }}" data-toggle="dropdown" class="dropdown-toggle"
+                                    aria-haspopup="true" href="{{ route('shop', ['category' => $category->id]) }}">
+                                    {{ $category->name }} <span class="caret"></span>
+                                </a>
+                                <ul role="menu" class="dropdown-menu">
+                                    @foreach ($category->children as $child)
+                                        <li class="menu-item animate-dropdown">
+                                            <a title="{{ $child->name }}"
+                                                href="{{ route('shop', ['category_mini' => $child->id]) }}">
+                                                {{ $child->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            <li class="menu-item animate-dropdown">
+                                <a title="{{ $category->name }}"
+                                    href="{{ route('shop', ['category' => $category->id]) }}">
+                                    {{ $category->name }}
+                                </a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+            <!-- .departments-menu -->
+
             <form class="navbar-search" method="get" action="{{ route('shop') }}">
                 <label class="sr-only screen-reader-text" for="search">Tìm kiếm:</label>
                 <div class="input-group">
                     <input type="text" id="search" class="form-control search-field product-search-field"
                         dir="ltr" value="{{ request('search') }}" name="search"
                         placeholder="Tìm kiếm sản phẩm" />
-                    <div class="input-group-addon search-categories">
+                    {{-- <div class="input-group-addon search-categories">
                         <select name='category' id='category' class='postform resizeselect'>
                             <option value='0' selected='selected'>Danh sách danh mục</option>
                             @foreach ($categories as $cat)
@@ -172,7 +193,7 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <!-- .input-group-addon -->
                     <div class="input-group-btn">
                         <!-- <input type="hidden" id="search-param" name="post_type" value="product" /> -->
@@ -206,7 +227,7 @@
             <!-- .header-wishlist -->
             <ul id="site-header-cart" class="site-header-cart menu">
                 <li class="animate-dropdown dropdown ">
-                    <a href="{{ asset('cart') }}" class="cart-contents" title="View your shopping cart">
+                    <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
                         <i class="tm tm-shopping-bag"></i>
                         <span class="count">{{ $cartCount }}</span>
                     </a>
@@ -214,8 +235,8 @@
                 </li>
             </ul>
             <!-- .site-header-cart -->
+            <!-- .site-header-cart -->
         </div>
-        <!-- /.row -->
     </div>
     <!-- .col-full -->
     <div class="col-full handheld-only">
@@ -283,18 +304,18 @@
                                 <i class="tm tm-login-register"></i>
                             </a>
                         </li>
-                        <!-- <li class="wishlist">
+                        <li class="wishlist">
                             <a href="{{ asset('wishlist.html') }}" class="has-icon">
                                 <i class="tm tm-favorites"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li> -->
-                        <!-- <li class="compare">
+                        </li>
+                        <li class="compare">
                             <a href="{{ asset('compare.html') }}" class="has-icon">
                                 <i class="tm tm-compare"></i>
                                 <span class="count">3</span>
                             </a>
-                        </li> -->
+                        </li>
                     </ul>
                     <!-- .columns-3 -->
                 </div>
@@ -839,7 +860,8 @@
                                                                             Speakers</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Home
                                                                             Entertainment Systems</a></li>
-                                                                    <li><a href="{{ asset('shop.html') }}">MP3 & Media
+                                                                    <li><a href="{{ asset('shop.html') }}">MP3 &
+                                                                            Media
                                                                             Players</a></li>
                                                                 </ul>
                                                             </div>
@@ -888,7 +910,8 @@
                                                                     <li><a href="{{ asset('shop.html') }}">Laptops,
                                                                             Desktops &amp; Monitors</a>
                                                                     </li>
-                                                                    <li><a href="{{ asset('shop.html') }}">Pen Drives,
+                                                                    <li><a href="{{ asset('shop.html') }}">Pen
+                                                                            Drives,
                                                                             Hard Drives &amp; Memory
                                                                             Cards</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">Printers
