@@ -16,10 +16,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    // public function index()
-    // {
-    //     return view('client.product.index');
-    // }
     public function show($id)
     {
         $product = Product::with([
@@ -49,15 +45,7 @@ class ProductController extends Controller
             ->limit(8)
             ->get();
 
-        $canReview = false;
-        if (Auth::check()) {
-            $userId = Auth::id();
-            $canReview = \App\Models\OrderDetail::whereHas('order', function ($q) use ($userId) {
-                $q->where('user_id', $userId)
-                    ->where('payment_status', 'paid'); // status: success = đã thanh toán thành công
-            })->where('product_id', $product->id)->exists();
-        }
-        return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
+        return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts'));
     }
 
     public function shop(Request $request)
