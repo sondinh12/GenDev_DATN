@@ -159,9 +159,7 @@
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
             @csrf
-
-            @method('put')
-
+            @method('PUT')
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">

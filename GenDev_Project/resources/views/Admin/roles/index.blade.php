@@ -16,11 +16,11 @@
     </div>
 
 
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div class="alert alert-success" role="alert">
             {{ session('success') }}
         </div>
-    @endif
+    @endif --}}
 
 
     <table class="table table-bordered">
@@ -33,7 +33,7 @@
         @foreach ($roles as $key => $role)
             <tr>
                 <td>{{ ($roles->currentPage() - 1) * $roles->perPage() + $loop->iteration }}</td>
-                <td>{{ $role->name }}</td>
+                <td>{{ ucfirst($role->name) }}</td>
                 <td>
                     @if ($role->permissions->count())
                         <span class="badge bg-info">{{ $role->permissions->count() }} quyền</span>
@@ -68,3 +68,21 @@
     </div>
 
 @endsection
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif

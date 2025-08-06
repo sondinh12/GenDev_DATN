@@ -82,7 +82,7 @@ class RegisterController extends Controller
             'status' => 1,
             'role' => 2,
         ]);
-        $user->assignRole('user');
+        $user->assignRole('người dùng');
         return $user;
     }
 

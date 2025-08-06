@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+
 class LoginController extends Controller
 {
 
@@ -30,11 +31,10 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $user = Auth::user();
-        $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%staff%')->pluck('name')->toArray();
+        $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%nhan vien%')->pluck('name')->toArray();
         if ($user && $user->hasAnyRole($adminRoles)) {
 
             return '/admin/dashboard';
-
         }
         return '/';
     }
@@ -84,5 +84,12 @@ class LoginController extends Controller
             $this->credentials($request),
             $request->filled('remember')
         );
+    }
+    /**
+     * Set flash message after successful login.
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        session()->flash('success', 'Chào mừng bạn trở lại, ' . $user->name . '!');
     }
 }

@@ -6,7 +6,7 @@
    <div class="container-fluid py-4" style="background: #f8fafc;">
     <div class="row justify-content-center">
         {{-- Flash Message --}}
-        @if(session('success'))
+        {{-- @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -21,7 +21,7 @@
                 <i class="fas fa-info-circle me-1"></i> {{ session('notification') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        @endif --}}
     </div>
 
  <div class="col-lg-10">
@@ -100,20 +100,25 @@
                 @endif
 
                 {{-- Số tài khoản hoàn tiền nếu applicable --}}
-                @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+              @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+    @php
+        $refundLog = $order->orderStatusLogs()
+            ->whereNotNull('refund_bank_account')
+            ->orderByDesc('changed_at')
+            ->first();
+    @endphp
+    @if($refundLog && $refundLog->refund_bank_account)
+        <div class="p-3 mt-3 border rounded bg-light">
+            <h6 class="fw-bold mb-1 text-primary">
+                <i class="fas fa-university me-1"></i> Thông tin hoàn tiền
+            </h6>
+            <div class="mb-0">
+                <strong>Số tài khoản:</strong> {{ $refundLog->refund_bank_account }}
+            </div>
+        </div>
+    @endif
+@endif
 
-                    @php
-                        $refundLog = $order->orderStatusLogs()
-                            ->whereNotNull('refund_bank_account')
-                            ->orderByDesc('changed_at')
-                            ->first();
-                    @endphp
-                    @if($refundLog && $refundLog->refund_bank_account)
-                        <div class="alert alert-info mt-3">
-                            <strong>Số tài khoản hoàn tiền:</strong> {{ $refundLog->refund_bank_account }}
-                        </div>
-                    @endif
-                @endif
 
 
                         {{-- Thông tin khách hàng --}}
@@ -365,3 +370,51 @@
         }
     }, 5000);
 </script> --}}
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('notification'))
+    <script>
+        Swal.fire({
+            icon: 'notification',
+            title: 'Thành công!',
+            text: '{{ session('notification') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif

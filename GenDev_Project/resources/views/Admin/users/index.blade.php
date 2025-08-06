@@ -7,13 +7,13 @@
         <div class="row mb-4">
             <div class="col-12">
                 <!-- Flash Message -->
-                @if (session('success'))
+                {{-- @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @elseif(session('error'))
                     <div class="alert alert-danger">{{ session('error') }}</div>
                 @elseif(session('notification'))
                     <div class="alert alert-warning">{{ session('notification') }}</div>
-                @endif
+                @endif --}}
 
                 <div class="card">
                     <div class="card-header bg-white py-3">
@@ -86,8 +86,8 @@
                                                     // Tự động sinh màu cho role nếu không có trường color
                                                     $defaultColors = [
                                                         'admin' => 'success',
-                                                        'staff' => 'primary',
-                                                        'user' => 'secondary',
+                                                        'nhân viên' => 'primary',
+                                                        'người dùng' => 'secondary',
                                                     ];
                                                     $class =
                                                         $roleObj && isset($roleObj->color) && $roleObj->color
@@ -114,7 +114,7 @@
                                                     {{ $label }}
                                                 </span>
                                             </td>
-                               {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
+                                            {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
                                             <td>
                                                 @if ($user->status == 1)
                                                     <span class="badge bg-success">Hoạt động</span>
@@ -341,3 +341,51 @@
         });
     </script>
 @endpush
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('notification'))
+    <script>
+        Swal.fire({
+            icon: 'notification',
+            title: 'Thành công!',
+            text: '{{ session('notification') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif

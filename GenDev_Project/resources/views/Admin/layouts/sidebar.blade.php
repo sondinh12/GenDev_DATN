@@ -15,7 +15,7 @@
                 </li>
 
                 {{-- Danh mục --}}
-                @can('manage categories')
+                @can('Quản lý danh mục')
                     <li>
                         <a href="{{ url('/admin/categories') }}">
                             <i class="fa-solid fa-list"></i>
@@ -25,7 +25,7 @@
                 @endcan
 
                 {{-- Thuộc tính --}}
-                @can('manage products')
+                @can('Quản lý thuộc tính')
                     <li>
                         <a href="{{ url('/admin/attributes') }}">
                             <i class="fa fa-palette"></i>
@@ -35,7 +35,7 @@
                 @endcan
 
                 {{-- Sản phẩm --}}
-                @can('manage products')
+                @can('Quản lý sản phẩm')
                     <li>
                         <a href="{{ url('/admin/products') }}">
                             <i class="fa-solid fa-mobile-screen-button"></i>
@@ -45,7 +45,7 @@
                 @endcan
 
                 {{-- Tài khoản --}}
-                @can('manage users')
+                @can('Quản lý tài khoản')
                     <li>
                         <a href="{{ url('/admin/users') }}">
                             <i class="fa-regular fa-user"></i>
@@ -55,7 +55,7 @@
                 @endcan
 
                 {{-- Vai trò --}}
-                @can('manage roles')
+                @can('Quản lý vai trò')
                     <li>
                         <a href="{{ url('/admin/roles') }}">
                             <i class="fa-solid fa-users"></i>
@@ -65,7 +65,7 @@
                 @endcan
 
                 {{-- Đơn hàng --}}
-                @can('manage orders')
+                @can('Quản lý đơn hàng')
                     <li>
                         <a href="{{ url('/admin/orders') }}">
                             <i class="fas fa-shopping-cart"></i>
@@ -75,7 +75,7 @@
                 @endcan
 
                 {{-- Mã giảm giá --}}
-                @can('manage coupons')
+                @can('Quản lý mã giảm giá')
                     <li>
                         <a href="{{ url('/admin/coupons') }}">
                             <i class="fa-solid fa-tag"></i>
@@ -85,7 +85,7 @@
                 @endcan
 
                 {{-- Nhà cung cấp --}}
-                @can('manage suppliers')
+                @can('Quản lý nhà cung cấp')
                     <li>
                         <a href="{{ url('/admin/suppliers') }}" class="">
                             <i class="fa-solid fa-building"></i>
@@ -95,7 +95,7 @@
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
-                @can('manage imports')
+                @can('Quản lý hóa đơn nhập hàng')
                     <li>
                         <a href="{{ url('/admin/imports') }}" class="">
                             <i class="fa-solid fa-receipt"></i>
@@ -104,23 +104,25 @@
                     </li>
                 @endcan
 
-                {{-- Đánh giá --}}
-                @can('manage comments')
+                {{-- Bình luận --}}
+                @can('Quản lý bình luận')
                     <li>
                         <a href="{{ url('/admin/reviews') }}">
                             <i class="fa-solid fa-tag"></i>
-                            <span>Đánh giá</span>
+                            <span>Bình luận</span>
                         </a>
                     </li>
                 @endcan
 
                 {{-- Quản lý banner --}}
-                <li>
-                    <a href="{{ url('/admin/banner') }}" class="">
-                        <i class="fa-solid fa-images"></i>
-                        <span>Quản lý banner</span>
-                    </a>
-                </li>
+                @can('Quản lý banner')
+                    <li>
+                        <a href="{{ url('/admin/banner') }}" class="">
+                            <i class="fa-solid fa-images"></i>
+                            <span>Quản lý banner</span>
+                        </a>
+                    </li>
+                @endcan
             </ul>
         </div>
         <!-- Sidebar -->
