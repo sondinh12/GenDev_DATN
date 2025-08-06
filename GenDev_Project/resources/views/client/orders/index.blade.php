@@ -10,14 +10,14 @@
         @php
         $currentStatus = request('status');
         $tabs = [
-        'all' => 'Tất cả đơn',
-        'pending' => 'Chờ xác nhận',
-        'processing' => 'Đang xử lý',
-        'return_requested' => 'Đã hoàn',
-        'shipping' => 'Đang giao',
-        'shipped' => 'Đã giao',
-        'completed' => 'Hoàn thành',
-        'cancelled' => 'Đã huỷ',
+            'all' => 'Tất cả đơn',
+            'pending' => 'Chờ xác nhận',
+            'processing' => 'Đang xử lý',
+            'return_requested' => 'Đã hoàn',
+            'shipping' => 'Đang giao',
+            'shipped' => 'Đã giao',
+            'completed' => 'Hoàn thành',
+            'cancelled' => 'Đã huỷ',
         ];
         @endphp
         @foreach($tabs as $key => $label)
@@ -32,16 +32,16 @@
 
     @php
     function getStatusLabel($status) {
-    return match($status) {
-    'pending' => 'Chờ xác nhận',
-    'processing' => 'Đang xử lý',
-    'shipping' => 'Đang giao',
-    'shipped' => 'Đã giao',
-    'completed' => 'Hoàn thành',
-    'cancelled' => 'Đã hủy',
-    'return_requested' => 'Hoàn hàng',
-    default => ucfirst($status),
-    };
+        return match($status) {
+            'pending' => 'Chờ xác nhận',
+            'processing' => 'Đang xử lý',
+            'shipping' => 'Đang giao',
+            'shipped' => 'Đã giao',
+            'completed' => 'Hoàn thành',
+            'cancelled' => 'Đã hủy',
+            'return_requested' => 'Hoàn hàng',
+            default => ucfirst($status),
+        };
     }
     @endphp
 
@@ -120,33 +120,49 @@
         @foreach($uniqueProductIds as $productId)
         @php
         $product = \App\Models\Product::find($productId);
-        $hasReviewed = \App\Models\ProductReview::where('user_id', Auth::id())->where('product_id', $productId)->exists();
+        $hasReviewed = \App\Models\ProductReview::where('user_id', Auth::id())->where('product_id', $productId)->first();
         @endphp
-        @if(!$hasReviewed && $product)
+        @if($product)
         <div class="mb-3">
+            @if($hasReviewed)
+            <div class="review-display mb-2">
+                <strong>Đánh giá của bạn:</strong>
+                <div class="star-rating-display">
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= $hasReviewed->rating ? 'text-warning' : 'text-muted' }}"></i>
+                    @endfor
+                </div>
+                <p class="mt-1"><small>{{ $hasReviewed->comment }}</small></p>
+                <p class="text-muted"><small>Đăng lúc: {{ $hasReviewed->created_at->format('d/m/Y H:i') }}</small></p>
+            </div>
+            @else
             <button type="button" class="btn btn-outline-primary btn-sm toggle-review-form" data-product-id="{{ $productId }}">
                 Đánh giá sản phẩm: {{ $product->name }}
             </button>
 
             <form action="{{ route('product.review.store', $productId) }}" method="POST" class="review-form mt-3 d-none" id="review-form-{{ $productId }}">
                 @csrf
-
                 <div class="mb-3" data-product-id="{{ $productId }}">
-                @for($i=1; $i<=5; $i++)
-                <input type="radio" name="rating-{{ $productId }}" id="rating-{{ $productId }}-{{ $i }}" value="{{ $i }}" class="star-input">
-                <label for="rating-{{ $productId }}-{{ $i }}" class="star-label">
-                    <i class="far fa-star"></i>
-                </label>
-                @endfor
-
-                <div class="mb-3">
-                    <textarea name="comment" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required></textarea>
+                    @for($i = 1; $i <= 5; $i++)
+                        <input type="radio" name="rating" id="rating-{{ $productId }}-{{ $i }}" value="{{ $i }}" class="star-input">
+                        <label for="rating-{{ $productId }}-{{ $i }}" class="star-label">
+                            <i class="fas fa-star"></i>
+                        </label>
+                    @endfor
+                    @error('rating')
+                        <div class="text-danger small">{{ $message }}</div>
+                    @enderror
                 </div>
-
+                <div class="mb-3">
+                    <textarea name="comment" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required>{{ old('comment') }}</textarea>
+                    @error('comment')
+                        <div class="text-danger small">{{ $message }}</div>
+                    @enderror
+                </div>
                 <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá</button>
             </form>
+            @endif
         </div>
-
         @endif
         @endforeach
         @endif
@@ -318,15 +334,29 @@
     }
 
     .star-label {
-        color: #ccc;
         cursor: pointer;
+        color: #ccc;
         transition: color 0.2s ease;
     }
 
-    .star-label.active,
-    .star-label:hover,
-    .star-label:hover ~ .star-label {
+    .star-input:checked ~.star-label {
+        color: #FFC107 !important;
+    }
+
+    .star-label.active {
+        color: #FFC107 !important;
+    }
+
+    .star-rating-display .fas {
+        font-size: 1.2rem;
+    }
+
+    .star-rating-display .text-warning {
         color: #FFC107;
+    }
+
+    .star-rating-display .text-muted {
+        color: #ccc;
     }
 
     .review-form {
@@ -339,6 +369,12 @@
 
     .toggle-review-form {
         margin-top: 10px;
+    }
+
+    .review-display {
+        padding: 10px;
+        background-color: #f1f1f1;
+        border-radius: 5px;
     }
 </style>
 @endpush
@@ -403,36 +439,32 @@
             const $labels = $starRating.find('.star-label');
             const $inputs = $starRating.find('.star-input');
 
-            $labels.on('mouseenter', function() {
-                const index = $labels.index(this);
-                $labels.slice(0, index + 1).addClass('active');
-            });
-
-            $starRating.on('mouseleave', function() {
-                $labels.removeClass('active');
-                const checkedIndex = $inputs.index($inputs.filter(':checked'));
-                if (checkedIndex >= 0) {
-                    $labels.slice(0, checkedIndex + 1).addClass('active');
-                }
-            });
-
             $labels.on('click', function() {
                 const index = $labels.index(this);
-                $inputs.eq(index).prop('checked', true);
+                // Clear previous active stars and checked states
                 $labels.removeClass('active');
-                $labels.slice(0, index + 1).addClass('active');
+                $inputs.prop('checked', false);
+
+                // Set new active stars from left to clicked star
+                for (let i = 0; i <= index; i++) {
+                    $labels.eq(i).addClass('active');
+                    if (i === index) {
+                        $inputs.eq(i).prop('checked', true);
+                    }
+                }
+                console.log('Selected rating:', $inputs.eq(index).val()); // Debug
             });
         });
 
-        // Form submission validation
+        // Form submission validation and success handling
         $('.review-form').on('submit', function(e) {
+            e.preventDefault();
             const $form = $(this);
-            const productId = $form.attr('id').replace('review-form-', '');
-            const rating = $form.find(`input[name="rating-${productId}"]:checked`).val();
+            const productId = $form.data('product-id');
+            const rating = $form.find('input[name="rating"]:checked').val();
             const comment = $form.find('textarea[name="comment"]').val().trim();
 
             if (!rating) {
-                e.preventDefault();
                 Swal.fire({
                     icon: 'warning',
                     title: 'Vui lòng chọn số sao!',
@@ -443,7 +475,6 @@
             }
 
             if (!comment) {
-                e.preventDefault();
                 Swal.fire({
                     icon: 'warning',
                     title: 'Vui lòng viết bình luận!',
@@ -452,6 +483,32 @@
                 });
                 return false;
             }
+
+            // Submit form
+            $.ajax({
+                url: $form.attr('action'),
+                method: 'POST',
+                data: $form.serialize(),
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đánh giá thành công!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Reload page to show the review
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Đã có lỗi xảy ra!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
         });
     });
 </script>
