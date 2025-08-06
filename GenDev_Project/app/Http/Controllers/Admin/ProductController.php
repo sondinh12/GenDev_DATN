@@ -384,6 +384,11 @@ class ProductController extends Controller
     public function trashAttribute($id)
     {
         $attribute = Attribute::findOrFail($id);
+        $isUsed = ProductVariantAttribute::where('attribute_id', $id)->exists();
+        if ($isUsed) {
+            return redirect()->route('admin.attributes.index')
+                ->with('error', 'Không thể đưa thuộc tính vào thùng rác vì đã được sử dụng trong sản phẩm!');
+        }
         $attribute->status = 2; // đánh dấu là đã xóa
         $attribute->save();
 
