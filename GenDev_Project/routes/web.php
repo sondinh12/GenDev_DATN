@@ -121,6 +121,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::get('/products/trash/list', [ProductController::class, 'listTrashed'])->name('products.trash.list');
+        Route::post('/products/{product}/questions', [ProductController::class, 'storeQuestion'])->name('product.question.store');
     });
     Route::middleware(['permission:Quản lý thuộc tính'])->group(function () {
         Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
