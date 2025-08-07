@@ -190,6 +190,9 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
     });
 
       // quan lý banner
+      // Chuyển banner sang trạng thái 'using'
+    Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
+     ->name('banner.use');
     Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
     Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
     Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
