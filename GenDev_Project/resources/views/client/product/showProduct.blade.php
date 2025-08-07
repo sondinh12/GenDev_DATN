@@ -1,7 +1,5 @@
 @extends('client.layout.master')
 
-
-
 @section('styles')
 <style>
     .gallery-nav-btn {
@@ -101,6 +99,48 @@
         color: #fff;
         border-color: #4caf50;
     }
+
+    .review-card, .question-card {
+        border-radius: 1.2rem !important;
+    }
+
+    .review-card .card-header, .question-card .card-header {
+        border-radius: 1.2rem 1.2rem 0 0 !important;
+    }
+
+    .review-item, .question-item {
+        border-radius: 1rem !important;
+        background: #f8fafc;
+        box-shadow: 0 2px 12px rgba(33, 150, 243, 0.07);
+    }
+
+    .review-comment, .question-comment {
+        background: #fff;
+        border-radius: 0.7rem;
+        padding: 0.7rem 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 1px 4px rgba(33, 150, 243, 0.05);
+    }
+
+    .review-stars i {
+        font-size: 1.3rem;
+        margin-right: 2px;
+    }
+
+    @media (max-width: 767px) {
+        .review-card .card-body, .question-card .card-body {
+            padding: 1rem !important;
+        }
+
+        .review-item, .question-item {
+            padding: 1rem !important;
+        }
+
+        .review-comment, .question-comment {
+            font-size: 0.95rem;
+            padding: 0.5rem 0.7rem;
+        }
+    }
 </style>
 @endsection
 
@@ -138,9 +178,19 @@
                         <div class="col-md-7 p-4">
                             <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
                                 <h1 class="h3 fw-bold text-primary mb-0">{{ $product->name }}</h1>
-                                <button id="favorite-btn" class="btn rounded-circle p-2 ms-1 bg-white" type="button" title="Yêu thích" style="font-size: 1.5rem; transition: background 0.2s;">
-                                    <i id="favorite-icon" class="fas fa-heart" style="color: #e53935; transition: color 0.2s;"></i>
-                                </button>
+                                @php
+    $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
+@endphp
+
+<form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit"
+        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
+        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
+        <i class="fas fa-heart"></i>
+    </button>
+</form>
+
                             </div>
                             <div class="d-flex align-items-center mb-3 gap-2 border-bottom pb-2">
                                 @php
@@ -149,15 +199,15 @@
                                 @endphp
                                 <div class="product-rating text-warning small">
                                     @for($i = 1; $i <= 5; $i++)
-                                        @if($i <=floor($avgRating))
+                                        @if($i <= floor($avgRating))
                                         <i class="fas fa-star"></i>
                                         @elseif($i - $avgRating < 1)
                                             <i class="fas fa-star-half-alt"></i>
                                             @else
                                             <i class="far fa-star"></i>
                                             @endif
-                                            @endfor
-                                            <span class="text-muted ms-1">({{ $avgRating }} / {{ $reviewCount }} đánh giá)</span>
+                                    @endfor
+                                    <span class="text-muted ms-1">({{ $avgRating }} / {{ $reviewCount }} đánh giá)</span>
                                 </div>
                             </div>
                             <div class="mb-3 border-bottom pb-2">
@@ -169,36 +219,36 @@
                                     $min = null; $max = null;
                                     $discountPercent = null;
                                     if(count($product->variants)) {
-                                    foreach($product->variants as $v) {
-                                    $sale = $v->sale_price;
-                                    $price = $v->price;
-                                    $display = $sale !== null ? $sale : $price;
-                                    if($min === null || $display < $min) $min=$display;
-                                        if($max===null || $display> $max) $max = $display;
+                                        foreach($product->variants as $v) {
+                                            $sale = $v->sale_price;
+                                            $price = $v->price;
+                                            $display = $sale !== null ? $sale : $price;
+                                            if($min === null || $display < $min) $min=$display;
+                                            if($max===null || $display> $max) $max = $display;
                                         }
-                                        } else {
+                                    } else {
                                         if($product->sale_price !== null && $product->sale_price < $product->price && $product->price > 0) {
                                             $discountPercent = round(100 - ($product->sale_price / $product->price * 100));
-                                            }
-                                            }
-                                            @endphp
-                                            @if(count($product->variants))
-                                            @if($min == $max)
+                                        }
+                                    }
+                                    @endphp
+                                    @if(count($product->variants))
+                                        @if($min == $max)
                                             {{ number_format($min, 0, ',', '.') }}đ
-                                            @else
+                                        @else
                                             {{ number_format($min, 0, ',', '.') }}đ - {{ number_format($max, 0, ',', '.') }}đ
-                                            @endif
-                                            @else
-                                            @if($product->sale_price !== null && $product->sale_price < $product->price)
-                                                {{ number_format($product->sale_price, 0, ',', '.') }}đ
-                                                <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($product->price, 0, ',', '.') }}đ</del></small>
-                                                @if($discountPercent)
+                                        @endif
+                                    @else
+                                        @if($product->sale_price !== null && $product->sale_price < $product->price)
+                                            {{ number_format($product->sale_price, 0, ',', '.') }}đ
+                                            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($product->price, 0, ',', '.') }}đ</del></small>
+                                            @if($discountPercent)
                                                 <span class="badge bg-danger ms-2">-{{ $discountPercent }}%</span>
-                                                @endif
-                                                @else
-                                                {{ number_format($product->sale_price ?: $product->price, 0, ',', '.') }}đ
-                                                @endif
-                                                @endif
+                                            @endif
+                                        @else
+                                            {{ number_format($product->sale_price ?: $product->price, 0, ',', '.') }}đ
+                                        @endif
+                                    @endif
                                 </span>
                             </div>
                             <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
@@ -214,9 +264,9 @@
                                 <span class="fw-semibold">Số lượng còn lại:</span>
                                 <span id="variant-quantity" class="fw-bold text-primary">
                                     @if(count($product->variants))
-                                    --
+                                        --
                                     @else
-                                    {{ $product->quantity ?? 0 }}
+                                        {{ $product->quantity ?? 0 }}
                                     @endif
                                 </span>
                             </div>
@@ -233,51 +283,51 @@
                                     </button>
                                 </div>
                                 @php
-                                $attributes = [];
-                                $variantMap = [];
-                                foreach ($product->variants as $variant) {
-                                $variantKey = [];
-                                foreach ($variant->variantAttributes as $variantAttr) {
-                                $attrName = $variantAttr->attribute->name;
-                                $attrValue = $variantAttr->value->value;
-                                $attrId = $variantAttr->attribute->id;
-                                $valId = $variantAttr->value->id;
-                                $attributes[$attrName]['id'] = $attrId;
-                                $attributes[$attrName]['values'][$valId] = $attrValue;
-                                $variantKey[$attrId] = $valId;
-                                }
-                                ksort($variantKey);
-                                $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
-                                $variantMap[$key] = [
-                                'price' => $variant->sale_price ?? $variant->price,
-                                'origin_price' => $variant->price,
-                                'quantity' => $variant->quantity,
-                                ];
-                                }
-                                $attributes = array_slice($attributes, 0, 2, true);
+                                    $attributes = [];
+                                    $variantMap = [];
+                                    foreach ($product->variants as $variant) {
+                                        $variantKey = [];
+                                        foreach ($variant->variantAttributes as $variantAttr) {
+                                            $attrName = $variantAttr->attribute->name;
+                                            $attrValue = $variantAttr->value->value;
+                                            $attrId = $variantAttr->attribute->id;
+                                            $valId = $variantAttr->value->id;
+                                            $attributes[$attrName]['id'] = $attrId;
+                                            $attributes[$attrName]['values'][$valId] = $attrValue;
+                                            $variantKey[$attrId] = $valId;
+                                        }
+                                        ksort($variantKey);
+                                        $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
+                                        $variantMap[$key] = [
+                                            'price' => $variant->sale_price ?? $variant->price,
+                                            'origin_price' => $variant->price,
+                                            'quantity' => $variant->quantity,
+                                        ];
+                                    }
+                                    $attributes = array_slice($attributes, 0, 2, true);
                                 @endphp
                                 <div class="row">
                                     @foreach($attributes as $attrName => $attr)
-                                    <div class="col-12 col-md-6 mb-2">
-                                        <label class="form-label fw-semibold">{{ $attrName }}</label>
-                                        <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
-                                            <option value="" disabled {{ !old('attribute.'.$attr['id']) ? 'selected' : '' }}>-- Chọn {{ $attrName }} --</option>
-                                            @foreach($attr['values'] as $valId => $val)
-                                            @php
-                                            $variantKey = [];
-                                            foreach ($attributes as $attrName2 => $attr2) {
-                                            $variantKey[$attr2['id']] = ($attr2['id'] == $attr['id']) ? $valId : null;
-                                            }
-                                            ksort($variantKey);
-                                            $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
-                                            $salePrice = $variantMap[$key]['price'] ?? null;
-                                            @endphp
-                                            <option value="{{ $valId }}" {{ old('attribute.'.$attr['id']) == $valId ? 'selected' : '' }}>
-                                                {{ $val }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                        <div class="col-12 col-md-6 mb-2">
+                                            <label class="form-label fw-semibold">{{ $attrName }}</label>
+                                            <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
+                                                <option value="" disabled {{ !old('attribute.'.$attr['id']) ? 'selected' : '' }}>-- Chọn {{ $attrName }} --</option>
+                                                @foreach($attr['values'] as $valId => $val)
+                                                    @php
+                                                        $variantKey = [];
+                                                        foreach ($attributes as $attrName2 => $attr2) {
+                                                            $variantKey[$attr2['id']] = ($attr2['id'] == $attr['id']) ? $valId : null;
+                                                        }
+                                                        ksort($variantKey);
+                                                        $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
+                                                        $salePrice = $variantMap[$key]['price'] ?? null;
+                                                    @endphp
+                                                    <option value="{{ $valId }}" {{ old('attribute.'.$attr['id']) == $valId ? 'selected' : '' }}>
+                                                        {{ $val }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     @endforeach
                                 </div>
                                 <div class="d-flex gap-2 mt-3">
@@ -301,172 +351,253 @@
             </div>
             <div class="card-body p-4">
                 @auth
-                @php
-                $userReviewCount = 0;
-                if(auth()->check()) {
-                $userReviewCount = $product->reviews()->where('user_id', auth()->id())->count();
-                }
-                @endphp
-                @if(!empty($canReview) && $canReview)
-                @if($userReviewCount < 2)
-                    <form method="POST" action="{{ route('product.review.store', $product->id) }}" class="row g-3 align-items-end mb-4">
-                    @csrf
-                    <div class="col-12 col-md-4 text-center">
-                        <label class="form-label fw-semibold mb-2">Số sao</label>
-                        <div id="star-rating" class="d-inline-block">
-                            @for($i=1; $i<=5; $i++)
-                                <i class="fas fa-star star-select text-secondary" data-value="{{ $i }}" style="font-size:2rem; cursor:pointer; margin:0 2px;"></i>
-                                @endfor
-                        </div>
-                        <input type="hidden" name="rating" id="rating-value" value="5" required>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Bình luận</label>
-                        <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
-                    </div>
-                    <div class="col-12 col-md-2 text-end">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi đánh giá</button>
-                    </div>
-                    </form>
-                    @else
-                    <div class="alert alert-warning mb-4">Bạn đã đánh giá sản phẩm này tối đa 2 lần.</div>
+                    @php
+                        $userReviewCount = 0;
+                        if(auth()->check()) {
+                            $userReviewCount = $product->reviews()->where('user_id', auth()->id())->count();
+                        }
+                    @endphp
+                    @if(!empty($canReview) && $canReview && $userReviewCount < 2)
+                        <form method="POST" action="{{ route('product.review.store', $product->id) }}" class="row g-3 align-items-end mb-4">
+                            @csrf
+                            <div class="col-12 col-md-4 text-center">
+                                <label class="form-label fw-semibold mb-2">Số sao</label>
+                                <div id="star-rating" class="d-inline-block">
+                                    @for($i=1; $i<=5; $i++)
+                                        <i class="fas fa-star star-select text-secondary" data-value="{{ $i }}" style="font-size:2rem; cursor:pointer; margin:0 2px;"></i>
+                                    @endfor
+                                </div>
+                                <input type="hidden" name="rating" id="rating-value" value="5" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Bình luận</label>
+                                <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
+                            </div>
+                            <div class="col-12 col-md-2 text-end">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi đánh giá</button>
+                            </div>
+                        </form>
                     @endif
-                    @else
-                    <div class="alert alert-warning mb-4">Bạn cần mua sản phẩm này thành công để có thể đánh giá.</div>
-                    @endif
-                    @else
+                @else
                     <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
-                    @endauth
-                    <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                    @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
-                    <div class="row g-3">
-                        @forelse($reviews as $review)
+                @endauth
+                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
+                @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
+                <div class="row g-3">
+                    @forelse($reviews as $review)
                         <div class="col-12 col-md-6">
                             <div class="review-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
                                 <div class="d-flex align-items-center mb-2">
                                     <span class="fw-bold me-2 text-dark" style="font-size:1.1rem;">{{ $review->user->name ?? 'Ẩn danh' }}</span>
                                     <span class="review-stars text-warning fs-5">
                                         @for($i=1; $i<=5; $i++)
-                                            @if($i <=$review->rating)
-                                            <i class="fas fa-star"></i>
+                                            @if($i <= $review->rating)
+                                                <i class="fas fa-star"></i>
                                             @else
-                                            <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
                                             @endif
-                                            @endfor
+                                        @endfor
                                     </span>
                                     <span class="ms-2 text-muted small">{{ $review->created_at->format('d/m/Y H:i') }}</span>
                                 </div>
                                 <div class="review-comment text-secondary" style="font-size:1rem;">{{ $review->comment }}</div>
                             </div>
                         </div>
-                        @empty
+                    @empty
                         <div class="col-12">
                             <div class="text-muted">Chưa có đánh giá nào.</div>
                         </div>
-                        @endforelse
-                    </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Hỏi đáp sản phẩm --}}
+    <div class="container-lg px-0">
+        <div class="question-card card mb-5 mt-4 shadow rounded-4 border-0 mx-auto" style="max-width: 1200px;">
+            <div class="card-header bg-gradient text-white fw-bold py-3 rounded-top-4" style="background: linear-gradient(45deg, #4CAF50, #8BC34A); font-size: 1.2rem; letter-spacing: 1px;">
+                <i class="fas fa-question-circle text-warning me-2"></i>Hỏi đáp sản phẩm
+            </div>
+            <div class="card-body p-4">
+                @auth
+                    <form method="POST" action="{{ route('product.question.store', $product->id) }}" class="row g-3 align-items-end mb-4">
+                        @csrf
+                        <div class="col-12 col-md-10">
+                            <label class="form-label fw-semibold">Câu hỏi của bạn</label>
+                            <textarea name="question" class="form-control form-control-lg" rows="2" maxlength="200" placeholder="Nhập câu hỏi về sản phẩm..." style="border-radius: 1rem;"></textarea>
+                        </div>
+                        <div class="col-12 col-md-2 text-end">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi câu hỏi</button>
+                        </div>
+                    </form>
+                @else
+                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đặt câu hỏi về sản phẩm.</div>
+                @endauth
+                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các câu hỏi gần đây</h6>
+                @php $questions = $product->questions()->with('user')->latest()->take(5)->get(); @endphp
+                <div class="row g-3">
+                    @forelse($questions as $question)
+                        <div class="col-12">
+                            <div class="question-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="fw-bold me-2 text-dark" style="font-size:1.1rem;">{{ $question->user->name ?? 'Ẩn danh' }}</span>
+                                    <span class="ms-2 text-muted small">{{ $question->created_at->format('d/m/Y H:i') }}</span>
+                                </div>
+                                <div class="question-comment text-secondary" style="font-size:1rem;">{{ $question->question }}</div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="text-muted">Chưa có câu hỏi nào.</div>
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
 
     {{-- Sản phẩm liên quan --}}
     @if(isset($relatedProducts) && count($relatedProducts))
-    <div class="container-fluid mt-5 px-0">
-        <h4 class="mb-4 fw-bold text-primary text-center">Sản phẩm liên quan</h4>
-        <div class="related-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:32px 24px; justify-items:center; align-items:stretch;">
-            @foreach($relatedProducts as $item)
-            <div style="width:100%; max-width:270px; min-width:250px; display:flex; align-items:stretch;">
-                <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="width:100%; min-width:0; min-height:380px; display:flex; flex-direction:column;">
-                    <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
-                        <a href="{{ route('product.show', $item->id) }}" class="d-block w-100 h-100">
-                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
-                        </a>
-                        @php
-                        $variant = $item->variants->first();
-                        $discountPercent = null;
-                        $min = null; $max = null;
-                        if($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
-                            $discountPercent = round(100 - ($variant->sale_price / $variant->price * 100));
-                            } elseif($item->sale_price && $item->sale_price < $item->price && $item->price > 0) {
-                                $discountPercent = round(100 - ($item->sale_price / $item->price * 100));
-                                }
-                                if(count($item->variants ?? [])) {
-                                foreach($item->variants as $v) {
-                                $sale = $v->sale_price ?? $v->price;
-                                if($min === null || $sale < $min) $min=$sale;
-                                    if($max===null || $sale> $max) $max = $sale;
+        <div class="container-fluid mt-5 px-0">
+            <h4 class="mb-4 fw-bold text-primary text-center">Sản phẩm liên quan</h4>
+            <div class="related-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:32px 24px; justify-items:center; align-items:stretch;">
+                @foreach($relatedProducts as $item)
+                    <div style="width:100%; max-width:270px; min-width:250px; display:flex; align-items:stretch;">
+                        <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="width:100%; min-width:0; min-height:380px; display:flex; flex-direction:column;">
+                            <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
+                                <a href="{{ route('product.show', $item->id) }}" class="d-block w-100 h-100">
+                                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
+                                </a>
+                                @php
+                                    $variant = $item->variants->first();
+                                    $discountPercent = null;
+                                    $min = null; $max = null;
+                                    if($variant && $variant->sale_price && $variant->sale_price < $variant->price && $variant->price > 0) {
+                                        $discountPercent = round(100 - ($variant->sale_price / $variant->price * 100));
+                                    } elseif($item->sale_price && $item->sale_price < $item->price && $item->price > 0) {
+                                        $discountPercent = round(100 - ($item->sale_price / $item->price * 100));
                                     }
+                                    if(count($item->variants ?? [])) {
+                                        foreach($item->variants as $v) {
+                                            $sale = $v->sale_price ?? $v->price;
+                                            if($min === null || $sale < $min) $min=$sale;
+                                            if($max===null || $sale> $max) $max = $sale;
+                                        }
                                     }
-                                    @endphp
-                                    @if($discountPercent)
+                                @endphp
+                                @if($discountPercent)
                                     <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
-                                    @endif
-                    </div>
-                    <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center" style="flex:1 1 auto;">
-                        <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
-                            <a href="{{ route('product.show', $item->id) }}" class="text-decoration-none text-dark">{{ $item->name }}</a>
-                        </h6>
-                        <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
-                            @if($variant)
-                            @if($variant->sale_price && $variant->sale_price < $variant->price)
-                                <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
-                                <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
-                                @else
-                                <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                                 @endif
-                                @else
-                                @if($item->sale_price && $item->sale_price < $item->price)
-                                    <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
-                                    <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
+                            </div>
+                            <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center" style="flex:1 1 auto;">
+                                <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
+                                    <a href="{{ route('product.show', $item->id) }}" class="text-decoration-none text-dark">{{ $item->name }}</a>
+                                </h6>
+                                <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
+                                    @if($variant)
+                                        @if($variant->sale_price && $variant->sale_price < $variant->price)
+                                            <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                                            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
+                                        @else
+                                            <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
+                                        @endif
                                     @else
-                                    <ins class="text-primary fw-bold fs-6">{{ number_format($item->sale_price ?: $item->price) }}đ</ins>
+                                        @if($item->sale_price && $item->sale_price < $item->price)
+                                            <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
+                                            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
+                                        @else
+                                            <ins class="text-primary fw-bold fs-6">{{ number_format($item->sale_price ?: $item->price) }}đ</ins>
+                                        @endif
                                     @endif
+                                </div>
+                                <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <small class="text-muted ms-1">(4.5)</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
+                                    <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $item->id }}">
+                                        <i class="fas fa-shopping-cart text-primary"></i>
+                                    </a>
+                                   @php
+    $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
+@endphp
+
+<form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit"
+        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
+        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
+        <i class="fas fa-heart"></i>
+    </button>
+</form>
+
+
+                                    <a href="{{ route('product.show', $item->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
+                                        <i class="fas fa-eye text-info"></i>
+                                    </a>
+                                </div>
+                                <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    @if($item->variants && $item->variants->count() > 0)
+                                        @foreach ($item->variants->first()->variantAttributes ?? [] as $variantAttr)
+                                            @php
+                                                $valueId = $variantAttr->attribute_value_id
+                                                ?? $variantAttr->value_id
+                                                ?? optional($variantAttr->value)->id;
+                                            @endphp
+                                            <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
+                                        @endforeach
                                     @endif
+                                    <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">Mua ngay</button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <small class="text-muted ms-1">(4.5)</small>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $item->id }}">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                            </a>
-                            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-wishlist" title="Thêm vào yêu thích" data-product-id="{{ $item->id }}">
-                                <i class="fas fa-heart text-danger"></i>
-                            </a>
-                            <a href="{{ route('product.show', $item->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
-                                <i class="fas fa-eye text-info"></i>
-                            </a>
-                        </div>
-                        <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $item->id }}">
-                            <input type="hidden" name="quantity" value="1">
-                            @if($item->variants && $item->variants->count() > 0)
-                            @foreach ($item->variants->first()->variantAttributes ?? [] as $variantAttr)
-                            @php
-                            $valueId = $variantAttr->attribute_value_id
-                            ?? $variantAttr->value_id
-                            ?? optional($variantAttr->value)->id;
-                            @endphp
-                            <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
-                            @endforeach
-                            @endif
-                            <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">Mua ngay</button>
-                        </form>
                     </div>
-                </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
-    </div>
     @endif
 </div>
 <style>
+    .btn-favorite {
+    font-size: 1.3rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #bbb;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-favorite i {
+    color: #bbb;
+    transition: color 0.3s;
+}
+
+.btn-favorite:hover {
+    border-color: #e53935;
+    background: #ffeaea;
+}
+
+.btn-favorite:hover i {
+    color: #e53935;
+}
+
+.btn-favorite.active {
+    background: #e53935;
+    border-color: #e53935;
+}
+
+.btn-favorite.active i {
+    color: #fff;
+}
+
     .related-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -552,48 +683,6 @@
     .star-select.hovered {
         color: #FFC107 !important;
         text-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
-    }
-
-    .review-card {
-        border-radius: 1.2rem !important;
-    }
-
-    .review-card .card-header {
-        border-radius: 1.2rem 1.2rem 0 0 !important;
-    }
-
-    .review-item {
-        border-radius: 1rem !important;
-        background: #f8fafc;
-        box-shadow: 0 2px 12px rgba(33, 150, 243, 0.07);
-    }
-
-    .review-stars i {
-        font-size: 1.3rem;
-        margin-right: 2px;
-    }
-
-    .review-comment {
-        background: #fff;
-        border-radius: 0.7rem;
-        padding: 0.7rem 1rem;
-        margin-top: 0.5rem;
-        box-shadow: 0 1px 4px rgba(33, 150, 243, 0.05);
-    }
-
-    @media (max-width: 767px) {
-        .review-card .card-body {
-            padding: 1rem !important;
-        }
-
-        .review-item {
-            padding: 1rem !important;
-        }
-
-        .review-comment {
-            font-size: 0.95rem;
-            padding: 0.5rem 0.7rem;
-        }
     }
 
     body {
@@ -805,6 +894,7 @@
 
         // Variant price/quantity logic
         var variantMap = @json($variantMap);
+
         function formatPrice(price) {
             if (typeof price === 'number') {
                 return price.toLocaleString('vi-VN') + 'đ';
@@ -841,11 +931,11 @@
             var hasVariants = Object.keys(variantMap).length > 0;
 
             if (hasVariants && !allAttrSelected()) {
-                // Nếu sản phẩm có biến thể nhưng chưa chọn đủ thuộc tính
                 $qtyInput.prop('disabled', true);
                 $btnMinus.prop('disabled', true);
                 $btnPlus.prop('disabled', true);
-                var min = null, max = null;
+                var min = null,
+                    max = null;
                 Object.values(variantMap).forEach(function(v) {
                     var display = parseInt(v.price);
                     if (min === null || display < min) min = display;
@@ -861,7 +951,6 @@
                 $('#variant-status').removeClass('bg-danger').addClass('bg-success').text('Còn hàng');
                 $('#add-to-cart-btn').removeClass('btn-secondary').addClass('btn-primary').prop('disabled', false);
             } else {
-                // Nếu không có biến thể hoặc đã chọn đủ thuộc tính
                 $qtyInput.prop('disabled', false);
                 $btnMinus.prop('disabled', false);
                 $btnPlus.prop('disabled', false);
@@ -896,7 +985,6 @@
                         }
                     }
                 } else {
-                    // Không có biến thể
                     var price = parseInt('{{ $product->sale_price ?: $product->price }}');
                     var originPrice = parseInt('{{ $product->price }}');
                     if (price != originPrice && '{{ $product->sale_price }}') {
@@ -1005,7 +1093,13 @@
             if (Object.keys(variantMap).length) {
                 if (!allAttrSelected()) {
                     $qtyInput.val(1);
-                    alert('Vui lòng chọn đầy đủ các thuộc tính sản phẩm trước khi thay đổi số lượng.');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh báo!',
+                        text: 'Vui lòng chọn đầy đủ các thuộc tính sản phẩm trước khi thay đổi số lượng.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                     return;
                 }
                 var key = getSelectedKey();
@@ -1014,14 +1108,26 @@
                 if (val < max) {
                     $qtyInput.val(val + 1);
                 } else {
-                    alert('Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                 }
             } else {
                 var max = parseInt($qtyInput.attr('max')) || getMaxQuantity();
                 if (val < max) {
                     $qtyInput.val(val + 1);
                 } else {
-                    alert('Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Bạn đã chọn tối đa số lượng tối đa của sản phẩm này.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                 }
             }
         });
@@ -1031,16 +1137,22 @@
             var val = parseInt($qtyInput.val()) || 1;
             if (val > 1) {
                 $qtyInput.val(val - 1);
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cảnh báo!',
+                    text: 'Số lượng tối thiểu là 1, không thể giảm thêm.',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
             }
         });
 
         $('#quantity-input').on('input change', function() {
             var $qtyInput = $(this);
             var val = $qtyInput.val();
-            // Chỉ cho phép số, loại bỏ các ký tự không phải số
             val = val.replace(/[^0-9]/g, '');
             $qtyInput.val(val);
-            // Đảm bảo giá trị tối thiểu là 1
             if (val === '' || parseInt(val) < 1) {
                 $qtyInput.val(1);
             }

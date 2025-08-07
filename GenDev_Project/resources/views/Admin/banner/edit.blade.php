@@ -30,7 +30,6 @@
           });
         </script>
     @endif
-
 <div class="container-fluid px-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -44,7 +43,6 @@
             <i class="fas fa-arrow-left me-1"></i> Quay lại
         </a>
     </div>
-
     <!-- Edit Form -->
     <div class="card border-0 shadow-sm">
         <div class="card-body">
@@ -126,7 +124,6 @@
                             <span class="text-muted">Chưa có ảnh</span>
                         @endif
                     </div>
-
                     <label class="form-label fw-semibold">Thay ảnh mới</label>
                     <input type="file"
                            name="image"
@@ -213,7 +210,6 @@
             addImageInput();
         }
     }
-
     // Thêm input file cho ảnh động mới
     let newImageCount = 0;
     function addImageInput() {

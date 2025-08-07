@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Banner extends Model
 {
     use SoftDeletes;
-
     protected $fillable = [
         'title',
         'image',
@@ -16,6 +15,7 @@ class Banner extends Model
         'images', 
         'status',
     ];
+
 
     protected $casts = [
         'images' => 'array',

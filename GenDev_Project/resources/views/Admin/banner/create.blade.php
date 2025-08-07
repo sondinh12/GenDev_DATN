@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <!-- Tiêu đề & Breadcrumb -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
@@ -23,7 +22,6 @@
             </nav>
         </div>
     </div>
-
     <div class="card border-0 shadow-sm">
         <div class="card-body">
             <form method="POST" action="{{ route('banner.store') }}" enctype="multipart/form-data" novalidate>
@@ -86,7 +84,6 @@
                         </div>
                     </div>
                 </div>
-
                 {{-- Banner tĩnh --}}
                 <div class="form-group mb-4" id="static-image">
                     <label class="form-label fw-semibold">Ảnh banner</label>
@@ -130,8 +127,6 @@
                         <i class="fas fa-plus me-1"></i> Thêm ảnh
                     </button>
                 </div>
-
-                {{-- Nút submit --}}
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary px-4">
                         <i class="fas fa-save me-1"></i> Lưu lại
@@ -204,7 +199,7 @@
         border: 1px solid rgba(0,0,0,0.05);
     }
     .form-label {
-        font-weight: 500;
+        font-weight: 500;v
     }
     .img-thumbnail {
         background-color: #f8f9fa;
@@ -216,3 +211,4 @@
     }
 </style>
 @endsection
+

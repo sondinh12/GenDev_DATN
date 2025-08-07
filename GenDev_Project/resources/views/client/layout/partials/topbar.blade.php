@@ -53,7 +53,7 @@
                     <li class="menu-item animate-dropdown">
                         @php
                             $adminRoles = \Spatie\Permission\Models\Role::where('name', 'like', '%admin%')
-                                ->orWhere('name', 'like', '%staff%')
+                                ->orWhere('name', 'like', '%nhan vien%')
                                 ->pluck('name')
                                 ->toArray();
                         @endphp

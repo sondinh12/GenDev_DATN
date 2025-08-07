@@ -17,13 +17,12 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('images')->nullable();
             $table->enum('type', ['static', 'dynamic'])->default('static');
-            
             // Thêm cột status (3 trạng thái) ngay sau type, nhưng không dùng AFTER
             $table->enum('status', ['unused', 'using', 'expired'])
                   ->default('unused');
-            
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 

@@ -29,8 +29,10 @@
                 
                 <!-- Search & Filter -->
                 <div class="d-flex align-items-center">
+
                     <form action="{{ route('banner.index') }}" method="GET" class="input-group input-group-sm me-3 search-container" style="width: 250px;">
                         <input type="text" name="search" class="form-control form-control-sm search-input border-0" placeholder="Tìm banner..." value="{{ request()->query('search') }}">
+
                         <button class="btn btn-search-custom bg-white border-0" type="submit">
                             <i class="fas fa-search text-primary"></i>
                         </button>
