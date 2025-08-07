@@ -28,6 +28,8 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Client\FavoriteController;
+
 use Spatie\Permission\Models\Role;
 
 // ================= TRANG CHÍNH =================
@@ -225,7 +227,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
         Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
-
 });
 
 Route::resource('/product', ClientProductController::class);
@@ -274,7 +275,10 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'
 Route::get('/reset-password', function () {
     return view('auth.passwords.reset_password');
 })->middleware('guest')->name('password.reset');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('client.favorites.index');
+    Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])->name('client.favorites.toggle');
+});
 // Xử lý xác minh OTP và cập nhật mật khẩu mới
 Route::post('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp'])
     ->middleware('guest')
