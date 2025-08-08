@@ -85,27 +85,29 @@
                 @endcan
 
                 {{-- Nhà cung cấp --}}
-                @can('Quản lý nhà cung cấp')
-                    <li>
-                        <a href="{{ url('/admin/suppliers') }}" class="">
-                            <i class="fa-solid fa-building"></i>
-                            <span>Nhà cung cấp</span>
-                        </a>
-                    </li>
+                @can('manage suppliers')
+                <li>
+                    <a href="{{ url('/admin/suppliers') }}" class="">
+                        <i class="fa-solid fa-building"></i>
+                        <span>Nhà cung cấp</span>
+                    </a>
+                <li>
                 @endcan
 
                 {{-- Hóa đơn nhập hàng --}}
-                @can('Quản lý hóa đơn nhập hàng')
-                    <li>
-                        <a href="{{ url('/admin/imports') }}" class="">
-                            <i class="fa-solid fa-receipt"></i>
-                            <span>Hóa đơn</span>
-                        </a>
-                    </li>
+                @can('manage imports')
+
+                <li>
+                    <a href="{{ url('/admin/imports') }}" class="">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>Hóa đơn</span>
+                    </a>
+                <li>
+
                 @endcan
 
-                {{-- Bình luận --}}
-                @can('Quản lý bình luận')
+                {{-- Đánh giá --}}
+                @can('manage reviews')
                     <li>
                         <a href="{{ url('/admin/reviews') }}">
                             <i class="fa-solid fa-tag"></i>
