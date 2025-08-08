@@ -3,22 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductReview extends Model
+class Favorite extends Model
 {
+    protected $table = 'favorites';
+
     protected $fillable = [
         'user_id',
         'product_id',
-        'rating',
-        'comment',
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function product(): BelongsTo
+
+    public function product()
     {
         return $this->belongsTo(Product::class);
     }

@@ -109,6 +109,13 @@
                     @endif
                 </div>
             </div>
+             @if ($loop->first)
+            <div class="order-customer-info mt-2 small text-muted">
+    <strong>Người nhận:</strong> {{ $order->name }}<br>
+    <strong>SĐT:</strong> {{ $order->phone }}<br>
+    <strong>Địa chỉ:</strong> {{ $order->address }}, {{ $order->ward }}, {{ $order->city }}
+</div>
+@endif
             <div class="text-end">
                 <div class="text-muted">x{{ $detail->quantity }}</div>
                 <div class="fw-bold">{{ number_format($detail->price, 0, ',', '.') }} đ</div>
@@ -182,6 +189,7 @@
                     {{ number_format($order->total, 0, ',', '.') }} đ
                 </span>
             </div>
+
             <div class="d-flex gap-2">
                 @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
                 <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
@@ -376,6 +384,17 @@
         background-color: #f1f1f1;
         border-radius: 5px;
     }
+    .order-customer-info {
+    background-color: #f8f9fa;
+    padding: 10px 12px;
+    border-left: 3px solid #0d6efd;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555;
+}
+
 </style>
 @endpush
 

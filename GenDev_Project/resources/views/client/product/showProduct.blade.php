@@ -178,9 +178,19 @@
                         <div class="col-md-7 p-4">
                             <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
                                 <h1 class="h3 fw-bold text-primary mb-0">{{ $product->name }}</h1>
-                                <button id="favorite-btn" class="btn rounded-circle p-2 ms-1 bg-white" type="button" title="Yêu thích" style="font-size: 1.5rem; transition: background 0.2s;">
-                                    <i id="favorite-icon" class="fas fa-heart" style="color: #e53935; transition: color 0.2s;"></i>
-                                </button>
+                                @php
+    $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
+@endphp
+
+<form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit"
+        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
+        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
+        <i class="fas fa-heart"></i>
+    </button>
+</form>
+
                             </div>
                             <div class="d-flex align-items-center mb-3 gap-2 border-bottom pb-2">
                                 @php
@@ -341,7 +351,7 @@
             </div>
             <div class="card-body p-4">
                 <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
+                @php $reviews = $product->reviews()->with('user')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
                     @forelse($reviews as $review)
                         <div class="col-12 col-md-6">
@@ -394,9 +404,9 @@
                     <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đặt câu hỏi về sản phẩm.</div>
                 @endauth
                 <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các câu hỏi gần đây</h6>
-                @php $questions = $product->questions()->with('user')->latest()->take(5)->get(); @endphp
+                @php $questionss = $product->questions()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
-                    @forelse($questions as $question)
+                    @forelse($questionss as $question)
                         <div class="col-12">
                             <div class="question-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
                                 <div class="d-flex align-items-center mb-2">
@@ -482,9 +492,20 @@
                                     <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $item->id }}">
                                         <i class="fas fa-shopping-cart text-primary"></i>
                                     </a>
-                                    <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-wishlist" title="Thêm vào yêu thích" data-product-id="{{ $item->id }}">
-                                        <i class="fas fa-heart text-danger"></i>
-                                    </a>
+                                   @php
+    $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
+@endphp
+
+<form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit"
+        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
+        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
+        <i class="fas fa-heart"></i>
+    </button>
+</form>
+
+
                                     <a href="{{ route('product.show', $item->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
                                         <i class="fas fa-eye text-info"></i>
                                     </a>
@@ -514,6 +535,38 @@
     @endif
 </div>
 <style>
+    .btn-favorite {
+    font-size: 1.3rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #bbb;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-favorite i {
+    color: #bbb;
+    transition: color 0.3s;
+}
+
+.btn-favorite:hover {
+    border-color: #e53935;
+    background: #ffeaea;
+}
+
+.btn-favorite:hover i {
+    color: #e53935;
+}
+
+.btn-favorite.active {
+    background: #e53935;
+    border-color: #e53935;
+}
+
+.btn-favorite.active i {
+    color: #fff;
+}
+
     .related-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);

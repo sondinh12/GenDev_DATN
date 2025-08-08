@@ -41,7 +41,7 @@ class ProductReviewController extends Controller
             'product_id' => $productId,
             'rating' => $request->rating ?? null, // Allow null rating for product show page
             'comment' => $request->comment,
-            'status' => 'approved',
+            // 'status' => 'approved',
         ]);
 
         return redirect()->back()->with('success', 'Bình luận của bạn đã được ghi nhận!');

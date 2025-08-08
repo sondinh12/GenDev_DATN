@@ -13,11 +13,11 @@ Manage
 
 @section('content')
 
-@if (session('success'))
+{{-- @if (session('success'))
 <div class="alert alert-success">
     {{session('success')}}
 </div>
-@endif
+@endif --}}
 
 <a href="{{route('products.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
     <a href="{{ route('products.trash.list') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
@@ -124,3 +124,21 @@ Manage
 @section('scripts')
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif

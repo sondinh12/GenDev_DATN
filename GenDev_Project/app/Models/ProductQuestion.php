@@ -9,7 +9,7 @@ class ProductQuestion extends Model
     protected $table = 'product_questions';
 
     protected $fillable = [
-        'product_id', 'user_id', 'question', 'created_at', 'updated_at'
+        'product_id', 'user_id', 'question','status', 'created_at', 'updated_at'
     ];
 
     public function product()

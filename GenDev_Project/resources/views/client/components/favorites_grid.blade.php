@@ -1,5 +1,5 @@
 <div class="products">
-    @foreach ($bestSellingProducts as $product)
+    @foreach ($products as $product)
         <div class="product {{ $loop->first ? 'dau-tien' : '' }} {{ $loop->last ? 'cuoi-cung' : '' }}">
             @php
                 $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
