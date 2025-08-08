@@ -220,7 +220,6 @@ class BannerController extends Controller
     {
         $banner = Banner::onlyTrashed()->findOrFail($id);
         $banner->restore();
-
         return redirect()->route('banner.index')
                          ->with('success', 'Banner đã được khôi phục.');
     }

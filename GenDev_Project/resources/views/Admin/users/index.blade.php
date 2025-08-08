@@ -86,8 +86,8 @@
                                                     // Tự động sinh màu cho role nếu không có trường color
                                                     $defaultColors = [
                                                         'admin' => 'success',
-                                                        'staff' => 'primary',
-                                                        'user' => 'secondary',
+                                                        'nhân viên' => 'primary',
+                                                        'người dùng' => 'secondary',
                                                     ];
                                                     $class =
                                                         $roleObj && isset($roleObj->color) && $roleObj->color
@@ -114,7 +114,7 @@
                                                     {{ $label }}
                                                 </span>
                                             </td>
-                               {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
+                                            {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
                                             <td>
                                                 @if ($user->status == 1)
                                                     <span class="badge bg-success">Hoạt động</span>

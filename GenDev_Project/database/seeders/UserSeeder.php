@@ -65,8 +65,8 @@ class UserSeeder extends Seeder
         $admin = User::where('email', 'admin@example.com')->first();
         if ($admin) $admin->assignRole('admin');
         $staff = User::where('email', 'staff@example.com')->first();
-        if ($staff) $staff->assignRole('staff');
+        if ($staff) $staff->assignRole('nhân viên');
         $user = User::where('email', 'kenhoangkhoaghost@gmail.com')->first();
-        if ($user) $user->assignRole('user');
+        if ($user) $user->assignRole('người dùng');
     }
 }

@@ -58,8 +58,8 @@
                                                     : 'Không rõ');
                                         $defaultColors = [
                                             'admin' => 'success',
-                                            'staff' => 'primary',
-                                            'user' => 'secondary',
+                                            'nhân viên' => 'primary',
+                                            'người dùng' => 'secondary',
                                         ];
                                         $class =
                                             $roleObj && isset($roleObj->color) && $roleObj->color

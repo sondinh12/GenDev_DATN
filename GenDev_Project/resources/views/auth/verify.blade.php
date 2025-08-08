@@ -22,7 +22,7 @@
                         Vui lòng xác thực địa chỉ email của bạn để tiếp tục sử dụng tài khoản
                     </div>
 
-                    @if (session('resent'))
+                    @if (session('success'))
                     <div class="alert alert-success" role="alert">
                         <i class="fa fa-check-circle me-2"></i>
                         Một liên kết xác thực mới đã được gửi đến địa chỉ email của bạn.
