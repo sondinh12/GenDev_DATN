@@ -106,44 +106,16 @@
                         {{ $attr->attribute->name ?? '' }}: {{ $attr->value->value ?? '' }}@if(!$loop->last), @endif
                         @endforeach
                     </div>
-
-                </div>
-                <div class="text-end">
-                    <div class="text-muted">x{{ $detail->quantity }}</div>
-                    <div class="fw-bold">{{ number_format($detail->price, 0, ',', '.') }} đ</div>
-                </div>
-            </div>
-            @endforeach
-
-            @if($order->orderDetails->count() > 2)
-            <div class="text-end mb-3">
-                <a href="{{ route('client.orders.show', $order->id) }}" class="text-decoration-none small">
-                    Xem thêm {{ $order->orderDetails->count() - 2 }} sản phẩm...
-                </a>
-            </div>
-            @endif
-
-            <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
-                <div class="fw-bold text-muted">
-                    Tổng tiền:
-                    <span class="text-danger fs-5">
-                        {{ number_format($order->total, 0, ',', '.') }} đ
-                    </span>
-                </div>
-
-            <div class="d-flex gap-2">
-                    {{-- @if($order->status === 'cancelled' || $order->status === 'completed')
-                        <a href="{{ route('checkout.reorder', $order->id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-redo-alt me-1"></i> Mua lại
-                        </a>
-                    @endif --}}
-                    @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
-                        <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
-                        </a>
                     @endif
                 </div>
             </div>
+             @if ($loop->first)
+            <div class="order-customer-info mt-2 small text-muted">
+    <strong>Người nhận:</strong> {{ $order->name }}<br>
+    <strong>SĐT:</strong> {{ $order->phone }}<br>
+    <strong>Địa chỉ:</strong> {{ $order->address }}, {{ $order->ward }}, {{ $order->city }}
+</div>
+@endif
             <div class="text-end">
                 <div class="text-muted">x{{ $detail->quantity }}</div>
                 <div class="fw-bold">{{ number_format($detail->price, 0, ',', '.') }} đ</div>
@@ -217,6 +189,7 @@
                     {{ number_format($order->total, 0, ',', '.') }} đ
                 </span>
             </div>
+
             <div class="d-flex gap-2">
                 @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
                 <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
@@ -411,6 +384,17 @@
         background-color: #f1f1f1;
         border-radius: 5px;
     }
+    .order-customer-info {
+    background-color: #f8f9fa;
+    padding: 10px 12px;
+    border-left: 3px solid #0d6efd;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555;
+}
+
 </style>
 @endpush
 

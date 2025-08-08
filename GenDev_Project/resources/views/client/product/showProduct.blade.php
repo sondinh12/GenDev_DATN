@@ -394,9 +394,9 @@
                     <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đặt câu hỏi về sản phẩm.</div>
                 @endauth
                 <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các câu hỏi gần đây</h6>
-                @php $questions = $product->questions()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
+                @php $questionss = $product->questions()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
-                    @forelse($questions as $question)
+                    @forelse($questionss as $question)
                         <div class="col-12">
                             <div class="question-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
                                 <div class="d-flex align-items-center mb-2">
