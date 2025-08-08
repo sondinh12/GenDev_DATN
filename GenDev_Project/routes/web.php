@@ -28,7 +28,9 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
-use App\Models\ProductQuestion;
+use App\Http\Controllers\Client\FavoriteController;
+
+
 use Spatie\Permission\Models\Role;
 
 // ================= TRANG CHÍNH =================
@@ -123,6 +125,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::get('/products/trash/list', [ProductController::class, 'listTrashed'])->name('products.trash.list');
+        Route::post('/products/{product}/questions', [ProductController::class, 'storeQuestion'])->name('product.question.store');
     });
     Route::middleware(['permission:Quản lý thuộc tính'])->group(function () {
         Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
@@ -274,7 +277,10 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'
 Route::get('/reset-password', function () {
     return view('auth.passwords.reset_password');
 })->middleware('guest')->name('password.reset');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('client.favorites.index');
+    Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])->name('client.favorites.toggle');
+});
 // Xử lý xác minh OTP và cập nhật mật khẩu mới
 Route::post('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp'])
     ->middleware('guest')
