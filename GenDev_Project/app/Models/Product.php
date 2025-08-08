@@ -55,4 +55,8 @@ class Product extends Model
     {
         return $this->hasMany(ImportDetail::class);
     }
+    public function questions()
+    {
+        return $this->hasMany(ProductQuestion::class, 'product_id');
+    }
 }
