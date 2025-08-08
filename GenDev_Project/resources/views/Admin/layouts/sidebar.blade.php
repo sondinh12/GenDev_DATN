@@ -123,14 +123,6 @@
                         </a>
                     </li>
                 @endcan
-
-                {{-- Quản lý banner --}}
-                <li>
-                    <a href="{{ url('/admin/banner') }}" class="">
-                        <i class="fa-solid fa-images"></i>
-                        <span>Quản lý banner</span>
-                    </a>
-                </li>
             </ul>
         </div>
         <!-- Sidebar -->

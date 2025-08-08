@@ -11,46 +11,75 @@
     @endif
 
     <div id="content" class="site-content">
-
         <div class="col-full">
             <div class="row">
                 <div id="primary" class="content-area">
                     <main id="main" class="site-main">
-                        <div class="home-v1-slider home-slider">
-                            <div class="slider-1"
-                                style="background-image: url(assets/images/slider/home-v1-background.jpg);">
-                                <img src="assets/images/slider/home-v1-img-1.png" alt="">
-                                <div class="caption">
-                                    <div class="title">Xoay. Nhấn. Mở rộng. Thiết kế mô-đun thông minh giúp thêm bộ nhớ dễ
-                                        dàng cho dữ liệu ngày càng tăng.</div>
-                                    <div class="sub-title">Bộ xử lý sáu nhân mạnh mẽ, hiển thị sống động 4K UHD và SSD tốc
-                                        độ cao trong thiết kế hợp kim mềm mại.</div>
-                                    <div class="button">Sở hữu ngay
-                                        <i class="tm tm-long-arrow-right"></i>
+
+                        {{-- Active banner lookup --}}
+                        @php
+                            $activeBanner = \App\Models\Banner::where('status','using')->first();
+                        @endphp
+
+                        @if($activeBanner)
+                            <div class="home-v1-slider home-slider">
+                                @if($activeBanner->type === 'static')
+                                    <div class="slider-1"
+                                         style="background-image: url('{{ asset('storage/' . $activeBanner->image) }}');">
+                                        {{-- Static banner slide --}}
                                     </div>
-                                    <div class="bottom-caption">Miễn phí vận chuyển toàn quốc</div>
+                                @else
+                                    @foreach(json_decode($activeBanner->images, true) as $slide)
+                                        <div class="slider-1"
+                                             style="background-image: url('{{ asset('storage/' . $slide) }}');">
+                                            {{-- Dynamic banner slide --}}
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        @else
+                            {{-- Fallback to your original hard-coded sliders --}}
+                            <div class="home-v1-slider home-slider">
+                                <div class="slider-1"
+                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                    <img src="assets/images/slider/home-v1-img-1.png" alt="">
+                                    <div class="caption">
+                                        <div class="title">
+                                            Turn. Click. Expand. Smart modular design simplifies adding storage
+                                            for growing media.
+                                        </div>
+                                        <div class="sub-title">
+                                            Powerful Six Core processor, vibrant 4KUHD display output and
+                                            fast SSD elegantly cased in a soft alloy design.
+                                        </div>
+                                        <div class="button">
+                                            Get Yours now <i class="tm tm-long-arrow-right"></i>
+                                        </div>
+                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                    </div>
+                                </div>
+                                <div class="slider-1 slider-2"
+                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                    <img src="assets/images/slider/home-v1-img-2.png" alt="">
+                                    <div class="caption">
+                                        <div class="title">
+                                            The new-tech gift you<br>
+                                            are wishing for is<br>
+                                            right here
+                                        </div>
+                                        <div class="sub-title">
+                                            Big screens in incredibly slim designs<br>
+                                            that fit in your hand.
+                                        </div>
+                                        <div class="button">
+                                            Browse now <i class="tm tm-long-arrow-right"></i>
+                                        </div>
+                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- .slider-1 -->
-                            <div class="slider-1 slider-2"
-                                style="background-image: url(assets/images/slider/home-v1-background.jpg);">
-                                <img src="assets/images/slider/home-v1-img-2.png" alt="">
-                                <div class="caption">
-                                    <div class="title">Món quà công nghệ mới
-                                        <br> bạn đang mong chờ
-                                        <br> có ngay tại đây
-                                    </div>
-                                    <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng
-                                        <br>gọn gàng trong tay bạn.
-                                    </div>
-                                    <div class="button">Khám phá ngay
-                                        <i class="tm tm-long-arrow-right"></i>
-                                    </div>
-                                    <div class="bottom-caption">Miễn phí vận chuyển toàn quốc </div>
-                                </div>
-                            </div>
-                            <!-- .slider-2 -->
-                        </div>
+                        @endif
+
                         <!-- .home-v1-slider -->
 
                         <div class="features-list">
@@ -68,8 +97,8 @@
                                     <div class="media">
                                         <i class="feature-icon d-flex mr-3 tm tm-feedback"></i>
                                         <div class="media-body feature-text">
-                                            <h5 class="mt-0">99% Khách hàng</h5>
-                                            <span>phản hồi tích cực</span>
+                                            <h5 class="mt-0">99% Phản hồi</h5>
+                                            <span>từ khách hàng</span>
                                         </div>
                                     </div>
                                 </div>
@@ -105,9 +134,7 @@
 
                         <section class="section-top-categories section-categories-carousel" id="categories-carousel-1">
                             <header class="section-header">
-                                <h2 class="section-title">
-                                    Danh mục<br> sản phẩm
-                                </h2>
+                                <h2 class="section-title">Danh mục<br> sản phẩm</h2>
                                 <nav class="custom-slick-nav"></nav>
                             </header>
                             <div class="product-categories-1 product-categories-carousel"
@@ -154,8 +181,10 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
+        // AJAX pagination for best sellers
         $(document).on('click', '#best-selling-wrapper .pagination a', function(e) {
             e.preventDefault();
             let url = $(this).attr('href');

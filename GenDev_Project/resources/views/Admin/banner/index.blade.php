@@ -114,7 +114,6 @@
                                 @endswitch
                             </td>
                             <td class="text-center">
-                                {{-- Nút Sử dụng --}}
                                 @if($banner->status !== 'using')
                                     <form action="{{ route('banner.use', $banner->id) }}" method="POST" class="use-form d-inline">
                                         @csrf
@@ -122,10 +121,7 @@
                                             <i class="fas fa-check me-1"></i>Sử dụng
                                         </button>
                                     </form>
-                                @else
-                                    <span class="badge bg-success text-white px-2 py-1 rounded-pill me-2">Đang sử dụng</span>
                                 @endif
-
                                 {{-- Nút Sửa --}}
                                 <a href="{{ route('banner.edit',$banner->id) }}" class="btn btn-sm btn-outline-primary me-2">
                                     <i class="fas fa-edit me-1"></i>Sửa
@@ -172,18 +168,17 @@
 
 @if (session('error'))
     <script>
-      Swal.fire({
-        icon: 'error',
-        title: 'Không thể xóa!',
-        text: '{{ session('error') }}',
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
+        Swal.fire({
+            icon: 'error',
+            title: 'Không thể xóa!',
+            text: '{{ session('error') }}',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
     </script>
 @endif
-
 
 {{-- Xác nhận khi nhấn 'Sử dụng' và 'Xóa' --}}
 <script>
