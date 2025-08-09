@@ -19,7 +19,7 @@ class ProductSeeder extends Seeder
             // Điện thoại
             [
                 'name' => 'iPhone 15 Pro Max',
-                'image' => '/products/iphone_15_pro_max.png',
+                'image' => 'products/vn-11134207-7ras8-m44io289jumne6.webp',
                 'price' => 30990000,
                 'sale_price' => 28990000,
                 'quantity' => 240,
@@ -30,7 +30,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Samsung Galaxy S24 Ultra',
-                'image' => 'https://down-vn.img.susercontent.com/file/sg-11134201-7rff3-m9r108ikhgv6df.webp',
+                'image' => 'products/sg-11134201-7rff3-m9r108ikhgv6df.webp',
                 'price' => 27990000,
                 'sale_price' => 25990000,
                 'quantity' => 18,
@@ -42,7 +42,7 @@ class ProductSeeder extends Seeder
             // Laptop
             [
                 'name' => 'Asus Vivobook 16',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-ma9a8n27i3jc62.webp',
+                'image' => 'products/vn-11134207-7ra0g-ma9a8n27i3jc62.webp',
                 'price' => 15990000,
                 'sale_price' => 14490000,
                 'quantity' => 45,
@@ -53,7 +53,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Dell XPS 13',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-makt8pyzj848cb.webp',
+                'image' => 'products/vn-11134207-7ra0g-makt8pyzj848cb.webp',
                 'price' => 24990000,
                 'sale_price' => 22990000,
                 'quantity' => 28,
@@ -65,7 +65,7 @@ class ProductSeeder extends Seeder
             // Phụ kiện
             [
                 'name' => 'Tai Nghe Lenovo',
-                'image' => 'https://down-vn.img.susercontent.com/file/cn-11134207-7ras8-m59ux96d4gsxa1@resize_w900_nl.webp',
+                'image' => 'products/cn-11134207-7ras8-m59ux96d4gsxa1@resize_w900_nl.webp',
                 'price' => 790000,
                 'sale_price' => 670000,
                 'quantity' => 340,
@@ -76,7 +76,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Sạc dự phòng Baseus',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lwmf0iifmd3t8f.webp',
+                'image' => 'products/vn-11134207-7r98o-lwmf0iifmd3t8f.webp',
                 'price' => 1200000,
                 'sale_price' => 990000,
                 'quantity' => 425,
@@ -88,7 +88,7 @@ class ProductSeeder extends Seeder
             // Máy tính bảng
             [
                 'name' => 'iPad Air (M3)',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m7hvzyyz0igm60.webp',
+                'image' => 'products/vn-11134207-7ra0g-m7hvzyyz0igm60.webp',
                 'price' => 14590000,
                 'sale_price' => 13490000,
                 'quantity' => 12,
@@ -99,7 +99,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Samsung Galaxy Tab S9',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-maq8xcm2x85o3e.webp',
+                'image' => 'products/vn-11134207-7ras8-maq8xcm2x85o3e.webp',
                 'price' => 20000000,
                 'sale_price' => 18000000,
                 'quantity' => 140,
@@ -111,7 +111,7 @@ class ProductSeeder extends Seeder
             // Tivi
             [
                 'name' => 'Tivi Sony 4K',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mc1kcdjtcdslaf.webp',
+                'image' => 'products/vn-11134207-7ras8-mc1kcdjtcdslaf.webp',
                 'price' => 17000000,
                 'sale_price' => 15000000,
                 'quantity' => 17,
@@ -122,7 +122,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Tivi LG 55 inch',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mbhhk5gdftxgb4.webp',
+                'image' => 'products/vn-11134207-7ras8-mbhhk5gdftxgb4.webp',
                 'price' => 20000000,
                 'sale_price' => 18000000,
                 'quantity' => 26,
@@ -134,7 +134,7 @@ class ProductSeeder extends Seeder
             // Âm thanh
             [
                 'name' => 'Loa Bluetooth JBL',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m9ijn4tl8sas5e.webp',
+                'image' => 'products/vn-11134207-7ra0g-m9ijn4tl8sas5e.webp',
                 'price' => 2500000,
                 'sale_price' => 2200000,
                 'quantity' => 430,
@@ -145,7 +145,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Loa Bluetooth Cyboris',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m6f9xpfnl8bc7e.webp',
+                'image' => 'products/vn-11134207-7ra0g-m6f9xpfnl8bc7e.webp',
                 'price' => 2770000,
                 'sale_price' => 2300000,
                 'quantity' => 85,
@@ -157,7 +157,7 @@ class ProductSeeder extends Seeder
             // Máy ảnh
             [
                 'name' => 'Máy ảnh Lomo',
-                'image' => 'https://down-vn.img.susercontent.com/file/sg-11134201-7rfih-m9kfiaklfamp3f.webp',
+                'image' => 'products/sg-11134201-7rfih-m9kfiaklfamp3f.webp',
                 'price' => 1200000,
                 'sale_price' => 900000,
                 'quantity' => 543,
@@ -168,7 +168,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Instax Mini 12',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m7u96xguvesx8c@resize_w900_nl.webp',
+                'image' => 'products/vn-11134207-7ra0g-m7u96xguvesx8c@resize_w900_nl.webp',
                 'price' => 3200000,
                 'sale_price' => 2850000,
                 'quantity' => 322,
@@ -180,7 +180,7 @@ class ProductSeeder extends Seeder
             // Đồng hồ
             [
                 'name' => 'HUAWEI watch fit 3',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mccaqti4c6z6dc.webp',
+                'image' => 'products/vn-11134207-7ras8-mccaqti4c6z6dc.webp',
                 'price' => 2880000,
                 'sale_price' => 2350000,
                 'quantity' => 150,
@@ -191,7 +191,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Đồng hồ Xiaomi Smart',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mbp4t2viye3989.webp',
+                'image' => 'products/vn-11134207-7ras8-mbp4t2viye3989.webp',
                 'price' => 2500000,
                 'sale_price' => 2200000,
                 'quantity' => 110,
@@ -203,7 +203,7 @@ class ProductSeeder extends Seeder
             // Thiết bị mạng
             [
                 'name' => 'TP-Link Router Wi-Fi 4G',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mbnct2du22cg19.webp',
+                'image' => 'products/vn-11134207-7ras8-mbnct2du22cg19.webp',
                 'price' => 900000,
                 'sale_price' => 800000,
                 'quantity' => 128,
@@ -214,7 +214,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Switch TP-Link 8-Port',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mbnjpmhdmx509c@resize_w900_nl.webp',
+                'image' => 'products/vn-11134207-7ras8-mbnjpmhdmx509c@resize_w900_nl.webp',
                 'price' => 700000,
                 'sale_price' => 650000,
                 'quantity' => 12,
@@ -226,7 +226,7 @@ class ProductSeeder extends Seeder
             // Máy in
             [
                 'name' => 'Máy in laser CANON',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-ma2n2j08d1y247.webp',
+                'image' => 'products/vn-11134207-7ra0g-ma2n2j08d1y247.webp',
                 'price' => 3200000,
                 'sale_price' => 2990000,
                 'quantity' => 7,
@@ -237,7 +237,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Máy in Epson L3250',
-                'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-ma548lgiqwmg55.webp',
+                'image' => 'products/vn-11134207-7ra0g-ma548lgiqwmg55.webp',
                 'price' => 2500000,
                 'sale_price' => 2200000,
                 'quantity' => 6,
