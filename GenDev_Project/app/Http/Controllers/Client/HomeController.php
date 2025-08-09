@@ -15,7 +15,7 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // Lấy danh mục chính
         $categories = Category::with('categoryMinis')
@@ -87,14 +87,18 @@ class HomeController extends Controller
             'variants.variantAttributes.value',
             'category'
         ])
-            ->withCount(['cartdetails as total_sold' => function ($query) {
-                $query->select(DB::raw('SUM(quantity)'));
-            }])
+            ->withCount([
+                'cartdetails as total_sold' => function ($query) {
+                    $query->select(DB::raw('SUM(quantity)'));
+                }
+            ])
             ->where('status', 1)
             ->orderBy('total_sold', 'desc')
-            ->take(8)
-            ->get();
 
+            ->paginate(14);
+        if ($request->ajax()) {
+            return view('client.components.best_sellers', compact('bestSellingProducts'))->render();
+        }
         $products = Product::all();
 
         return view('client.pages.home', compact(

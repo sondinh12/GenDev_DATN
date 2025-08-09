@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use Illuminate\Http\Request;
 use App\Models\Category;
 
@@ -24,7 +25,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = Category::all(); // hoặc whereNull('parent_id') nếu chỉ lấy danh mục cha
-        return view('client.pages.home', compact('categories'));
+        $categories = Category::all();
+
+        // Lấy banner đang sử dụng, nếu không có thì lấy banner mới nhất
+        $banner = Banner::where('status', 'using')->first();
+        if (!$banner) {
+            $banner = Banner::latest()->first();
+        }
+
+        return view('client.pages.home', compact('categories', 'banner'));
     }
 }
