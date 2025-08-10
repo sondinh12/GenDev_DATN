@@ -1,11 +1,11 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    Add
+    Sản phẩm
 @endsection
 
 @section('topbar-title')
-    Products
+    Thêm mới
 @endsection
 
 @section('css')
@@ -43,82 +43,96 @@
     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <div class="form-group">
-            <label>Tên sản phẩm</label>
+        <div class="form-group mt-4 mb-2">
+            <label style="font-size: 15px">Tên sản phẩm</label>
             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                value="{{ old('name') }}">
+                value="{{ old('name') }}" style="text-transform: capitalize; width: 610px;">
             @error('name')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
 
-
-        <div class="form-group">
-            <label>Danh mục</label>
-            <select name="category_id" id=category_id class="form-control">
-                <option value="">-- Chọn danh mục --</option>
-                @foreach($categories as $cate)
-                    <option value="{{ $cate->id }}">{{ $cate->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        @error('category_id')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-
-        <div class="form-group">
-            <label>Danh mục con</label>
-            <select name="category_mini_id" id="category_mini_id" class="form-control">
-                <option value="">-- Chọn danh mục con --</option>
-            </select>
-        </div>
-        @error('category_mini_id')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-
-        <div class="form-group">
-
-            <label>Ảnh đại diện</label>
-            <input type="file" name="image" class="form-control-file" accept="image/*">
-        </div>
-        @error('image')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-
-
-        <div class="form-group">
-            <label>Ảnh thư viện (có thể chọn nhiều)</label>
-            <input type="file" name="galleries[]" class="form-control-file" multiple accept="image/*">
-        </div>
-        @error('galleries')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-
-
-        <div class="form-group">
-            <label>Mô tả</label>
-            <textarea name="description" class="form-control" rows="5" value="{{old('description')}}"></textarea>
-            @error('description')
-                <div class="text-danger">{{ $message }}</div>
-
-            @enderror
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label style="font-size: 15px">Danh mục</label>
+                    <select name="category_id" id="category_id" class="form-control">
+                        <option value="">-- Chọn danh mục --</option>
+                        @foreach ($categories as $cate)
+                            <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label style="font-size: 15px">Danh mục con</label>
+                    <select name="category_mini_id" id="category_mini_id" class="form-control">
+                        <option value="">-- Chọn danh mục con --</option>
+                    </select>
+                    @error('category_mini_id')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
         </div>
 
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label style="font-size: 15px">Ảnh đại diện: </label>
+                    <input type="file" name="image" class="form-control-file" accept="image/*">
+                    @error('image')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label style="font-size: 15px">Ảnh thư viện: </label>
+                    <input type="file" name="galleries[]" class="form-control-file" multiple accept="image/*">
+                    @error('galleries')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
 
-        <div class="form-group">
-            <label>Trạng thái</label><br>
-            <label><input type="radio" name="status" value="1" checked> Hiển thị</label>
-            <label><input type="radio" name="status" value="0"> Ẩn</label>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group mb-2">
+                    <label style="font-size: 15px;">Mô tả</label>
+                    <textarea name="description" class="form-control" rows="5">{{ old('description') }}</textarea>
+                    @error('description')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2"> 
+                    <label style="font-size: 15px" class="mb-2">Trạng thái</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="status" id="status_show" value="1" checked>
+                        <label class="form-check-label" for="status_show">Hiển thị</label>
+                    </div>
+                    <div class="form-check form-check-inline ml-3">
+                        <input class="form-check-input" type="radio" name="status" id="status_hide" value="0">
+                        <label class="form-check-label" for="status_hide">Ẩn</label>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <hr>
 
-        <div class="form-group">
-            <label>Loại sản phẩm</label>
+        <div class="form-group mb-2">
+            <label style="font-size: 15px">Loại sản phẩm</label>
             <select name="product_type" id="product-type" class="form-control @error('product_type') is-invalid @enderror"
                 onchange="toggleProductType()">
-                <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến
-                    thể</option>
+                <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến thể</option>
                 <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể
                 </option>
             </select>
@@ -128,41 +142,49 @@
         </div>
 
         <div id="simple-product-fields" class="{{ old('product_type', 'simple') == 'variable' ? 'hidden' : '' }}">
-            <div class="form-group">
-                <label>Giá</label>
-                <input type="number" name="price" class="form-control @error('price') is-invalid @enderror"
-                    value="{{ old('price') }}" step="0.01">
-                @error('price')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Giá</label>
+                        <input type="number" name="price" class="form-control @error('price') is-invalid @enderror"
+                            value="{{ old('price') }}" step="0.01">
+                        @error('price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label>Giá khuyến mãi</label>
-                <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror"
-                    value="{{ old('sale_price') }}" step="0.01">
-                @error('sale_price')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label style="font-size: 15px">Giá khuyến mãi</label>
+                        <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror"
+                            value="{{ old('sale_price') }}" step="0.01">
+                        @error('sale_price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label>Số lượng</label>
-                <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
-                    value="{{ old('quantity') }}">
-                @error('quantity')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label style="font-size: 15px">Số lượng</label>
+                        <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
+                            value="{{ old('quantity') }}">
+                        @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="variant-form" class="hidden {{ old('product_type') == 'variable' ? '' : 'hidden' }}">
-            <h4>Biến thể sản phẩm</h4>
+            <h5>Biến thể sản phẩm</h5>
             <div class="form-group">
-                <label>Chọn thuộc tính:</label>
+                <label style="font-size: 15px">Thuộc tính: </label>
                 <select id="attribute-selector" class="form-control">
                     <option value="">-- Chọn thuộc tính --</option>
-                    @foreach($attributes as $attribute)
+                    @foreach ($attributes as $attribute)
                         <option value="{{ $attribute->id }}" data-name="{{ $attribute->name }}">
                             {{ $attribute->name }}
                         </option>
@@ -177,16 +199,17 @@
             <div id="variant-table" class="mt-4"></div>
 
             <div id="attribute-values-template" style="display: none;">
-                @foreach($attributes as $attribute)
+                @foreach ($attributes as $attribute)
                     <div class="attribute-group border p-2 mb-2" data-attr-id="{{ $attribute->id }}">
                         <div class="d-flex justify-content-between">
                             <strong>{{ $attribute->name }}</strong>
                             <button type="button" class="btn btn-danger btn-sm remove-attribute">❌</button>
                         </div>
                         <div class="mt-2">
-                            @foreach($attribute->values as $value)
+                            @foreach ($attribute->values as $value)
                                 <label class="mr-2">
-                                    <input type="checkbox" name="attribute_values[{{ $attribute->id }}][]" value="{{ $value->id }}">
+                                    <input type="checkbox" name="attribute_values[{{ $attribute->id }}][]"
+                                        value="{{ $value->id }}">
                                     {{ $value->value }}
                                 </label>
                             @endforeach
@@ -202,8 +225,7 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ URL::asset('build/js/app.js') }}">
-    </script>
+    <script src="{{ URL::asset('build/js/app.js') }}"></script>
 
 
     <script>
@@ -228,21 +250,23 @@
 
         document.addEventListener('DOMContentLoaded', toggleProductType);
 
-        document.getElementById('attribute-selector').addEventListener('change', function () {
+        document.getElementById('attribute-selector').addEventListener('change', function() {
             const attrId = this.value;
             const attrName = this.options[this.selectedIndex].dataset.name;
 
             if (!attrId) return;
 
-            if (document.querySelector(`#selected-attributes-container .attribute-group[data-attr-id="${attrId}"]`)) {
+            if (document.querySelector(
+                `#selected-attributes-container .attribute-group[data-attr-id="${attrId}"]`)) {
                 this.value = '';
                 return;
             }
 
-            const template = document.querySelector(`#attribute-values-template .attribute-group[data-attr-id="${attrId}"]`);
+            const template = document.querySelector(
+                `#attribute-values-template .attribute-group[data-attr-id="${attrId}"]`);
             const clone = template.cloneNode(true);
 
-            clone.querySelector('.remove-attribute').addEventListener('click', function () {
+            clone.querySelector('.remove-attribute').addEventListener('click', function() {
                 clone.remove();
             });
 
@@ -250,7 +274,7 @@
             this.value = '';
         });
 
-        document.getElementById('generate-variants').addEventListener('click', function () {
+        document.getElementById('generate-variants').addEventListener('click', function() {
             const groups = document.querySelectorAll('#selected-attributes-container .attribute-group');
             let selected = [];
             groups.forEach(group => {
@@ -297,10 +321,9 @@
             document.getElementById('variant-table').innerHTML = '';
             document.getElementById('variant-table').appendChild(table);
         });
-
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const miniCategories = @json($groupedMini ?? []);
             const categorySelect = document.getElementById('category_id');
             const miniSelect = document.getElementById('category_mini_id');
@@ -310,7 +333,7 @@
                 return;
             }
 
-            categorySelect.addEventListener('change', function () {
+            categorySelect.addEventListener('change', function() {
                 const selected = this.value;
                 miniSelect.innerHTML = '<option value="">-- Chọn danh mục con --</option>';
 

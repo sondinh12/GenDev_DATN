@@ -1,11 +1,11 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-Products
+Sản phẩm
 @endsection
 
 @section('topbar-title')
-Manage
+Quản lý
 @endsection
 
 @section('css')

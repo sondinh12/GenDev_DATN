@@ -5,7 +5,7 @@
 @endsection
 
 @section('topbar-title')
-    Product
+    Sản phẩm
 @endsection
 
 @section('css')

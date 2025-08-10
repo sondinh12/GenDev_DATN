@@ -6,9 +6,6 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">✏️ Sửa danh mục con cho {{ $categories->name }}</h4>
-        <a href="{{ route('admin.categories_minis.index', $categories->id) }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách
-        </a>
     </div>
 
     <div class="card shadow-sm">

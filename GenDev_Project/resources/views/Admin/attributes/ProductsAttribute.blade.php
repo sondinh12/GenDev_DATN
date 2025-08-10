@@ -34,7 +34,7 @@
             <div class="accordion" id="attributesAccordion">
                 @forelse ($attributes as $attribute)
                     <div class="accordion-item mb-3 border-0 rounded-3 overflow-hidden shadow-sm">
-                       <h2 class="accordion-header" id="heading{{ $attribute->id }}">
+                        <h2 class="accordion-header" id="heading{{ $attribute->id }}">
                             <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light bg-opacity-10">
                                 <button class="accordion-button collapsed bg-transparent shadow-none flex-grow-1 me-3" type="button"
                                     data-bs-toggle="collapse"
@@ -74,7 +74,7 @@
 
 
                         <div id="collapse{{ $attribute->id }}" class="accordion-collapse collapse"
-                             aria-labelledby="heading{{ $attribute->id }}" data-bs-parent="#attributesAccordion">
+                            aria-labelledby="heading{{ $attribute->id }}" data-bs-parent="#attributesAccordion">
                             <div class="accordion-body bg-light bg-opacity-10">
                                 @if ($attribute->values->count())
                                     <div class="d-flex flex-wrap gap-2">
