@@ -343,46 +343,15 @@
             </div>
         </div>
     </div>
-    {{-- Đánh giá sản phẩm --}}
+  {{-- Đánh giá sản phẩm --}}
     <div class="container-lg px-0">
         <div class="review-card card mb-5 mt-4 shadow rounded-4 border-0 mx-auto" style="max-width: 1200px;">
             <div class="card-header bg-gradient text-white fw-bold py-3 rounded-top-4" style="background: linear-gradient(45deg, #2196F3, #00BCD4); font-size: 1.2rem; letter-spacing: 1px;">
                 <i class="fas fa-star text-warning me-2"></i>Đánh giá sản phẩm
             </div>
             <div class="card-body p-4">
-                @auth
-                    @php
-                        $userReviewCount = 0;
-                        if(auth()->check()) {
-                            $userReviewCount = $product->reviews()->where('user_id', auth()->id())->count();
-                        }
-                    @endphp
-                    @if(!empty($canReview) && $canReview && $userReviewCount < 2)
-                        <form method="POST" action="{{ route('product.review.store', $product->id) }}" class="row g-3 align-items-end mb-4">
-                            @csrf
-                            <div class="col-12 col-md-4 text-center">
-                                <label class="form-label fw-semibold mb-2">Số sao</label>
-                                <div id="star-rating" class="d-inline-block">
-                                    @for($i=1; $i<=5; $i++)
-                                        <i class="fas fa-star star-select text-secondary" data-value="{{ $i }}" style="font-size:2rem; cursor:pointer; margin:0 2px;"></i>
-                                    @endfor
-                                </div>
-                                <input type="hidden" name="rating" id="rating-value" value="5" required>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label fw-semibold">Bình luận</label>
-                                <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
-                            </div>
-                            <div class="col-12 col-md-2 text-end">
-                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi đánh giá</button>
-                            </div>
-                        </form>
-                    @endif
-                @else
-                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
-                @endauth
                 <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
+                @php $reviews = $product->reviews()->with('user')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
                     @forelse($reviews as $review)
                         <div class="col-12 col-md-6">
@@ -417,7 +386,7 @@
     <div class="container-lg px-0">
         <div class="question-card card mb-5 mt-4 shadow rounded-4 border-0 mx-auto" style="max-width: 1200px;">
             <div class="card-header bg-gradient text-white fw-bold py-3 rounded-top-4" style="background: linear-gradient(45deg, #4CAF50, #8BC34A); font-size: 1.2rem; letter-spacing: 1px;">
-                <i class="fas fa-question-circle text-warning me-2"></i>Hỏi đáp sản phẩm
+                <i class="fas fa-comment text-warning me-2"></i>Bình luận
             </div>
             <div class="card-body p-4">
                 @auth
@@ -435,9 +404,9 @@
                     <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đặt câu hỏi về sản phẩm.</div>
                 @endauth
                 <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các câu hỏi gần đây</h6>
-                @php $questions = $product->questions()->with('user')->latest()->take(5)->get(); @endphp
+                @php $questionss = $product->questions()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
-                    @forelse($questions as $question)
+                    @forelse($questionss as $question)
                         <div class="col-12">
                             <div class="question-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
                                 <div class="d-flex align-items-center mb-2">
