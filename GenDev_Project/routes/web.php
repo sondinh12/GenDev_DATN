@@ -177,12 +177,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
-
-    // Vai trò
-    Route::middleware(['permission:Quản lý vai trò'])->group(function () {
-        Route::resource('roles', RoleController::class);
-    });
-
     // Mã giảm giá
     Route::middleware(['permission:Quản lý mã giảm giá'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
