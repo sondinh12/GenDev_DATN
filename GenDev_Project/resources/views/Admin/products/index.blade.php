@@ -124,6 +124,7 @@ Manage
 @section('scripts')
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
+@push('scripts')
 {{-- SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -142,3 +143,4 @@ Manage
         });
     </script>
 @endif
+@endpush

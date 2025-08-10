@@ -386,7 +386,7 @@
     <div class="container-lg px-0">
         <div class="question-card card mb-5 mt-4 shadow rounded-4 border-0 mx-auto" style="max-width: 1200px;">
             <div class="card-header bg-gradient text-white fw-bold py-3 rounded-top-4" style="background: linear-gradient(45deg, #4CAF50, #8BC34A); font-size: 1.2rem; letter-spacing: 1px;">
-                <i class="fas fa-question-circle text-warning me-2"></i>Hỏi đáp sản phẩm
+                <i class="fas fa-comment text-warning me-2"></i>Bình luận
             </div>
             <div class="card-body p-4">
                 @auth

@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('image')->nullable();      
-            $table->text('images')->nullable();        
+            $table->string('image')->nullable();
+            $table->text('images')->nullable();
             $table->enum('type', ['static', 'dynamic'])->default('static');
+            
+            // Thêm cột status (3 trạng thái) ngay sau type, nhưng không dùng AFTER
+            $table->enum('status', ['unused', 'using', 'expired'])
+                  ->default('unused');
+            
             $table->timestamps();
-            $table->softDeletes();                     
+            $table->softDeletes();
         });
     }
 

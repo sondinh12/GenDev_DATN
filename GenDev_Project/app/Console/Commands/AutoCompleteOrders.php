@@ -21,7 +21,7 @@ class AutoCompleteOrders extends Command
             ->get();
 
         foreach ($orders as $order) {
-            $order->status = 'completed';
+            $order->status = 'completed'; 
             $order->save();
 
             $this->info("Order #{$order->id} marked as completed.");
