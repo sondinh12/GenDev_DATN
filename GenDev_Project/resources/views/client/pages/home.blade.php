@@ -68,8 +68,8 @@
                                     <div class="media">
                                         <i class="feature-icon d-flex mr-3 tm tm-feedback"></i>
                                         <div class="media-body feature-text">
-                                            <h5 class="mt-0">99% Khách hàng</h5>
-                                            <span>phản hồi tích cực</span>
+                                            <h5 class="mt-0">99% Phản hồi</h5>
+                                            <span>từ khách hàng</span>
                                         </div>
                                     </div>
                                     <!-- .media -->
