@@ -472,9 +472,15 @@ class ProductController extends Controller
             'question' => 'required|string|max:200',
         ]);
 
+        $user = Auth::user();
+        if ($user && $user->is_banned) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors(['Tài khoản của bạn đã bị khóa.']);
+        }
+
         ProductQuestion::create([
             'product_id' => $product->id,
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'question' => $request->question,
         ]);
 
