@@ -36,18 +36,36 @@
     </div>
     @endsection
     <style>
+#best-selling-wrapper .products{
+  display: grid !important;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));         /* mobile mặc định 2 cột */
+}
 
+/* Gỡ ép width/float của theme */
+#best-selling-wrapper .products .product{
+  width: auto !important;
+  max-width: none !important;
+  float: none !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
 @media (min-width: 576px){
-  #best-selling-wrapper .products .product{ flex-basis: 220px !important; max-width: 220px !important; width: 220px !important; }
+  #best-selling-wrapper .products{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (min-width: 768px){
+  #best-selling-wrapper .products{ grid-template-columns: repeat(4, minmax(0,1fr)); }
 }
 @media (min-width: 992px){
-  #best-selling-wrapper .products .product{ flex-basis: 240px !important; max-width: 240px !important; width: 240px !important; }
+  #best-selling-wrapper .products{ grid-template-columns: repeat(5, minmax(0,1fr)); }
 }
 @media (min-width: 1200px){
-  #best-selling-wrapper .products .product{ flex-basis: 260px !important; max-width: 260px !important; width: 260px !important; }
+  #best-selling-wrapper .products{ grid-template-columns: repeat(6, minmax(0,1fr)); }
 }
-
-
+/* Màn rất rộng: KHÓA 7 cột, item thứ 7 KHÔNG rơi hàng */
+@media (min-width: 1400px){
+  #best-selling-wrapper .products{ grid-template-columns: repeat(7, minmax(0,1fr)); }
+}
 
     </style>
 
