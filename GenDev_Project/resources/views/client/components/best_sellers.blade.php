@@ -54,7 +54,7 @@
                 @endif
             </span>
 
-            <h2 class="woocommerce-loop-product__title">{{ $product->name }}</h2>
+            <b class="woocommerce-loop-product__title">{{ $product->name }}</b>
 
             <div class="techmarket-product-rating">
                 <div title="Đánh giá {{ $product->rating ?? '5.00' }} trên 5" class="star-rating">
