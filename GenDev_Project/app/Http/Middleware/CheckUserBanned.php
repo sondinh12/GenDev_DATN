@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,12 +33,10 @@ class CheckUserBanned
                     $user->save();
                 } else {
                     Auth::logout();
-                    return redirect()->route('login')->withErrors([
-                        'email' => 'Tài khoản bị tạm khóa đến ' . Carbon::parse($user->banned_until)->format('d/m/Y H:i'),
-                    ]);
+                    return redirect()->route('login')->withErrors('Tài khoản bị tạm khóa đến ' . $user->banned_until->format('d/m/Y H:i'));
                 }
             }
-        }
+        } 
         return $next($request);
     }
-}
+}  

@@ -25,11 +25,11 @@
             @endif
 
             {{-- Hiển thị thông báo thành công --}}
-            {{-- @if (session('success'))
+            @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
-            @endif --}}
+            @endif
 
             <form action="{{route("categories.store")}}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -58,36 +58,3 @@
     </div>
 </div>
 @endsection
-{{-- SweetAlert2 --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-{{-- Flash Message --}}
-@if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: '{{ session('success') }}',
-            confirmButtonColor: '#3085d6',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
-
-@if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi!',
-            text: '{{ session('error') }}',
-            confirmButtonColor: '#d33',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif

@@ -10,57 +10,55 @@ use App\Models\AttributeValue;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\CategoryMini;
-use App\Models\Order;
-use App\Models\ProductQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-public function show($id)
-{
-    $product = Product::with([
-        'category',
-        'categoryMini',
-        'galleries',
-        'variants.variantAttributes.attribute',
-        'variants.variantAttributes.value',
-        'reviews' => function ($query) {
-            // $query->where('status', 'approved')->with('user');
-        },
-        'questions' => function ($query) {
-            $query->with('user')->where('status', 'approved')->latest()->take(5);
+    // public function index()
+    // {
+    //     return view('client.product.index');
+    // }
+    public function show($id)
+    {
+        $product = Product::with([
+            'category',
+            'categoryMini',
+            'galleries',
+            'variants.variantAttributes.attribute',
+            'variants.variantAttributes.value'
+        ])->findOrFail($id);
+
+        // Lấy danh sách ảnh cho gallery
+        $galleryImageUrls = [];
+        if ($product->image) {
+            $galleryImageUrls[] = asset('storage/' . $product->image);
         }
-    ])->findOrFail($id);
-
-    $galleryImageUrls = [];
-    if ($product->image) {
-        $galleryImageUrls[] = asset('storage/' . $product->image);
-    }
-    if ($product->galleries) {
-        foreach ($product->galleries as $gallery) {
-            $galleryImageUrls[] = asset('storage/' . $gallery->image);
+        if ($product->galleries) {
+            foreach ($product->galleries as $gallery) {
+                $galleryImageUrls[] = asset('storage/' . $gallery->image);
+            }
         }
+
+        // Lấy 10 sản phẩm liên quan cùng danh mục (trừ sản phẩm hiện tại)
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')
+            ->limit(8)
+            ->get();
+
+        $canReview = false;
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $canReview = \App\Models\OrderDetail::whereHas('order', function ($q) use ($userId) {
+                $q->where('user_id', $userId)
+                    ->where('payment_status', 'paid'); // status: success = đã thanh toán thành công
+            })->where('product_id', $product->id)->exists();
+        }
+        return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
     }
-
-    $relatedProducts = Product::where('category_id', $product->category_id)
-        ->where('id', '!=', $product->id)
-        ->whereNull('deleted_at')
-        ->orderBy('id', 'desc')
-        ->limit(8)
-        ->get();
-
-    // Example logic for $canReview
-    $canReview = Auth::check() && Order::where('user_id', Auth::id())
-        ->whereHas('orderDetails', function ($query) use ($product) {
-            $query->where('product_id', $product->id);
-        })
-        ->where('status', 'completed') // Adjust based on your order status logic
-        ->exists();
-
-    return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
-}
 
     public function shop(Request $request)
     {
@@ -206,20 +204,5 @@ public function show($id)
         $products = $query->paginate(10)->withQueryString();
 
         return view('client.product.shop', compact('products', 'categories', 'priceRange'));
-    }
-    // New method to store questions
-    public function storeQuestion(Request $request, Product $product)
-    {
-        $request->validate([
-            'question' => 'required|string|max:200',
-        ]);
-
-        ProductQuestion::create([
-            'product_id' => $product->id,
-            'user_id' => Auth::id(),
-            'question' => $request->question,
-        ]);
-
-        return redirect()->route('product.show', $product->id)->with('success', 'Câu hỏi của bạn đã được gửi!');
     }
 }

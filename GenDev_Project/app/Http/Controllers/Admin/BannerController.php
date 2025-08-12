@@ -3,219 +3,192 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BannerRequest;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        // Đếm số banner trong thùng rác
+        // Lấy số lượng banner trong thùng rác
         $trashCount = Banner::onlyTrashed()->count();
 
-        // Tìm kiếm theo title
+        // Tìm kiếm
         $search = $request->query('search');
-        $query = Banner::latest(); // mới nhất lên đầu
+        $query = Banner::latest(); // Sắp xếp theo created_at giảm dần (mới nhất lên đầu)
 
         if ($search) {
-            $query->where('title', 'like', "%{$search}%");
+            $query->where('title', 'like', '%' . $search . '%');
         }
 
-        // Phân trang 10 bản ghi/trang
+        // Phân trang 10 banner/trang
         $banners = $query->paginate(10);
 
         return view('admin.banner.index', compact('banners', 'trashCount'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.banner.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(BannerRequest $request)
+    public function store(Request $request)
     {
-        // Nếu banner mới chọn dùng, reset các banner khác
-        if ($request->status === 'using') {
-            Banner::where('status', 'using')->update(['status' => 'unused']);
+        // Validate request
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'type'  => 'required|in:static,dynamic',
+            'image' => 'required_if:type,static|image|mimes:jpg,jpeg,png,gif',
+            'images'   => 'required_if:type,dynamic|array|min:1',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif',
+        ]);
+
+        // Prepare data
+        $data = [
+            'title' => $request->title,
+            'type'  => $request->type,
+        ];
+
+        // Static banner: single image
+        if ($request->type === 'static' && $request->hasFile('image')) {
+            $data['image'] = $request->file('image')
+                                    ->store('banners', 'public');
         }
 
-        // Chuẩn bị dữ liệu
-        $data = $request->only(['title', 'type', 'status']);
-
-        if ($request->type === 'static') {
-            $data['image'] = $request->file('image')->store('banners', 'public');
-        } else {
+        // Dynamic banner: multiple images
+        if ($request->type === 'dynamic' && $request->hasFile('images')) {
             $paths = [];
             foreach ($request->file('images') as $file) {
-                $paths[] = $file->store('banners', 'public');
+                if ($file->isValid()) {
+                    $paths[] = $file->store('banners', 'public');
+                }
             }
-            $data['images'] = json_encode($paths);
+            if (count($paths) > 0) {
+                $data['images'] = json_encode($paths);
+            }
         }
 
+        // Create record
         Banner::create($data);
 
         return redirect()->route('banner.index')
                          ->with('success', 'Banner đã được thêm.');
     }
 
-    /**
-     * Activate (use) a banner.
-     */
-    public function useBanner($id)
+    public function show(string $id)
     {
-        // Reset tất cả banner đang sử dụng
-        Banner::where('status', 'using')->update(['status' => 'unused']);
-
-        // Đánh dấu banner này là đang sử dụng
         $banner = Banner::findOrFail($id);
-        $banner->status = 'using';
-        $banner->save();
-
-        return back()->with('success', "Banner “{$banner->title}” đang được sử dụng.");
+        return view('admin.banner.show', compact('banner'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $banner = Banner::findOrFail($id);
         return view('admin.banner.edit', compact('banner'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(BannerRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         $banner = Banner::findOrFail($id);
 
-        // Nếu chọn dùng banner này, reset banner khác
-        if ($request->status === 'using') {
-            Banner::where('status', 'using')
-                  ->where('id', '!=', $id)
-                  ->update(['status' => 'unused']);
-        }
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'type'        => 'required|in:static,dynamic',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            'replace_images.*' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            'delete_images'    => 'array',
+            'new_images.*'     => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        ]);
 
-        // Gán chung
-        $banner->title  = $request->title;
-        $banner->type   = $request->type;
-        $banner->status = $request->status;
+        $banner->title = $request->title;
+        $banner->type  = $request->type;
 
-        // Nếu dynamic, kiểm tra tối thiểu phải 2 ảnh
-        if ($request->type === 'dynamic') {
-            $existing = $banner->images ? json_decode($banner->images, true) : [];
-            $toDelete = $request->input('delete_images', []);
-            $added    = is_array($request->file('new_images')) ? count($request->file('new_images')) : 0;
-            $remaining = count($existing) - count($toDelete) + $added;
-
-            if ($remaining < 2) {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Banner động phải có ít nhất 2 ảnh.');
-            }
-        }
-
-        // Xử lý banner tĩnh
+        // ====== banner static ======
         if ($request->type === 'static') {
+            // nếu upload ảnh mới static
             if ($request->hasFile('image')) {
+                // xóa file cũ
                 if ($banner->image && Storage::disk('public')->exists($banner->image)) {
                     Storage::disk('public')->delete($banner->image);
                 }
                 $banner->image = $request->file('image')->store('banners', 'public');
             }
-            // Xóa ảnh động cũ
+            // reset dynamic images
             $banner->images = null;
             $banner->save();
-
-            return redirect()->route('banner.index')
-                             ->with('success', 'Banner đã được cập nhật.');
+            return redirect()->route('banner.index')->with('success','Banner đã được cập nhật.');
         }
 
-        // Xử lý banner động
+        // ====== banner dynamic ======
+        // 1) Load mảng cũ
         $existing = $banner->images ? json_decode($banner->images, true) : [];
 
-        // 1) Xóa ảnh cũ
+        // 2) Xóa theo delete_images[]
         if ($request->filled('delete_images')) {
             foreach ($request->delete_images as $idx) {
                 if (isset($existing[$idx])) {
-                    Storage::disk('public')->delete($existing[$idx]);
+                    // xóa file vật lý
+                    if (Storage::disk('public')->exists($existing[$idx])) {
+                        Storage::disk('public')->delete($existing[$idx]);
+                    }
+                    // bỏ ảnh khỏi mảng
                     unset($existing[$idx]);
                 }
             }
         }
 
-        // 2) Thay ảnh cũ
+        // 3) Thay ảnh theo replace_images[i]
         if ($request->hasFile('replace_images')) {
             foreach ($request->file('replace_images') as $idx => $file) {
-                if ($file->isValid() && isset($existing[$idx])) {
-                    Storage::disk('public')->delete($existing[$idx]);
-                    $existing[$idx] = $file->store('banners', 'public');
+                if ($file && $file->isValid() && isset($existing[$idx])) {
+                    // xóa file cũ
+                    if (Storage::disk('public')->exists($existing[$idx])) {
+                        Storage::disk('public')->delete($existing[$idx]);
+                    }
+                    // lưu ảnh mới thay thế
+                    $existing[$idx] = $file->store('banners','public');
                 }
             }
         }
 
-        // 3) Thêm ảnh mới
+        // 4) Thêm ảnh mới new_images[]
         if ($request->hasFile('new_images')) {
             foreach ($request->file('new_images') as $file) {
-                $existing[] = $file->store('banners', 'public');
+                if ($file->isValid()) {
+                    $existing[] = $file->store('banners','public');
+                }
             }
         }
 
-        // Lưu lại
-        $banner->images = json_encode(array_values($existing));
-        $banner->image  = null;
+        // 5) Reindex và lưu lại
+        $existing = array_values($existing);
+        $banner->images = json_encode($existing);
+        // static image clear
+        $banner->image = null;
+
         $banner->save();
 
-        return redirect()->route('banner.index')
-                         ->with('success', 'Banner đã được cập nhật.');
+        return redirect()->route('banner.index')->with('success','Banner đã được cập nhật.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $banner = Banner::findOrFail($id);
-
-        // Không cho xóa banner đang sử dụng
-        if ($banner->status === 'using') {
-            return redirect()->route('banner.index')
-                             ->with('error', 'Không thể xóa banner đang được sử dụng.');
-        }
-
         $banner->delete(); // Soft delete
-
         return redirect()->route('banner.index')
                          ->with('success', 'Banner đã được chuyển vào thùng rác.');
     }
 
-    /**
-     * Display the trash.
-     */
     public function trash()
     {
+        // Lấy số lượng banner trong thùng rác
         $trashCount = Banner::onlyTrashed()->count();
-        $banners    = Banner::onlyTrashed()->latest()->paginate(10);
-
+        // Phân trang cho thùng rác
+        $banners = Banner::onlyTrashed()->latest()->paginate(10); // Sắp xếp mới nhất lên đầu trong thùng rác
         return view('admin.banner.trash', compact('banners', 'trashCount'));
     }
 
-    /**
-     * Restore a soft-deleted banner.
-     */
     public function restore($id)
     {
         $banner = Banner::onlyTrashed()->findOrFail($id);
@@ -224,25 +197,23 @@ class BannerController extends Controller
                          ->with('success', 'Banner đã được khôi phục.');
     }
 
-    /**
-     * Permanently delete a banner.
-     */
     public function forceDelete($id)
     {
         $banner = Banner::onlyTrashed()->findOrFail($id);
 
-        // Xóa file vật lý
+        // Delete stored images
         if ($banner->image && Storage::disk('public')->exists($banner->image)) {
             Storage::disk('public')->delete($banner->image);
         }
         if ($banner->images) {
-            foreach (json_decode($banner->images) as $img) {
-                Storage::disk('public')->delete($img);
+            foreach (json_decode($banner->images) as $old) {
+                if (Storage::disk('public')->exists($old)) {
+                    Storage::disk('public')->delete($old);
+                }
             }
         }
 
         $banner->forceDelete();
-
         return redirect()->route('admin.banner.trash')
                          ->with('success', 'Banner đã bị xóa vĩnh viễn.');
     }

@@ -15,14 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("user_id");
             $table->unsignedBigInteger("product_id");
+            $table->integer("quantity");
             $table->timestamps();
 
-            // Foreign keys
-            $table->foreign("user_id")->references("id")->on("users")->onDelete('cascade');
-            $table->foreign("product_id")->references("id")->on("products")->onDelete('cascade');
-
-            // Unique constraint để tránh trùng wishlist
-            $table->unique(['user_id', 'product_id']);
+            // fk
+            $table->foreign("user_id")->references("id")->on("users");
+            $table->foreign("product_id")->references("id")->on("products");
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('favorites');
+        Schema::dropIfExists('order_favorites');
     }
 };
