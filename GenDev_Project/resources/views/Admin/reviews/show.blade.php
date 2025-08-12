@@ -9,26 +9,26 @@
             <h5 class="mb-0">Chi tiết đánh giá</h5>
         </div>
         <div class="card-body">
-            <p><strong>Sản phẩm:</strong> {{ $question->product->name }}</p>
-            <p><strong>Người đánh giá:</strong> {{ $question->user->name }} ({{ $question->user->email }})</p>
+            <p><strong>Sản phẩm:</strong> {{ $review->product->name }}</p>
+            <p><strong>Người đánh giá:</strong> {{ $review->user->name }} ({{ $review->user->email }})</p>
             <p><strong>Số sao:</strong>
                 @for($i = 1; $i <= 5; $i++)
-                    <i class="fas fa-star{{ $i <= $question->rating ? '' : '-o' }} text-warning"></i>
+                    <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }} text-warning"></i>
                 @endfor
             </p>
-            <p><strong>Bình luận:</strong><br>{{ $question->comment }}</p>
+            <p><strong>Bình luận:</strong><br>{{ $review->comment }}</p>
             <p><strong>Trạng thái:</strong>
-                @if($question->status === 'approved')
+                @if($review->status === 'approved')
                     <span class="badge bg-success">Hiển thị</span>
                 @else
                     <span class="badge bg-danger">Đã ẩn</span>
                 @endif
             </p>
-            <p><strong>Thời gian:</strong> {{ $question->created_at->format('d/m/Y H:i') }}</p>
+            <p><strong>Thời gian:</strong> {{ $review->created_at->format('d/m/Y H:i') }}</p>
             <p><strong>Số lần vi phạm:</strong> 
-               @if($question->user->violation_count == 0)
+               @if($review->user->violation_count == 0)
                     <span class="badge bg-success">Chưa vi phạm</span>
-                @elseif($question->user->violation_count == 1)
+                @elseif($review->user->violation_count == 1)
                     <span class="badge bg-warning">Đã cảnh cáo 1 lần</span>
                 @else
                     <span class="badge bg-danger">Vi phạm nhiều lần</span>

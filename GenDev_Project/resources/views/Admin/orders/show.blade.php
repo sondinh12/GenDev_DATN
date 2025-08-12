@@ -6,7 +6,7 @@
    <div class="container-fluid py-4" style="background: #f8fafc;">
     <div class="row justify-content-center">
         {{-- Flash Message --}}
-        {{-- @if(session('success'))
+        @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -21,7 +21,7 @@
                 <i class="fas fa-info-circle me-1"></i> {{ session('notification') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif --}}
+        @endif
     </div>
 
  <div class="col-lg-10">
@@ -370,53 +370,3 @@
         }
     }, 5000);
 </script> --}}
-@push('scripts')
-{{-- SweetAlert2 --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-{{-- Flash Message --}}
-@if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: '{{ session('success') }}',
-            confirmButtonColor: '#3085d6',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
-
-@if (session('notification'))
-    <script>
-        Swal.fire({
-            icon: 'notification',
-            title: 'Thành công!',
-            text: '{{ session('notification') }}',
-            confirmButtonColor: '#3085d6',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
-
-@if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi!',
-            text: '{{ session('error') }}',
-            confirmButtonColor: '#d33',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
-@endpush

@@ -13,10 +13,8 @@ use App\Models\Attribute;
 use App\Models\Cartdetail;
 use App\Models\Product;
 use App\Models\ProductGallery;
-use App\Models\ProductQuestion;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantAttribute;
-use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class ProductController extends Controller
@@ -384,11 +382,6 @@ class ProductController extends Controller
     public function trashAttribute($id)
     {
         $attribute = Attribute::findOrFail($id);
-        $isUsed = ProductVariantAttribute::where('attribute_id', $id)->exists();
-        if ($isUsed) {
-            return redirect()->route('admin.attributes.index')
-                ->with('error', 'Không thể đưa thuộc tính vào thùng rác vì đã được sử dụng trong sản phẩm!');
-        }
         $attribute->status = 2; // đánh dấu là đã xóa
         $attribute->save();
 
@@ -465,25 +458,5 @@ class ProductController extends Controller
         $attribute->delete(); // Xóa chính nó
 
         return redirect()->route('admin.attributes.trashList')->with('success', 'Đã xóa vĩnh viễn thuộc tính!');
-    }
-    public function storeQuestion(Request $request, Product $product)
-    {
-        $request->validate([
-            'question' => 'required|string|max:200',
-        ]);
-
-        $user = Auth::user();
-        if ($user && $user->is_banned) {
-            Auth::logout();
-            return redirect()->route('login')->withErrors(['Tài khoản của bạn đã bị khóa.']);
-        }
-
-        ProductQuestion::create([
-            'product_id' => $product->id,
-            'user_id' => $user->id,
-            'question' => $request->question,
-        ]);
-
-        return redirect()->route('product.show', $product->id)->with('success', 'Câu hỏi của bạn đã được gửi!');
     }
 }
