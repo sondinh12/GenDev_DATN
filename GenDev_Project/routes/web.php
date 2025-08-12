@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
@@ -28,7 +29,6 @@ use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Client\FavoriteController;
-
 
 use Spatie\Permission\Models\Role;
 
@@ -190,12 +190,12 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
 
     // quan lý banner
     Route::middleware(['permission:Quản lý banner'])->group(function () {
-     Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
-     ->name('banner.use');
-    Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
-    Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
-    Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
-    Route::resource('banner', BannerController::class);
+        Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
+            ->name('banner.use');
+        Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
+        Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
+        Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
+        Route::resource('banner', BannerController::class);
     });
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng

@@ -85,19 +85,39 @@ class ClientOrderController extends Controller
 
         // 6. Cập nhật trạng thái đơn hàng
         $order->status = 'cancelled';
-        // $order->payment_status = 'cancelled';
-        $order->save();
+        // 7. Trạng thái thanh toán
+        $oldPaymentStatus = $order->payment_status;
 
+        if ($order->payment === 'banking' && $oldPaymentStatus === 'paid') {
+            // Đã thanh toán online → chuyển sang "đang hoàn tiền"
+            $order->payment_status = 'refund';
+        } else {
+            // COD/chưa thanh toán → đánh dấu "cancelled"
+            $order->payment_status = 'cancelled';
+        }
+        $order->save();
         // 7. Ghi log trạng thái
-        OrderStatusLog::create([
-            'order_id' => $order->id,
+        $order->orderStatusLogs()->create([
             'changed_by' => Auth::id(),
+            'type'       => 'order',
             'old_status' => $oldStatus,
             'new_status' => 'cancelled',
-            'note' => $validated['reason'],
-            'refund_bank_account' => $validated['bank_account'],
+            'note'       => $validated['reason'],
             'changed_at' => now(),
         ]);
+
+        // Nếu chuyển thanh toán sang refund → ghi log thanh toán (type = payment)
+        if ($oldPaymentStatus === 'paid' && $order->payment_status === 'refund') {
+            $order->orderStatusLogs()->create([
+                'changed_by'          => Auth::id(),
+                'type'                => 'payment',
+                'old_status'          => $oldPaymentStatus,  // paid
+                'new_status'          => 'refund',
+                'note'                =>  $validated['reason'],
+                'refund_bank_account' => $validated['bank_account'],
+                'changed_at'          => now(),
+            ]);
+        }
 
         return back()->with('success', 'Đơn hàng đã được hủy thành công.');
     }
@@ -152,6 +172,7 @@ class ClientOrderController extends Controller
         OrderStatusLog::create([
             'order_id' => $order->id,
             'changed_by' => Auth::id(),
+            'type' => 'order',
             'old_status' => $oldStatus,
             'new_status' => 'completed',
             'note' => 'Người dùng xác nhận đã nhận hàng',
@@ -162,33 +183,56 @@ class ClientOrderController extends Controller
     }
     public function return(Request $request, Order $order)
     {
-        // 1. Kiểm tra đơn hàng thuộc về người dùng đang đăng nhập
-        if ($order->user_id !== Auth::id()) {
-            return redirect()->back()->with('error', 'Bạn không có quyền truy cập đơn hàng này.');
+        // 1) Chỉ chủ đơn mới được yêu cầu hoàn
+        if ((int)$order->user_id !== (int)Auth::id()) {
+            return back()->with('error', 'Bạn không có quyền truy cập đơn hàng này.');
         }
 
-        // 2. Validate input
-        $validated = $request->validate([
-            'reason' => 'required|string|max:1000',
-            'bank_account' => 'nullable|string|max:255',
-        ]);
+        // 2) Chỉ cho phép khi đang giao
+        if ($order->status !== 'shipping') {
+            return back()->with('error', 'Chỉ có thể yêu cầu hoàn hàng khi đơn đang giao.');
+        }
 
-        // 3. Ghi log trạng thái đơn hàng
-        OrderStatusLog::create([
-            'order_id' => $order->id,
+        // 3) Validate (nếu đã thanh toán online thì bắt buộc STK)
+        $rules = [
+            'reason'       => 'required|string|max:1000',
+            'bank_account' => 'nullable|string|max:255',
+        ];
+        if ($order->payment === 'banking' && $order->payment_status === 'paid') {
+            $rules['bank_account'] = 'required|string|max:255';
+        }
+        $data = $request->validate($rules);
+
+        // 4) Ghi log trạng thái đơn (type = order)
+        $order->orderStatusLogs()->create([
             'changed_by' => Auth::id(),
-            'old_status' => $order->status,
-            'new_status' => 'return_requested', // trạng thái mới tùy bạn định nghĩa trong hệ thống
-            'note' => $validated['reason'],
-            'refund_bank_account' => $validated['bank_account'] ?? null,
+            'type'       => 'order',
+            'old_status' => $order->status,          // shipping
+            'new_status' => 'return_requested',
+            'note'       => $data['reason'],
             'changed_at' => now(),
         ]);
 
-        // 4. Cập nhật trạng thái đơn hàng (tuỳ logic, có thể để admin duyệt sau)
-        $order->update([
-            'status' => 'return_requested',
-        ]);
+        // 5) Nếu đã thanh toán online → chuyển payment_status sang refund + ghi log payment
+        if ($order->payment === 'banking' && $order->payment_status === 'paid') {
+            $order->orderStatusLogs()->create([
+                'changed_by'          => Auth::id(),
+                'type'                => 'payment',
+                'old_status'          => 'paid',
+                'new_status'          => 'refund',
+                'note'                => $data['reason'],
+                'refund_bank_account' => $data['bank_account'] ?? null,
+                'changed_at'          => now(),
+            ]);
 
-        return redirect()->route('client.orders.index')->with('success', 'Đã gửi yêu cầu hoàn hàng thành công.');
+            $order->update(['payment_status' => 'refund']);
+        }
+
+        // 6) Cập nhật trạng thái đơn → return_requested
+        $order->update(['status' => 'return_requested']);
+
+        return redirect()
+            ->route('client.orders.index')
+            ->with('success', 'Đã gửi yêu cầu hoàn hàng thành công.');
     }
 }
