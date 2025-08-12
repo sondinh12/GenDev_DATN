@@ -25,13 +25,15 @@
                             <div class="home-v1-slider home-slider">
                                 @if ($activeBanner->type === 'static')
                                     <div class="slider-1"
-                                        style="background-image: url('{{ asset('storage/' . $activeBanner->image) }}');">
+                                        style="background-image: url('asset('storage/banners/home-v1-background.jpg')');">
+                                        <img src="{{ asset('storage/' . $activeBanner->image) }}" alt="">
                                         {{-- Static banner slide --}}
                                     </div>
                                 @else
                                     @foreach (json_decode($activeBanner->images, true) as $slide)
                                         <div class="slider-1"
-                                            style="background-image: url('{{ asset('storage/' . $slide) }}');">
+                                            style="background-image: url('asset('storage/banners/home-v1-background.jpg')');">
+                                            <img src="{{ asset('storage/' . $activeBanner->image) }}" alt="">
                                             {{-- Dynamic banner slide --}}
                                         </div>
                                     @endforeach
