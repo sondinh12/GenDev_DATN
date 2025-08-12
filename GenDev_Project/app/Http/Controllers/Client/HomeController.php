@@ -16,6 +16,7 @@ class HomeController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
+    public function index(Request $request)
     {
         // Lấy danh mục chính
         $categories = Category::with('categoryMinis')

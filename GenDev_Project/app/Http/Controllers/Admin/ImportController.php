@@ -246,17 +246,23 @@ class ImportController extends Controller
 
             // 👉 Chỉ xử lý khi chuyển trạng thái sang "Đã duyệt"
             if ($dtImport->status == 1) {
+                $productCache = [];
                 foreach ($dtImport->details as $detail) {
                     $product = $detail->product;
 
                     // ✅ Tạo mới sản phẩm nếu chưa tồn tại
                     if (!$product && $detail->product_temp_name) {
-                        $product = Product::create([
-                            'name' => $detail->product_temp_name,
-                            'quantity' => $detail->variant_data ? 0 : $detail->quantity,
-                            'price' => !$detail->variant_data ? $detail->import_price : null,
-                            'status' => 0
-                        ]);
+                        if (!isset($productCache[$detail->product_temp_name])) {
+                            $product = Product::create([
+                                'name' => $detail->product_temp_name,
+                                'quantity' => $detail->variant_data ? 0 : $detail->quantity,
+                                'price' => !$detail->variant_data ? $detail->import_price : null,
+                                'status' => 0
+                            ]);
+                            $productCache[$detail->product_temp_name] = $product;
+                        }else {
+                            $product = $productCache[$detail->product_temp_name];
+                        }
 
                         $detail->product_id = $product->id;
                         $detail->save();
