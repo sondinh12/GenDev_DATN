@@ -37,7 +37,6 @@ use Spatie\Permission\Models\Role;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
-Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
