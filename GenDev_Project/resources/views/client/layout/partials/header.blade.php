@@ -5,6 +5,7 @@
                 <div class="site-branding">
                     <a href="{{ asset('/') }}" class="custom-logo-link" rel="home">
                         {{-- <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28">
+                        {{-- <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28">
                             <defs>
                                 <style>
                                     .cls-1,
@@ -56,6 +57,11 @@
                             style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333e48; font-size: 24px;">
                             Tech<span style="color: #3265b0;">Store</span>
                         </h1>
+                        </svg> --}}
+                        <h1
+                            style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333e48; font-size: 24px;">
+                            Tech<span style="color: #3265b0;">Store</span>
+                        </h1>
                     </a>
                     <!-- /.custom-logo-link -->
                 </div>
@@ -98,6 +104,8 @@
                         </li>
                         <li
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-487 animate-dropdown dropdown">
+                            <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
+                                href="#">
                             <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true"
                                 href="#">
                                 <i class="tm tm-dollar"></i>Dollar (US)
@@ -143,10 +151,14 @@
             <div id="departments-menu" class="dropdown departments-menu">
                 <button class="btn dropdown-toggle btn-block" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
+                <button class="btn dropdown-toggle btn-block" type="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
                     <i class="tm tm-departments-thin"></i>
                     <span>Danh mục sản phẩm </span>
                 </button>
                 <ul id="menu-departments-menu" class="dropdown-menu yamm departments-menu-dropdown">
+                    @foreach ($categories as $category)
+                        @if ($category->children->count())
                     @foreach ($categories as $category)
                         @if ($category->children->count())
                             <li class="yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown-submenu">
@@ -156,7 +168,10 @@
                                 </a>
                                 <ul role="menu" class="dropdown-menu">
                                     @foreach ($category->children as $child)
+                                    @foreach ($category->children as $child)
                                         <li class="menu-item animate-dropdown">
+                                            <a title="{{ $child->name }}"
+                                                href="{{ route('shop', ['category_mini' => $child->id]) }}">
                                             <a title="{{ $child->name }}"
                                                 href="{{ route('shop', ['category_mini' => $child->id]) }}">
                                                 {{ $child->name }}
@@ -167,6 +182,8 @@
                             </li>
                         @else
                             <li class="menu-item animate-dropdown">
+                                <a title="{{ $category->name }}"
+                                    href="{{ route('shop', ['category' => $category->id]) }}">
                                 <a title="{{ $category->name }}"
                                     href="{{ route('shop', ['category' => $category->id]) }}">
                                     {{ $category->name }}
@@ -864,6 +881,8 @@
                                                                             Entertainment Systems</a></li>
                                                                     <li><a href="{{ asset('shop.html') }}">MP3 &
                                                                             Media
+                                                                    <li><a href="{{ asset('shop.html') }}">MP3 &
+                                                                            Media
                                                                             Players</a></li>
                                                                 </ul>
                                                             </div>
@@ -912,6 +931,8 @@
                                                                     <li><a href="{{ asset('shop.html') }}">Laptops,
                                                                             Desktops &amp; Monitors</a>
                                                                     </li>
+                                                                    <li><a href="{{ asset('shop.html') }}">Pen
+                                                                            Drives,
                                                                     <li><a href="{{ asset('shop.html') }}">Pen
                                                                             Drives,
                                                                             Hard Drives &amp; Memory
