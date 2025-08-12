@@ -28,7 +28,7 @@
                                             class="img-fluid rounded-circle shadow-sm"
                                             style="max-width: 200px; border: 4px solid #fff;">
                                     @else
-                                        <img src="{{ asset('storage/images/default-avatar.png') }}" alt="Default Avatar"
+                                        <img src="{{ asset('storage/avatar/default-avatar.png') }}" alt="Default Avatar"
                                             class="img-fluid rounded-circle shadow-sm"
                                             style="max-width: 200px; border: 4px solid #fff;">
                                     @endif
