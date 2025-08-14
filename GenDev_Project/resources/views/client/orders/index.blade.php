@@ -347,7 +347,7 @@
         transition: color 0.2s ease;
     }
 
-    .star-input:checked ~.star-label {
+    .star-input:checked +.star-label {
         color: #FFC107 !important;
     }
 
@@ -452,26 +452,32 @@
         });
 
         // Star rating functionality
-        $('.star-rating').each(function() {
-            const $starRating = $(this);
-            const productId = $starRating.data('product-id');
-            const $labels = $starRating.find('.star-label');
-            const $inputs = $starRating.find('.star-input');
+        $('.review-form').each(function() {
+            const $form = $(this);
+            const $stars = $form.find('.star-label');
+            const $inputs = $form.find('.star-input');
 
-            $labels.on('click', function() {
-                const index = $labels.index(this);
-                // Clear previous active stars and checked states
-                $labels.removeClass('active');
+            $stars.on('click', function() {
+                const idx = $stars.index(this);
                 $inputs.prop('checked', false);
-
-                // Set new active stars from left to clicked star
-                for (let i = 0; i <= index; i++) {
-                    $labels.eq(i).addClass('active');
-                    if (i === index) {
-                        $inputs.eq(i).prop('checked', true);
+                $inputs.eq(idx).prop('checked', true);
+                $stars.removeClass('active');
+                // Chỉ active các sao từ 0 đến idx
+                $stars.each(function(i) {
+                    if (i <= idx) {
+                        $(this).addClass('active');
+                    } else {
+                        $(this).removeClass('active');
                     }
+                });
+            });
+            // Khi load lại form, hiển thị các sao đã chọn
+            var checkedIdx = $inputs.index($inputs.filter(':checked'));
+            $stars.removeClass('active');
+            $stars.each(function(i) {
+                if (i <= checkedIdx) {
+                    $(this).addClass('active');
                 }
-                console.log('Selected rating:', $inputs.eq(index).val()); // Debug
             });
         });
 
