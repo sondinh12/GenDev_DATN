@@ -17,13 +17,14 @@
             <div class="product-image-wrapper">
                 <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="wishlist-form">
                     @csrf
-                    <button type="submit" class="wishlist-btn" title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                    <button type="submit" class="wishlist-btn"
+                        title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
                         <i class="fas fa-heart {{ $isFavorited ? 'favorited' : 'not-favorited' }}"></i>
                     </button>
                 </form>
 
                 <a class="woocommerce-LoopProduct-link woocommerce-loop-product__link"
-                   href="{{ route('product.show', $product->id) }}">
+                    href="{{ route('product.show', $product->id) }}">
                     @if ($displaySale)
                         <span class="discount-badge">
                             -{{ round((100 * ($displayPrice - $displaySale)) / $displayPrice) }}%
@@ -31,7 +32,7 @@
                     @endif
 
                     <img width="224" height="197" src="{{ asset('storage/' . $product->image) }}"
-                         alt="{{ $product->name }}" class="attachment-shop_catalog size-shop_catalog wp-post-image">
+                        alt="{{ $product->name }}" class="attachment-shop_catalog size-shop_catalog wp-post-image">
                 </a>
             </div>
 
@@ -57,12 +58,30 @@
             <b class="woocommerce-loop-product__title">{{ $product->name }}</b>
 
             <div class="techmarket-product-rating">
-                <div title="Đánh giá {{ $product->rating ?? '5.00' }} trên 5" class="star-rating">
+
+                {{-- <div title="Đánh giá {{ $product->rating ?? '5.00' }} trên 5" class="star-rating">
                     <span style="width:{{ ($product->rating ?? 5) * 20 }}%">
                         <strong class="rating">{{ $product->rating ?? '5.00' }}</strong> trên 5
                     </span>
                 </div>
-                <span class="review-count">({{ $product->reviews_count ?? 1 }})</span>
+                <span class="review-count">({{ $product->reviews_count ?? 1 }})</span> --}}
+                <div class="techmarket-product-rating">
+                    @php
+                        $avgRating = round($product->reviews()->avg('rating'), 1);
+                    @endphp
+                    <div class="">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= floor($avgRating))
+                                <i class="fas fa-star"></i>
+                            @elseif($i - $avgRating < 1)
+                                <i class="fas fa-star-half-alt"></i>
+                            @else
+                                <i class="far fa-star"></i>
+                            @endif
+                        @endfor
+                        <span class="review-count">({{ $avgRating }})</span>
+                    </div>
+                </div>
             </div>
 
             <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
@@ -73,9 +92,12 @@
                 @if ($product->variants && $product->variants->count() > 0)
                     @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
                         @php
-                            $valueId = $variantAttr->attribute_value_id ?? ($variantAttr->value_id ?? optional($variantAttr->value)->id);
+                            $valueId =
+                                $variantAttr->attribute_value_id ??
+                                ($variantAttr->value_id ?? optional($variantAttr->value)->id);
                         @endphp
-                        <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]" value="{{ $valueId }}">
+                        <input type="hidden" name="attribute[{{ $variantAttr->attribute_id }}]"
+                            value="{{ $valueId }}">
                     @endforeach
                 @endif
 
@@ -90,49 +112,50 @@
 </div>
 <style>
     .product-image-wrapper {
-    position: relative;
-    display: inline-block;
-}
+        position: relative;
+        display: inline-block;
+    }
 
-.wishlist-form {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-}
+    .wishlist-form {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
 
-.wishlist-btn {
-    background: none;
-    border: none;
-    padding: 1px;
-    cursor: pointer;
-    font-size: 25px;
-}
+    .wishlist-btn {
+        background: none;
+        border: none;
+        padding: 1px;
+        cursor: pointer;
+        font-size: 25px;
+    }
 
-.favorited {
-    color: #e74c3c; /* Tim đỏ */
-}
+    .favorited {
+        color: #e74c3c;
+        /* Tim đỏ */
+    }
 
-.not-favorited {
-    color: #ccc; /* Tim trắng */
-}
+    .not-favorited {
+        color: #ccc;
+        /* Tim trắng */
+    }
 
-.wishlist-btn:hover i {
-    transform: scale(1.1);
-    transition: 0.2s ease;
-}
+    .wishlist-btn:hover i {
+        transform: scale(1.1);
+        transition: 0.2s ease;
+    }
 
-.discount-badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: #e74c3c;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 2px 8px;
-    border-radius: 4px;
-    z-index: 5;
-}
-
+    .discount-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #e74c3c;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 2px 8px;
+        border-radius: 4px;
+        z-index: 5;
+    }
 </style>

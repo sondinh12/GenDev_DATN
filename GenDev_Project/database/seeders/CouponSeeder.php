@@ -162,7 +162,41 @@ class CouponSeeder extends Seeder
                 'total_used' => 0,
                 'user_id' => -1, // System-wide coupon
             ],
-            
+
+            [
+                'name' => 'Giảm 5K phí ship',
+                'coupon_code' => 'SHIP5K',
+                'discount_type' => 'fixed',
+                'discount_amount' => 5000,
+                'type' => 'shipping',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays(15),
+                'status' => 1,
+                'max_coupon' => 5000,
+                'min_coupon' => 0,
+                'usage_limit' => 60,
+                'per_use_limit' => -1,
+                'total_used' => 0,
+                'user_id' => -1, // System-wide coupon
+            ],
+
+            [
+                'name' => 'Giảm 30K phí ship',
+                'coupon_code' => 'SHIP30K',
+                'discount_type' => 'fixed',
+                'discount_amount' => 30000,
+                'type' => 'shipping',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays(15),
+                'status' => 1,
+                'max_coupon' => 30000,
+                'min_coupon' => 0,
+                'usage_limit' => 60,
+                'per_use_limit' => -1,
+                'total_used' => 0,
+                'user_id' => -1, // System-wide coupon
+            ],
+
             // Expired coupons for testing
             [
                 'name' => 'Coupon đã hết hạn',
@@ -232,7 +266,58 @@ class CouponSeeder extends Seeder
                 'usage_limit' => 10,
                 'per_use_limit' => 1, // Can only be used once per user
                 'total_used' => 0,
-                'user_id' => 0, // Loyalty coupon (user-specific)
+                'user_id' => 1, // Loyalty coupon (user-specific)
+            ],
+            
+            [
+                'name' => 'Giảm 30K cho khách hàng mới',
+                'coupon_code' => 'NEWBIE30K',
+                'discount_type' => 'fixed',
+                'discount_amount' => 30000,
+                'type' => 'order',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays(7),
+                'status' => 1,
+                'max_coupon' => 30000,
+                'min_coupon' => 100000,
+                'usage_limit' => 100,
+                'per_use_limit' => 1,
+                'total_used' => 0,
+                'user_id' => -1, // User-specific for new customers
+            ],
+            
+            [
+                'name' => 'Giảm 20% dịp Tết',
+                'coupon_code' => 'TET2024',
+                'discount_type' => 'percent',
+                'discount_amount' => 20,
+                'type' => 'order',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays(10),
+                'status' => 1,
+                'max_coupon' => 300000,
+                'min_coupon' => 200000,
+                'usage_limit' => 200,
+                'per_use_limit' => -1,
+                'total_used' => 0,
+                'user_id' => -1,
+            ],
+            
+            [
+                'name' => 'Flash Sale Giảm 40%',
+                'coupon_code' => 'FLASH40',
+                'discount_type' => 'percent',
+                'discount_amount' => 40,
+                'type' => 'order',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addHours(6),
+                'status' => 1,
+                'max_coupon' => 500000,
+                'min_coupon' => 0,
+                'usage_limit' => 25,
+                'per_use_limit' => -1,
+                'total_used' => 0,
+                'user_id' => -1,
             ],
         ];
 

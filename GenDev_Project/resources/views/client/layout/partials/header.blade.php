@@ -211,7 +211,7 @@
                 <li class="nav-item">
                     <a href="{{ asset('compare.html') }}" class="nav-link">
                         <i class="tm tm-compare"></i>
-                        <span id="top-cart-compare-count" class="value">3</span>
+                        <span id="top-cart-compare-count" class="value">0</span>
                     </a>
                 </li>
             </ul>
