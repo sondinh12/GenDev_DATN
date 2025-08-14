@@ -93,21 +93,6 @@
             </div>
         </div>
 
-        {{-- Hành động: giỏ, yêu thích, xem nhanh --}}
-        <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
-            <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart"
-                title="Thêm vào giỏ hàng" data-product-id="{{ $product->id }}">
-                <i class="fas fa-shopping-cart text-primary"></i>
-            </a>
-
-            {{-- Đã có wishlist-form bên trên nên không cần lặp lại --}}
-
-            <a href="{{ route('client.product.show', $product->id) }}"
-                class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
-                <i class="fas fa-eye text-info"></i>
-            </a>
-        </div>
-
         {{-- Mua ngay --}}
         <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
             @csrf
