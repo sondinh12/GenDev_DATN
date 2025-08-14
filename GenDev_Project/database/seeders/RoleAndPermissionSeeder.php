@@ -23,15 +23,13 @@ class RoleAndPermissionSeeder extends Seeder
             'Quản lý đơn hàng',
             'Quản lý banner',
             // Admin
-            'Quản lý người dùng',
             'Quản lý hóa đơn nhập hàng',
             'Quản lý danh mục',
             'Quản lý mã giảm giá',
             'Quản lý tài khoản',
             'Quản lý thống kê',
             'Quản lý thuộc tính',
-            'Quản lý nhà cung cấp',
-            'Quản lý vai trò',
+            'Quản lý nhà cung cấp'
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);

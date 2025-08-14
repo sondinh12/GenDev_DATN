@@ -64,7 +64,7 @@
                                             <td>{{ $user->id }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/images/default-avatar.png') }}"
+                                                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/avatar/default-avatar.png') }}"
                                                         alt="{{ $user->name }}" class="rounded-circle me-2"
                                                         width="40" height="40" style="object-fit: cover;">
                                                     <div>
@@ -341,6 +341,7 @@
         });
     </script>
 @endpush
+@push('scripts')
 {{-- SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -389,3 +390,4 @@
         });
     </script>
 @endif
+@endpush

@@ -125,7 +125,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::get('/products/trash/list', [ProductController::class, 'listTrashed'])->name('products.trash.list');
-        Route::post('/products/{product}/questions', [ProductController::class, 'storeQuestion'])->name('product.question.store');
     });
     Route::middleware(['permission:Quản lý thuộc tính'])->group(function () {
         Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
@@ -198,11 +197,14 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
 
     // quan lý banner
     Route::middleware(['permission:Quản lý banner'])->group(function () {
+        Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
+            ->name('banner.use');
         Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
         Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
         Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
         Route::resource('banner', BannerController::class);
     });
+
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng
     //Quản lý hóa đơn nhập hàng
     Route::middleware(['permission:Quản lý hóa đơn nhập hàng'])->group(function () {

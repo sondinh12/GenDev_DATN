@@ -89,7 +89,8 @@ class HomeController extends Controller
         ])
             ->withCount([
                 'cartdetails as total_sold' => function ($query) {
-                    $query->select(DB::raw('SUM(quantity)'));
+                    $query->where('created_at', '>=', now()->subDays(30))
+                        ->select(DB::raw('SUM(quantity)'));
                 }
             ])
             ->where('status', 1)

@@ -49,20 +49,26 @@
                         <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                         <td>{{ strtoupper($order->payment) }}</td>
                         <td>
-                            @php
-                                $paymentClass = match ($order->payment_status) {
-                                    'paid' => 'success',
-                                    'unpaid' => 'warning',
-                                    'cancelled' => 'danger',
-                                    default => 'secondary'
-                                };
-                                $paymentLabel = match ($order->payment_status) {
-                                    'paid' => 'Đã thanh toán',
-                                    'unpaid' => 'Chưa thanh toán',
-                                    'cancelled' => 'Đã huỷ',
-                                    default => 'Không rõ'
-                                };
-                            @endphp
+                           @php
+    $paymentClass = match ($order->payment_status) {
+        'paid' => 'success',
+        'unpaid' => 'warning',
+        'cancelled' => 'danger',
+        'refund' => 'info',
+        'refunded' => 'primary',
+        default => 'secondary'
+    };
+
+    $paymentLabel = match ($order->payment_status) {
+        'paid' => 'Đã thanh toán',
+        'unpaid' => 'Chưa thanh toán',
+        'cancelled' => 'Đã huỷ',
+        'refund' => 'Đang hoàn tiền',
+        'refunded' => 'Đã hoàn tiền',
+        default => 'Không rõ'
+    };
+@endphp
+
                             <span class="badge bg-{{ $paymentClass }}">{{ $paymentLabel }}</span>
                         </td>
                         <td>
@@ -112,6 +118,7 @@
     </div>
 </div>
 @endsection
+@push('scripts')
 {{-- SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -160,3 +167,4 @@
         });
     </script>
 @endif
+@endpush
