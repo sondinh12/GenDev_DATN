@@ -393,17 +393,17 @@
                     <form method="POST" action="{{ route('product.question.store', $product->id) }}" class="row g-3 align-items-end mb-4">
                         @csrf
                         <div class="col-12 col-md-10">
-                            <label class="form-label fw-semibold">Câu hỏi của bạn</label>
-                            <textarea name="question" class="form-control form-control-lg" rows="2" maxlength="200" placeholder="Nhập câu hỏi về sản phẩm..." style="border-radius: 1rem;"></textarea>
+                            <label class="form-label fw-semibold">Bình luận của bạn</label>
+                            <textarea name="question" class="form-control form-control-lg" rows="2" maxlength="200" placeholder="Nhập bình luận về sản phẩm..." style="border-radius: 1rem;"></textarea>
                         </div>
                         <div class="col-12 col-md-2 text-end">
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi câu hỏi</button>
                         </div>
                     </form>
                 @else
-                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đặt câu hỏi về sản phẩm.</div>
+                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để bình luận về sản phẩm.</div>
                 @endauth
-                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các câu hỏi gần đây</h6>
+                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các bình luận gần đây</h6>
                 @php $questionss = $product->questions()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
                     @forelse($questionss as $question)
@@ -418,7 +418,7 @@
                         </div>
                     @empty
                         <div class="col-12">
-                            <div class="text-muted">Chưa có câu hỏi nào.</div>
+                            <div class="text-muted">Chưa có bình luận nào.</div>
                         </div>
                     @endforelse
                 </div>

@@ -1,7 +1,7 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-Thùng Rác Sản Phẩm
+Thùng rác Sản Phẩm
 @endsection
 
 @section('topbar-title')
