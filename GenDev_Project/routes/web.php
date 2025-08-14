@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Client\FavoriteController;
 
+
 use Spatie\Permission\Models\Role;
 
 // ================= TRANG CHÍNH =================
@@ -178,12 +179,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::put('/users/{user}/update', [UserController::class, 'update'])->name('admin.users.update');
         Route::post('/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
-    });
-
-
-    // Vai trò
-    Route::middleware(['permission:Quản lý vai trò'])->group(function () {
-        Route::resource('roles', RoleController::class);
     });
 
     // Mã giảm giá

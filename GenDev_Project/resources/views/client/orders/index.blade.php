@@ -146,47 +146,46 @@
                                         ->where('product_id', $productId)->first();
                         @endphp
                         @if($product)
-                            <div class="mb-3">
-                                @if($hasReviewed)
-                                    <div class="review-display mb-2">
-                                        <strong>Đánh giá của bạn:</strong>
-                                        <div class="star-rating-display">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                <i class="fas fa-star {{ $i <= $hasReviewed->rating ? 'text-warning' : 'text-muted' }}"></i>
-                                            @endfor
-                                        </div>
-                                        <p class="mt-1"><small>{{ $hasReviewed->comment }}</small></p>
-                                        <p class="text-muted"><small>Đăng lúc: {{ $hasReviewed->created_at->format('d/m/Y H:i') }}</small></p>
-                                    </div>
-                                @else
-                                    <button type="button" class="btn btn-outline-primary btn-sm toggle-review-form" data-product-id="{{ $productId }}">
-                                        Đánh giá sản phẩm: {{ $product->name }}
-                                    </button>
-
-                                    <form action="{{ route('product.review.store', $productId) }}" method="POST"
-                                          class="review-form mt-3 d-none" id="review-form-{{ $productId }}">
-                                        @csrf
-                                        <div class="mb-3 star-rating" data-product-id="{{ $productId }}">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                <input type="radio" name="rating" id="rating-{{ $productId }}-{{ $i }}" value="{{ $i }}" class="star-input">
-                                                <label for="rating-{{ $productId }}-{{ $i }}" class="star-label">
-                                                    <i class="fas fa-star"></i>
-                                                </label>
-                                            @endfor
-                                            @error('rating')
-                                                <div class="text-danger small">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-3">
-                                            <textarea name="comment" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required>{{ old('comment') }}</textarea>
-                                            @error('comment')
-                                                <div class="text-danger small">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá</button>
-                                    </form>
-                                @endif
+                        <div class="mb-3">
+                            @if($hasReviewed)
+                            <div class="review-display mb-2">
+                                <strong>Đánh giá của bạn:</strong>
+                                <div class="star-rating-display">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star {{ $i <= $hasReviewed->rating ? 'text-warning' : 'text-muted' }}"></i>
+                                    @endfor
+                                </div>
+                                <p class="mt-1"><small>{{ $hasReviewed->comment }}</small></p>
+                                <p class="text-muted"><small>Đăng lúc: {{ $hasReviewed->created_at->format('d/m/Y H:i') }}</small></p>
                             </div>
+                            @else
+                            <button type="button" class="btn btn-outline-primary btn-sm toggle-review-form" data-product-id="{{ $productId }}">
+                                Đánh giá sản phẩm: {{ $product->name }}
+                            </button>
+
+                            <form action="{{ route('product.review.store', $productId) }}" method="POST" class="review-form mt-3 d-none" id="review-form-{{ $productId }}">
+                                @csrf
+                                <div class="mb-3" data-product-id="{{ $productId }}">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <input type="radio" name="rating" id="rating-{{ $productId }}-{{ $i }}" value="{{ $i }}" class="star-input">
+                                        <label for="rating-{{ $productId }}-{{ $i }}" class="star-label">
+                                            <i class="fas fa-star"></i>
+                                        </label>
+                                    @endfor
+                                    @error('rating')
+                                        <div class="text-danger small">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <textarea name="comment" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required>{{ old('comment') }}</textarea>
+                                    @error('comment')
+                                        <div class="text-danger small">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá</button>
+                            </form>
+                            @endif
+                        </div>
                         @endif
                     @endforeach
                 @endif
@@ -261,6 +260,146 @@
 
 @push('styles')
 <style>
+    .order-card {
+        transition: all 0.2s ease;
+    }
+
+    .order-card:hover {
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border: 1px solid #eee;
+        border-radius: 4px;
+    }
+
+    .order-status {
+        padding: 4px 12px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 8px;
+        display: inline-block;
+        text-align: center;
+        min-width: 80px;
+        text-transform: uppercase;
+    }
+
+    .order-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .order-header-actions form,
+    .order-header-actions button {
+        margin: 0;
+    }
+
+    .order-header-actions .btn {
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+        padding: 4px 10px;
+    }
+
+    .order-status {
+        margin-left: 0 !important;
+    }
+
+    .order-status.cancelled {
+        background-color: #eb5757;
+        color: #fff;
+    }
+
+    .order-status.pending {
+        background-color: #f5c542;
+        color: #333;
+    }
+
+    .order-status.processing {
+        background-color: #2d9cdb;
+        color: #fff;
+    }
+
+    .order-status.shipping {
+        background-color: #ff9800;
+        color: #fff;
+    }
+
+    .order-status.shipped {
+        background-color: #9b51e0;
+        color: #fff;
+    }
+
+    .order-status.completed {
+        background-color: #27ae60;
+        color: #fff;
+    }
+
+    .order-status.return_requested {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .star-rating {
+        display: inline-flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 5px;
+        font-size: 1.6rem;
+    }
+
+    .star-input {
+        display: none;
+    }
+
+    .star-label {
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s ease;
+    }
+
+    .star-input:checked +.star-label {
+        color: #FFC107 !important;
+    }
+
+    .star-label.active {
+        color: #FFC107 !important;
+    }
+
+    .star-rating-display .fas {
+        font-size: 1.2rem;
+    }
+
+    .star-rating-display .text-warning {
+        color: #FFC107;
+    }
+
+    .star-rating-display .text-muted {
+        color: #ccc;
+    }
+
+    .review-form {
+        padding: 15px;
+        border-left: 3px solid #e0e0e0;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    .toggle-review-form {
+        margin-top: 10px;
+    }
+
+    .review-display {
+        padding: 10px;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+    }
     .order-customer-info {
     background-color: #f8f9fa;
     padding: 10px 12px;
@@ -353,7 +492,35 @@
       $('#bankInfo').addClass('d-none');
       $('#bank_account').val('');
     }
+        // Star rating functionality
+    $('.review-form').each(function() {
+            const $form = $(this);
+            const $stars = $form.find('.star-label');
+            const $inputs = $form.find('.star-input');
 
+            $stars.on('click', function() {
+                const idx = $stars.index(this);
+                $inputs.prop('checked', false);
+                $inputs.eq(idx).prop('checked', true);
+                $stars.removeClass('active');
+                // Chỉ active các sao từ 0 đến idx
+                $stars.each(function(i) {
+                    if (i <= idx) {
+                        $(this).addClass('active');
+                    } else {
+                        $(this).removeClass('active');
+                    }
+                });
+            });
+            // Khi load lại form, hiển thị các sao đã chọn
+            var checkedIdx = $inputs.index($inputs.filter(':checked'));
+            $stars.removeClass('active');
+            $stars.each(function(i) {
+                if (i <= checkedIdx) {
+                    $(this).addClass('active');
+                }
+            });
+    });
     $('#reason').val('');
     const $form = $('#returnForm');
     $form.attr('action', `/orders/${orderId}/return`);
@@ -367,6 +534,7 @@
   window.openCancelModal = function(orderId, paymentMethod, paymentStatus){
     $('#returnOrderId').val(orderId);
     $('#reason').val('');
+
 
     // Hủy đơn đã thanh toán banking: bắt nhập STK để hoàn tiền
     $('#bankInfo').removeClass('d-none');
@@ -385,21 +553,23 @@
     $(`#review-form-${productId}`).toggleClass('d-none');
   });
 
-  // Chọn sao rating
-  $(document).on('click', '.star-label', function(){
-    const $wrap = $(this).closest('.star-rating');
-    const $labels = $wrap.find('.star-label');
-    const $inputs = $wrap.find('.star-input');
-    const idx = $labels.index(this);
+    // Chọn sao rating
+    $(document).on('click', '.star-label', function(){
+        const $form = $(this).closest('.review-form');
+        const $labels = $form.find('.star-label');
+        const $inputs = $form.find('.star-input');
+        const idx = $labels.index(this);
 
-    $labels.removeClass('active');
-    $inputs.prop('checked', false);
+        $labels.removeClass('active');
+        $inputs.prop('checked', false);
 
-    for (let i = 0; i <= idx; i++) {
-      $labels.eq(i).addClass('active');
-      if (i === idx) $inputs.eq(i).prop('checked', true);
-    }
-  });
+        $labels.each(function(i) {
+            if (i <= idx) {
+                $(this).addClass('active');
+            }
+        });
+        $inputs.eq(idx).prop('checked', true);
+    });
 
   // Submit review (AJAX optional — có thể để form post thường)
   $(document).on('submit', '.review-form', function(e){
