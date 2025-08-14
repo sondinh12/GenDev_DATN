@@ -46,37 +46,29 @@
                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-1.png" alt="">
                                     <div class="caption">
-                                        <div class="title">
-                                            Turn. Click. Expand. Smart modular design simplifies adding storage
-                                            for growing media.
-                                        </div>
-                                        <div class="sub-title">
-                                            Powerful Six Core processor, vibrant 4KUHD display output and
-                                            fast SSD elegantly cased in a soft alloy design.
-                                        </div>
-                                        <div class="button">
-                                            Get Yours now <i class="tm tm-long-arrow-right"></i>
-                                        </div>
-                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                        <div class="title">Xoay. Nhấn. Mở rộng. Thiết kế mô-đun thông minh giúp thêm bộ nhớ dễ
+                                            dàng cho dữ liệu ngày càng tăng.</div>
+                                        <div class="sub-title">Bộ xử lý sáu nhân mạnh mẽ, hiển thị sống động 4K UHD và SSD tốc
+                                            độ cao trong thiết kế hợp kim mềm mại.</div>
+                                        <a href="{{ route('shop') }}" class="button">Sở hữu ngay
+                                            <i class="tm tm-long-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="slider-1 slider-2"
                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-2.png" alt="">
                                     <div class="caption">
-                                        <div class="title">
-                                            The new-tech gift you<br>
-                                            are wishing for is<br>
-                                            right here
+                                        <div class="title">Món quà công nghệ mới
+                                            <br> bạn đang mong chờ
+                                            <br> có ngay tại đây
                                         </div>
-                                        <div class="sub-title">
-                                            Big screens in incredibly slim designs<br>
-                                            that fit in your hand.
+                                        <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng
+                                            <br>gọn gàng trong tay bạn.
                                         </div>
-                                        <div class="button">
-                                            Browse now <i class="tm tm-long-arrow-right"></i>
-                                        </div>
-                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                        <a href="{{ route('shop') }}" class="button">Khám phá ngay
+                                            <i class="tm tm-long-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

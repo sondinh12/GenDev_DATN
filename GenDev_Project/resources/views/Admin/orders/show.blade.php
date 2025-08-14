@@ -205,9 +205,15 @@
                         @if($order->shipping_discount > 0)
                             <div class="row mb-2">
                                 <div class="col-sm-4 fw-bold">Giảm phí vận chuyển:</div>
-                                <div class="col-sm-8 text-success">
-                                    -{{ number_format($order->shipping_discount, 0, ',', '.') }} đ
-                                </div>
+                                @if ($order->shipping_discount > $order->shipping_fee)
+                                    <div class="col-sm-8 text-success">
+                                        -{{ number_format($order->shipping_fee, 0, ',', '.') }} đ
+                                    </div>
+                                @else
+                                    <div class="col-sm-8 text-success">
+                                        -{{ number_format($order->shipping_discount, 0, ',', '.') }} đ
+                                    </div>
+                                @endif
                             </div>
                         @endif
                     </div>
