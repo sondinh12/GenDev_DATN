@@ -363,7 +363,7 @@
         transition: color 0.2s ease;
     }
 
-    .star-input:checked ~.star-label {
+    .star-input:checked +.star-label {
         color: #FFC107 !important;
     }
 
