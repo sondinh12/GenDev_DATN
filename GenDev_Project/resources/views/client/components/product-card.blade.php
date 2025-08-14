@@ -48,25 +48,25 @@
         </h6>
 
         {{-- Hiển thị giá --}}
-        <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
+        <div class="product-price mb-1 w-100 justify-content-center align-items-baseline gap-2">
             @php
                 $variant = $product->variants->first();
             @endphp
             @if ($variant)
                 @if ($variant->sale_price && $variant->sale_price < $variant->price)
-                    <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
                     <small class="text-muted text-decoration-line-through ms-1">
                         <del>{{ number_format($variant->price) }}đ</del>
                     </small>
+                    <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
                 @else
                     <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                 @endif
             @else
-                @if ($priceInfo['has_discount'])
-                    <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                @if ($priceInfo['has_discount']) 
                     <small class="text-muted text-decoration-line-through ms-1">
                         <del>{{ number_format($priceInfo['original_price']) }}đ</del>
                     </small>
+                    <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
                 @else
                     <ins class="text-primary fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
                 @endif
