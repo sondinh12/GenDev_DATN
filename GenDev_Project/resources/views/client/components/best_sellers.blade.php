@@ -58,29 +58,20 @@
             <b class="woocommerce-loop-product__title">{{ $product->name }}</b>
 
             <div class="techmarket-product-rating">
-
-                {{-- <div title="Đánh giá {{ $product->rating ?? '5.00' }} trên 5" class="star-rating">
-                    <span style="width:{{ ($product->rating ?? 5) * 20 }}%">
-                        <strong class="rating">{{ $product->rating ?? '5.00' }}</strong> trên 5
-                    </span>
-                </div>
-                <span class="review-count">({{ $product->reviews_count ?? 1 }})</span> --}}
-                <div class="techmarket-product-rating">
-                    @php
-                        $avgRating = round($product->reviews()->avg('rating'), 1);
-                    @endphp
-                    <div class="">
-                        @for ($i = 1; $i <= 5; $i++)
-                            @if ($i <= floor($avgRating))
-                                <i class="fas fa-star"></i>
-                            @elseif($i - $avgRating < 1)
-                                <i class="fas fa-star-half-alt"></i>
-                            @else
-                                <i class="far fa-star"></i>
-                            @endif
-                        @endfor
-                        <span class="review-count">({{ $avgRating }})</span>
-                    </div>
+                @php
+                    $avgRating = round($product->reviews()->avg('rating'), 1);
+                @endphp
+                <div class="">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= floor($avgRating))
+                            <i class="fas fa-star" style="color: #ffc107;"></i>
+                        @elseif($i - $avgRating < 1)
+                            <i class="fas fa-star-half-alt" style="color: #ffc107;"></i>
+                        @else
+                            <i class="far fa-star" style="color: #e0e0e0;"></i>
+                        @endif
+                    @endfor
+                    <span class="review-count" style="color: #666;">({{ $avgRating }})</span>
                 </div>
             </div>
 
