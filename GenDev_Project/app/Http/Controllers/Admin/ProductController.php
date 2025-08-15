@@ -241,7 +241,17 @@ class ProductController extends Controller
         // Không cho vào thùng rác nếu sản phẩm còn trong giỏ hàng
         $cartCount = $product->cartdetails()->count();
         if ($cartCount > 0) {
-            return redirect()->route('products.index')->with('success', 'Không thể chuyển vào thùng rác vì sản phẩm còn tồn tại trong giỏ hàng của khách!');
+            return redirect()->route('products.index')->with('error', 'Không thể chuyển vào thùng rác vì sản phẩm còn tồn tại trong giỏ hàng của khách!');
+        }
+        // Không cho vào thùng rác nếu sản phẩm còn liên kết với các bảng khác
+        if (method_exists($product, 'supplierProductPrices') && $product->supplierProductPrices()->count() > 0) {
+            return redirect()->route('products.index')->with('error', 'Không thể chuyển vào thùng rác vì vẫn còn thông tin giá nhập từ nhà cung cấp.');
+        } else if (method_exists($product, 'orderDetails') && $product->orderDetails()->count() > 0) {
+            return redirect()->route('products.index')->with('error', 'Không thể chuyển vào thùng rác vì đã từng được đặt hàng.');
+        } else if (method_exists($product, 'favorites') && $product->favorites()->count() > 0) {
+            return redirect()->route('products.index')->with('error', 'Không thể chuyển vào thùng rác vì khách hàng còn lưu trong danh sách yêu thích.');
+        } else if (method_exists($product, 'importDetails') && $product->importDetails()->count() > 0) {
+            return redirect()->route('products.index')->with('error', 'Không thể chuyển vào thùng rác vì đã từng nhập kho.');
         }
         $product->delete(); // Soft delete: cập nhật deleted_at
         return redirect()->route('products.index')->with('success', 'Sản phẩm đã được chuyển vào thùng rác!');
