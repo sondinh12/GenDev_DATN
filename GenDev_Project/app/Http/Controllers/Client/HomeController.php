@@ -95,10 +95,11 @@ class HomeController extends Controller
             ])
             ->where('status', 1)
             ->orderBy('total_sold', 'desc')
-            ->paginate(14);
-        if ($request->ajax()) {
-            return view('client.components.best_sellers', compact('bestSellingProducts'))->render();
-        }
+            ->take(14)
+            ->get();
+        // if ($request->ajax()) {
+        //     return view('client.components.best_sellers', compact('bestSellingProducts'))->render();
+        // }
         $products = Product::all();
 
         return view('client.pages.home', compact(
