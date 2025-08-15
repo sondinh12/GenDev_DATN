@@ -60,7 +60,7 @@ class ProfileController extends Controller
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
             Storage::disk('public')->delete($user->avatar);
         }
-        $user->avatar = $request->file('avatar')->store('images', 'public');
+        $user->avatar = $request->file('avatar')->store('avatar', 'public');
         $user->save();
 
         return redirect()->back()->with('success', 'Cập nhật ảnh đại diện thành công!');

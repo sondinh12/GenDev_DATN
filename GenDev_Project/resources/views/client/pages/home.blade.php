@@ -18,20 +18,22 @@
 
                         {{-- Active banner lookup --}}
                         @php
-                            $activeBanner = \App\Models\Banner::where('status','using')->first();
+                            $activeBanner = \App\Models\Banner::where('status', 'using')->first();
                         @endphp
 
-                        @if($activeBanner)
+                        @if ($activeBanner)
                             <div class="home-v1-slider home-slider">
-                                @if($activeBanner->type === 'static')
+                                @if ($activeBanner->type === 'static')
                                     <div class="slider-1"
-                                         style="background-image: url('{{ asset('storage/' . $activeBanner->image) }}');">
+                                        style="background-image: url('asset('storage/banners/home-v1-background.jpg')');">
+                                        <img src="{{ asset('storage/' . $activeBanner->image) }}" alt="">
                                         {{-- Static banner slide --}}
                                     </div>
                                 @else
-                                    @foreach(json_decode($activeBanner->images, true) as $slide)
+                                    @foreach (json_decode($activeBanner->images, true) as $slide)
                                         <div class="slider-1"
-                                             style="background-image: url('{{ asset('storage/' . $slide) }}');">
+                                            style="background-image: url('asset('storage/banners/home-v1-background.jpg')');">
+                                            <img src="{{ asset('storage/' . $activeBanner->image) }}" alt="">
                                             {{-- Dynamic banner slide --}}
                                         </div>
                                     @endforeach
@@ -41,7 +43,7 @@
                             {{-- Fallback to your original hard-coded sliders --}}
                             <div class="home-v1-slider home-slider">
                                 <div class="slider-1"
-                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                    style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-1.png" alt="">
                                     <div class="caption">
                                         <div class="title">
@@ -59,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="slider-1 slider-2"
-                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                    style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-2.png" alt="">
                                     <div class="caption">
                                         <div class="title">
@@ -137,22 +139,21 @@
                                 <h2 class="section-title">Danh mục<br> sản phẩm</h2>
                                 <nav class="custom-slick-nav"></nav>
                             </header>
-                            <div class="product-categories-1 product-categories-carousel"
-                                 data-ride="tm-slick-carousel"
-                                 data-wrap=".products"
-                                 data-slick='{"slidesToShow":5,"slidesToScroll":1,"dots":false,"arrows":true,"prevArrow":"<a href=\"#\"><i class=\"tm tm-arrow-left\"></i></a>","nextArrow":"<a href=\"#\"><i class=\"tm tm-arrow-right\"></i></a>","appendArrows":"#categories-carousel-1 .custom-slick-nav","responsive":[{"breakpoint":1200,"settings":{"slidesToShow":2,"slidesToScroll":2}},{"breakpoint":1400,"settings":{"slidesToShow":4,"slidesToScroll":4}}]}'>
+                            <div class="product-categories-1 product-categories-carousel" data-ride="tm-slick-carousel"
+                                data-wrap=".products"
+                                data-slick='{"slidesToShow":5,"slidesToScroll":1,"dots":false,"arrows":true,"prevArrow":"<a href=\"#\"><i class=\"tm tm-arrow-left\"></i></a>","nextArrow":"<a href=\"#\"><i class=\"tm tm-arrow-right\"></i></a>","appendArrows":"#categories-carousel-1 .custom-slick-nav","responsive":[{"breakpoint":1200,"settings":{"slidesToShow":2,"slidesToScroll":2}},{"breakpoint":1400,"settings":{"slidesToShow":4,"slidesToScroll":4}}]}'>
                                 <div class="woocommerce columns-5">
                                     <div class="products">
                                         @foreach ($categories as $category)
                                             <div class="product-category product">
                                                 <a href="{{ route('shop', ['category' => $category->id]) }}">
                                                     <img class="category-img" width="224" height="197"
-                                                         src="{{ Str::startsWith($category->image, ['http://','https://'])
+                                                        src="{{ Str::startsWith($category->image, ['http://', 'https://'])
                                                             ? $category->image
                                                             : (file_exists(public_path($category->image))
                                                                 ? asset($category->image)
                                                                 : asset('storage/' . $category->image)) }}"
-                                                         alt="{{ $category->name }}">
+                                                        alt="{{ $category->name }}">
                                                     <h2 class="woocommerce-loop-category__title">
                                                         {{ $category->name }}
                                                     </h2>
@@ -174,7 +175,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </main>
                 </div>
             </div>

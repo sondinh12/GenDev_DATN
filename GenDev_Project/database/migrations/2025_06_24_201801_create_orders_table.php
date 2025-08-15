@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('postcode');
             $table->string('transaction_code')->unique()->nullable();
             $table->enum('payment', ['cod', 'banking'])->default('cod');
-            $table->enum('payment_status', ['paid', 'unpaid', 'cancelled'])->default('unpaid');
+            $table->enum('payment_status', ['paid', 'unpaid', 'refund', 'refunded', 'cancelled'])->default('unpaid');
             $table->timestamp('payment_expired_at')->nullable();
             $table->decimal('subtotal', 15, 2)->nullable(); // total before discounts
             $table->decimal('product_discount', 10, 2)->nullable()->default(0);

@@ -21,7 +21,7 @@
                     style="border-radius: 18px 0 0 18px;">
                     <!-- Avatar -->
                     <div class="position-relative mb-3">
-                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/images/default-avatar.png') }}"
+                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/avatar/default-avatar.png') }}"
                             alt class="rounded-circle border border-primary mx-auto d-block"
                             style="width: 90px; height: 90px; object-fit: cover;">
                         <form id="avatarForm" method="POST" action="{{ route('profile.update_avatar') }}"
