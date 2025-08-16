@@ -1,7 +1,7 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    Show
+    Chi tiết sản phẩm
 @endsection
 
 @section('topbar-title')

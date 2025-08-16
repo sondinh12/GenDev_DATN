@@ -554,6 +554,7 @@ class ImportController extends Controller
 
     public function forceDelete($id)
     {
+        DB::table('import_details')->where('import_id', $id)->delete();
         $import = Import::onlyTrashed()->findOrFail($id);
         $import->forceDelete();
 
