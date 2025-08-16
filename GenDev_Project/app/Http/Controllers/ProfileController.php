@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+
 class ProfileController extends Controller
 {
     public function show()
@@ -19,7 +20,7 @@ class ProfileController extends Controller
         $user = Auth::user();
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'regex:/^\d{8,20}$/'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
             'ward' => ['nullable', 'string', 'max:255'],

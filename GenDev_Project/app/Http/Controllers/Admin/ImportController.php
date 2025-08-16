@@ -23,9 +23,22 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ImportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $imports = Import::with('supplier')->orderBy('created_at', 'desc')->paginate(10);
+        // $imports = Import::with('supplier')->orderBy('created_at', 'desc')->paginate(10);
+        $query = Import::with('supplier')->orderBy('created_at', 'desc');
+
+        // Nếu có từ khóa tìm kiếm
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+
+            // Tìm theo tên supplier
+            $query->whereHas('supplier', function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%');
+            });
+        }
+
+    $imports = $query->paginate(10);
         return view('Admin.imports.index', compact('imports'));
     }
 
@@ -554,6 +567,7 @@ class ImportController extends Controller
 
     public function forceDelete($id)
     {
+        DB::table('import_details')->where('import_id', $id)->delete();
         $import = Import::onlyTrashed()->findOrFail($id);
         $import->forceDelete();
 
