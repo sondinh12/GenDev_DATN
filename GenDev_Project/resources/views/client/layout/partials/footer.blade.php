@@ -62,8 +62,8 @@
             <div class="row">
                 <div class="footer-contact">
                     <div class="footer-logo">
-                        <a href="home-v1.html" class="custom-logo-link" rel="home">
-                            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28">
+                        <a href="{{ asset('/') }}" class="custom-logo-link" rel="home">
+                            {{-- <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28">
                                 <defs>
                                     <style>
                                         .cls-1,
@@ -97,7 +97,11 @@
                                 <polygon class="cls-1" points="32.85 27.56 28.6 27.56 28.6 5.42 28.6 3.96 28.6 0.44 47.95 0.44 47.95 5.42 34.46 5.42 34.46 22.72 48.25 22.72 48.25 27.56 34.46 27.56 32.85 27.56" />
                                 <polygon class="cls-1" points="15.4 27.56 9.53 27.56 9.53 5.57 9.53 0.59 9.53 0.44 24.93 0.44 24.93 5.57 15.4 5.57 15.4 27.56" />
                                 <rect class="cls-2" y="0.44" width="7.19" height="5.13" />
-                            </svg>
+                            </svg> --}}
+                            <h1
+                            style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333e48; font-size: 24px;">
+                            Tech<span style="color: #3265b0;">Store</span>
+                            </h1>
                         </a>
                     </div>
                     <!-- .footer-logo -->
