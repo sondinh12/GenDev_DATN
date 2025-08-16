@@ -23,10 +23,11 @@ class CategoryRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {   
+        $isUpdate = $this->route('id') ? true : false;
         return [
             'name' => 'required|string|max:255',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'image' => $isUpdate ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048' : 'required|file|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ];
     }
 
@@ -44,25 +45,25 @@ class CategoryRequest extends FormRequest
     }
 
     protected function withValidator(Validator $validator)
-    {
-        $validator->after(function ($validator) {
-            $id = $this->route('id'); // nếu là update thì lấy id hiện tại
+{
+    $validator->after(function ($validator) {
+        $id = $this->route('id'); // id cha
 
-            // 1. Check cha trùng cha
-            $existsParent = Category  ::where('name', $this->name)
-                ->when($id, fn($q) => $q->where('id', '!=', $id)) // bỏ qua chính nó khi update
-                ->exists();
+        // 1. Check cha trùng cha
+        $existsParent = Category::where('name', $this->name)
+            ->when($id, fn($q) => $q->where('id', '!=', $id))
+            ->exists();
 
-            if ($existsParent) {
-                $validator->errors()->add('name', 'Tên danh mục cha đã tồn tại!');
-            }
+        if ($existsParent) {
+            $validator->errors()->add('name', 'Tên danh mục cha đã tồn tại!');
+        }
 
-            // 2. Check cha trùng con
-            $existsMini = CategoryMini::where('name', $this->name)->exists();
+        // 2. Check cha trùng con
+        $existsMini = CategoryMini::where('name', $this->name)->exists();
 
-            if ($existsMini) {
-                $validator->errors()->add('name', 'Tên danh mục cha không được trùng với tên danh mục con!');
-            }
-        });
-    }
+        if ($existsMini) {
+            $validator->errors()->add('name', 'Tên danh mục cha không được trùng với tên danh mục con!');
+        }
+    });
+}
 }

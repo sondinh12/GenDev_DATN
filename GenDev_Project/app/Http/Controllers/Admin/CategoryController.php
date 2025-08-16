@@ -48,7 +48,7 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(CategoryRequest $request,$id)
+    public function update(Request $request,$id)
     {
         $category = Category::findOrFail($id);
 
