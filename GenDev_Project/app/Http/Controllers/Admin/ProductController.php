@@ -214,21 +214,9 @@ class ProductController extends Controller
                     $variantModel->save();
                 } else {
                     // Create new variant
-                    $variantModel = ProductVariant::create([
-                        'product_id' => $product->id,
-                        'price' => $variant['price'],
-                        'sale_price' => $variant['sale_price'] ?? 0,
-                        'quantity' => $variant['quantity'] ?? 0,
-                        'status' => $variant['status'] ?? 1,
-                    ]);
-                    foreach ($valueIds as $valueId) {
-                        $attributeId = AttributeValue::find($valueId)?->attribute_id;
-                        ProductVariantAttribute::create([
-                            'product_variant_id' => $variantModel->id,
-                            'attribute_value_id' => $valueId,
-                            'attribute_id' => $attributeId
-                        ]);
-                    }
+                        if (method_exists($product, 'importDetails') && $product->importDetails()->count() > 0) {
+                            return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì đã có phiếu nhập kho!');
+                        } 
                 }
             }
             // Xóa các biến thể không còn trong tổ hợp mới
@@ -282,13 +270,51 @@ class ProductController extends Controller
             return redirect()->route('products.trash.list')->with('success', 'Không thể xoá vĩnh viễn sản phẩm vì còn tồn tại trong giỏ hàng của khách!');
         }
 
-        $product->galleries()->delete();
-        $product->variants()->each(function ($variant) {
-            $variant->variantAttributes()->delete();
-            $variant->delete();
-        });
-        $product->forceDelete();
-        return redirect()->route('products.trash.list')->with('success', 'Đã xóa vĩnh viễn sản phẩm!');
+        try {
+            // Kiểm tra liên kết với các bảng khác, trả về thông báo chi tiết đầu tiên gặp phải
+            if (method_exists($product, 'supplierProductPrices') && $product->supplierProductPrices()->count() > 0) {
+                return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì vẫn còn thông tin giá nhập từ nhà cung cấp.');
+            } else if (method_exists($product, 'orderDetails') && $product->orderDetails()->count() > 0) {
+                return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì đã từng được đặt hàng.');
+            } else if (method_exists($product, 'favorites') && $product->favorites()->count() > 0) {
+                return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì khách hàng còn lưu trong danh sách yêu thích.');
+            } else if (method_exists($product, 'cartdetails') && $product->cartdetails()->count() > 0) {
+                return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì vẫn còn trong giỏ hàng của khách.');
+            } else if (method_exists($product, 'importDetails') && $product->importDetails()->count() > 0) {
+                return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì đã từng nhập kho.');
+            }
+
+            // Xóa các liên kết phụ thuộc trước khi xóa sản phẩm
+            $product->galleries()->delete();
+            $product->variants()->each(function ($variant) {
+                $variant->variantAttributes()->delete();
+                $variant->delete();
+            });
+
+            $product->forceDelete();
+            return redirect()->route('products.trash.list')->with('success', 'Đã xóa vĩnh viễn sản phẩm!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Bắt lỗi ràng buộc toàn vẹn hoặc lỗi SQL khác, chỉ trả về thông báo chi tiết đầu tiên nếu có thể
+            $msg = $e->getMessage();
+            if (str_contains($msg, 'supplier_product_prices')) {
+                $errorMsg = 'Không thể xóa sản phẩm vì vẫn còn thông tin giá nhập từ nhà cung cấp. ';
+            } else if (str_contains($msg, 'order_details')) {
+                $errorMsg = 'Không thể xóa sản phẩm vì đã từng được đặt hàng.';
+            } else if (str_contains($msg, 'favorites')) {
+                $errorMsg = 'Không thể xóa sản phẩm vì khách hàng còn lưu trong danh sách yêu thích.';
+            } else if (str_contains($msg, 'cartdetails')) {
+                $errorMsg = 'Không thể xóa sản phẩm vì vẫn còn trong giỏ hàng của khách.';
+            } else if (str_contains($msg, 'import_details')) {
+                $errorMsg = 'Không thể xóa sản phẩm vì đã từng nhập kho.';
+            } else if (str_contains($msg, 'Integrity constraint violation')) {
+                $errorMsg = 'Không thể xóa sản phẩm vì còn dữ liệu liên quan. Vui lòng kiểm tra lại các thông tin liên kết.';
+            } else {
+                $errorMsg = 'Không thể xóa sản phẩm do dữ liệu liên quan.';
+            }
+            return redirect()->route('products.trash.list')->with('error', $errorMsg);
+        } catch (\Exception $e) {
+            return redirect()->route('products.trash.list')->with('error', 'Đã xảy ra lỗi khi xóa sản phẩm: ' . $e->getMessage());
+        }
     }
 
 
