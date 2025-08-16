@@ -277,7 +277,7 @@
 @push('styles')
 
 <style>
-button, span{
+ .swal2-arial, button, span{
     font-family: Arial, Helvetica, sans-serif;
 }
     .order-card { transition: all 0.2s ease; border-color: #eef0f2 !important; }
@@ -391,11 +391,19 @@ button, span{
     const reason = $('#reason').val().trim();
     const bank = $('#bankInfo').hasClass('d-none') ? '' : ($('#bank_account').val().trim());
 
-    if (!reason) {
-      return Swal.fire({
-        icon: 'warning', title: 'Vui lòng nhập lý do', timer: 1600, showConfirmButton: false, toast: true, position: 'top-end'
-      });
+   if (!reason) {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Vui lòng nhập lý do',
+    timer: 1600,
+    showConfirmButton: false,
+    toast: true,
+    position: 'top-end',
+    customClass: {
+      popup: 'swal2-arial'
     }
+  });
+}
 
     let html = `<div class="text-start">
       <div class="mb-2"><strong>Hành động:</strong> ${mode === 'cancel' ? 'Huỷ đơn' : 'Hoàn hàng'}</div>
