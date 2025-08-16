@@ -58,11 +58,13 @@ Sản phẩm
                         <select name="category_id" id="category_id" class="form-control">
                             <option value="">-- Chọn danh mục --</option>
                             @foreach($categories as $cate)
+
                                 <option value="{{ $cate->id }}" {{ old('category_id', $product->category_id) == $cate->id ? 'selected' : '' }}>{{ $cate->name }}</option>
                             @endforeach
                         </select>
                         @error('category_id')<div class="text-danger">{{ $message }}</div>@enderror
                     </div>
+
                     @php
                         $groupedMini = [];
                         foreach ($categories_mini as $mini) {
@@ -72,6 +74,7 @@ Sản phẩm
                             ];
                         }
                     @endphp
+
                     <div class="mb-3">
                         <label class="form-label">Danh mục con</label>
                         <select name="category_mini_id" id="category_mini_id" class="form-control">
@@ -263,6 +266,7 @@ Sản phẩm
                     }
                 });
             }
+
 
             // Danh mục con động
             const miniCategories = @json($groupedMini ?? []);

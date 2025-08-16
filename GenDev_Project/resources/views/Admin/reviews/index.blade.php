@@ -11,9 +11,13 @@
             @endif --}}
 
             <div class="card">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Danh sách đánh giá</h5>
-                </div>
+                <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <h5 class="mb-0">Danh sách bình luận</h5>
+            <form method="GET" class="d-flex flex-wrap gap-2">
+                <input type="text" name="search" class="form-control" placeholder="Câu bình luận...." value="{{ request('search') }}">
+                <button class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+            </form>
+        </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
