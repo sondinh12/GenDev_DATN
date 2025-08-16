@@ -171,99 +171,60 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->category_mini_id = $request->category_mini_id;
         $product->status = $request->status;
+        $product->price = $request->price;
+        $product->quantity = $request->quantity;
+        $product->sale_price = $request->sale_price;
 
-        $productType = $request->input('product_type', $product->variants->count() ? 'variable' : 'simple');
-
-        if ($productType === 'simple') {
-            // Sản phẩm không biến thể: xóa toàn bộ biến thể cũ, cập nhật giá chính
-            $product->price = $request->price;
-            $product->quantity = $request->quantity;
-            $product->sale_price = $request->sale_price;
-            $product->save();
-            // Xóa toàn bộ biến thể cũ
-            $oldVariants = ProductVariant::where('product_id', $product->id)->get();
-            foreach ($oldVariants as $oldVariant) {
-                ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
-                $oldVariant->delete();
-            }
-        } else {
-            // Sản phẩm có biến thể: cập nhật biến thể, đặt giá chính về 0
-            $product->price = 0;
-            $product->quantity = 0;
-            $product->sale_price = 0;
-            $product->save();
-            if ($request->has('variant_combinations')) {
-                $oldVariants = ProductVariant::where('product_id', $product->id)->get();
-                $oldVariantMap = [];
-                foreach ($oldVariants as $old) {
-                    $oldValueIds = $old->variantAttributes->pluck('attribute_value_id')->toArray();
-                    sort($oldValueIds);
-                    $key = implode(',', $oldValueIds);
-                    $oldVariantMap[$key] = $old;
-                }
-
-                $handledKeys = [];
-                foreach ($request->variant_combinations as $variant) {
-                    $valueRaw = $variant['value_ids'] ?? [];
-                    $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
-                    $valueIds = array_map('intval', $valueIds);
-                    sort($valueIds);
-                    $key = implode(',', $valueIds);
-                    $handledKeys[] = $key;
-                    if (isset($oldVariantMap[$key])) {
-                        $variantModel = $oldVariantMap[$key];
-                        $variantModel->price = $variant['price'];
-                        $variantModel->sale_price = $variant['sale_price'] ?? 0;
-                        $variantModel->quantity = $variant['quantity'] ?? 0;
-                        $variantModel->status = $variant['status'] ?? 1;
-                        $variantModel->save();
-                    } else {
-                        if (method_exists($product, 'importDetails') && $product->importDetails()->count() > 0) {
-                            return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì đã có phiếu nhập kho!');
-                        }
-                        $variantModel = ProductVariant::create([
-                            'product_id' => $product->id,
-                            'price' => $variant['price'],
-                            'sale_price' => $variant['sale_price'] ?? 0,
-                            'quantity' => $variant['quantity'] ?? 0,
-                            'status' => $variant['status'] ?? 1,
-                        ]);
-                        foreach ($valueIds as $valueId) {
-                            $attributeId = \App\Models\AttributeValue::find($valueId)?->attribute_id;
-                            \App\Models\ProductVariantAttribute::create([
-                                'product_variant_id' => $variantModel->id,
-                                'attribute_value_id' => $valueId,
-                                'attribute_id' => $attributeId
-                            ]);
-                        }
-                    }
-                }
-                // Xóa các biến thể không còn trong tổ hợp mới
-                foreach ($oldVariantMap as $key => $oldVariant) {
-                    if (!in_array($key, $handledKeys)) {
-                        ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
-                        $oldVariant->delete();
-                    }
-                }
-            } else {
-                // Nếu không có biến thể gửi lên, xóa toàn bộ biến thể cũ
-                $oldVariants = ProductVariant::where('product_id', $product->id)->get();
-                foreach ($oldVariants as $oldVariant) {
-                    ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
-                    $oldVariant->delete();
-                }
-            }
-        }
-
+        $product->save();
         // Xử lý cập nhật gallery ảnh
         if ($request->hasFile('galleries')) {
+            // Xóa ảnh gallery cũ
             ProductGallery::where('product_id', $product->id)->delete();
+            // Lưu ảnh gallery mới
             foreach ($request->file('galleries') as $galleryImg) {
                 $galleryPath = $galleryImg->store('products/gallery', 'public');
                 ProductGallery::create([
                     'product_id' => $product->id,
                     'image' => $galleryPath
                 ]);
+            }
+        }
+        // Xử lý cập nhật biến thể sản phẩm
+        if ($request->has('variant_combinations')) {
+            $oldVariants = ProductVariant::where('product_id', $product->id)->get();
+            $oldVariantMap = [];
+            foreach ($oldVariants as $old) {
+                $key = $old->variantAttributes->pluck('attribute_value_id')->implode(',');
+                $oldVariantMap[$key] = $old;
+            }
+
+            $handledKeys = [];
+            foreach ($request->variant_combinations as $variant) {
+                $valueRaw = $variant['value_ids'] ?? [];
+                $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
+                $key = implode(',', $valueIds);
+                $handledKeys[] = $key;
+                if (isset($oldVariantMap[$key])) {
+                    // Update variant (không kiểm tra số lượng trong giỏ hàng)
+                    $variantModel = $oldVariantMap[$key];
+                    $variantModel->price = $variant['price'];
+                    $variantModel->sale_price = $variant['sale_price'] ?? 0;
+                    $variantModel->quantity = $variant['quantity'] ?? 0;
+                    $variantModel->status = $variant['status'] ?? 1;
+                    $variantModel->save();
+                } else {
+                    // Create new variant
+                        if (method_exists($product, 'importDetails') && $product->importDetails()->count() > 0) {
+                            return redirect()->route('products.trash.list')->with('error', 'Không thể xóa sản phẩm vì đã có phiếu nhập kho!');
+                        } 
+                }
+            }
+            // Xóa các biến thể không còn trong tổ hợp mới
+            foreach ($oldVariantMap as $key => $oldVariant) {
+                if (!in_array($key, $handledKeys)) {
+                    ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
+                    $oldVariant->delete();
+                }
             }
         }
 
