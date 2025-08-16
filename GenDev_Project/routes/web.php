@@ -29,7 +29,6 @@ use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Client\FavoriteController;
 
-
 use Spatie\Permission\Models\Role;
 
 // ================= TRANG CHÍNH =================
