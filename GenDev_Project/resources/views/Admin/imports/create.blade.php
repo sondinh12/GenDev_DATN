@@ -9,7 +9,7 @@
     @endif
     <form action="{{ route('admin.imports.store') }}" method="post">
         @csrf
-        @if ($errors->any())
+        {{-- @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $err)
@@ -17,14 +17,14 @@
             @endforeach
         </ul>
     </div>
-@endif
+@endif --}}
         <div class="container mt-4">
             <h2 class="mb-4">Tạo phiếu nhập hàng</h2>
 
             {{-- Nhà cung cấp --}}
             <div class="form-group mb-3">
                 <label for="supplier_id">Nhà cung cấp:</label>
-                <select name="supplier_id" class="form-control">
+                <select name="supplier_id" class="form-control @error('supplier_id') is-invalid @enderror">
                     <option value="">-- Chọn --</option>
                     @foreach($suppliers as $supplier)
                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -38,7 +38,7 @@
             {{-- Ngày nhập --}}
             <div class="form-group mb-3">
                 <label for="import_date">Ngày nhập:</label>
-                <input type="date" name="import_date" class="form-control" value="{{ old('import_date') }}">
+                <input type="date" name="import_date" class="form-control @error('import_date') is-invalid @enderror" value="{{ old('import_date') }}">
                 @error('import_date')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
