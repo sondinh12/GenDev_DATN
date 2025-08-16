@@ -203,7 +203,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="d-flex align-items-center mb-3">
+                                                {{-- <div class="d-flex align-items-center mb-3">
                                                     <div class="flex-shrink-0">
                                                         <i class="fas fa-exclamation-triangle text-warning fa-fw"></i>
                                                     </div>
@@ -211,7 +211,7 @@
                                                         <h6 class="mb-0 text-muted">Số lần vi phạm</h6>
                                                         <p class="mb-0">{{ $user->violation_count }}</p>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="d-flex align-items-center mb-3">

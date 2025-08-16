@@ -101,6 +101,9 @@
         </div>
     @endforeach
 </div>
+<div class="mt-4 d-flex justify-content-center">
+    {{ $bestSellingProducts->links('pagination::bootstrap-4') }}
+</div>
 <style>
     .product-image-wrapper {
         position: relative;
