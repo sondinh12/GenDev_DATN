@@ -89,11 +89,13 @@ class HomeController extends Controller
         ])
             ->withCount([
                 'orderDetails as total_sold' => function ($query) {
+
                     $query->where('created_at', '>=', now()->subDays(30))
                         ->select(DB::raw('SUM(quantity)'));
                 }
             ])
             ->where('status', 1)
+
             ->orderByDesc('total_sold')
             ->paginate(14);
         if ($request->ajax()) {

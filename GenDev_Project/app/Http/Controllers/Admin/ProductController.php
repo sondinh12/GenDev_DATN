@@ -313,6 +313,7 @@ class ProductController extends Controller
             }
         }
 
+
         // Chuyển hướng về trang danh sách sản phẩm với thông báo thành công
         return redirect()->route('products.index')->with('success', 'Cập nhật sản phẩm thành công!');
     }

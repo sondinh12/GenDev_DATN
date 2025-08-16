@@ -14,7 +14,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
             {{-- Hiển thị lỗi validate --}}
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
                         @foreach ($errors->all() as $error)
@@ -22,7 +22,8 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
+
 
             {{-- Hiển thị thông báo thành công
             @if (session('success'))
@@ -65,8 +66,9 @@
     </div>
 </div>
 @endsection
+@push('scripts')
 {{-- SweetAlert2 --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 {{-- Flash Message --}}
 @if (session('success'))
@@ -84,12 +86,12 @@
     </script>
 @endif
 
-@if (session('error'))
+@if ($errors->any())
     <script>
         Swal.fire({
             icon: 'error',
             title: 'Lỗi!',
-            text: '{{ session('error') }}',
+            html: `{!! implode('<br>', $errors->all()) !!}`, 
             confirmButtonColor: '#d33',
             toast: true,
             position: 'top-end',
@@ -98,3 +100,4 @@
         });
     </script>
 @endif
+@endpush
