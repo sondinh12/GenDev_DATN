@@ -58,20 +58,24 @@ Sản phẩm
                         <select name="category_id" id="category_id" class="form-control">
                             <option value="">-- Chọn danh mục --</option>
                             @foreach($categories as $cate)
-                                <option value="{{ $cate->id }}" {{ $product->category_id == $cate->id ? 'selected' : '' }}>{{ $cate->name }}</option>
+                                <option value="{{ $cate->id }}" {{ old('category_id', $product->category_id) == $cate->id ? 'selected' : '' }}>{{ $cate->name }}</option>
                             @endforeach
                         </select>
                         @error('category_id')<div class="text-danger">{{ $message }}</div>@enderror
                     </div>
+                    @php
+                        $groupedMini = [];
+                        foreach ($categories_mini as $mini) {
+                            $groupedMini[$mini->category_id][] = [
+                                'id' => $mini->id,
+                                'name' => $mini->name,
+                            ];
+                        }
+                    @endphp
                     <div class="mb-3">
                         <label class="form-label">Danh mục con</label>
                         <select name="category_mini_id" id="category_mini_id" class="form-control">
                             <option value="">-- Chọn danh mục con --</option>
-                            @if(isset($categories_mini))
-                                @foreach($categories_mini as $mini)
-                                    <option value="{{ $mini->id }}" {{ $product->category_mini_id == $mini->id ? 'selected' : '' }}>{{ $mini->name }}</option>
-                                @endforeach
-                            @endif
                         </select>
                         @error('category_mini_id')<div class="text-danger">{{ $message }}</div>@enderror
                     </div>
@@ -259,6 +263,31 @@ Sản phẩm
                     }
                 });
             }
+
+            // Danh mục con động
+            const miniCategories = @json($groupedMini ?? []);
+            const categorySelect = document.getElementById('category_id');
+            const miniSelect = document.getElementById('category_mini_id');
+            const selectedMini = @json(old('category_mini_id', $product->category_mini_id));
+
+            function renderMiniOptions() {
+                const selected = categorySelect.value;
+                miniSelect.innerHTML = '<option value="">-- Chọn danh mục con --</option>';
+                if (selected && miniCategories[selected]) {
+                    miniCategories[selected].forEach(mini => {
+                        const opt = document.createElement('option');
+                        opt.value = mini.id;
+                        opt.textContent = mini.name;
+                        if (selectedMini == mini.id) opt.selected = true;
+                        miniSelect.appendChild(opt);
+                    });
+                }
+            }
+            categorySelect.addEventListener('change', function () {
+                renderMiniOptions();
+            });
+            // Khởi tạo khi load trang
+            renderMiniOptions();
         });
     </script>
     <script>
