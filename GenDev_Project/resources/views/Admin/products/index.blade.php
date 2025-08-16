@@ -20,8 +20,17 @@ Quản lý
 @endif --}}
 
 <div class="card">
+    
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Danh sách sản phẩm</h5>
+        <form method="GET" style="max-width: 300px; width: 100%;">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="🔍 Tìm kiếm sản phẩm..."
+                        value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-outline-secondary">Tìm</button>
+                    <a href="{{ route('products.index') }}" class="btn btn-outline-danger">Xóa</a>
+                </div>
+            </form>
 
     </div>
     <div class="card-body py-3 d-flex justify-content-between align-items-center">

@@ -9,9 +9,21 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function index(){
-        $suppliers = Supplier::all();
-        return view('Admin.suppliers.index',compact('suppliers')); 
+    public function index(Request $request){
+        // $suppliers = Supplier::all();
+        // return view('Admin.suppliers.index',compact('suppliers')); 
+        $query = Supplier::query();
+
+    // Nếu có từ khóa tìm kiếm
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where('name', 'like', '%' . $keyword . '%')
+                ->orWhere('email', 'like', "%$keyword%");
+        }
+
+        $suppliers = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('Admin.suppliers.index', compact('suppliers'));
     }
 
     public function create(){
