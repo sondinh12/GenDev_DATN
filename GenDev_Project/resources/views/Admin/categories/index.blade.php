@@ -18,7 +18,7 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Danh sách danh mục</h5>
+            <h5 class="mb-0">Danh sách Danh mục</h5>
             <form method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm danh mục sản phẩm..."
@@ -28,11 +28,11 @@
             </form>
         </div>
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
-            <a href="{{ route('categories.create') }}" class="btn btn-outline-primary mb-3"></i> Thêm danh mục</a>
-            <a href="{{ route('categories.trash') }}" class="btn btn-outline-danger position-relative">
-                <i class="fa fa-trash me-1"></i> Thùng rác
+            <a href="{{ route('categories.create') }}" class="btn btn-outline-primary mb-3"><i class="fas fa-plus me-1"></i>Thêm mới sản phẩm</a>
+            <a href="{{ route('categories.trash') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
+                <i class="fa fa-trash me-1"></i>Thùng rác
                 @if(isset($trashedCount) && $trashedCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.9em;">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ $trashedCount }}
                     </span>
                 @endif

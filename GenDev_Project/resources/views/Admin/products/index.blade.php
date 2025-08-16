@@ -20,7 +20,7 @@
         </div>
 
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
-            <a href="{{ route('products.create') }}" class="btn btn-outline-primary mb-3">Thêm mới sản phẩm</a>
+            <a href="{{ route('products.create') }}" class="btn btn-outline-primary mb-3"><i class="fas fa-plus me-1"></i>Thêm mới sản phẩm</a>
             <a href="{{ route('products.trash.list') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
                 <i class="fa fa-trash me-1"></i>Thùng rác
                 @if (isset($trashedCount) && $trashedCount > 0)
@@ -30,6 +30,7 @@
                 @endif
             </a>
         </div>
+        
         <div class="card-body table-responsive">
             <table class="table table-bordered align-middle text-center">
                 <thead class="table-light">
