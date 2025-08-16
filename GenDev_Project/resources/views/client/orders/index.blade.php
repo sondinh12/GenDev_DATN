@@ -138,7 +138,7 @@
                 @endforeach
 
                 {{-- Review sau khi đã giao/hoàn thành --}}
-                @if(in_array($order->status, ['shipped', 'completed']) && Auth::check())
+                @if(in_array($order->status, ['completed']) && Auth::check())
                     @foreach($uniqueProductIds as $productId)
                         @php
                             $product = \App\Models\Product::find($productId);
