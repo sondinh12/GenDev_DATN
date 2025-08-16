@@ -2,17 +2,16 @@
     <div class="col-full">
         <ul id="menu-top-bar-left" class="nav menu-top-bar-left">
             <li class="menu-item animate-dropdown">
-                <a title="Giao hàng miễn phí toàn quốc" href="contact-v1.html">Giao hàng miễn phí toàn quốc</a>
+                <a title="Giao hàng miễn phí toàn quốc" href="#">Giao hàng miễn phí toàn quốc</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Đảm bảo chất lượng sản phẩm" href="shop.html">Đảm bảo chất lượng sản phẩm</a>
+                <a title="Đảm bảo chất lượng sản phẩm" href="#">Đảm bảo chất lượng sản phẩm</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Chương trình đổi trả nhanh chóng" href="track-your-order.html">Chương trình đổi trả nhanh
-                    chóng</a>
+                <a title="Chương trình đổi trả nhanh chóng" href="#">Chương trình đổi trả nhanh chóng</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Không phụ phí" href="contact-v2.html">Không phụ phí</a>
+                <a title="Không phụ phí" href="#">Không phụ phí</a>
             </li>
         </ul>
         <!-- .nav -->

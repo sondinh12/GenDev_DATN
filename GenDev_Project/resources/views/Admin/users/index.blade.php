@@ -7,13 +7,13 @@
         <div class="row mb-4">
             <div class="col-12">
                 <!-- Flash Message -->
-                @if (session('success'))
+                {{-- @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @elseif(session('error'))
                     <div class="alert alert-danger">{{ session('error') }}</div>
                 @elseif(session('notification'))
                     <div class="alert alert-warning">{{ session('notification') }}</div>
-                @endif
+                @endif --}}
 
                 <div class="card">
                     <div class="card-header bg-white py-3">
@@ -64,7 +64,7 @@
                                             <td>{{ $user->id }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/images/default-avatar.png') }}"
+                                                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/avatar/default-avatar.png') }}"
                                                         alt="{{ $user->name }}" class="rounded-circle me-2"
                                                         width="40" height="40" style="object-fit: cover;">
                                                     <div>
@@ -340,4 +340,54 @@
             });
         });
     </script>
+@endpush
+@push('scripts')
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('notification'))
+    <script>
+        Swal.fire({
+            icon: 'notification',
+            title: 'Thành công!',
+            text: '{{ session('notification') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
 @endpush

@@ -76,6 +76,7 @@ class OrderController extends Controller
 
         OrderStatusLog::create([
             'order_id'   => $order->id,
+            'type' => 'order',
             'changed_by' => Auth::id() ?? 1,
             'old_status' => $current,
             'new_status' => $new,
@@ -87,6 +88,50 @@ class OrderController extends Controller
         $order->save();
 
         return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
+    }
+
+    public function updatePaymentStatus(Request $request, Order $order)
+    {
+        // Chỉ cho phép chọn đúng 2 trạng thái này ở form, nhưng vẫn validate chặt chẽ
+        $request->validate([
+            'payment_status'       => 'required|in:refund,refunded',
+            'payment_note'         => 'nullable|string|max:500',
+            'refund_bank_account'  => 'nullable|string|max:255',
+        ]);
+
+        $old = $order->payment_status;
+        $new = $request->payment_status;
+
+        // 1) Nếu trạng thái không thay đổi
+        if ($old === $new) {
+            return back()->with('notification', 'Trạng thái thanh toán không thay đổi.');
+        }
+
+        // 2) Nếu đơn đã "ĐÃ HOÀN TIỀN" thì khóa không cho đổi gì nữa
+        if ($old === 'refunded') {
+            return back()->with('error', 'Đơn hàng đã ở trạng thái "Đã hoàn tiền" và không thể thay đổi.');
+        }
+
+        // 3) Ràng buộc DUY NHẤT: chỉ cho phép từ refund -> refunded
+        if (!($old === 'refund' && $new === 'refunded')) {
+            return back()->with('error', 'Chỉ được phép chuyển từ "Đang hoàn tiền" sang "Đã hoàn tiền".');
+        }
+
+        // 5) Cập nhật & log
+        $order->payment_status = 'refunded';
+        $order->save();
+
+        $order->orderStatusLogs()->create([
+            'changed_by'           => Auth::id(),
+            'type'                 => 'payment',
+            'old_status'           => $old,
+            'new_status'           => 'refunded',
+            'note'                 => $request->payment_note,
+            'refund_bank_account'  => $request->refund_bank_account,
+            'changed_at'           => now(),
+        ]);
+
+        return back()->with('success', 'Cập nhật trạng thái thanh toán sang "Đã hoàn tiền" thành công.');
     }
 
     public function show($id)

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @if(session('error'))
+    {{-- @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
@@ -14,7 +14,7 @@
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif
+    @endif --}}
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -98,3 +98,38 @@
     </div>
 
 @endsection
+@push('scripts')
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+@endpush
