@@ -5,7 +5,6 @@
 @section('content')
    <div class="container-fluid py-4" style="background: #f8fafc;">
     <div class="row justify-content-center">
-        {{-- Flash Message (đã chuyển sang SweetAlert bên dưới) --}}
     </div>
 
     <div class="col-lg-10">
@@ -391,15 +390,6 @@
 <style>
     .table th, .table td { vertical-align: middle !important; }
 </style>
-{{-- <script>
-    setTimeout(() => {
-        const alert = document.querySelector('.alert');
-        if (alert) {
-            alert.classList.remove('show');
-            alert.classList.add('fade');
-        }
-    }, 5000);
-</script> --}}
 @push('scripts')
 {{-- SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
