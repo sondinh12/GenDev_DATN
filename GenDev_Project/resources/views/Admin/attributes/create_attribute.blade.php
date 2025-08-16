@@ -20,9 +20,9 @@
                     <h5 class="mb-0">
                         <i class="fas fa-plus-circle me-2 text-success"></i>Thêm thuộc tính mới
                     </h5>
-                    <a href="{{ route('admin.attributes.index') }}" class="btn btn-outline-secondary rounded-pill px-3">
+                    {{-- <a href="{{ route('admin.attributes.index') }}" class="btn btn-outline-secondary rounded-pill px-3">
                         <i class="fas fa-arrow-left me-1"></i> Quay lại
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>

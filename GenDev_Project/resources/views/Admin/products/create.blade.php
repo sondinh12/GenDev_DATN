@@ -83,7 +83,7 @@
         <div class="row mb-2">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label style="font-size: 15px">Ảnh đại diện: </label>
+                    <label style="font-size: 15px">Ảnh đại diện:</label>
                     <input type="file" name="image" class="form-control-file" accept="image/*">
                     @error('image')
                         <div class="text-danger">{{ $message }}</div>
@@ -92,7 +92,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label style="font-size: 15px">Ảnh thư viện: </label>
+                    <label style="font-size: 15px">Ảnh thư viện:</label>
                     <input type="file" name="galleries[]" class="form-control-file" multiple accept="image/*">
                     @error('galleries')
                         <div class="text-danger">{{ $message }}</div>
@@ -101,40 +101,35 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-8">
-                <div class="form-group mb-2">
-                    <label style="font-size: 15px;">Mô tả</label>
-                    <textarea name="description" class="form-control" rows="5">{{ old('description') }}</textarea>
-                    @error('description')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+        <div class="form-group mb-2 d-flex align-items-start">
+            <div class="me-3">
+                <label style="font-size: 15px;">Mô tả:</label>
+                <textarea style="width: 610px" name="description" class="form-control" rows="6">{{ old('description') }}</textarea>
+                @error('description')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
-            <div class="col-md-4">
-                <div class="form-group mb-2"> 
-                    <label style="font-size: 15px" class="mb-2">Trạng thái</label><br>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_show" value="1" checked>
-                        <label class="form-check-label" for="status_show">Hiển thị</label>
-                    </div>
-                    <div class="form-check form-check-inline ml-3">
-                        <input class="form-check-input" type="radio" name="status" id="status_hide" value="0">
-                        <label class="form-check-label" for="status_hide">Ẩn</label>
-                    </div>
+            <div>
+                <label style="font-size: 15px" class="mb-2">Trạng thái:</label><br>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="status_show" value="1" checked>
+                    <label class="form-check-label" for="status_show">Hiển thị</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="status_hide" value="0">
+                    <label class="form-check-label" for="status_hide">Ẩn</label>
                 </div>
             </div>
         </div>
 
         <hr>
 
-        <div class="form-group mb-2">
-            <label style="font-size: 15px">Loại sản phẩm</label>
-            <select name="product_type" id="product-type" class="form-control @error('product_type') is-invalid @enderror"
-                onchange="toggleProductType()">
+        <div class="form-group mb-3 d-flex align-items-center">
+            <label for="product-type" class="form-label" style="font-size: 15px; width: 140px; margin-bottom: 0;">Loại sản phẩm:</label>
+            <select name="product_type" id="product-type" class="form-select form-control-lg @error('product_type') is-invalid @enderror"
+                onchange="toggleProductType()" style="width: 320px; border-radius: 8px; border: 1px solid #dee2e6;">
                 <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến thể</option>
-                <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể
-                </option>
+                <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể</option>
             </select>
             @error('product_type')
                 <div class="invalid-feedback">{{ $message }}</div>

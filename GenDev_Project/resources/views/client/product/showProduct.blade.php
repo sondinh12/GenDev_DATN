@@ -313,8 +313,8 @@
                                 <div class="row">
                                     @foreach($attributes as $attrName => $attr)
                                         <div class="col-12 col-md-6 mb-2">
-                                            <label style="font-size: 15px" class="form-label">{{ $attrName }}</label>
-                                            <select style="font-size: 15px;color: #646464;font-weight: 300;" name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
+                                            <label class="form-label fw-semibold">{{ $attrName }}</label>
+                                            <select name="attribute[{{ $attr['id'] }}]" class="form-select variant-select" data-attr-id="{{ $attr['id'] }}">
                                                 <option value="" disabled {{ !old('attribute.'.$attr['id']) ? 'selected' : '' }}>-- Chọn {{ $attrName }} --</option>
                                                 @foreach($attr['values'] as $valId => $val)
                                                     @php
