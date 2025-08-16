@@ -209,31 +209,33 @@
             <!-- .navbar-search -->
             <ul class="header-compare nav navbar-nav">
                 <li class="nav-item">
-                    <a href="{{ asset('compare.html') }}" class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="tm tm-compare"></i>
-                        <span id="top-cart-compare-count" class="value">3</span>
+                        <span id="top-cart-compare-count" class="value">0</span>
                     </a>
                 </li>
             </ul>
             <!-- .header-compare -->
-            <ul class="header-wishlist nav navbar-nav">
-                <li class="nav-item">
-                    <a href="{{ asset('wishlist.html') }}" class="nav-link">
-                        <i class="tm tm-favorites"></i>
-                        <span id="top-cart-wishlist-count" class="value">3</span>
-                    </a>
-                </li>
-            </ul>
-            <!-- .header-wishlist -->
-            <ul id="site-header-cart" class="site-header-cart menu">
-                <li class="animate-dropdown dropdown ">
-                    <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
-                        <i class="tm tm-shopping-bag"></i>
-                        <span class="count">{{ $cartCount }}</span>
-                    </a>
-                    <!-- .dropdown-menu-mini-cart -->
-                </li>
-            </ul>
+           <ul class="header-wishlist nav navbar-nav">
+    <li class="nav-item">
+        <a href="{{ route('client.favorites.index') }}" class="nav-link">
+            <i class="tm tm-favorites"></i>
+            <span id="top-cart-wishlist-count" class="value">
+                {{ auth()->check() ? auth()->user()->favorites()->count() : 0 }}
+            </span>
+        </a>
+    </li>
+</ul>
+
+<ul id="site-header-cart" class="site-header-cart menu">
+    <li class="animate-dropdown dropdown">
+        <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
+            <i class="tm tm-shopping-bag"></i>
+            <span class="count">{{ $cartCount }}</span>
+        </a>
+    </li>
+</ul>
+
             <!-- .site-header-cart -->
             <!-- .site-header-cart -->
         </div>

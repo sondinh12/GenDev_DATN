@@ -1,7 +1,7 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-Thùng Rác Sản Phẩm
+Thùng rác Sản Phẩm
 @endsection
 
 @section('topbar-title')
@@ -13,6 +13,21 @@ Thùng Rác Sản Phẩm
 
 @section('content')
 <div class="container-fluid px-4">
+
+    <!-- Thông báo lỗi/thành công -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+        </div>
+    @endif
+
     <!-- Header Card -->
     <div class="card mb-4 border-0 shadow-sm">
         <div class="card-body py-3">
