@@ -17,32 +17,35 @@
 
                 <div class="card">
                     <div class="card-header bg-white py-3">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-                            <h5 class="mb-0 flex-shrink-0">Danh sách người dùng</h5>
-                            <form action="{{ route('admin.users.index') }}" method="GET"
-                                class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center"
-                                style="min-width:300px;">
-                                <div class="input-group" style="min-width:180px;">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Tìm kiếm theo tên..." value="{{ request('search') }}">
-                                </div>
-                                <select name="role" class="form-select" style="max-width:160px">
-                                    <option value="">Tất cả vai trò</option>
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}"
-                                            {{ request('role') == $role->name ? 'selected' : '' }}>
-                                            {{ ucfirst($role->name) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </form>
-                            <a href="#" class="btn btn-primary flex-shrink-0" data-bs-toggle="modal"
-                                data-bs-target="#addUserModal">
-                                <i class="fa fa-plus"></i> Thêm tài khoản
-                            </a>
+                        <div class="row w-100 g-0 align-items-center">
+                            <div class="col d-flex align-items-center gap-2 flex-wrap">
+                                <h5 class="mb-0 flex-shrink-0">Danh sách người dùng</h5>
+                                <form action="{{ route('admin.users.index') }}" method="GET"
+                                    class="d-flex align-items-center gap-2" style="min-width:300px;">
+                                    <div class="input-group" style="min-width:180px;">
+                                        <input type="text" name="search" class="form-control"
+                                            placeholder="Tìm kiếm theo tên..." value="{{ request('search') }}">
+                                    </div>
+                                    <select name="role" class="form-select" style="max-width:160px">
+                                        <option value="">Tất cả vai trò</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}"
+                                                {{ request('role') == $role->name ? 'selected' : '' }}>
+                                                {{ ucfirst($role->name) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-auto d-flex justify-content-end">
+                                <a href="#" class="btn btn-primary flex-shrink-0 ms-2" data-bs-toggle="modal"
+                                    data-bs-target="#addUserModal">
+                                    <i class="fa fa-plus"></i> Thêm tài khoản
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -65,8 +68,10 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/avatar/default-avatar.png') }}"
-                                                        alt="{{ $user->name }}" class="rounded-circle me-2"
-                                                        width="40" height="40" style="object-fit: cover;">
+
+                                                        alt="{{ $user->name }}" class="rounded-circle me-2" width="40"
+                                                        height="40" style="object-fit: cover;">
+
                                                     <div>
                                                         <div class="fw-medium">{{ $user->name }}</div>
                                                     </div>
@@ -190,7 +195,9 @@
                                                                     @endforeach
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group">
+                                                            <div class="form-group user-permissions-group"
+                                                                id="permissions-group-{{ $user->id }}"
+                                                                style="display: {{ $user->hasRole('người dùng') ? 'none' : 'block' }};">
                                                                 <label>Quyền riêng (Permissions)</label>
                                                                 <div class="row">
                                                                     @foreach ($permissions as $permission)
@@ -255,44 +262,81 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Họ tên</label>
-                            <input type="text" class="form-control" name="name" required>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                                value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" name="phone" required>
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror"
+                                name="phone" value="{{ old('phone') }}" required>
+                            @error('phone')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="gender" class="form-label">Giới tính</label>
-                            <select name="gender" class="form-control" required>
-                                <option value="Nam">Nam</option>
-                                <option value="Nữ">Nữ</option>
-                                <option value="Khác">Khác</option>
+                            <select name="gender" class="form-control @error('gender') is-invalid @enderror" required>
+                                <option value="Nam" {{ old('gender') == 'Nam' ? 'selected' : '' }}>Nam</option>
+                                <option value="Nữ" {{ old('gender') == 'Nữ' ? 'selected' : '' }}>Nữ</option>
+                                <option value="Khác" {{ old('gender') == 'Khác' ? 'selected' : '' }}>Khác</option>
                             </select>
+                            @error('gender')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" name="password" required minlength="8">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                name="password" required minlength="8">
+                            @error('password')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="role" class="form-label">Vai trò</label>
-                            <select name="role" class="form-control" required>
+                            <select name="role" class="form-control @error('role') is-invalid @enderror" required>
                                 @foreach ($roles as $role)
-                                    <option value="{{ $role->name }}" {{ $role->name == 'user' ? 'selected' : '' }}>
+                                    <option value="{{ $role->name }}"
+                                        {{ old('role', $role->name == 'user' ? 'user' : '') == $role->name ? 'selected' : '' }}>
                                         {{ ucfirst($role->name) }}</option>
                                 @endforeach
                             </select>
+                            @error('role')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Trạng thái</label>
-                            <select name="status" class="form-control" required>
-                                <option value="1" selected>Hoạt động</option>
-                                <option value="0">Khóa</option>
+                            <select name="status" class="form-control @error('status') is-invalid @enderror" required>
+                                <option value="1" {{ old('status', '1') == '1' ? 'selected' : '' }}>Hoạt động
+                                </option>
+                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Khóa</option>
                             </select>
+                            @error('status')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
+                        @push('scripts')
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    @if ($errors->any())
+                                        var addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
+                                        addUserModal.show();
+                                    @endif
+                                });
+                            </script>
+                        @endpush
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -325,6 +369,15 @@
                     var userId = this.id.replace('role-', '');
                     var roleName = this.value;
                     var permList = window.rolePermissionsMap[roleName] || [];
+                    // Ẩn/hiện phần quyền riêng
+                    var permGroup = document.getElementById('permissions-group-' + userId);
+                    if (permGroup) {
+                        if (roleName === 'người dùng') {
+                            permGroup.style.display = 'none';
+                        } else {
+                            permGroup.style.display = 'block';
+                        }
+                    }
                     // Bỏ tích hết
                     document.querySelectorAll('#editRoleModal-' + userId +
                         ' input[name="permissions[]"]').forEach(function(cb) {
@@ -342,52 +395,53 @@
     </script>
 @endpush
 @push('scripts')
-{{-- SweetAlert2 --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-{{-- Flash Message --}}
-@if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: '{{ session('success') }}',
-            confirmButtonColor: '#3085d6',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
+    {{-- Flash Message --}}
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
 
-@if (session('notification'))
-    <script>
-        Swal.fire({
-            icon: 'notification',
-            title: 'Thành công!',
-            text: '{{ session('notification') }}',
-            confirmButtonColor: '#3085d6',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
+    @if (session('notification'))
+        <script>
+            Swal.fire({
+                icon: 'notification',
+                title: 'Thành công!',
+                text: '{{ session('notification') }}',
+                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
 
-@if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi!',
-            text: '{{ session('error') }}',
-            confirmButtonColor: '#d33',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+
 @endpush

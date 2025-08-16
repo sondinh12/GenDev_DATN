@@ -163,7 +163,7 @@ public function show($id)
                 $query->orderBy('name', 'desc');
                 break;
             case 'popularity':
-                $query->withCount(['cartdetails as total_sold' => function ($query) {
+                $query->withCount(['orderDetails as total_sold' => function ($query) {
                     $query->select(DB::raw('SUM(quantity)'));
                 }])->orderBy('total_sold', 'desc');
                 break;
