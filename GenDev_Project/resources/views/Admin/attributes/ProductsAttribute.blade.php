@@ -1,6 +1,6 @@
-@extends('Admin.layouts.master')
+@extends('Admin.layouts.master-without-page-title')
 
-
+@section('title', 'Quản lý thuộc tính')
 
 @section('content')
 <div class="container-fluid px-4">

@@ -21,15 +21,14 @@
             <h5 class="mb-0">Danh sách danh mục</h5>
             <form method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="🔍 Tìm kiếm danh mục sản phẩm..."
+                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm danh mục sản phẩm..."
                         value="{{ request('search') }}">
                     <button type="submit" class="btn btn-outline-secondary">Tìm</button>
                 </div>
             </form>
         </div>
-        <div class="card-body py-3 d-flex justify-content-between align-items-center"> {{-- Use card-body for this section --}}
+        <div class="card-body py-3 d-flex justify-content-between align-items-center">
             <a href="{{ route('categories.create') }}" class="btn btn-outline-primary mb-3"></i> Thêm danh mục</a>
-
             <a href="{{ route('categories.trash') }}" class="btn btn-outline-danger position-relative">
                 <i class="fa fa-trash me-1"></i> Thùng rác
                 @if(isset($trashedCount) && $trashedCount > 0)

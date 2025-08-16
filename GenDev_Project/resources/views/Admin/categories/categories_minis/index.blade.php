@@ -37,7 +37,7 @@
     </div> <br>
     
 
-    <div class="card-body py-3 d-flex justify-content-between align-items-center"> {{-- Use card-body for this section --}}
+    <div class="card-body py-3 d-flex justify-content-between align-items-center">
         <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-outline-primary mb-3">Thêm danh mục con</a>
 
         <a href="{{ route('categories_mini.trash', ['category_id' => $category_id]) }}" class="btn btn-outline-danger position-relative">
