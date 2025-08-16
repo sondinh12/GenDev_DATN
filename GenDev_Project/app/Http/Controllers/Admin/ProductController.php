@@ -24,14 +24,26 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Product::with(['category', 'categoryMini'])
+            ->whereNull('deleted_at');
 
-        $products = Product::with(['category', 'categoryMini'])
-            ->whereNull('deleted_at')
-            ->orderBy('id', 'DESC')
-            ->paginate(5);
+        // Tìm kiếm theo tên sản phẩm
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Nếu muốn tìm kiếm theo danh mục, có thể mở rộng ở đây
+        // if ($request->filled('category_id')) {
+        //     $query->where('category_id', $request->category_id);
+        // }
+
+        $products = $query->orderBy('id', 'DESC')->paginate(5)->appends($request->all());
         $trashedCount = Product::onlyTrashed()->count();
+        // Nếu muốn truyền danh sách danh mục cho select box tìm kiếm:
+        // $categories = Category::all();
+        // return view('Admin.products.index', compact('products', 'trashedCount', 'categories'));
         return view('Admin.products.index', compact('products', 'trashedCount'));
     }
 
@@ -215,6 +227,15 @@ class ProductController extends Controller
 
                 $handledKeys = [];
                 foreach ($request->variant_combinations as $variant) {
+                    $price = isset($variant['price']) ? (int)$variant['price'] : 0;
+                    $sale_price = isset($variant['sale_price']) ? (int)$variant['sale_price'] : 0;
+                    // Validate giá
+                    if ($price < 1000 || $sale_price < 0) {
+                        return redirect()->route('products.edit', $product->id)->with('error', 'Giá và giá khuyến mãi của biến thể phải lớn hơn hoặc bằng 1000.');
+                    }
+                    if ($sale_price > $price) {
+                        return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi của biến thể không được lớn hơn giá gốc.');
+                    }
                     $valueRaw = $variant['value_ids'] ?? [];
                     $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
                     $key = implode(',', $valueIds);
@@ -222,8 +243,8 @@ class ProductController extends Controller
                     if (isset($oldVariantMap[$key])) {
                         // Update variant (không kiểm tra số lượng trong giỏ hàng)
                         $variantModel = $oldVariantMap[$key];
-                        $variantModel->price = $variant['price'];
-                        $variantModel->sale_price = $variant['sale_price'] ?? 0;
+                        $variantModel->price = $price;
+                        $variantModel->sale_price = $sale_price;
                         $variantModel->quantity = $variant['quantity'] ?? 0;
                         $variantModel->status = $variant['status'] ?? 1;
                         $variantModel->save();
@@ -234,8 +255,8 @@ class ProductController extends Controller
                         }
                         $variantModel = ProductVariant::create([
                             'product_id' => $product->id,
-                            'price' => $variant['price'],
-                            'sale_price' => $variant['sale_price'] ?? 0,
+                            'price' => $price,
+                            'sale_price' => $sale_price,
                             'quantity' => $variant['quantity'] ?? 0,
                             'status' => $variant['status'] ?? 1,
                         ]);
