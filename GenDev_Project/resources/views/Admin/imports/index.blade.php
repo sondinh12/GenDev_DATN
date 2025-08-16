@@ -8,6 +8,14 @@
         {{session('success')}}
     </div>
     @endif
+    <form action="{{ route('admin.imports.index') }}" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control"
+                placeholder="Tìm theo tên nhà cung cấp..."
+                value="{{ request('keyword') }}">
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
     <h2>Nguồn nhập</h2>
 
     <div class="d-flex justify-content-between mb-3">
