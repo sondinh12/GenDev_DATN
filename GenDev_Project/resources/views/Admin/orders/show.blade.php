@@ -69,28 +69,26 @@
                     </span>
                 </div>
 
-                {{-- Form cập nhật trạng thái thanh toán (mặc định chọn refunded) --}}
-               {{-- Form cập nhật trạng thái thanh toán (chỉ hiện khi đang hoàn tiền) --}}
-@if ($order->payment_status === 'refund')
-    <form action="{{ route('admin.orders.update-payment-status', $order->id) }}"
-          method="POST" class="mt-2 d-flex flex-column flex-md-row align-items-start gap-2">
-        @csrf
-        @method('PUT')
-        <select hidden name="payment_status" class="form-select form-select-sm w-auto">
-            @foreach (['unpaid','paid','cancelled','refund','refunded'] as $ps)
-                <option  value="{{ $ps }}" {{ $ps === 'refunded' ? 'selected' : '' }}>
-                    {{ $paymentLabelMap[$ps] }}
-                </option>
-            @endforeach
-        </select>
-        <input type="text" name="payment_note" class="form-control form-control-sm w-50"
-               placeholder="Ghi chú thanh toán (nếu có)">
-        <button class="btn btn-sm btn-outline-primary">
-            <i class="fas fa-sync"></i> Đã hoàn tiền
-        </button>
-    </form>
-@endif
-
+                {{-- Form cập nhật trạng thái thanh toán (chỉ hiện khi đang hoàn tiền) --}}
+                @if ($order->payment_status === 'refund')
+                    <form action="{{ route('admin.orders.update-payment-status', $order->id) }}"
+                          method="POST" class="mt-2 d-flex flex-column flex-md-row align-items-start gap-2">
+                        @csrf
+                        @method('PUT')
+                        <select hidden name="payment_status" class="form-select form-select-sm w-auto">
+                            @foreach (['unpaid','paid','cancelled','refund','refunded'] as $ps)
+                                <option value="{{ $ps }}" {{ $ps === 'refunded' ? 'selected' : '' }}>
+                                    {{ $paymentLabelMap[$ps] }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <input type="text" name="payment_note" class="form-control form-control-sm w-50"
+                               placeholder="Ghi chú thanh toán (nếu có)">
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-sync"></i> Đã hoàn tiền
+                        </button>
+                    </form>
+                @endif
 
                 <hr class="my-3">
 
@@ -103,7 +101,7 @@
                 </div>
 
                 {{-- Form cập nhật trạng thái ĐƠN: ẩn nếu payment_status là refund/refunded,
-                     và như trước: không cho update nếu đã shipped / cancelled / completed / return_requested --}}
+                     và không cho update nếu đã shipped / cancelled / completed / return_requested --}}
                 @if (!in_array($order->payment_status, ['refund', 'refunded']) &&
                      !in_array($order->status, ['shipped', 'cancelled', 'completed', 'return_requested']))
                     <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
@@ -129,258 +127,326 @@
                     </form>
                 @endif
 
-                {{-- Số tài khoản hoàn tiền nếu applicable --}}
-                @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
-                    @php
-                        $refundLog = $order->orderStatusLogs()
-                            ->whereNotNull('refund_bank_account')
-                            ->orderByDesc('changed_at')
-                            ->first();
-                    @endphp
-                    @if($refundLog && $refundLog->refund_bank_account)
-                        <div class="p-3 mt-3 border rounded bg-light">
-                            <h6 class="fw-bold mb-1 text-primary">
-                                <i class="fas fa-university me-1"></i> Thông tin hoàn tiền
-                            </h6>
-                            <div class="mb-0">
-                                <strong>Số tài khoản:</strong> {{ $refundLog->refund_bank_account }}
-                            </div>
-                        </div>
-                    @endif
-                @endif
-<hr>
-                {{-- Thông tin khách hàng --}}
-                <div class="card mb-4 border-start border-4 border-primary">
-                    <div class="card-header bg-light fw-bold"><i class="fas fa-user me-2"></i>Thông tin khách hàng</div>
-                    <div class="card-body p-3">
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Họ và tên:</div>
-                            <div class="col-sm-8">{{ $order->user->name ?? $order->name }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Email:</div>
-                            <div class="col-sm-8">{{ $order->email }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Số điện thoại:</div>
-                            <div class="col-sm-8">{{ $order->phone }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Địa chỉ:</div>
-                            <div class="col-sm-8">{{ $order->address }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Thành phố:</div>
-                            <div class="col-sm-8">{{ $order->city }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Phường/Xã:</div>
-                            <div class="col-sm-8">{{ $order->ward }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Mã bưu chính:</div>
-                            <div class="col-sm-8">{{ $order->postcode }}</div>
-                        </div>
-                    </div>
-                </div>
+                {{-- ====== BẮT ĐẦU: GIAO DIỆN MỚI TỪ “THÔNG TIN KHÁCH HÀNG” TRỞ XUỐNG ====== --}}
 
-                {{-- Giao hàng & thanh toán --}}
-                <div class="card mb-4 border-start border-4 border-info">
-                    <div class="card-header bg-light fw-bold">
-                        <i class="fas fa-shipping-fast me-2"></i>Thông tin giao hàng
+                <div class="row g-4 align-items-start mt-3">
+                  {{-- LEFT COLUMN --}}
+                  <div class="col-12 col-lg-8">
+
+                    {{-- Thông tin khách hàng --}}
+                    <div class="card border-0 shadow-sm overflow-hidden">
+                      <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                        <div class="d-flex align-items-center gap-3">
+                          <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width:44px;height:44px;font-weight:700;">
+                            {{ strtoupper(mb_substr($order->user->name ?? $order->name,0,1)) }}
+                          </div>
+                          <div>
+                            <h5 class="mb-0">Thông tin khách hàng</h5>
+                            <small class="text-muted">Mã đơn #{{ $order->id }}</small>
+                          </div>
+                        </div>
+                        <span class="badge bg-light text-dark border"><i class="fas fa-user me-2"></i>{{ $order->user->name ?? $order->name }}</span>
+                      </div>
+                      <div class="card-body">
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-start">
+                              <div>
+                                <div class="text-muted small">Họ và tên</div>
+                                <div class="fw-semibold">{{ $order->user->name ?? $order->name }}</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-start">
+                              <div>
+                                <div class="text-muted small">Email</div>
+                                <div class="fw-semibold">{{ $order->email }}</div>
+                              </div>
+                              <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy="{{ $order->email }}" data-bs-toggle="tooltip" title="Sao chép email"><i class="far fa-copy"></i></button>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-start">
+                              <div>
+                                <div class="text-muted small">Số điện thoại</div>
+                                <div class="fw-semibold">{{ $order->phone }}</div>
+                              </div>
+                              <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy="{{ $order->phone }}" data-bs-toggle="tooltip" title="Sao chép SĐT"><i class="far fa-copy"></i></button>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-start">
+                              <div>
+                                <div class="text-muted small">Thành phố</div>
+                                <div class="fw-semibold">{{ $order->city }}</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-start">
+                              <div class="pe-2">
+                                <div class="text-muted small">Địa chỉ</div>
+                                <div class="fw-semibold">{{ $order->address }}</div>
+                                <div class="small text-muted">Phường/Xã: {{ $order->ward }} · Mã bưu chính: {{ $order->postcode }}</div>
+                              </div>
+                              <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy="{{ trim(($order->address.' '.$order->ward.' '.$order->city.' '.$order->postcode)) }}" data-bs-toggle="tooltip" title="Sao chép địa chỉ"><i class="far fa-copy"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="card-body p-3">
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Phương thức thanh toán:</div>
-                            <div class="col-sm-8">{{ strtoupper($order->payment) }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Đơn vị giao hàng:</div>
-                            <div class="col-sm-8">{{ $order->ship->name ?? '-' }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Phí giao hàng:</div>
-                            <div class="col-sm-8">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</div>
-                        </div>
-                        @if($order->shipping_discount > 0)
-                            <div class="row mb-2">
-                                <div class="col-sm-4 fw-bold">Giảm phí vận chuyển:</div>
+
+                    {{-- Giao hàng & Thanh toán --}}
+                    <div class="row g-4 mt-1">
+                      <div class="col-12 col-xl-6">
+                        <div class="card border-0 shadow-sm h-100">
+                          <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
+                            <i class="fas fa-shipping-fast text-info"></i>
+                            <h6 class="mb-0">Thông tin giao hàng</h6>
+                          </div>
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                              <span class="text-muted">Đơn vị giao hàng</span>
+                              <span class="fw-semibold">{{ $order->ship->name ?? '-' }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                              <span class="text-muted">Phí giao hàng</span>
+                              <span class="fw-semibold">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</span>
+                            </div>
+                            @if($order->shipping_discount > 0)
+                              <div class="d-flex justify-content-between">
+                                <span class="text-muted">Giảm phí vận chuyển</span>
                                 @if ($order->shipping_discount > $order->shipping_fee)
-                                    <div class="col-sm-8 text-success">
-                                        -{{ number_format($order->shipping_fee, 0, ',', '.') }} đ
-                                    </div>
+                                  <span class="fw-semibold text-success">-{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</span>
                                 @else
-                                    <div class="col-sm-8 text-success">
-                                        -{{ number_format($order->shipping_discount, 0, ',', '.') }} đ
-                                    </div>
+                                  <span class="fw-semibold text-success">-{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</span>
                                 @endif
+                              </div>
+                            @endif
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-xl-6">
+                        <div class="card border-0 shadow-sm h-100">
+                          <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
+                            <i class="fas fa-wallet text-primary"></i>
+                            <h6 class="mb-0">Thanh toán</h6>
+                          </div>
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                              <span class="text-muted">Phương thức</span>
+                              <span class="fw-semibold">{{ strtoupper($order->payment) }}</span>
                             </div>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Sản phẩm --}}
-                <div class="card mb-4 border-start border-4 border-success">
-                    <div class="card-header bg-light fw-bold"><i class="fas fa-box me-2"></i>Danh sách sản phẩm</div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Sản phẩm</th>
-                                        <th>Ảnh sản phẩm</th>
-                                        <th>Giá</th>
-                                        <th>Số lượng</th>
-                                        <th>Ghi chú</th>
-                                        <th>Thuộc tính</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($order->orderDetails as $i => $detail)
-                                        <tr>
-                                            <td>{{ $i + 1 }}</td>
-                                            <td>{{ $detail->product->name ?? '-' }}</td>
-                                            <td>
-                                                <img src="{{ asset('storage/' . $detail->product->image) }}"
-                                                     alt="{{ $detail->product->name }}" width="80"
-                                                     class="img-thumbnail">
-                                            </td>
-                                            <td>{{ number_format($detail->price, 0, ',', '.') }} đ</td>
-                                            <td>{{ $detail->quantity }}</td>
-                                            <td>{{ $detail->note ?? '-' }}</td>
-                                            <td>
-                                                @if ($detail->variant && $detail->variant->variantAttributes->count())
-                                                    @foreach ($detail->variant->variantAttributes as $attr)
-                                                        <span class="badge bg-info text-dark me-1">
-                                                            {{ $attr->attribute->name ?? '' }}:
-                                                            {{ $attr->value->value ?? '' }}
-                                                        </span>
-                                                    @endforeach
-                                                @else
-                                                    <span class="text-muted">Không có</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Tổng kết --}}
-                <div class="card border-start border-4 border-warning mb-4 mt-4">
-                    <div class="card-header bg-light fw-bold">
-                        <i class="fas fa-calculator me-2"></i>Tổng kết đơn hàng
-                    </div>
-                    <div class="card-body p-3">
-                        <div class="row mb-2">
-                            <div class="col-sm-4 fw-bold">Tổng phụ:</div>
-                            <div class="col-sm-8">{{ number_format($order->subtotal, 0, ',', '.') }} đ</div>
-                        </div>
-                        @if($order->product_discount > 0)
-                            <div class="row mb-2">
-                                <div class="col-sm-4 fw-bold">Giảm giá sản phẩm:</div>
-                                <div class="col-sm-8 text-success">
-                                    -{{ number_format($order->product_discount, 0, ',', '.') }} đ
+                            <div class="d-flex justify-content-between align-items-center">
+                              <span class="text-muted">Trạng thái</span>
+                              @php
+                                $paymentBadgeClassInline = match ($order->payment_status) {
+                                  'paid' => 'success','unpaid' => 'warning','cancelled' => 'danger','refund' => 'info','refunded' => 'primary', default => 'secondary'};
+                                $paymentLabelMapInline = ['paid'=>'Đã thanh toán','unpaid'=>'Chưa thanh toán','cancelled'=>'Đã huỷ','refund'=>'Đang hoàn tiền','refunded'=>'Đã hoàn tiền'];
+                              @endphp
+                              <span class="badge bg-{{ $paymentBadgeClassInline }}">{{ $paymentLabelMapInline[$order->payment_status] ?? ucfirst($order->payment_status) }}</span>
+                            </div>
+                            @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled','return_requested']))
+                              @php
+                                $refundLog = $order->orderStatusLogs()->whereNotNull('refund_bank_account')->orderByDesc('changed_at')->first();
+                              @endphp
+                              @if($refundLog && $refundLog->refund_bank_account)
+                                <hr>
+                                <div>
+                                  <div class="text-muted small mb-1"><i class="fas fa-university me-1"></i>Thông tin hoàn tiền</div>
+                                  <div class="d-flex align-items-center justify-content-between">
+                                    <code class="small">{{ $refundLog->refund_bank_account }}</code>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy="{{ $refundLog->refund_bank_account }}">Copy</button>
+                                  </div>
                                 </div>
-                            </div>
-                        @endif
-                        <div class="row mb-2 border-top pt-2">
-                            <div class="col-sm-4 fw-bold">Tổng tiền thanh toán:</div>
-                            <div class="col-sm-8 text-danger fw-bold" style="font-size: 1.2rem;">
-                                {{ number_format($order->total, 0, ',', '.') }} đ
-                            </div>
+                              @endif
+                            @endif
+                          </div>
                         </div>
+                      </div>
                     </div>
+
+                    {{-- Danh sách sản phẩm --}}
+                    <div class="card border-0 shadow-sm mt-4" id="productTableCard">
+                      <div class="card-header bg-white py-3 d-flex flex-wrap gap-2 align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                          <i class="fas fa-box text-success"></i>
+                          <h6 class="mb-0">Sản phẩm</h6>
+                        </div>
+                        <div class="input-group input-group-sm" style="max-width: 320px;">
+                          <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                          <input type="text" id="productFilter" class="form-control" placeholder="Tìm theo tên, ghi chú, thuộc tính...">
+                        </div>
+                      </div>
+                      <div class="card-body p-0">
+                        <div class="table-responsive">
+                          <table class="table table-hover align-middle mb-0" id="productTable">
+                            <thead class="table-light position-sticky top-0" style="z-index:1;">
+                              <tr>
+                                <th class="text-nowrap">#</th>
+                                <th>Sản phẩm</th>
+                                <th>Ảnh</th>
+                                <th class="text-end">Giá</th>
+                                <th class="text-end">SL</th>
+                                <th>Ghi chú</th>
+                                <th>Thuộc tính</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach ($order->orderDetails as $i => $detail)
+                                <tr>
+                                  <td class="text-muted">{{ $i + 1 }}</td>
+                                  <td class="fw-semibold">{{ $detail->product->name ?? '-' }}</td>
+                                  <td>
+                                    @php $img = $detail->product->image ?? null; @endphp
+                                    @if($img)
+                                      <img src="{{ asset('storage/' . $img) }}" alt="{{ $detail->product->name }}" width="64" height="64" class="rounded border object-fit-cover">
+                                    @else
+                                      <div class="bg-light border rounded d-inline-flex align-items-center justify-content-center" style="width:64px;height:64px;">
+                                        <i class="fas fa-image text-muted"></i>
+                                      </div>
+                                    @endif
+                                  </td>
+                                  <td class="text-end">{{ number_format($detail->price, 0, ',', '.') }} đ</td>
+                                  <td class="text-end">{{ $detail->quantity }}</td>
+                                  <td class="text-muted">{{ $detail->note ?? '-' }}</td>
+                                  <td>
+                                    @if ($detail->variant && $detail->variant->variantAttributes->count())
+                                      @foreach ($detail->variant->variantAttributes as $attr)
+                                        <span class="badge bg-soft-info text-dark border me-1 mb-1">
+                                          {{ $attr->attribute->name ?? '' }}: {{ $attr->value->value ?? '' }}
+                                        </span>
+                                      @endforeach
+                                    @else
+                                      <span class="text-muted">Không có</span>
+                                    @endif
+                                  </td>
+                                </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                    {{-- Lịch sử trạng thái (Timeline) --}}
+                    @php
+                        $logs = $order->orderStatusLogs()->orderByDesc('changed_at')->get();
+                        $statusLabelsHistory = [
+                            'pending' => 'Chờ xử lý',
+                            'processing' => 'Đang xử lý',
+                            'shipping' => 'Đang giao',
+                            'shipped' => 'Đã giao',
+                            'completed' => 'Hoàn thành',
+                            'cancelled' => 'Đã huỷ',
+                            'return_requested' => 'Hoàn hàng',
+                            'unpaid' => 'Chưa thanh toán',
+                            'paid' => 'Đã thanh toán',
+                            'refund' => 'Đang hoàn tiền',
+                            'refunded' => 'Đã hoàn tiền'
+                        ];
+                        $badgeColorsHistory = [
+                            'pending' => 'secondary',
+                            'processing' => 'info',
+                            'shipping' => 'warning',
+                            'shipped' => 'primary',
+                            'completed' => 'success',
+                            'cancelled' => 'danger',
+                            'return_requested' => 'dark',
+                            'unpaid' => 'warning',
+                            'paid' => 'success',
+                            'refund' => 'info',
+                            'refunded' => 'primary'
+                        ];
+                    @endphp
+
+                    <div class="card border-0 shadow-sm mt-4">
+                      <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
+                        <i class="fas fa-history"></i>
+                        <h6 class="mb-0">Lịch sử đơn hàng #{{ $order->id }}</h6>
+                      </div>
+                      <div class="card-body">
+                        @if ($logs->isNotEmpty())
+                          <ul class="list-unstyled timeline">
+                            @foreach ($logs as $i => $log)
+                              <li class="timeline-item mb-4">
+                                <div class="d-flex gap-3">
+                                  <div class="timeline-dot bg-{{ $badgeColorsHistory[$log->new_status] ?? 'secondary' }}"></div>
+                                  <div class="flex-grow-1">
+                                    <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
+                                      <span class="badge bg-{{ in_array($log->old_status, ['paid','unpaid','refund','refunded']) ? 'info' : 'primary' }}">
+                                        {{ in_array($log->old_status, ['paid','unpaid','refund','refunded']) ? 'Thanh toán' : 'Đơn hàng' }}
+                                      </span>
+                                      <span class="badge bg-light text-dark border">{{ $statusLabelsHistory[$log->old_status] ?? $log->old_status }}</span>
+                                      <i class="fas fa-arrow-right text-muted"></i>
+                                      <span class="badge bg-{{ $badgeColorsHistory[$log->new_status] ?? 'secondary' }}">{{ $statusLabelsHistory[$log->new_status] ?? $log->new_status }}</span>
+                                      <span class="ms-auto text-muted small"><i class="far fa-clock me-1"></i>{{ \Carbon\Carbon::parse($log->changed_at)->format('d/m/Y H:i') }}</span>
+                                    </div>
+                                    <div class="small text-muted mb-1"><i class="far fa-user me-1"></i>{{ $log->changedBy->name ?? 'Hệ thống' }}</div>
+                                    <div>{{ $log->note ?? '-' }}</div>
+                                  </div>
+                                </div>
+                              </li>
+                            @endforeach
+                          </ul>
+                        @else
+                          <p class="text-muted mb-0">Không có thay đổi nào được ghi nhận.</p>
+                        @endif
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {{-- RIGHT COLUMN (Sticky Summary) --}}
+                  <div class="col-12 col-lg-4">
+                    <div class="position-sticky" style="top: 1rem;">
+                      <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
+                          <i class="fas fa-calculator text-warning"></i>
+                          <h6 class="mb-0">Tổng kết đơn hàng</h6>
+                        </div>
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Tổng phụ</span>
+                            <span class="fw-semibold">{{ number_format($order->subtotal, 0, ',', '.') }} đ</span>
+                          </div>
+                          @if($order->product_discount > 0)
+                            <div class="d-flex justify-content-between mb-2">
+                              <span class="text-muted">Giảm giá sản phẩm</span>
+                              <span class="fw-semibold text-success">-{{ number_format($order->product_discount, 0, ',', '.') }} đ</span>
+                            </div>
+                          @endif
+                          <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Phí giao hàng</span>
+                            <span class="fw-semibold">{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</span>
+                          </div>
+                          @if($order->shipping_discount > 0)
+                            <div class="d-flex justify-content-between mb-2">
+                              <span class="text-muted">Giảm phí vận chuyển</span>
+                              @if ($order->shipping_discount > $order->shipping_fee)
+                                <span class="fw-semibold text-success">-{{ number_format($order->shipping_fee, 0, ',', '.') }} đ</span>
+                              @else
+                                <span class="fw-semibold text-success">-{{ number_format($order->shipping_discount, 0, ',', '.') }} đ</span>
+                              @endif
+                            </div>
+                          @endif
+                          <hr>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div class="fw-bold">Tổng thanh toán</div>
+                            <div class="fs-5 fw-bold text-danger">{{ number_format($order->total, 0, ',', '.') }} đ</div>
+                          </div>
+                          <div class="mt-3 d-flex gap-2">
+                            <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary w-50"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
+                            <a href="#productTableCard" class="btn btn-primary w-50"><i class="fas fa-list me-2"></i>Xem sản phẩm</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {{-- Lịch sử trạng thái --}}
-                @php
-    $logs = $order->orderStatusLogs()
-        ->orderByDesc('changed_at')
-        ->get();
-    $statusLabels = [
-        'pending' => 'Chờ xử lý',
-        'processing' => 'Đang xử lý',
-        'shipping' => 'Đang giao',
-        'shipped' => 'Đã giao',
-        'completed' => 'Hoàn thành',
-        'cancelled' => 'Đã huỷ',
-        'return_requested' => 'Hoàn hàng',
-        'unpaid' => 'Chưa thanh toán',
-        'paid' => 'Đã thanh toán',
-        'refund' => 'Đang hoàn tiền',
-        'refunded' => 'Đã hoàn tiền'
-    ];
-    $badgeColors = [
-        'pending' => 'secondary',
-        'processing' => 'info',
-        'shipping' => 'warning',
-        'shipped' => 'primary',
-        'completed' => 'success',
-        'cancelled' => 'danger',
-        'return_requested' => 'dark',
-        'unpaid' => 'warning',
-        'paid' => 'success',
-        'refund' => 'info',
-        'refunded' => 'primary'
-    ];
-@endphp
-
-               <div class="card border-start border-4 border-dark mb-4">
-    <div class="card-header bg-light fw-bold">
-        <i class="fas fa-history me-2"></i>Lịch sử đơn hàng #{{ $order->id }}
-    </div>
-    <div class="card-body p-3">
-        @if ($logs->isNotEmpty())
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Loại</th>
-                            <th>Trạng thái cũ</th>
-                            <th>Trạng thái mới</th>
-                            <th>Người thay đổi</th>
-                            <th>Thời gian</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($logs as $i => $log)
-                            <tr>
-                                <td>{{ $i + 1 }}</td>
-                                <td>
-                                    <span class="badge bg-{{ in_array($log->old_status, ['paid','unpaid','refund','refunded']) ? 'info' : 'primary' }}">
-                                        {{ in_array($log->old_status, ['paid','unpaid','refund','refunded']) ? 'Thanh toán' : 'Đơn hàng' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ $badgeColors[$log->old_status] ?? 'secondary' }}">
-                                        {{ $statusLabels[$log->old_status] ?? $log->old_status }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ $badgeColors[$log->new_status] ?? 'secondary' }}">
-                                        {{ $statusLabels[$log->new_status] ?? $log->new_status }}
-                                    </span>
-                                </td>
-                                <td>{{ $log->changedBy->name ?? 'Hệ thống' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($log->changed_at)->format('d/m/Y H:i') }}</td>
-                                <td>{{ $log->note ?? '-' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <p class="text-muted mb-0">Không có thay đổi nào được ghi nhận.</p>
-        @endif
-    </div>
-</div>
-
+                {{-- ====== KẾT THÚC: GIAO DIỆN MỚI ====== --}}
 
             </div> {{-- card-body --}}
         </div>
@@ -388,8 +454,16 @@
 
 @endsection
 
+{{-- Styles bổ sung --}}
 <style>
     .table th, .table td { vertical-align: middle !important; }
+    .bg-soft-info { background: #e8f5ff; }
+    .timeline { position: relative; margin-left: .5rem; }
+    .timeline:before { content: ""; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e9ecef; }
+    .timeline-item { position: relative; }
+    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: .4rem; box-shadow: 0 0 0 3px #fff; }
+    .timeline-item > .d-flex > .timeline-dot { position: relative; left: -15px; }
+    @media (max-width: 576px) { .position-sticky { position: static !important; } }
 </style>
 
 @push('scripts')
@@ -441,4 +515,40 @@ Swal.fire({
 });
 </script>
 @endif
+
+{{-- Copy / Filter / Tooltip --}}
+<script>
+  // Copy helper
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy || '');
+        if (window.Swal) {
+          Swal.fire({
+            icon: 'success', title: 'Đã sao chép', text: btn.dataset.copy, timer: 1500,
+            showConfirmButton: false, toast: true, position: 'top-end'
+          });
+        }
+      } catch (e) { console.error(e); }
+    });
+  });
+
+  // Filter products
+  const filterInput = document.getElementById('productFilter');
+  const table = document.getElementById('productTable');
+  if (filterInput && table) {
+    filterInput.addEventListener('input', function(){
+      const q = this.value.toLowerCase();
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+  }
+
+  // Enable tooltips if Bootstrap is available
+  if (window.bootstrap) {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+  }
+</script>
 @endpush
