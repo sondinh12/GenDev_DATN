@@ -99,7 +99,7 @@
         }
 
         select.form-select:required:invalid {
-        color: #6c757d;
+        color: #67686b;
         }
 
         select.form-select option {
@@ -248,8 +248,8 @@
 
                             <!-- Điều khoản -->
                             <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="terms"
+                                <div class="form-check ps-0">
+                                    <input class="form-check-input me-2" type="checkbox" id="terms"
                                         style="margin-left: 1px" required>
                                     <label class="form-check-label" for="terms">Tôi đồng ý với <a href="#"
                                             class="text-primary">điều khoản sử dụng</a> và
