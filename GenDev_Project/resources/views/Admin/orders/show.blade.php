@@ -6,6 +6,7 @@
    <div class="container-fluid py-4" style="background: #f8fafc;">
     <div class="row justify-content-center">
         {{-- Flash Message (đã chuyển sang SweetAlert bên dưới) --}}
+
     </div>
 
     <div class="col-lg-10">
@@ -90,6 +91,7 @@
                     </form>
                 @endif
 
+
                 <hr class="my-3">
 
                 {{-- Trạng thái đơn hàng: tiêu đề trái, badge phải --}}
@@ -102,6 +104,7 @@
 
                 {{-- Form cập nhật trạng thái ĐƠN: ẩn nếu payment_status là refund/refunded,
                      và không cho update nếu đã shipped / cancelled / completed / return_requested --}}
+
                 @if (!in_array($order->payment_status, ['refund', 'refunded']) &&
                      !in_array($order->status, ['shipped', 'cancelled', 'completed', 'return_requested']))
                     <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="mt-2">
@@ -447,6 +450,7 @@
                 </div>
 
                 {{-- ====== KẾT THÚC: GIAO DIỆN MỚI ====== --}}
+
 
             </div> {{-- card-body --}}
         </div>

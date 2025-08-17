@@ -206,11 +206,13 @@
             <!-- .navbar-search -->
            <ul class="header-wishlist nav navbar-nav">
                 <li class="nav-item">
+
                     <a href="{{ route('client.favorites.index') }}" class="nav-link">
                         <i class="tm tm-favorites"></i>
                         <span id="top-cart-wishlist-count" class="value">
                             {{ auth()->check() ? auth()->user()->favorites()->count() : 0 }}
                         </span>
+
                     </a>
                 </li>
             </ul>

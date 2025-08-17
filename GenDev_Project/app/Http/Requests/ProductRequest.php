@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,7 +30,6 @@ class ProductRequest extends FormRequest
     {
         $rules=  [
             'name' => 'required|max:255|string',
-
             'description'=>'required',
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
@@ -61,7 +61,6 @@ class ProductRequest extends FormRequest
             'name.required'=>'Tên sản phẩm không được bỏ trống',
             'name.max'=>'Tên chỉ giới hạn 255 kí tự',
             'name.string'=>'Tên phải là chuỗi kí tự',
-            // 'name.unique'=>'Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!',
             'price.required'=>'Giá không được bỏ trống',
             'price.integer'=>'Giá phải là 1 số nguyên',
             'price.min'=>'Giá phải là 1 số nguyên > 0',

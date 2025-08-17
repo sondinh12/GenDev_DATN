@@ -68,8 +68,10 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('storage/avatar/default-avatar.png') }}"
+
                                                         alt="{{ $user->name }}" class="rounded-circle me-2" width="40"
                                                         height="40" style="object-fit: cover;">
+
                                                     <div>
                                                         <div class="fw-medium">{{ $user->name }}</div>
                                                     </div>

@@ -187,6 +187,10 @@ class ProductController extends Controller
             $product->image = $imagePath;
         }
 
+        // Nếu có lỗi validate (bao gồm lỗi trùng tên), trả về view edit với lỗi
+        if ($request->validator && $request->validator->fails()) {
+            return redirect()->back()->withErrors($request->validator)->withInput();
+        }
         // Cập nhật thông tin sản phẩm chung
         $product->name = $request->name;
         $product->description = $request->description;
@@ -204,7 +208,9 @@ class ProductController extends Controller
             if ($price < 1000 ) {
                 return redirect()->route('products.edit', $product->id)->with('error', 'Giá sản phẩm phải lớn hơn hoặc bằng 1000.');
             }
+
             if ($sale_price < 0 || $sale_price < 100) {
+
                 return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi phải lớn hơn hoặc bằng 100.');
             }
             if ($sale_price > $price) {
@@ -335,6 +341,7 @@ class ProductController extends Controller
             }
         }
 
+
         // Chuyển hướng về trang danh sách sản phẩm với thông báo thành công
         return redirect()->route('products.index')->with('success', 'Cập nhật sản phẩm thành công!');
     }
@@ -437,9 +444,22 @@ class ProductController extends Controller
 
 
     // Hiển thị danh sách thuộc tính
-    public function allAttributes()
+    public function allAttributes(Request $request)
     {
-        $attributes = Attribute::with('values')->where('status', 1)->get();
+        $query = Attribute::with('values')->where('status', 1);
+
+        // Xử lý tìm kiếm
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                  ->orWhereHas('values', function ($q) use ($keyword) {
+                      $q->where('value', 'like', '%' . $keyword . '%');
+                  });
+            });
+        }
+
+        $attributes = $query->get();
         $trashCount = Attribute::where('status', 2)->count();
         return view('Admin.attributes.ProductsAttribute', compact('attributes', 'trashCount'));
     }
@@ -482,7 +502,7 @@ class ProductController extends Controller
     }
 
     // Cập nhật thuộc tính + value con cũ và thêm value con mới
-    public function updateAttribute(Request $request, $id)
+public function updateAttribute(Request $request, $id)
     {
         // Validate đầu vào
         $request->validate([
@@ -491,6 +511,8 @@ class ProductController extends Controller
             'values.*' => 'required|string|max:255',
             'new_values' => 'nullable|array',
             'new_values.*' => 'required|string|max:255',
+            'delete_values' => 'nullable|array',
+            'delete_values.*' => 'required|exists:attribute_values,id',
         ]);
 
         // 1. Update tên thuộc tính cha
@@ -521,9 +543,23 @@ class ProductController extends Controller
             }
         }
 
+        // 4. Xóa các giá trị con được đánh dấu
+        if ($request->has('delete_values')) {
+            foreach ($request->delete_values as $valueId) {
+                // Kiểm tra xem giá trị có đang được sử dụng trong product_variant_attributes
+                $isUsed = ProductVariantAttribute::where('attribute_value_id', $valueId)->exists();
+                if ($isUsed) {
+                    $valueName = htmlspecialchars_decode(AttributeValue::find($valueId)->value); // Giải mã HTML
+                    return redirect()->back()->withInput()->withErrors([
+                        'delete_values' => "Không thể xóa giá trị thuộc tính $valueName vì đang được sử dụng trong sản phẩm!"
+                    ]);
+                }
+                AttributeValue::where('id', $valueId)->delete();
+            }
+        }
+
         return redirect()->route('admin.attributes.index')->with('success', 'Cập nhật thuộc tính và giá trị thành công!');
     }
-
     public function trashAttribute($id)
     {
         $attribute = Attribute::findOrFail($id);
