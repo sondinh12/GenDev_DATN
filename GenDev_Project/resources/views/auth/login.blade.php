@@ -20,8 +20,11 @@
         }
         body {
             background: var(--bg-color);
-            min-height: 100vh;
+            width: 1200px;
+            min-height: 90vh;
+            margin: 0 auto;
             align-items: center;
+            justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 

@@ -114,7 +114,7 @@
             <div class="card border-0 shadow-lg">
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
-                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); ">Đăng ký</h3>
+                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);">Đăng ký</h3>
                         <p>Tham gia cùng chúng tôi để có trải nghiệm mua sắm tốt nhất</p>
                     </div>
                     @if (session('status'))
@@ -305,5 +305,4 @@
     @endpush
 
 </body>
-
 </html>
