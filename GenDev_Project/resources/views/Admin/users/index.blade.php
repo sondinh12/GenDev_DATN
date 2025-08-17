@@ -15,7 +15,7 @@
 
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Danh sách người dùng</h5>
+                <h3 class="mb-0">Quản lý tài khoản người dùng</h3>
 
                 <form action="{{ route('admin.users.index') }}" method="GET"
                     style="width: 45%; display: flex">

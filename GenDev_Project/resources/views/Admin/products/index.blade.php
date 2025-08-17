@@ -13,7 +13,7 @@
     <div class="card">
 
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Danh sách sản phẩm</h5>
+            <h3 class="mb-0">Danh sách sản phẩm</h3>
             <form method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm..."
@@ -23,11 +23,10 @@
                 </div>
             </form>
 
-
         </div>
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
             <a href="{{ route('products.create') }}" class="btn btn-outline-primary mb-3"><i class="fas fa-plus me-1"></i>
-                Thêm sản phẩm
+                Thêm mới sản phẩm
             </a>
             <a href="{{ route('products.trash.list') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
                 <i class="fa fa-trash me-1"></i> Thùng rác

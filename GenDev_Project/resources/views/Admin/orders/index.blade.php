@@ -3,7 +3,6 @@
 @section('title', 'Quản lý Đơn hàng')
 
 @section('content')
-<div class="container-fluid py-4">
     {{-- @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @elseif(session('error'))
@@ -13,30 +12,34 @@
     @endif --}}
 
     <div class="card">
-        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-            <h5 class="mb-0">Danh sách đơn hàng</h5>
-            <form method="GET" class="d-flex flex-wrap gap-2">
-                <input type="text" name="search" class="form-control" placeholder="Tên hoặc SĐT..." value="{{ request('search') }}">
-                <input type="date" name="from" class="form-control" value="{{ request('from') }}">
-                <input type="date" name="to" class="form-control" value="{{ request('to') }}">
-                <button class="btn btn-primary"><i class="fas fa-search"></i> Lọc</button>
-            </form>
+        <div class="card-header">
+            <h3 class="mb-0">Danh sách đơn hàng</h3>
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <form method="GET" class="d-flex flex-wrap gap-2" style="width: 100%;">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Tên hoặc SĐT..." value="{{ request('search') }}">
+                        <input type="date" name="from" class="form-control me-2" value="{{ request('from') }}">
+                        <input type="date" name="to" class="form-control me-2" value="{{ request('to') }}">
+                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
         </div>
-
+        
         <div class="card-body table-responsive">
             <table class="table table-bordered align-middle text-center">
-                <thead>
+                <thead class="table-light">
                     <tr>
-                        <th>Mã đơn</th>
-                        <th>Khách hàng</th>
-                        <th>SĐT</th>
-                        <th>Địa chỉ</th>
-                        <th>Tổng tiền</th>
-                        <th>Thanh toán</th>
-                        <th>Trạng thái TT</th>
-                        <th>Trạng thái đơn</th>
-                        <th>Ngày đặt</th>
-                        <th>Hành động</th>
+                        <th scope="col">Mã đơn</th>
+                        <th scope="col">Khách hàng</th>
+                        <th scope="col">SĐT</th>
+                        <th scope="col">Địa chỉ</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Thanh toán</th>
+                        <th scope="col">Trạng thái TT</th>
+                        <th scope="col">Trạng thái đơn</th>
+                        <th scope="col">Ngày đặt</th>
+                        <th scope="col" class="text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,11 +54,11 @@
                         <td>
                     @php
     $paymentClass = match ($order->payment_status) {
-        'paid' => 'success',
+        'paid' => 'primary',
         'unpaid' => 'warning',
         'cancelled' => 'danger',
         'refund' => 'info',
-        'refunded' => 'primary',
+        'refunded' => 'success',
         default => 'secondary'
     };
 
@@ -75,8 +78,8 @@
                             @php
                                 $statusClass = [
                                     'pending' => 'secondary',
-                                    'processing' => 'info',
-                                    'shipping' => 'warning',
+                                    'processing' => 'warning',
+                                    'shipping' => 'info',
                                     'shipped' => 'primary',
                                     'completed' => 'success',
                                     'cancelled' => 'danger',
@@ -98,7 +101,7 @@
                         </td>
                         <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                         <td>
-                            <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">
+                            <a href="{{ route('orders.show', $order->id) }}" class="btn btn-sm btn-outline-warning">
                                 <i class="fas fa-eye"></i> Xem
                             </a>
                         </td>
@@ -110,13 +113,10 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="card-footer d-flex justify-content-center">
             {{ $orders->withQueryString()->links() }}
         </div>
+
     </div>
-</div>
 @endsection
 @push('scripts')
 {{-- SweetAlert2 --}}

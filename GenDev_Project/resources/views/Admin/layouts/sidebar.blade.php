@@ -80,7 +80,7 @@
                     <li>
                         <a href="{{ url('/admin/users') }}">
                             <i class="fa-regular fa-user"></i>
-                            <span>Tài khoản</span>
+                            <span>Quản lý tài khoản</span>
                         </a>
                     </li>
                 @endcan
@@ -95,16 +95,6 @@
                     </li>
                 @endcan
 
-                {{-- Nhà cung cấp --}}
-                @can('Quản lý nhà cung cấp')
-                    <li>
-                        <a href="{{ url('/admin/suppliers') }}" class="">
-                            <i class="fa-solid fa-building"></i>
-                            <span>Nhà cung cấp</span>
-                        </a>
-                    </li>
-                @endcan
-
                 {{-- Hóa đơn nhập hàng --}}
                 @can('Quản lý hóa đơn nhập hàng')
                     <li>
@@ -115,6 +105,15 @@
                     </li>
                 @endcan
 
+                {{-- Nhà cung cấp --}}
+                @can('Quản lý nhà cung cấp')
+                    <li>
+                        <a href="{{ url('/admin/suppliers') }}" class="">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Nhà cung cấp</span>
+                        </a>
+                    </li>
+                @endcan
             </ul>
         </div>
         <!-- Sidebar -->

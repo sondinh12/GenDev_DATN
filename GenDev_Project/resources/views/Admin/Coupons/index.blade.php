@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Danh sách mã giảm giá</h5>
+            <h3 class="mb-0">Danh sách mã giảm giá</h3>
             {{-- SEARCH: đổi sang form GET --}}
             <form method="GET" action="{{ route('coupons.index') }}" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
@@ -26,7 +26,7 @@
 
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
             <a href="{{ route('coupons.create') }}" class="btn btn-outline-primary mb-3"><i
-                    class="fas fa-plus me-1"></i>Thêm mã mới
+                    class="fas fa-plus me-1"></i>Thêm mã giảm giá
             </a>
             <a href="{{ route('admin.coupons.trashed') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
                 <i class="fa fa-trash me-1"></i>Thùng rác

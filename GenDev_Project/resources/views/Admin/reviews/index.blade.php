@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Quản lí bình luận</h5>
+            <h3 class="mb-0">Quản lí bình luận</h3>
             <form method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm đánh giá...."

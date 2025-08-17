@@ -6,7 +6,7 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Quản lý thuộc tính</h5>
+            <h3 class="mb-0">Quản lý thuộc tính</h3>
             <form action="{{ route('admin.attributes.index') }}" method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
                     <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm thuộc tính..."

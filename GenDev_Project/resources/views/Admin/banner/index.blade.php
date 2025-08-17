@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Danh sách Banner</h5>
+            <h3 class="mb-0">Danh sách Banner</h5>
             <form action="{{ route('banner.index') }}" method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm banner..."
