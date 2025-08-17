@@ -28,12 +28,8 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         $rules=  [
-            'name' => [
-                'required',
-                'max:255',
-                'string',
-                Rule::unique('products', 'name')->ignore($this->route('id'))->whereNull('deleted_at'),
-            ],
+            'name' => 'required|max:255|string',
+
             'description'=>'required',
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',
@@ -65,7 +61,7 @@ class ProductRequest extends FormRequest
             'name.required'=>'Tên sản phẩm không được bỏ trống',
             'name.max'=>'Tên chỉ giới hạn 255 kí tự',
             'name.string'=>'Tên phải là chuỗi kí tự',
-            'name.unique'=>'Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!',
+            // 'name.unique'=>'Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!',
             'price.required'=>'Giá không được bỏ trống',
             'price.integer'=>'Giá phải là 1 số nguyên',
             'price.min'=>'Giá phải là 1 số nguyên > 0',
