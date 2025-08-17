@@ -12,9 +12,9 @@
         </div>
 
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
-            <a href="{{ route('coupons.create') }}" class="btn btn-outline-primary mb-3"></i> Thêm Mã giảm giá</a>
+            <a href="{{ route('coupons.create') }}" class="btn btn-outline-primary mb-3"><i class="fas fa-plus me-1"></i> Thêm Mã giảm giá</a>
 
-            <a href="{{ route('admin.coupons.trashed') }}" class="btn btn-outline-danger position-relative">
+            <a href="{{ route('admin.coupons.trashed') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
                 <i class="fa fa-trash"></i> Thùng rác
                 @if (isset($trashedCount) && $trashedCount > 0)
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

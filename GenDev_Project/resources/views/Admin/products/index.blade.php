@@ -35,16 +35,16 @@
             <table class="table table-bordered align-middle text-center">
                 <thead class="table-light">
                     <tr>
-                        <th>ID</th>
-                        <th>Tên</th>
-                        <th>Ảnh</th>
-                        <th>Tên danh mục</th>
-                        <th>Giá</th>
-                        <th>Danh mục con</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
-                        <th>Ngày cập nhật</th>
-                        <th>Hành động</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Tên</th>
+                        <th scope="col">Ảnh</th>
+                        <th scope="col">Tên danh mục</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Danh mục con</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Ngày cập nhật</th>
+                        <th scope="col" class="text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>

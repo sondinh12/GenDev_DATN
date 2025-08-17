@@ -12,21 +12,21 @@
 
             <div class="card">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Danh sách đánh giá</h5>
+                    <h5 class="mb-0">Quản lí bình luận</h5>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="bg-light">
+                
+                <div class="card-body table-responsive">
+                        <table class="table table-bordered align-middle text-center">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Người đánh giá</th>
-                                    <th>Số sao</th>
-                                    <th>Bình luận</th>
-                                    <th>Thời gian</th>
-                                    <th>Trạng thái</th>
-                                    <th class="text-center">Hành động</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Người đánh giá</th>
+                                    <th scope="col">Số sao</th>
+                                    <th scope="col">Bình luận</th>
+                                    <th scope="col">Thời gian</th>
+                                    <th scope="col">Trạng thái</th>
+                                    <th scope="col" class="text-center">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,7 +66,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
                 </div>
                 <div class="card-footer">
                     {{ $reviews->links() }}

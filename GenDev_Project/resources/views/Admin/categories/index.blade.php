@@ -65,7 +65,7 @@
                                     class="rounded border">
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-warning me-1">
+                                <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-warning me-1" data-bs-toggle="tooltip" title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i> Sửa
                                 </a>
 
@@ -74,7 +74,7 @@
                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục {{ $cate->name }}?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
+                                    <button type="submit" class="btn btn-sm btn-danger me-1" data-bs-toggle="tooltip" title="Chuyển vào thùng rác">
                                         <i class="fas fa-trash-alt"></i> Xoá
                                     </button>
                                 </form>
