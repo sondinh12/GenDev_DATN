@@ -1,120 +1,13 @@
-<!DOCTYPE html>
-<html lang="vi">
+@extends('client.layout.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký tài khoản</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2563eb;      /* Xanh dương chủ đạo */
-            --primary-hover: #1d4ed8;     /* Xanh dương đậm hơn khi hover */
-            --secondary-color: #64748b;   /* Xám nhẹ cho chữ phụ */
-            --success-color: #10b981;     /* Xanh lá (success) */
-            --error-color: #ef4444;       /* Đỏ (error) */
-            --bg-color: #f9fafb;          /* Nền sáng giống trang chủ */
-            --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Bóng nhẹ */
-        }
+@section('content')
 
-
-        body {
-            background: var(--bg-color);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-
-        .register-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card {
-            border-radius: 1.5rem;
-            background: #fff;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .form-control.is-invalid,
-        .form-select.is-invalid {
-            border-color: #dc3545;
-            background-color: #fff8f8;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #495057;
-        }
-
-        .toggle-password {
-            background: none;
-            border: none;
-            color: #2575fc;
-            cursor: pointer;
-            user-select: none;
-            padding: 0 0.75rem;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            transition: color 0.2s;
-        }
-
-        .toggle-password:hover {
-            color: #1250b5;
-        }
-
-        .invalid-feedback {
-            color: #dc3545;
-            margin-top: 0.25rem;
-            font-size: 0.875em;
-            display: block !important;
-        }
-        .btn-register {
-        background: var(--primary-color);
-        border: none;
-        color: #fff;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 10px 35px;
-        border-radius: 50px;
-        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        }
-
-        .btn-register:hover {
-            background: var(--primary-hover); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
-        }
-
-        .btn-register:active {
-            transform: scale(0.97);
-        }
-
-        select.form-select:required:invalid {
-        color: #67686b;
-        }
-
-        select.form-select option {
-            color: #000;
-        }
-    </style>
-</head>
-
-<body>
     <div class="register-container">
         <div class="col-md-8 col-lg-7">
             <div class="card border-0 shadow-lg">
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
-                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);">Đăng ký</h3>
+                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); color: #0063d1;">Đăng ký</h3>
                         <p>Tham gia cùng chúng tôi để có trải nghiệm mua sắm tốt nhất</p>
                     </div>
                     @if (session('status'))
@@ -265,7 +158,7 @@
                                 </button>
                             </div> --}}
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn-register">
+                                <button type="submit" class="btn-register" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
                                     Đăng ký
                                 </button>
                             </div>
@@ -280,6 +173,99 @@
             </div>
         </div>
     </div>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;      /* Xanh dương chủ đạo */
+            --primary-hover: #1d4ed8;     /* Xanh dương đậm hơn khi hover */
+            --secondary-color: #64748b;   /* Xám nhẹ cho chữ phụ */
+            --success-color: #10b981;     /* Xanh lá (success) */
+            --error-color: #ef4444;       /* Đỏ (error) */
+            --bg-color: #f9fafb;          /* Nền sáng giống trang chủ */
+            --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Bóng nhẹ */
+        }
+
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 70px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .card {
+            border-radius: 1.5rem;
+            background: #fff;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .toggle-password {
+            background: none;
+            border: none;
+            color: #2575fc;
+            cursor: pointer;
+            user-select: none;
+            padding: 0 0.75rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #1250b5;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            display: block !important;
+        }
+        .btn-register {
+        background: var(--primary-color);
+        border: none;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 10px 35px;
+        border-radius: 50px;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        }
+
+        .btn-register:hover {
+            background: var(--primary-hover); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-register:active {
+            transform: scale(0.97);
+        }
+
+        select.form-select:required:invalid {
+        color: #67686b;
+        }
+
+        select.form-select option {
+            color: #000;
+        }
+    </style>
 
     @push('scripts')
         <!-- Font Awesome CDN for password icons -->
@@ -304,5 +290,4 @@
         </script>
     @endpush
 
-</body>
-</html>
+@endsection

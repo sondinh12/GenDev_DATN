@@ -1,46 +1,7 @@
-<!DOCTYPE html>
-<html lang="vi">
+@extends('client.layout.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác thực tài khoản</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2563eb;      /* Xanh dương chủ đạo */
-            --primary-hover: #1d4ed8;     /* Xanh dương đậm hơn khi hover */
-            --secondary-color: #64748b;   /* Xám nhẹ cho chữ phụ */
-            --success-color: #10b981;     /* Xanh lá (success) */
-            --error-color: #ef4444;       /* Đỏ (error) */
-            --bg-color: #f9fafb;          /* Nền sáng giống trang chủ */
-            --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Bóng nhẹ */
-        }
+@section('content')
 
-        body {
-            background: var(--bg-color);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-        .container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card {
-            border-radius: 1.5rem;
-            background: #fff;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            background: rgba(255, 255, 255, 0.95);
-        }
-    </style>
-</head>
-<body>
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -95,5 +56,31 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;      /* Xanh dương chủ đạo */
+            --primary-hover: #1d4ed8;     /* Xanh dương đậm hơn khi hover */
+            --secondary-color: #64748b;   /* Xám nhẹ cho chữ phụ */
+            --success-color: #10b981;     /* Xanh lá (success) */
+            --error-color: #ef4444;       /* Đỏ (error) */
+            --bg-color: #f9fafb;          /* Nền sáng giống trang chủ */
+            --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Bóng nhẹ */
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .card {
+            border-radius: 1.5rem;
+            background: #fff;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+@endsection

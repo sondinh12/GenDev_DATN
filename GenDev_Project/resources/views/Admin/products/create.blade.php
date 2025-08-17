@@ -1,214 +1,173 @@
-@extends('Admin.layouts.master')
-
-@section('title')
-    Sản phẩm
-@endsection
-
-@section('topbar-title')
-    Thêm mới
-
-@endsection
-
-@section('css')
-    <style>
-        .hidden {
-            display: none !important;
-        }
-    </style>
-@endsection
-
+@extends('Admin.layouts.master-without-page-title')
 
 @section('content')
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @php
-        $groupedMini = [];
-        foreach ($categories_mini as $mini) {
-            $groupedMini[$mini->category_id][] = [
-                'id' => $mini->id,
-                'name' => $mini->name,
-            ];
-        }
-    @endphp
-    <h2>Thêm sản phẩm mới</h2>
-
-    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="form-group mt-4 mb-2">
-            <label style="font-size: 15px">Tên sản phẩm</label>
-            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                value="{{ old('name') }}" style="text-transform: capitalize; width: 610px;">
-            @error('name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0">➕ Thêm sản phẩm mới</h4>
+            <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+            </a>
         </div>
 
-        <div class="row mb-2">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label style="font-size: 15px">Danh mục</label>
-                    <select name="category_id" id="category_id" class="form-control">
-                        <option value="">-- Chọn danh mục --</option>
-                        @foreach ($categories as $cate)
-                            <option value="{{ $cate->id }}">{{ $cate->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_id')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label style="font-size: 15px">Danh mục con</label>
-                    <select name="category_mini_id" id="category_mini_id" class="form-control">
-                        <option value="">-- Chọn danh mục con --</option>
-                    </select>
-                    @error('category_mini_id')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-        <div class="row mb-2">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label style="font-size: 15px">Ảnh đại diện:</label>
-                    <input type="file" name="image" class="form-control-file" accept="image/*">
-                    @error('image')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label style="font-size: 15px">Ảnh thư viện:</label>
-                    <input type="file" name="galleries[]" class="form-control-file" multiple accept="image/*">
-                    @error('galleries')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-        <div class="form-group mb-2 d-flex align-items-start">
-            <div class="me-3">
-                <label style="font-size: 15px;">Mô tả:</label>
-                <textarea style="width: 610px" name="description" class="form-control" rows="6">{{ old('description') }}</textarea>
-                @error('description')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            <div>
-                <label style="font-size: 15px" class="mb-2">Trạng thái:</label><br>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status" id="status_show" value="1" checked>
-                    <label class="form-check-label" for="status_show">Hiển thị</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status" id="status_hide" value="0">
-                    <label class="form-check-label" for="status_hide">Ẩn</label>
-                </div>
-            </div>
-        </div>
+                @php
+                    $groupedMini = [];
+                    foreach ($categories_mini as $mini) {
+                        $groupedMini[$mini->category_id][] = [
+                            'id' => $mini->id,
+                            'name' => $mini->name,
+                        ];
+                    }
+                @endphp
 
-        <hr>
+                <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-        <div class="form-group mb-3 d-flex align-items-center">
-            <label for="product-type" class="form-label" style="font-size: 15px; width: 140px; margin-bottom: 0;">Loại sản phẩm:</label>
-            <select name="product_type" id="product-type" class="form-select form-control-lg @error('product_type') is-invalid @enderror"
-                onchange="toggleProductType()" style="width: 320px; border-radius: 8px; border: 1px solid #dee2e6;">
-                <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến thể</option>
-                <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể</option>
-            </select>
-            @error('product_type')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div id="simple-product-fields" class="{{ old('product_type', 'simple') == 'variable' ? 'hidden' : '' }}">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Giá</label>
-                        <input type="number" name="price" class="form-control @error('price') is-invalid @enderror"
-                            value="{{ old('price') }}" step="0.01">
-                        @error('price')
+                    <div class="mb-3">
+                        <label class="form-label">Tên sản phẩm</label>
+                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                        @error('name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label style="font-size: 15px">Giá khuyến mãi</label>
-                        <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror"
-                            value="{{ old('sale_price') }}" step="0.01">
-                        @error('sale_price')
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục</label>
+                        <select name="category_id" id="category_id" class="form-control">
+                            <option value="">-- Chọn danh mục --</option>
+                            @foreach($categories as $cate)
+                                <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục con</label>
+                        <select name="category_mini_id" id="category_mini_id" class="form-control">
+                            <option value="">-- Chọn danh mục con --</option>
+                        </select>
+                        @error('category_mini_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh đại diện</label>
+                        <input type="file" name="image" class="form-control" accept="image/*" id="image-input">
+                        @error('image')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div id="image-preview" class="mt-2"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh thư viện (có thể chọn nhiều)</label>
+                        <input type="file" name="galleries[]" class="form-control" multiple accept="image/*" id="galleries-input">
+                        @error('galleries')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div id="galleries-preview" class="mt-2 d-flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="description" class="form-control" rows="5">{{ old('description') }}</textarea>
+                        @error('description')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label><br>
+                        <label class="me-3"><input type="radio" name="status" value="1" checked> Hiển thị</label>
+                        <label><input type="radio" name="status" value="0"> Ẩn</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Loại sản phẩm</label>
+                        <select name="product_type" id="product-type" class="form-control @error('product_type') is-invalid @enderror" onchange="toggleProductType()">
+                            <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến thể</option>
+                            <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể</option>
+                        </select>
+                        @error('product_type')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <div class="form-group mb-3">
-                        <label style="font-size: 15px">Số lượng</label>
-                        <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror"
-                            value="{{ old('quantity') }}">
-                        @error('quantity')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="variant-form" class="hidden {{ old('product_type') == 'variable' ? '' : 'hidden' }}">
-            <h5>Biến thể sản phẩm</h5>
-            <div class="form-group">
-                <label style="font-size: 15px">Thuộc tính: </label>
-                <select id="attribute-selector" class="form-control">
-                    <option value="">-- Chọn thuộc tính --</option>
-                    @foreach ($attributes as $attribute)
-                        <option value="{{ $attribute->id }}" data-name="{{ $attribute->name }}">
-                            {{ $attribute->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div id="selected-attributes-container" class="mt-4"></div>
-            <div class="form-group mt-3">
-                <button type="button" class="btn btn-primary" id="generate-variants">Tạo tổ hợp biến thể</button>
-            </div>
-            <div id="variant-table" class="mt-4"></div>
-
-            <div id="attribute-values-template" style="display: none;">
-                @foreach ($attributes as $attribute)
-                    <div class="attribute-group border p-2 mb-2" data-attr-id="{{ $attribute->id }}">
-                        <div class="d-flex justify-content-between">
-                            <strong>{{ $attribute->name }}</strong>
-                            <button type="button" class="btn btn-danger btn-sm remove-attribute">❌</button>
+                    <div id="simple-product-fields" class="{{ old('product_type', 'simple') == 'variable' ? 'hidden' : '' }}">
+                        <div class="mb-3">
+                            <label class="form-label">Giá</label>
+                            <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" step="0.01">
+                            @error('price')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
-                        <div class="mt-2">
-                            @foreach ($attribute->values as $value)
-                                <label class="mr-2">
-                                    <input type="checkbox" name="attribute_values[{{ $attribute->id }}][]"
-                                        value="{{ $value->id }}">
-                                    {{ $value->value }}
-                                </label>
+                        <div class="mb-3">
+                            <label class="form-label">Giá khuyến mãi</label>
+                            <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror" value="{{ old('sale_price') }}" step="0.01">
+                            @error('sale_price')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số lượng</label>
+                            <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}">
+                            @error('quantity')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div id="variant-form" class="hidden {{ old('product_type') == 'variable' ? '' : 'hidden' }}">
+                        <h5 class="mb-3">Biến thể sản phẩm</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Chọn thuộc tính:</label>
+                            <select id="attribute-selector" class="form-control">
+                                <option value="">-- Chọn thuộc tính --</option>
+                                @foreach($attributes as $attribute)
+                                    <option value="{{ $attribute->id }}" data-name="{{ $attribute->name }}">
+                                        {{ $attribute->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div id="selected-attributes-container" class="mt-4"></div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary" id="generate-variants">Tạo tổ hợp biến thể</button>
+                        </div>
+                        <div id="variant-table" class="mt-4"></div>
+                        <div id="attribute-values-template" style="display: none;">
+                            @foreach($attributes as $attribute)
+                                <div class="attribute-group border p-2 mb-2" data-attr-id="{{ $attribute->id }}">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ $attribute->name }}</strong>
+                                        <button type="button" class="btn btn-danger btn-sm remove-attribute">❌</button>
+                                    </div>
+                                    <div class="mt-2">
+                                        @foreach($attribute->values as $value)
+                                            <label class="me-2">
+                                                <input type="checkbox" name="attribute_values[{{ $attribute->id }}][]" value="{{ $value->id }}">
+                                                {{ $value->value }}
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -226,6 +185,12 @@
         </div>
     </div>
 @endsection
+
+    <style>
+        .hidden {
+            display: none !important;
+        }
+    </style>
 
 @section('scripts')
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
@@ -300,23 +265,21 @@
 
         document.addEventListener('DOMContentLoaded', toggleProductType);
 
-        document.getElementById('attribute-selector').addEventListener('change', function() {
+        document.getElementById('attribute-selector').addEventListener('change', function () {
             const attrId = this.value;
             const attrName = this.options[this.selectedIndex].dataset.name;
 
             if (!attrId) return;
 
-            if (document.querySelector(
-                `#selected-attributes-container .attribute-group[data-attr-id="${attrId}"]`)) {
+            if (document.querySelector(`#selected-attributes-container .attribute-group[data-attr-id="${attrId}"]`)) {
                 this.value = '';
                 return;
             }
 
-            const template = document.querySelector(
-                `#attribute-values-template .attribute-group[data-attr-id="${attrId}"]`);
+            const template = document.querySelector(`#attribute-values-template .attribute-group[data-attr-id="${attrId}"]`);
             const clone = template.cloneNode(true);
 
-            clone.querySelector('.remove-attribute').addEventListener('click', function() {
+            clone.querySelector('.remove-attribute').addEventListener('click', function () {
                 clone.remove();
             });
 
@@ -324,7 +287,7 @@
             this.value = '';
         });
 
-        document.getElementById('generate-variants').addEventListener('click', function() {
+        document.getElementById('generate-variants').addEventListener('click', function () {
             const groups = document.querySelectorAll('#selected-attributes-container .attribute-group');
             let selected = [];
             groups.forEach(group => {
@@ -371,9 +334,10 @@
             document.getElementById('variant-table').innerHTML = '';
             document.getElementById('variant-table').appendChild(table);
         });
+
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const miniCategories = @json($groupedMini ?? []);
             const categorySelect = document.getElementById('category_id');
             const miniSelect = document.getElementById('category_mini_id');
@@ -383,7 +347,7 @@
                 return;
             }
 
-            categorySelect.addEventListener('change', function() {
+            categorySelect.addEventListener('change', function () {
                 const selected = this.value;
                 miniSelect.innerHTML = '<option value="">-- Chọn danh mục con --</option>';
 

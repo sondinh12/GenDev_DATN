@@ -4,13 +4,13 @@
 
 @section('content')
 
-    {{-- @if(session('error'))
+    {{-- @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
 
-    @if(session('success'))
+    @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -27,11 +27,13 @@
                 </div>
             </form>
         </div>
+
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
-            <a href="{{ route('categories.create') }}" class="btn btn-outline-primary mb-3"><i class="fas fa-plus me-1"></i>Thêm mới sản phẩm</a>
+            <a href="{{ route('categories.create') }}" class="btn btn-outline-primary mb-3"><i
+                    class="fas fa-plus me-1"></i>Thêm mới sản phẩm</a>
             <a href="{{ route('categories.trash') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
                 <i class="fa fa-trash me-1"></i>Thùng rác
-                @if(isset($trashedCount) && $trashedCount > 0)
+                @if (isset($trashedCount) && $trashedCount > 0)
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ $trashedCount }}
                     </span>
@@ -65,7 +67,8 @@
                                     class="rounded border">
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-warning me-1" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-warning me-1"
+                                    data-bs-toggle="tooltip" title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i> Sửa
                                 </a>
 
@@ -74,7 +77,8 @@
                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục {{ $cate->name }}?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger me-1" data-bs-toggle="tooltip" title="Chuyển vào thùng rác">
+                                    <button type="submit" class="btn btn-sm btn-danger me-1" data-bs-toggle="tooltip"
+                                        title="Chuyển vào thùng rác">
                                         <i class="fas fa-trash-alt"></i> Xoá
                                     </button>
                                 </form>
@@ -94,37 +98,37 @@
 
 @endsection
 @push('scripts')
-{{-- SweetAlert2 --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-{{-- Flash Message --}}
-@if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: '{{ session('success') }}',
-            confirmButtonColor: '#3085d6',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
+    {{-- Flash Message --}}
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
 
-@if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi!',
-            text: '{{ session('error') }}',
-            confirmButtonColor: '#d33',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
-@endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
 @endpush
