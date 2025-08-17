@@ -83,13 +83,9 @@
                                     đ
                                 @endif
                             </td>
-                            <!--
-            <td>
-                @if (!$pro->variants || !$pro->variants->count())
-    {{ $pro->quantity }}
-    @endif
-            </td>
-            -->
+                        @if (!$pro->variants || !$pro->variants->count())
+                        {{ $pro->quantity }}
+                        @endif
                             <td>{{ $pro->categoryMini?->name }}</td>
                             <th>
                                 @if ($pro->status == 1)
@@ -105,11 +101,11 @@
                             <td>
                                 @if ($pro->status == 1 || $pro->status == 0)
                                     <a href="{{ route('products.show', $pro->id) }}"
-                                            class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-eye"></i> Xem</a>
+                                        class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-eye"></i> Xem</a>
 
-                                    <a href="{{ route('products.edit', $pro->id) }}" class="btn btn-sm btn-outline-primary me-1"><i
-                                            class="fas fa-edit"></i> Sửa</a>
-                                    
+                                    <a href="{{ route('products.edit', $pro->id) }}"
+                                        class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i> Sửa</a>
+
                                     <form action="{{ route('products.trash', $pro->id) }}" method="POST"
                                         style="display:inline-block;">
                                         @csrf

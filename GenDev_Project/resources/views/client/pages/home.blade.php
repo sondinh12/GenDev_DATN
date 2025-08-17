@@ -45,17 +45,16 @@
                                     <img src="assets/images/slider/home-v1-img-1.png" alt="">
                                     <div class="caption">
                                         <div class="title">
-                                            Turn. Click. Expand. Smart modular design simplifies adding storage
-                                            for growing media.
+                                            Xoay. Nhấp. Mở rộng. Thiết kế mô-đun thông minh giúp đơn giản hóa việc thêm bộ lưu trữ cho giá thể trồng trọt.
                                         </div>
                                         <div class="sub-title">
-                                            Powerful Six Core processor, vibrant 4KUHD display output and
-                                            fast SSD elegantly cased in a soft alloy design.
+                                            Bộ xử lý sáu nhân mạnh mẽ, màn hình 4KUHD sống động và
+                                            SSD tốc độ cao được thiết kế tinh tế trong vỏ hợp kim mềm mại.
                                         </div>
                                         <div class="button">
-                                            Get Yours now <i class="tm tm-long-arrow-right"></i>
+                                            Nhận của bạn bây giờ <i class="tm tm-long-arrow-right"></i>
                                         </div>
-                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển trên Lãnh thổ Việt Nam</div>
                                     </div>
                                 </div>
                                 <div class="slider-1 slider-2"
@@ -63,18 +62,18 @@
                                     <img src="assets/images/slider/home-v1-img-2.png" alt="">
                                     <div class="caption">
                                         <div class="title">
-                                            The new-tech gift you<br>
-                                            are wishing for is<br>
-                                            right here
+                                            Món quà công nghệ mới dành cho bạn<br>
+                                            đang mong muốn là<br>
+                                            ngay tại đây
                                         </div>
                                         <div class="sub-title">
-                                            Big screens in incredibly slim designs<br>
-                                            that fit in your hand.
+                                            Màn hình lớn với thiết kế cực kỳ mỏng<br>
+                                            vừa vặn trong lòng bàn tay bạn.
                                         </div>
                                         <div class="button">
-                                            Browse now <i class="tm tm-long-arrow-right"></i>
+                                            Xem ngay bây giờ <i class="tm tm-long-arrow-right"></i>
                                         </div>
-                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển trên Lãnh thổ Việt Nam</div>
                                     </div>
                                 </div>
                             </div>

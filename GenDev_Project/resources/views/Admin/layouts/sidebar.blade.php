@@ -85,12 +85,12 @@
                     </li>
                 @endcan
 
-                {{-- Đơn hàng --}}
-                @can('Quản lý đơn hàng')
+                {{-- Nhà cung cấp --}}
+                @can('Quản lý nhà cung cấp')
                     <li>
-                        <a href="{{ url('/admin/orders') }}">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Danh sách đơn hàng</span>
+                        <a href="{{ url('/admin/suppliers') }}" class="">
+                            <i class="fa-solid fa-building"></i>
+                            <span>Nhà cung cấp</span>
                         </a>
                     </li>
                 @endcan
@@ -105,12 +105,12 @@
                     </li>
                 @endcan
 
-                {{-- Nhà cung cấp --}}
-                @can('Quản lý nhà cung cấp')
+                {{-- Đơn hàng --}}
+                @can('Quản lý đơn hàng')
                     <li>
-                        <a href="{{ url('/admin/suppliers') }}" class="">
-                            <i class="fa-solid fa-building"></i>
-                            <span>Nhà cung cấp</span>
+                        <a href="{{ url('/admin/orders') }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Danh sách đơn hàng</span>
                         </a>
                     </li>
                 @endcan

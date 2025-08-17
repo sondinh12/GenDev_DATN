@@ -8,31 +8,36 @@
         {{session('success')}}
     </div>
     @endif
-    <form action="{{ route('admin.imports.index') }}" method="GET" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="keyword" class="form-control"
-                placeholder="Tìm theo tên nhà cung cấp..."
-                value="{{ request('keyword') }}">
-            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Nguồn nhập</h3>
+            <form action="{{ route('admin.imports.index') }}" method="GET" style="max-width: 300px; width: 100%;">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" 
+                    placeholder="Tìm theo tên nhà cung cấp..."
+                        value="{{ request('keyword') }}">
+                    <button type="submit" class="btn btn-outline-secondary">Tìm</button>
+                </div>
+            </form>
         </div>
-    </form>
-    <h2>Nguồn nhập</h2>
 
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('admin.imports.create') }}" class="btn btn-outline-primary">➕ Thêm</a>
+        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+            <a href="{{ route('admin.imports.create') }}" class="btn btn-outline-primary mb-3">
+                <i class="fas fa-plus me-1"></i> Thêm mới</a>
+            <a href="{{ route('admin.imports.trash') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
+                <i class="fa fa-trash me-1"></i>Thùng rác</a>
+        </div>
 
-        <a href="{{ route('admin.imports.trash') }}" class="btn btn-outline-secondary">🗑 Thùng rác</a>
-    </div>
-    
-    <table class="table">
-        <thead>
+        <div class="card-body table-responsive">
+        <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
             <tr>
-                <th>ID</th>
-                <th>Tên nhà cung cấp</th>
-                <th>Ngày nhập</th>
-                <th>Tổng tiền</th>
-                <th>Ngày tạo</th>
-                <th>Hành động</th>
+                <th scope="col">ID</th>
+                <th scope="col">Tên nhà cung cấp</th>
+                <th scope="col">Ngày nhập</th>
+                <th scope="col">Tổng tiền</th>
+                <th scope="col">Ngày tạo</th>
+                <th scope="col" class="text-center">Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -44,13 +49,13 @@
                     <td>{{$import->total_cost}}</td>
                     <td>{{$import->created_at}}</td>
                     <td>
-                        <a href="{{route('admin.imports.show',$import->id)}}" class="btn btn-primary">Xem</a>
+                        <a href="{{route('admin.imports.show',$import->id)}}" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-eye"></i> Xem</a>
                         @if ($import->status == 0)                          
-                            <a href="{{route('admin.imports.edit',$import->id)}}" class="btn btn-info">Sửa</a>
+                            <a href="{{route('admin.imports.edit',$import->id)}}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i> Sửa</a>
                             <form action="{{ route('admin.imports.destroy', $import->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc muốn xóa phiếu này không?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">🗑 Xóa</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt"></i> Xóa</button>
                             </form>
                         @endif
                     </td>
@@ -58,7 +63,8 @@
             @endforeach
         </tbody>
     </table>
-    <div class="d-flex justify-content-end">
-        {{ $imports->links() }}
+    {{ $imports->links() }}
     </div>
+    </div>
+
 @endsection
