@@ -7,7 +7,7 @@
             <div class="card border-0 shadow-lg">
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
-                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);  color: #0063d1;">Đăng nhập</h3>
+                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);">Đăng nhập</h3>
                         <p>Chào mừng bạn quay trở lại!</p>
                     </div>
                     @if ($errors->has('email'))
@@ -53,7 +53,6 @@
                                     Ghi nhớ đăng nhập
                                 </label>
                             </div>
-
                             @if (Route::has('password.request'))
                                 <a href="{{ route('password.request') }}" class="text-primary text-decoration-none">
                                     Quên mật khẩu?

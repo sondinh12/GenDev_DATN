@@ -1,9 +1,4 @@
-@extends('Admin.layouts.master')
-
-@section('title')
-    Tạo thuộc tính
-@endsection
-
+@extends('Admin.layouts.master-without-page-title')
 @section('topbar-title')
     <div class="d-flex align-items-center">
         <i class="fas fa-tags me-2 fs-4 text-primary"></i>

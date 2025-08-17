@@ -1,7 +1,5 @@
 @extends('Admin.layouts.master-without-page-title')
 
-@section('title', 'Quản lý Thuộc tính')
-
 @section('content')
 
     <div class="card">
