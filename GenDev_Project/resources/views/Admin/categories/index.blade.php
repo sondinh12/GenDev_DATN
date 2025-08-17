@@ -18,7 +18,7 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Danh sách Danh mục</h5>
+            <h5 class="mb-0">Danh sách danh mục</h5>
             <form method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm danh mục sản phẩm..."
@@ -88,8 +88,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-        <div class="mt-3">
             {{ $categories->links() }}
         </div>
     </div>

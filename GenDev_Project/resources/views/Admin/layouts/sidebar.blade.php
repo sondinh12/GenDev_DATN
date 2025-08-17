@@ -54,11 +54,12 @@
                     </li>
                 @endcan
 
+                
                 {{-- Bình luận --}}
                 @can('Quản lý bình luận')
                     <li>
                         <a href="{{ url('/admin/reviews') }}">
-                            <i class="fa-solid fa-tag"></i>
+                            <i class="fa-regular fa-comment"></i>
                             <span>Bình luận</span>
                         </a>
                     </li>
@@ -93,15 +94,6 @@
                         </a>
                     </li>
                 @endcan
-                {{-- Mã giảm giá --}}
-                @can('Quản lý mã giảm giá')
-                    <li>
-                        <a href="{{ url('/admin/coupons') }}">
-                            <i class="fa-solid fa-tag"></i>
-                            <span>Mã Giảm Giá</span>
-                        </a>
-                    </li>
-                @endcan
 
                 {{-- Nhà cung cấp --}}
                 @can('Quản lý nhà cung cấp')
@@ -123,25 +115,6 @@
                     </li>
                 @endcan
 
-                {{-- Bình luận --}}
-                @can('Quản lý bình luận')
-                    <li>
-                        <a href="{{ url('/admin/reviews') }}">
-                            <i class="fa-regular fa-comment"></i>
-                            <span>Bình luận</span>
-                        </a>
-                    </li>
-                @endcan
-
-                {{-- Quản lý banner --}}
-                @can('Quản lý banner')
-                    <li>
-                        <a href="{{ url('/admin/banner') }}" class="">
-                            <i class="fa-solid fa-images"></i>
-                            <span>Quản lý banner</span>
-                        </a>
-                    </li>
-                @endcan
             </ul>
         </div>
         <!-- Sidebar -->
