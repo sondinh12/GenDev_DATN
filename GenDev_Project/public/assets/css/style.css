@@ -10206,7 +10206,7 @@ article .wl-create-new.more-link:before {
     .menu-item-has-children
     .menu-item-has-children
     > a::after {
-    font-family: "FontAwesome";
+    font-family: 'Arial', sans-serif;
     border-top: none;
     content: "\f105";
     /*rtl:"\f104";*/
@@ -37403,6 +37403,9 @@ form.track_order input[type="submit"] {
 .yith-wcwl-add-to-wishlist {
     display: none;
 }
+/**
+ * Breadcrumbs
+ */
 
 .woocommerce-breadcrumb {
     width: 100%;
