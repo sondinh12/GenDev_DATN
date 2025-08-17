@@ -105,17 +105,19 @@
                             <td>{{ $pro->updated_at }}</td>
                             <td>
                                 @if ($pro->status == 1 || $pro->status == 0)
-                                    <a href="{{ route('products.edit', $pro->id) }}" class="btn btn-sm btn-warning me-1"><i
-                                            class="fas fa-edit"></i> Sửa</a>
                                     <a href="{{ route('products.show', $pro->id) }}"
-                                        class="btn btn-sm btn-info me-1">Xem</a>
+                                            class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-eye"></i> Xem</a>
+
+                                    <a href="{{ route('products.edit', $pro->id) }}" class="btn btn-sm btn-outline-primary me-1"><i
+                                            class="fas fa-edit"></i> Sửa</a>
+                                    
                                     <form action="{{ route('products.trash', $pro->id) }}" method="POST"
                                         style="display:inline-block;">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="btn btn-sm btn-danger me-1"
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
                                             onclick="return confirm('Bạn có chắc muốn chuyển sản phẩm này vào thùng rác?')">
-                                            <i class="fas fa-trash-alt"></i>Xóa</button>
+                                            <i class="fas fa-trash-alt"></i> Xóa</button>
                                     </form>
                                 @elseif($pro->status == 2)
                                     <form action="{{ route('products.restore', $pro->id) }}" method="POST"

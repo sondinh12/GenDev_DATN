@@ -49,7 +49,7 @@
                         <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                         <td>{{ strtoupper($order->payment) }}</td>
                         <td>
-                           @php
+                    @php
     $paymentClass = match ($order->payment_status) {
         'paid' => 'success',
         'unpaid' => 'warning',

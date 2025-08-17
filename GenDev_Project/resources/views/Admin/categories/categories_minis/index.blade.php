@@ -29,7 +29,7 @@
         </h4>
         <form method="GET" style="max-width: 300px; width: 100%;">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="🔍 Tìm kiếm..."
+                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm danh mục con..."
                     value="{{ request('search') }}">
                 <button type="submit" class="btn btn-outline-secondary">Tìm</button>
             </div>
@@ -38,7 +38,8 @@
     
 
     <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-outline-primary mb-3">Thêm danh mục con</a>
+        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-outline-primary mb-3"><i
+                    class="fas fa-plus me-1"></i>Thêm danh mục con</a>
 
         <a href="{{ route('categories_mini.trash', ['category_id' => $category_id]) }}" class="btn btn-outline-danger position-relative">
             <i class="fa fa-trash me-1"></i> Thùng rác

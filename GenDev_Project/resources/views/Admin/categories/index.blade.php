@@ -30,7 +30,7 @@
 
         <div class="card-body py-3 d-flex justify-content-between align-items-center">
             <a href="{{ route('categories.create') }}" class="btn btn-outline-primary mb-3"><i
-                    class="fas fa-plus me-1"></i>Thêm mới sản phẩm</a>
+                    class="fas fa-plus me-1"></i>Thêm mới danh mục</a>
             <a href="{{ route('categories.trash') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
                 <i class="fa fa-trash me-1"></i>Thùng rác
                 @if (isset($trashedCount) && $trashedCount > 0)
@@ -67,7 +67,7 @@
                                     class="rounded border">
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-warning me-1"
+                                <a href="{{ route('categories.edit', $cate->id) }}" class="btn btn-sm btn-outline-primary me-1"
                                     data-bs-toggle="tooltip" title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i> Sửa
                                 </a>
@@ -77,14 +77,14 @@
                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục {{ $cate->name }}?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger me-1" data-bs-toggle="tooltip"
+                                    <button type="submit" class="btn btn-sm btn-outline-danger me-1" data-bs-toggle="tooltip"
                                         title="Chuyển vào thùng rác">
                                         <i class="fas fa-trash-alt"></i> Xoá
                                     </button>
                                 </form>
 
                                 <a href="{{ route('admin.categories_minis.index', ['id' => $cate->id]) }}"
-                                    class="btn btn-sm btn-info">
+                                    class="btn btn-sm btn-outline-info">
                                     <i class="fas fa-sitemap"></i> Danh mục con
                                 </a>
                             </td>

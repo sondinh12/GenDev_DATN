@@ -107,14 +107,14 @@
                                     <form action="{{ route('banner.use', $banner->id) }}" method="POST"
                                         class="use-form d-inline">
                                         @csrf
-                                        <button type="submit" class="btn btn-sm btn-success me-2">
+                                        <button type="submit" class="btn btn-sm btn-outline-success me-1">
                                             <i class="fas fa-check me-1"></i>Sử dụng
                                         </button>
                                     </form>
                                 @endif
                                 {{-- Nút Sửa --}}
                                 <a href="{{ route('banner.edit', $banner->id) }}"
-                                    class="btn btn-sm btn-outline-primary me-2">
+                                    class="btn btn-sm btn-outline-primary me-1">
                                     <i class="fas fa-edit me-1"></i>Sửa
                                 </a>
                                 {{-- Nút Xóa --}}
