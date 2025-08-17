@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -73,10 +74,26 @@ class CategoryController extends Controller
         $category = Category::with('categoryMinis')->findOrFail($id);
 
         // Kiểm tra nếu có danh mục con thì không cho xóa
-        if ($category->categoryMinis->count() > 0) {
-            return redirect()->route('categories.index')
-                ->with('error', 'Không thể xóa danh mục này vì vẫn còn danh mục con!');
+        // if ($category->categoryMinis->count() > 0) {
+        //     return redirect()->route('categories.index')
+        //         ->with('error', 'Không thể xóa danh mục này vì vẫn còn danh mục con!');
+        // }
+        
+        // $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
+        
+        // Kiểm tra nếu có danh mục con chứa sản phẩm
+        foreach ($category->categoryMinis as $categoryMini) {
+            if ($categoryMini->products->count() > 0) {
+                return redirect()->route('categories.index')
+                    ->with('error', 'Không thể xóa danh mục này vì vẫn còn danh mục con chứa sản phẩm!');
+            }
         }
+
+        // Kiểm tra nếu có sản phẩm thì không cho xóa
+        // if ($categoryMini->products()->count() > 0) {
+        //     return redirect()->route('admin.categories_minis.index', ['id' => $category_id])
+        //         ->with('error', 'Không thể xóa danh mục con này vì vẫn còn sản phẩm!');
+        // }
 
         // Xóa file ảnh nếu có
         // if ($category->image) {
