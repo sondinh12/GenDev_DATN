@@ -177,6 +177,10 @@ class ProductController extends Controller
             $product->image = $imagePath;
         }
 
+        // Nếu có lỗi validate (bao gồm lỗi trùng tên), trả về view edit với lỗi
+        if ($request->validator && $request->validator->fails()) {
+            return redirect()->back()->withErrors($request->validator)->withInput();
+        }
         // Cập nhật thông tin sản phẩm chung
         $product->name = $request->name;
         $product->description = $request->description;
@@ -188,10 +192,22 @@ class ProductController extends Controller
         $productType = $request->input('product_type', $product->variants->count() ? 'variable' : 'simple');
 
         if ($productType === 'simple') {
-            // Nếu là sản phẩm đơn, cập nhật giá trị đơn
-            $product->price = $request->price;
+            // Nếu là sản phẩm đơn, validate giá và giá khuyến mãi
+            $price = (int) $request->price;
+            $sale_price = (int) $request->sale_price;
+            if ($price < 1000 ) {
+                return redirect()->route('products.edit', $product->id)->with('error', 'Giá sản phẩm phải lớn hơn hoặc bằng 1000.');
+            }
+            if ($sale_price < 0 && $sale_price < 100) {
+                return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi phải lớn hơn hoặc bằng 100.');
+            }
+            if ($sale_price > $price) {
+                return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi không được lớn hơn giá gốc.');
+            }
+            // Cập nhật giá trị đơn
+            $product->price = $price;
             $product->quantity = $request->quantity;
-            $product->sale_price = $request->sale_price;
+            $product->sale_price = $sale_price;
 
             // Kiểm tra nếu sản phẩm đã có trong hóa đơn hoặc đã từng nhập kho thì không cho xóa biến thể
             $hasOrder = method_exists($product, 'orderDetails') && $product->orderDetails()->count() > 0;
