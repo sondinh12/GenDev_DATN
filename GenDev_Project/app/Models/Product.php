@@ -72,4 +72,7 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
     }
+    public function orderDetails() {
+        return $this->hasMany(OrderDetail::class, 'product_id');
+    }
 }

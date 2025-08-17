@@ -5,21 +5,96 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
+use Illuminate\Http\Request;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Auth;
 
 class CouponsController extends Controller
 {
-    public function index()
+     public function index(Request $request)
     {
+        // Auto set hết hạn
         Coupon::where('status', '!=', 2)
             ->where('end_date', '<', now())
             ->update(['status' => 2]);
 
-        $coupons = Coupon::with('creator')
-                    ->latest()
-                    ->paginate(10);
+        $search = trim((string) $request->input('q'));
 
+        $couponsQuery = Coupon::with('creator')->latest();
+
+        if ($search !== '') {
+            // map một số từ khóa tiếng Việt sang giá trị trong DB
+            $typeMap = [
+                'đơn hàng' => 'order',
+                'don hang' => 'order',
+                'ship' => 'shipping',
+                'phí ship' => 'shipping',
+                'phi ship' => 'shipping',
+            ];
+            $discountTypeMap = [
+                'phần trăm' => 'percent',
+                'phan tram' => 'percent',
+                '%' => 'percent',
+                'cố định' => 'fixed',
+                'co dinh' => 'fixed',
+                'đ' => 'fixed',
+            ];
+            $statusMap = [
+                'hoạt động' => 1,
+                'hoat dong' => 1,
+                'tạm dừng' => 0,
+                'tam dung' => 0,
+                'hết hạn' => 2,
+                'het han' => 2,
+            ];
+
+            $normalized = mb_strtolower($search, 'UTF-8');
+            $typeFilter = $typeMap[$normalized] ?? null;
+            $discountTypeFilter = $discountTypeMap[$normalized] ?? null;
+            $statusFilter = $statusMap[$normalized] ?? null;
+
+            $couponsQuery->where(function ($q) use ($search, $typeFilter, $discountTypeFilter, $statusFilter) {
+                // Tìm theo mã / tên
+                $q->where('coupon_code', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%");
+
+                // Tìm theo loại mã (order/shipping) nếu người dùng gõ "đơn hàng"/"ship"
+                if ($typeFilter) {
+                    $q->orWhere('type', $typeFilter);
+                }
+
+                // Tìm theo kiểu giảm (percent/fixed) nếu người dùng gõ "phần trăm"/"cố định"
+                if ($discountTypeFilter) {
+                    $q->orWhere('discount_type', $discountTypeFilter);
+                }
+
+                // Tìm theo trạng thái nếu gõ "hoạt động"/"tạm dừng"/"hết hạn"
+                if ($statusFilter !== null) {
+                    $q->orWhere('status', $statusFilter);
+                }
+
+                // Nếu chuỗi là số -> tìm theo các trường số
+                if (is_numeric(str_replace(['.', ','], '', $search))) {
+                    // Chuẩn hóa về số nguyên
+                    $num = (int) filter_var($search, FILTER_SANITIZE_NUMBER_INT);
+                    $q->orWhere('discount_amount', $num)
+                      ->orWhere('usage_limit', $num)
+                      ->orWhere('total_used', $num)
+                      ->orWhere('user_id', $num);
+                }
+
+                // Tìm nhanh theo ngày: người dùng gõ "dd/mm/yyyy" hoặc "yyyy-mm-dd"
+                // so khớp phần ngày của created_at / end_date
+                $dateLike = preg_replace('/[^\d\-\/]/', '', $search);
+                if ($dateLike) {
+                    // Chuẩn hóa 2 kiểu để LIKE
+                    $q->orWhereDate('created_at', $dateLike)
+                      ->orWhereDate('end_date', $dateLike);
+                }
+            });
+        }
+
+        $coupons = $couponsQuery->paginate(10)->appends($request->only('q'));
         $trashedCount = Coupon::onlyTrashed()->count();
 
         return view('admin.coupons.index', compact('coupons', 'trashedCount'));

@@ -6,6 +6,7 @@
 
 @section('topbar-title')
     Thêm mới
+
 @endsection
 
 @section('css')
@@ -15,6 +16,7 @@
         }
     </style>
 @endsection
+
 
 @section('content')
     @if (session('error'))
@@ -210,18 +212,71 @@
                             @endforeach
                         </div>
                     </div>
-                @endforeach
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Tạo sản phẩm
+                        </button>
+                        <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Huỷ
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
-
-
-        <button type="submit" class="btn btn-primary">Tạo sản phẩm</button>
-    </form>
+    </div>
 @endsection
 
 @section('scripts')
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
 
+    <script>
+        // Preview ảnh đại diện
+        document.addEventListener('DOMContentLoaded', function () {
+            const imageInput = document.getElementById('image-input');
+            const imagePreview = document.getElementById('image-preview');
+            if (imageInput && imagePreview) {
+                imageInput.addEventListener('change', function (e) {
+                    imagePreview.innerHTML = '';
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.style.maxWidth = '100px';
+                            img.style.maxHeight = '100px';
+                            img.className = 'rounded border';
+                            imagePreview.appendChild(img);
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            }
+            // Preview ảnh thư viện
+            const galleriesInput = document.getElementById('galleries-input');
+            const galleriesPreview = document.getElementById('galleries-preview');
+            if (galleriesInput && galleriesPreview) {
+                galleriesInput.addEventListener('change', function (e) {
+                    galleriesPreview.innerHTML = '';
+                    if (this.files) {
+                        Array.from(this.files).forEach(file => {
+                            if (!file.type.startsWith('image/')) return;
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.style.maxWidth = '70px';
+                                img.style.maxHeight = '70px';
+                                img.className = 'rounded border me-2 mb-2';
+                                galleriesPreview.appendChild(img);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 
     <script>
         function toggleProductType() {

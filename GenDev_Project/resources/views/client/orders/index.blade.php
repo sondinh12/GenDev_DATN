@@ -4,213 +4,247 @@
 
 @section('content')
 <div class="container py-5">
-    <h3 class="mb-4"><i class="fa fa-box me-2 text-primary"></i>Đơn hàng của tôi</h3>
+
+    <h3 class="mb-4 d-flex align-items-center gap-2">
+        <i class="fa fa-box text-primary"></i>
+        <span>Đơn hàng của tôi</span>
+    </h3>
+
+
     {{-- Tabs lọc --}}
     <ul class="nav nav-tabs mb-4" role="tablist">
         @php
-        $currentStatus = request('status');
-        $tabs = [
-            'all' => 'Tất cả đơn',
-            'pending' => 'Chờ xác nhận',
-            'processing' => 'Đang xử lý',
-            'return_requested' => 'Đã hoàn',
-            'shipping' => 'Đang giao',
-            'shipped' => 'Đã giao',
-            'completed' => 'Hoàn thành',
-            'cancelled' => 'Đã huỷ',
-        ];
+            $currentStatus = request('status');
+            $tabs = [
+                'all'              => 'Tất cả đơn',
+                'pending'          => 'Chờ xác nhận',
+                'processing'       => 'Đang xử lý',
+                'return_requested' => 'Đã hoàn',
+                'shipping'         => 'Đang giao',
+                'shipped'          => 'Đã giao',
+                'completed'        => 'Hoàn thành',
+                'cancelled'        => 'Đã huỷ',
+            ];
         @endphp
         @foreach($tabs as $key => $label)
-        <li class="nav-item" role="presentation">
-            <a class="nav-link {{ ($currentStatus === $key || ($key === 'all' && !$currentStatus)) ? 'active' : '' }}"
-                href="{{ route('client.orders.index', $key !== 'all' ? ['status' => $key] : []) }}">
-                {{ $label }}
-            </a>
-        </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ ($currentStatus === $key || ($key === 'all' && !$currentStatus)) ? 'active' : '' }}"
+                   href="{{ route('client.orders.index', $key !== 'all' ? ['status' => $key] : []) }}">
+                    {{ $label }}
+                </a>
+            </li>
         @endforeach
     </ul>
 
     @php
-    function getStatusLabel($status) {
-        return match($status) {
-            'pending' => 'Chờ xác nhận',
-            'processing' => 'Đang xử lý',
-            'shipping' => 'Đang giao',
-            'shipped' => 'Đã giao',
-            'completed' => 'Hoàn thành',
-            'cancelled' => 'Đã hủy',
-            'return_requested' => 'Hoàn hàng',
-            default => ucfirst($status),
-        };
-    }
+        function getStatusLabel($status) {
+            return match($status) {
+                'pending'          => 'Chờ xác nhận',
+                'processing'       => 'Đang xử lý',
+                'shipping'         => 'Đang giao',
+                'shipped'          => 'Đã giao',
+                'completed'        => 'Hoàn thành',
+                'cancelled'        => 'Đã hủy',
+                'return_requested' => 'Hoàn hàng',
+                default            => ucfirst($status),
+            };
+        }
     @endphp
 
     @if($orders->count())
-    @foreach($orders as $order)
-    <div class="order-card border rounded p-3 shadow-sm mb-4 bg-white">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="fw-bold text-muted">#{{ $order->id }} • {{ $order->created_at->format('d/m/Y H:i') }}</div>
-            <div class="order-header-actions">
-                @if($order->status === 'shipping')
-                <button class="btn btn-warning btn-sm text-white fw-bold shadow-sm"
-                    onclick="openReturnModal({{ $order->id }}, '{{ $order->payment }}', '{{ $order->payment_status }}')">
-                    <i class="fas fa-undo me-1"></i> Hoàn hàng
-                </button>
-                @endif
-
-                @if($order->status === 'pending')
-                @if($order->payment === 'banking' && $order->payment_status === 'paid')
-                <button class="btn btn-danger btn-sm fw-bold shadow-sm"
-                    onclick="openCancelModal({{ $order->id }}, '{{ $order->payment }}', '{{ $order->payment_status }}')">
-                    <i class="fas fa-times me-1"></i> Hủy đơn
-                </button>
-                @else
-                <form action="{{ route('client.orders.cancel', $order->id) }}" method="POST"
-                    onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');" class="d-inline-block">
-                    @csrf
-                    @method('PUT')
-                    <button class="btn btn-danger btn-sm fw-bold shadow-sm">
-                        <i class="fas fa-times me-1"></i> Hủy đơn
-                    </button>
-                </form>
-                @endif
-                @elseif($order->status === 'shipped')
-                <form action="{{ route('client.orders.complete', $order->id) }}" method="POST"
-                    onsubmit="return confirm('Xác nhận đã nhận hàng?');" class="d-inline-block">
-                    @csrf
-                    @method('PUT')
-                    <button class="btn btn-success btn-sm fw-bold shadow-sm">
-                        <i class="fas fa-check me-1"></i> Đã nhận hàng
-                    </button>
-                </form>
-                @endif
-
-                <span class="order-status {{ $order->status }}">{{ getStatusLabel($order->status) }}</span>
-            </div>
-        </div>
-
-        @php
-        // Collect unique product IDs to avoid duplicate review forms
-        $uniqueProductIds = $order->orderDetails->pluck('product_id')->unique()->toArray();
-        @endphp
-
-        @foreach($order->orderDetails->take(2) as $detail)
-        <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="d-flex">
-                <img src="{{ asset('storage/'.$detail->product->image) }}" alt="Ảnh" class="product-image me-3">
-                <div>
-                    <div class="fw-semibold">{{ $detail->product->name }}</div>
-                    @if($detail->variant && $detail->variant->variantAttributes->count())
-                    <div class="small text-muted">
-                        @foreach($detail->variant->variantAttributes as $attr)
-                        {{ $attr->attribute->name ?? '' }}: {{ $attr->value->value ?? '' }}@if(!$loop->last), @endif
-                        @endforeach
-                    </div>
-                    @endif
-                </div>
-            </div>
-             @if ($loop->first)
-            <div class="order-customer-info mt-2 small text-muted">
-    <strong>Người nhận:</strong> {{ $order->name }}<br>
-    <strong>SĐT:</strong> {{ $order->phone }}<br>
-    <strong>Địa chỉ:</strong> {{ $order->address }}, {{ $order->ward }}, {{ $order->city }}
+        @foreach($orders as $order)
+            <div class="order-card border rounded-3 p-3 shadow-sm mb-4 bg-white">
+                {{-- Header --}}
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <div class="d-flex align-items-center gap-3">
+                     <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+    @php
+        $parts = explode(' ', trim($order->name ?? 'U'));
+        $initial = count($parts) >= 3 ? mb_substr($parts[2], 0, 1) : mb_substr($parts[count($parts)-1], 0, 1);
+    @endphp
+    {{ strtoupper($initial) }}
 </div>
-@endif
-            <div class="text-end">
-                <div class="text-muted">x{{ $detail->quantity }}</div>
-                <div class="fw-bold">{{ number_format($detail->price, 0, ',', '.') }} đ</div>
-            </div>
-        </div>
-        @endforeach
 
-        @if(in_array($order->status, ['shipped', 'completed']) && Auth::check())
-        @foreach($uniqueProductIds as $productId)
-        @php
-        $product = \App\Models\Product::find($productId);
-        $hasReviewed = \App\Models\ProductReview::where('user_id', Auth::id())->where('product_id', $productId)->first();
-        @endphp
-        @if($product)
-        <div class="mb-3">
-            @if($hasReviewed)
-            <div class="review-display mb-2">
-                <strong>Đánh giá của bạn:</strong>
-                <div class="star-rating-display">
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="fas fa-star {{ $i <= $hasReviewed->rating ? 'text-warning' : 'text-muted' }}"></i>
-                    @endfor
+
+                        <div>
+                            <div class="fw-bold"><b>Đơn #{{ $order->id }}</b></div>
+                            <div class="small text-muted">{{ $order->created_at->format('d/m/Y H:i') }}</div>
+                        </div>
+                    </div>
+
+                    <div class="order-header-actions">
+                        {{-- Hoàn hàng (khi đang giao) --}}
+                        @if($order->status === 'shipping')
+                            <button
+                                class="btn btn-warning btn-sm text-white fw-bold shadow-sm"
+                                data-action="return"
+                                data-order-id="{{ $order->id }}"
+                                data-payment="{{ $order->payment }}"
+                                data-payment-status="{{ $order->payment_status }}"
+                                data-url="{{ url('/orders/'.$order->id.'/return') }}">
+                                <i class="fas fa-undo me-1"></i> Hoàn hàng
+                            </button>
+                        @endif
+
+                        {{-- Hủy đơn (khi pending) --}}
+                        @if($order->status === 'pending')
+                            <button
+                                class="btn btn-danger btn-sm fw-bold shadow-sm"
+                                data-action="cancel"
+                                data-order-id="{{ $order->id }}"
+                                data-payment="{{ $order->payment }}"
+                                data-payment-status="{{ $order->payment_status }}"
+                                data-url="{{ route('client.orders.cancel', $order->id) }}">
+                                <i class="fas fa-times me-1"></i> Hủy đơn
+                            </button>
+                        @elseif($order->status === 'shipped')
+                            {{-- Xác nhận đã nhận hàng (nút + SweetAlert confirm) --}}
+                            <form action="{{ route('client.orders.complete', $order->id) }}" method="POST" class="d-none" id="complete-form-{{ $order->id }}">
+                                @csrf
+                                @method('PUT')
+                            </form>
+                            <button class="btn btn-success btn-sm fw-bold shadow-sm btn-complete" data-target="#complete-form-{{ $order->id }}">
+                                <i class="fas fa-check me-1"></i> Đã nhận hàng
+                            </button>
+                        @endif
+
+                        {{-- Badge trạng thái --}}
+                        <span class="order-status {{ $order->status }}">{{ getStatusLabel($order->status) }}</span>
+                    </div>
                 </div>
-                <p class="mt-1"><small>{{ $hasReviewed->comment }}</small></p>
-                <p class="text-muted"><small>Đăng lúc: {{ $hasReviewed->created_at->format('d/m/Y H:i') }}</small></p>
-            </div>
-            @else
-            <button type="button" class="btn btn-outline-primary btn-sm toggle-review-form" data-product-id="{{ $productId }}">
-                Đánh giá sản phẩm: {{ $product->name }}
-            </button>
 
-            <form action="{{ route('product.review.store', $productId) }}" method="POST" class="review-form mt-3 d-none" id="review-form-{{ $productId }}">
-                @csrf
-                <div class="mb-3" data-product-id="{{ $productId }}">
-                    @for($i = 1; $i <= 5; $i++)
-                        <input type="radio" name="rating" id="rating-{{ $productId }}-{{ $i }}" value="{{ $i }}" class="star-input">
-                        <label for="rating-{{ $productId }}-{{ $i }}" class="star-label">
-                            <i class="fas fa-star"></i>
-                        </label>
-                    @endfor
-                    @error('rating')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-3">
-                    <textarea name="comment" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required>{{ old('comment') }}</textarea>
-                    @error('comment')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá</button>
-            </form>
-            @endif
-        </div>
-        @endif
-        @endforeach
-        @endif
+                {{-- Sản phẩm tóm tắt + người nhận --}}
+                @php
+                    $uniqueProductIds = $order->orderDetails->pluck('product_id')->unique()->toArray();
+                @endphp
 
-        @if($order->orderDetails->count() > 2)
-        <div class="text-end mb-3">
-            <a href="{{ route('client.orders.show', $order->id) }}" class="text-decoration-none small">
-                Xem thêm {{ $order->orderDetails->count() - 2 }} sản phẩm...
-            </a>
-        </div>
-        @endif
+                @foreach($order->orderDetails->take(2) as $detail)
+                    <div class="d-flex flex-wrap justify-content-between align-items-start mb-3 gap-3">
+                        <div class="d-flex" style="min-width:260px;">
+                            <img src="{{ asset('storage/'.$detail->product->image) }}" alt="Ảnh" class="product-image me-3">
+                            <div>
+                                <div class="fw-semibold">{{ $detail->product->name }}</div>
+                                @if($detail->variant && $detail->variant->variantAttributes->count())
+                                    <div class="small text-muted">
+                                        @foreach($detail->variant->variantAttributes as $attr)
+                                            {{ $attr->attribute->name ?? '' }}: {{ $attr->value->value ?? '' }}@if(!$loop->last), @endif
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
 
-        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
-            <div class="fw-bold text-muted">
-                Tổng tiền:
-                <span class="text-danger fs-5">
-                    {{ number_format($order->total, 0, ',', '.') }} đ
-                </span>
-            </div>
+                        {{-- Thông tin khách (chỉ render ở item đầu) --}}
+                        @if ($loop->first)
+                        <div class="order-customer-info mt-2 small text-muted flex-grow-1 mx-3">
+                            <strong>Người nhận:</strong> {{ $order->name }}<br>
+                            <strong>SĐT:</strong> {{ $order->phone }}<br>
+                            <strong>Địa chỉ:</strong> {{ $order->address }}, {{ $order->ward }}, {{ $order->city }}
+                        </div>
+                        @else
+                        <div class="flex-grow-1 mx-3 d-none d-md-block"></div>
+                        @endif
 
-            <div class="d-flex gap-2">
-                @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
-                <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
-                    <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
-                </a>
+                        <div class="text-end" style="min-width:120px;">
+                            <div class="text-muted">x{{ $detail->quantity }}</div>
+                            <div class="fw-bold">{{ number_format($detail->price, 0, ',', '.') }} đ</div>
+                        </div>
+                    </div>
+                @endforeach
+
+                {{-- Review sau khi hoàn thành --}}
+                @if(in_array($order->status, ['completed']) && Auth::check())
+                    @foreach($uniqueProductIds as $productId)
+                        @php
+                            $product = \App\Models\Product::find($productId);
+                            $hasReviewed = \App\Models\ProductReview::where('user_id', Auth::id())
+                                ->where('product_id', $productId)->first();
+                        @endphp
+                        @if($product)
+                        <div class="mb-3">
+                            @if($hasReviewed)
+                                <div class="review-display mb-2">
+                                    <strong>Đánh giá của bạn:</strong>
+                                    <div class="star-rating-display">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star {{ $i <= $hasReviewed->rating ? 'text-warning' : 'text-muted' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <p class="mt-1"><small>{{ $hasReviewed->comment }}</small></p>
+                                    <p class="text-muted"><small>Đăng lúc: {{ $hasReviewed->created_at->format('d/m/Y H:i') }}</small></p>
+                                </div>
+                            @else
+                                <button type="button" class="btn btn-outline-primary btn-sm toggle-review-form" data-product-id="{{ $productId }}">
+                                    Đánh giá sản phẩm: {{ $product->name }}
+                                </button>
+
+                                <form action="{{ route('product.review.store', $productId) }}" method="POST" class="review-form mt-3 d-none" id="review-form-{{ $productId }}">
+                                    @csrf
+                                    <div class="mb-3" data-product-id="{{ $productId }}">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <input type="radio" name="rating" id="rating-{{ $productId }}-{{ $i }}" value="{{ $i }}" class="star-input">
+                                            <label for="rating-{{ $productId }}-{{ $i }}" class="star-label">
+                                                <i class="fas fa-star"></i>
+                                            </label>
+                                        @endfor
+                                        @error('rating')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea name="comment" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required>{{ old('comment') }}</textarea>
+                                        @error('comment')
+                                            <div class="text-danger small">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá</button>
+                                </form>
+                            @endif
+                        </div>
+                        @endif
+                    @endforeach
                 @endif
-                <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
-            </div>
-        </div>
-    </div>
-    @endforeach
 
-    <div class="d-flex justify-content-center mt-4">
-        {{ $orders->links() }}
-    </div>
+                {{-- Xem thêm sản phẩm --}}
+                @if($order->orderDetails->count() > 2)
+                    <div class="text-end mb-3">
+                        <a href="{{ route('client.orders.show', $order->id) }}" class="text-decoration-none small">
+                            Xem thêm {{ $order->orderDetails->count() - 2 }} sản phẩm...
+                        </a>
+                    </div>
+                @endif
+
+                {{-- Footer --}}
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-top pt-3 mt-2 gap-2">
+                    <div class="fw-bold text-muted">
+                        Tổng tiền:
+                        <span class="text-danger fs-5">
+                            {{ number_format($order->total, 0, ',', '.') }} đ
+                        </span>
+                    </div>
+
+
+                    <div class="d-flex gap-2">
+                        @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
+                            <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-redo-alt me-1"></i> Thanh toán tiếp
+                            </a>
+                        @endif
+                        <a href="{{ route('client.orders.show', $order->id) }}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        <div class="d-flex justify-content-center mt-4">
+            {{ $orders->links() }}
+        </div>
     @else
-    <div class="alert alert-info text-center">Bạn chưa có đơn hàng nào.</div>
+        <div class="alert alert-info text-center">Bạn chưa có đơn hàng nào.</div>
     @endif
 </div>
 
-<!-- Modal hoàn hàng / hoàn tiền -->
+<!-- Modal dùng chung: Hoàn hàng / Hủy đơn -->
 <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form method="POST" id="returnForm">
@@ -219,8 +253,11 @@
             <input type="hidden" name="order_id" id="returnOrderId">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="returnModalLabel">Lý do</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    <h5 class="modal-title">
+                        <span id="returnModalTitle">Lý do</span>
+                    </h5>
+
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label=""></button> --}}
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -233,7 +270,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    <button type="button" id="modalSubmitBtn" class="btn btn-primary">Xác nhận</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
@@ -241,294 +278,222 @@
     </div>
 </div>
 @endsection
-
 @push('styles')
-<style>
-    .order-card {
-        transition: all 0.2s ease;
-    }
 
-    .order-card:hover {
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-    }
+<style>
+ .swal2-arial, button, span{
+    font-family: Arial, Helvetica, sans-serif;
+}
+    .order-card { transition: all 0.2s ease; border-color: #eef0f2 !important; }
+    .order-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
 
     .product-image {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border: 1px solid #eee;
-        border-radius: 4px;
+        width: 80px; height: 80px; object-fit: cover;
+        border: 1px solid #eee; border-radius: 8px;
     }
 
     .order-status {
-        padding: 4px 12px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        border-radius: 8px;
-        display: inline-block;
-        text-align: center;
-        min-width: 80px;
-        text-transform: uppercase;
+        padding: 4px 12px; font-size: 0.875rem; font-weight: 700;
+        border-radius: 999px; display: inline-block; text-align: center;
+        min-width: 110px; text-transform: uppercase; letter-spacing: .3px;
+        border: 1px solid rgba(0,0,0,.06);
     }
 
-    .order-header-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
+    .order-header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .order-header-actions .btn { font-weight: 700; padding: 6px 12px; }
 
-    .order-header-actions form,
-    .order-header-actions button {
-        margin: 0;
-    }
+    .order-status.cancelled { background-color: #eb5757; color: #fff; }
+    .order-status.pending { background-color: #ffd867; color: #333; }
+    .order-status.processing { background-color: #2d9cdb; color: #fff; }
+    .order-status.shipping { background-color: #ff9800; color: #fff; }
+    .order-status.shipped { background-color: #9b51e0; color: #fff; }
+    .order-status.completed { background-color: #27ae60; color: #fff; }
+    .order-status.return_requested { background-color: #6c757d; color: #fff; }
 
-    .order-header-actions .btn {
-        font-weight: 600;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-        padding: 4px 10px;
-    }
+    .star-rating { display: inline-flex; gap: 5px; font-size: 1.6rem; }
+    .star-input { display: none; }
+    .star-label { cursor: pointer; color: #ccc; transition: color 0.2s ease; }
+    .star-input:checked + .star-label { color: #FFC107 !important; }
+    .star-label.active { color: #FFC107 !important; }
+    .star-rating-display .fas { font-size: 1.2rem; }
+    .star-rating-display .text-warning { color: #FFC107; }
+    .star-rating-display .text-muted { color: #ccc; }
 
-    .order-status {
-        margin-left: 0 !important;
-    }
+    .review-form { padding: 15px; border-left: 3px solid #e0e0e0; background-color: #f8f9fa; border-radius: 8px; margin-top: 10px; }
+    .toggle-review-form { margin-top: 10px; }
+    .review-display { padding: 10px; background-color: #f1f1f1; border-radius: 8px; }
 
-    .order-status.cancelled {
-        background-color: #eb5757;
-        color: #fff;
-    }
 
-    .order-status.pending {
-        background-color: #f5c542;
-        color: #333;
-    }
-
-    .order-status.processing {
-        background-color: #2d9cdb;
-        color: #fff;
-    }
-
-    .order-status.shipping {
-        background-color: #ff9800;
-        color: #fff;
-    }
-
-    .order-status.shipped {
-        background-color: #9b51e0;
-        color: #fff;
-    }
-
-    .order-status.completed {
-        background-color: #27ae60;
-        color: #fff;
-    }
-
-    .order-status.return_requested {
-        background-color: #6c757d;
-        color: #fff;
-    }
-
-    .star-rating {
-        display: inline-flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 5px;
-        font-size: 1.6rem;
-    }
-
-    .star-input {
-        display: none;
-    }
-
-    .star-label {
-        cursor: pointer;
-        color: #ccc;
-        transition: color 0.2s ease;
-    }
-
-    .star-input:checked ~.star-label {
-        color: #FFC107 !important;
-    }
-
-    .star-label.active {
-        color: #FFC107 !important;
-    }
-
-    .star-rating-display .fas {
-        font-size: 1.2rem;
-    }
-
-    .star-rating-display .text-warning {
-        color: #FFC107;
-    }
-
-    .star-rating-display .text-muted {
-        color: #ccc;
-    }
-
-    .review-form {
-        padding: 15px;
-        border-left: 3px solid #e0e0e0;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        margin-top: 10px;
-    }
-
-    .toggle-review-form {
-        margin-top: 10px;
-    }
-
-    .review-display {
-        padding: 10px;
-        background-color: #f1f1f1;
-        border-radius: 5px;
-    }
     .order-customer-info {
-    background-color: #f8f9fa;
-    padding: 10px 12px;
-    border-left: 3px solid #0d6efd;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #555;
-}
+        background-color: #f8f9fa; padding: 10px 12px;
+        border-left: 3px solid #0d6efd; border-radius: 8px;
+        font-size: 0.9rem; line-height: 1.6; color: #555; min-width: 220px; flex: 1;
 
+    }
+    @media (max-width: 576px) {
+        .order-customer-info { width: 100%; min-width: 100%; }
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{{-- lưu ý: chỉ nạp 1 lần bootstrap.bundle trong layout tổng --}}
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    $(function() {
-        function openReturnModal(orderId, paymentMethod, paymentStatus) {
-            $('#returnOrderId').val(orderId);
-            const bankField = $('#bankInfo');
-            if (paymentMethod === 'banking' && paymentStatus === 'paid') {
-                bankField.removeClass('d-none');
-            } else {
-                bankField.addClass('d-none');
-            }
-            $('#reason').val('');
-            const form = $('#returnForm');
-            form.attr('action', `/orders/${orderId}/return`);
-            const methodInput = form.find('input[name="_method"]');
-            if (methodInput.length) methodInput.val('PUT');
-            else {
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: '_method',
-                    value: 'PUT'
-                }).appendTo(form);
-            }
-            new bootstrap.Modal(document.getElementById('returnModal')).show();
-        }
+(function($){
+  // Helper: đảm bảo PUT method cho form modal
+  function ensurePutMethod($form){
+    const $m = $form.find('input[name="_method"]');
+    if ($m.length) $m.val('PUT');
+    else $('<input>', {type:'hidden', name:'_method', value:'PUT'}).appendTo($form);
+  }
 
-        function openCancelModal(orderId, paymentMethod, paymentStatus) {
-            $('#returnOrderId').val(orderId);
-            $('#reason').val('');
-            $('#bankInfo').removeClass('d-none');
-            const form = $('#returnForm');
-            form.attr('action', `/orders/${orderId}/cancel`);
-            const methodInput = form.find('input[name="_method"]');
-            if (methodInput.length) methodInput.val('PUT');
-            else {
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: '_method',
-                    value: 'PUT'
-                }).appendTo(form);
-            }
-            new bootstrap.Modal(document.getElementById('returnModal')).show();
-        }
+  // Mở modal hoàn / huỷ (dùng chung)
+  function openActionModal(mode, orderId, paymentMethod, paymentStatus, actionUrl) {
+    $('#returnOrderId').val(orderId);
+    $('#reason').val('');
+    $('#bank_account').val('');
+    $('#returnModalTitle').text(mode === 'cancel' ? 'Xác nhận huỷ đơn' : 'Yêu cầu hoàn hàng');
+    $('#modalSubmitBtn').text(mode === 'cancel' ? 'Xác nhận huỷ' : 'Gửi yêu cầu');
 
-        // Toggle review form
-        $('.toggle-review-form').on('click', function() {
-            const productId = $(this).data('product-id');
-            $(`#review-form-${productId}`).toggleClass('d-none');
-        });
+    // Banking đã thanh toán -> yêu cầu nhập STK
+    if (mode === 'cancel' && paymentMethod === 'banking' && paymentStatus === 'paid') {
+      $('#bankInfo').removeClass('d-none');
+    } else if (mode === 'return' && paymentMethod === 'banking' && paymentStatus === 'paid') {
+      // tuỳ chính sách shop, có thể yêu cầu STK khi hoàn hàng
+      $('#bankInfo').removeClass('d-none');
+    } else {
+      $('#bankInfo').addClass('d-none');
+    }
 
-        // Star rating functionality
-        $('.star-rating').each(function() {
-            const $starRating = $(this);
-            const productId = $starRating.data('product-id');
-            const $labels = $starRating.find('.star-label');
-            const $inputs = $starRating.find('.star-input');
+    const $form = $('#returnForm');
+    $form.attr('action', actionUrl);
+    ensurePutMethod($form);
+    $('#returnModal').data('mode', mode);
 
-            $labels.on('click', function() {
-                const index = $labels.index(this);
-                // Clear previous active stars and checked states
-                $labels.removeClass('active');
-                $inputs.prop('checked', false);
 
-                // Set new active stars from left to clicked star
-                for (let i = 0; i <= index; i++) {
-                    $labels.eq(i).addClass('active');
-                    if (i === index) {
-                        $inputs.eq(i).prop('checked', true);
-                    }
-                }
-                console.log('Selected rating:', $inputs.eq(index).val()); // Debug
-            });
-        });
+    const modal = new bootstrap.Modal(document.getElementById('returnModal'));
+    modal.show();
+  }
 
-        // Form submission validation and success handling
-        $('.review-form').on('submit', function(e) {
-            e.preventDefault();
-            const $form = $(this);
-            const productId = $form.data('product-id');
-            const rating = $form.find('input[name="rating"]:checked').val();
-            const comment = $form.find('textarea[name="comment"]').val().trim();
+  // Event: click hành động Hoàn / Huỷ
+  $(document).on('click', '[data-action="cancel"], [data-action="return"]', function(){
+    const $btn = $(this);
+    const mode = $btn.data('action');
+    openActionModal(
+      mode,
+      $btn.data('order-id'),
+      $btn.data('payment'),
+      $btn.data('payment-status'),
+      $btn.data('url')
+    );
+  });
 
-            if (!rating) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Vui lòng chọn số sao!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                return false;
-            }
+  // Nút submit trong modal -> xác nhận đẹp bằng SweetAlert
+  $('#modalSubmitBtn').on('click', function(){
+    const mode = $('#returnModal').data('mode') || 'return';
+    const reason = $('#reason').val().trim();
+    const bank = $('#bankInfo').hasClass('d-none') ? '' : ($('#bank_account').val().trim());
 
-            if (!comment) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Vui lòng viết bình luận!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                return false;
-            }
+   if (!reason) {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Vui lòng nhập lý do',
+    timer: 1600,
+    showConfirmButton: false,
+    toast: true,
+    position: 'top-end',
+    customClass: {
+      popup: 'swal2-arial'
+    }
+  });
+}
 
-            // Submit form
-            $.ajax({
-                url: $form.attr('action'),
-                method: 'POST',
-                data: $form.serialize(),
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Đánh giá thành công!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        // Reload page to show the review
-                        location.reload();
-                    });
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Đã có lỗi xảy ra!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            });
-        });
+    let html = `<div class="text-start">
+      <div class="mb-2"><strong>Hành động:</strong> ${mode === 'cancel' ? 'Huỷ đơn' : 'Hoàn hàng'}</div>
+      <div class="mb-2"><strong>Lý do:</strong> ${$('<div>').text(reason).html()}</div>`;
+    if (bank) html += `<div class="mb-2"><strong>STK hoàn tiền:</strong> ${$('<div>').text(bank).html()}</div>`;
+    html += `</div>`;
+
+    Swal.fire({
+      icon: mode === 'cancel' ? 'question' : 'info',
+      title: mode === 'cancel' ? 'Xác nhận huỷ đơn?' : 'Xác nhận gửi yêu cầu?',
+      html,
+      showCancelButton: true,
+      confirmButtonText: mode === 'cancel' ? 'Huỷ đơn' : 'Gửi yêu cầu',
+      cancelButtonText: 'Xem lại',
+      confirmButtonColor: mode === 'cancel' ? '#d33' : undefined,
+    }).then(res => {
+      if (res.isConfirmed) {
+        $('#returnForm')[0].submit();
+      }
     });
+  });
+
+  // Xác nhận "Đã nhận hàng" (đẹp hơn confirm())
+  $(document).on('click', '.btn-complete', function(){
+    const target = $(this).data('target');
+    Swal.fire({
+      icon: 'question',
+      title: 'Xác nhận đã nhận hàng?',
+      text: 'Hành động này sẽ chuyển trạng thái đơn sang Hoàn thành.',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Huỷ'
+    }).then(res => {
+      if (res.isConfirmed) {
+        $(target)[0].submit();
+      }
+    });
+  });
+
+  // Toggle form review
+
+  $(document).on('click', '.toggle-review-form', function(){
+    const productId = $(this).data('product-id');
+    $(`#review-form-${productId}`).toggleClass('d-none');
+  });
+
+
+  // Star rating chọn đẹp
+  $(document).on('click', '.star-label', function(){
+    const $form = $(this).closest('.review-form');
+    const $labels = $form.find('.star-label');
+    const $inputs = $form.find('.star-input');
+    const idx = $labels.index(this);
+
+    $labels.removeClass('active');
+    $inputs.prop('checked', false);
+
+    $labels.each(function(i) { if (i <= idx) $(this).addClass('active'); });
+    $inputs.eq(idx).prop('checked', true);
+  });
+
+  // Submit review (AJAX optional)
+  $(document).on('submit', '.review-form', function(e){
+    e.preventDefault();
+    const $form = $(this);
+    const rating = $form.find('input[name="rating"]:checked').val();
+    const comment = $form.find('textarea[name="comment"]').val().trim();
+
+    if (!rating) {
+      return Swal.fire({icon:'warning', title:'Vui lòng chọn số sao!', showConfirmButton:false, timer:1500});
+    }
+    if (!comment) {
+      return Swal.fire({icon:'warning', title:'Vui lòng viết bình luận!', showConfirmButton:false, timer:1500});
+    }
+
+    $.post($form.attr('action'), $form.serialize())
+      .done(() => Swal.fire({icon:'success', title:'Đánh giá thành công!', showConfirmButton:false, timer:1500}).then(()=>location.reload()))
+      .fail(() => Swal.fire({icon:'error', title:'Đã có lỗi xảy ra!', showConfirmButton:false, timer:1500}));
+  });
+
+})(jQuery);
+
 </script>
 @endpush

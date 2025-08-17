@@ -44,19 +44,21 @@
 
    @php
     $statusVi = [
-        'pending'   => 'Chờ xử lý',
-        'processing'=> 'Đang xử lý',
-        'shipping'  => 'Đang giao hàng',
-        'shipped'   => 'Đã giao',
-        'completed' => 'Hoàn tất',
-        'cancelled' => 'Đã hủy',
-        'return_requested'  => 'Hoàn hàng',
+        'pending'          => 'Chờ xử lý',
+        'processing'       => 'Đang xử lý',
+        'shipping'         => 'Đang giao hàng',
+        'shipped'          => 'Đã giao',
+        'completed'        => 'Hoàn tất',
+        'cancelled'        => 'Đã hủy',
+        'return_requested' => 'Hoàn hàng',
     ][$order->status] ?? ucfirst($order->status);
 
     $paymentStatusClass = match($order->payment_status) {
         'paid'     => 'success',
         'unpaid'   => 'warning',
         'cancelled'=> 'danger',
+        'refund'   => 'info',
+        'refunded' => 'primary', 
         default    => 'secondary',
     };
 
@@ -64,9 +66,12 @@
         'paid'     => 'Đã thanh toán',
         'unpaid'   => 'Chưa thanh toán',
         'cancelled'=> 'Đã hủy',
+        'refund'   => 'Đang hoàn tiền',
+        'refunded' => 'Đã hoàn tiền',
         default    => ucfirst($order->payment_status),
     };
 @endphp
+
 
 
     <h5 class="mb-4">

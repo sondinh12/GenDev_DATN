@@ -35,7 +35,7 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
+// Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
@@ -67,6 +67,7 @@ Route::get('/product', function () {
 })->name('product');
 
 Route::get('/product/{id}', [ClientProductController::class, 'show'])->name('client.product.show');
+Route::post('/products/{product}/questions', [ProductController::class, 'storeQuestion'])->name('product.question.store');
 
 // ================= GIỎ HÀNG & THANH TOÁN =================
 Route::middleware(['auth', 'check_ban'])->group(function () {
@@ -122,7 +123,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::patch('/products/{id}/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::patch('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::get('/products/trash/list', [ProductController::class, 'listTrashed'])->name('products.trash.list');
-        Route::post('/products/{product}/questions', [ProductController::class, 'storeQuestion'])->name('product.question.store');
     });
     Route::middleware(['permission:Quản lý thuộc tính'])->group(function () {
         Route::get('/attributes', [ProductController::class, 'allAttributes'])->name('admin.attributes.index');
@@ -165,8 +165,8 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
     // Bình luận
     Route::middleware(['auth', 'check_ban', 'permission:Quản lý bình luận'])->group(function () {
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
-        Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
-        Route::post('/reviews/{review}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
+        Route::get('/reviews/{question}', [ReviewController::class, 'show'])->name('reviews.show');
+        Route::post('/reviews/{question}/violation', [ReviewController::class, 'handleViolation'])->name('reviews.violation');
     });
 
     // Tài khoản người dùng

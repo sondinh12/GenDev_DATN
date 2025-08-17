@@ -344,46 +344,15 @@
             </div>
         </div>
     </div>
-    {{-- Đánh giá sản phẩm --}}
+  {{-- Đánh giá sản phẩm --}}
     <div class="container-lg px-0">
         <div class="review-card card mb-5 mt-4 shadow rounded-4 border-0 mx-auto" style="max-width: 1200px;">
             <div class="card-header bg-gradient text-white fw-bold py-3 rounded-top-4" style="background: linear-gradient(45deg, #2196F3, #00BCD4); font-size: 1.2rem; letter-spacing: 1px;">
                 <i class="fas fa-star text-warning me-2"></i>Đánh giá sản phẩm
             </div>
             <div class="card-body p-4">
-                @auth
-                    @php
-                        $userReviewCount = 0;
-                        if(auth()->check()) {
-                            $userReviewCount = $product->reviews()->where('user_id', auth()->id())->count();
-                        }
-                    @endphp
-                    @if(!empty($canReview) && $canReview && $userReviewCount < 2)
-                        <form method="POST" action="{{ route('product.review.store', $product->id) }}" class="row g-3 align-items-end mb-4">
-                            @csrf
-                            <div class="col-12 col-md-4 text-center">
-                                <label class="form-label fw-semibold mb-2">Số sao</label>
-                                <div id="star-rating" class="d-inline-block">
-                                    @for($i=1; $i<=5; $i++)
-                                        <i class="fas fa-star star-select text-secondary" data-value="{{ $i }}" style="font-size:2rem; cursor:pointer; margin:0 2px;"></i>
-                                    @endfor
-                                </div>
-                                <input type="hidden" name="rating" id="rating-value" value="5" required>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label fw-semibold">Bình luận</label>
-                                <textarea name="comment" class="form-control form-control-lg" rows="2" maxlength="50" placeholder="Nhập bình luận..." style="border-radius: 1rem;"></textarea>
-                            </div>
-                            <div class="col-12 col-md-2 text-end">
-                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi đánh giá</button>
-                            </div>
-                        </form>
-                    @endif
-                @else
-                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm.</div>
-                @endauth
                 <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các đánh giá gần đây</h6>
-                @php $reviews = $product->reviews()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
+                @php $reviews = $product->reviews()->with('user')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
                     @forelse($reviews as $review)
                         <div class="col-12 col-md-6">
@@ -418,27 +387,27 @@
     <div class="container-lg px-0">
         <div class="question-card card mb-5 mt-4 shadow rounded-4 border-0 mx-auto" style="max-width: 1200px;">
             <div class="card-header bg-gradient text-white fw-bold py-3 rounded-top-4" style="background: linear-gradient(45deg, #4CAF50, #8BC34A); font-size: 1.2rem; letter-spacing: 1px;">
-                <i class="fas fa-question-circle text-warning me-2"></i>Hỏi đáp sản phẩm
+                <i class="fas fa-comment text-warning me-2"></i>Bình luận
             </div>
             <div class="card-body p-4">
                 @auth
                     <form method="POST" action="{{ route('product.question.store', $product->id) }}" class="row g-3 align-items-end mb-4">
                         @csrf
                         <div class="col-12 col-md-10">
-                            <label class="form-label fw-semibold">Câu hỏi của bạn</label>
-                            <textarea name="question" class="form-control form-control-lg" rows="2" maxlength="200" placeholder="Nhập câu hỏi về sản phẩm..." style="border-radius: 1rem;"></textarea>
+                            <label class="form-label fw-semibold">Bình luận của bạn</label>
+                            <textarea name="question" class="form-control form-control-lg" rows="2" maxlength="200" placeholder="Nhập bình luận về sản phẩm..." style="border-radius: 1rem;"></textarea>
                         </div>
                         <div class="col-12 col-md-2 text-end">
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi câu hỏi</button>
                         </div>
                     </form>
                 @else
-                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đặt câu hỏi về sản phẩm.</div>
+                    <div class="alert alert-info mb-4">Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để bình luận về sản phẩm.</div>
                 @endauth
-                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các câu hỏi gần đây</h6>
-                @php $questions = $product->questions()->with('user')->latest()->take(5)->get(); @endphp
+                <h6 class="fw-bold mb-3 mt-2"><i class="fas fa-comments text-primary me-2"></i>Các bình luận gần đây</h6>
+                @php $questionss = $product->questions()->with('user')->where('status','approved')->latest()->take(5)->get(); @endphp
                 <div class="row g-3">
-                    @forelse($questions as $question)
+                    @forelse($questionss as $question)
                         <div class="col-12">
                             <div class="question-item p-3 rounded-4 bg-light border-0 shadow-sm h-100">
                                 <div class="d-flex align-items-center mb-2">
@@ -450,7 +419,7 @@
                         </div>
                     @empty
                         <div class="col-12">
-                            <div class="text-muted">Chưa có câu hỏi nào.</div>
+                            <div class="text-muted">Chưa có bình luận nào.</div>
                         </div>
                     @endforelse
                 </div>
@@ -488,8 +457,10 @@
                                     }
                                 @endphp
                                 @if($discountPercent)
-                                    <span class="badge bg-danger position-absolute" style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
-                                @endif
+            <span class="discount-badge"     style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
+        @elseif($priceInfo['has_discount'])
+            <span class="discount-badge"     style="top:8px; left:8px; z-index:2;">-{{ $priceInfo['discount_percent'] }}%</span>
+        @endif
                             </div>
                             <div class="card-body p-2 d-flex flex-column justify-content-between align-items-center text-center" style="flex:1 1 auto;">
                                 <h6 class="card-title text-truncate mb-1 fw-semibold w-100" style="font-size:1rem;">
@@ -528,15 +499,12 @@
     $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
 @endphp
 
-<form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
-    @csrf
-    <button type="submit"
-        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
-        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
-        <i class="fas fa-heart"></i>
-    </button>
-</form>
-
+ <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="wishlist-form">
+            @csrf
+            <button type="submit" class="wishlist-btn" title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                <i class="fas fa-heart {{ $isFavorited ? 'favorited' : 'not-favorited' }}"></i>
+            </button>
+        </form>
 
                                     <a href="{{ route('product.show', $item->id) }}" class="btn btn-light border-0 shadow-sm rounded-circle p-2 quick-view" title="Xem nhanh">
                                         <i class="fas fa-eye text-info"></i>
@@ -567,37 +535,52 @@
     @endif
 </div>
 <style>
-    .btn-favorite {
-    font-size: 1.3rem;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    color: #bbb;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+ .product-image-wrapper {
+    position: relative;
+    display: inline-block;
 }
 
-.btn-favorite i {
-    color: #bbb;
-    transition: color 0.3s;
+.wishlist-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
 }
 
-.btn-favorite:hover {
-    border-color: #e53935;
-    background: #ffeaea;
+.wishlist-btn {
+    background: none;
+    border: none;
+    padding: 1px;
+    cursor: pointer;
+    font-size: 25px;
 }
 
-.btn-favorite:hover i {
-    color: #e53935;
+.favorited {
+    color: #e74c3c; /* Tim đỏ */
 }
 
-.btn-favorite.active {
-    background: #e53935;
-    border-color: #e53935;
+.not-favorited {
+    color: #ccc; /* Tim trắng */
 }
 
-.btn-favorite.active i {
+.wishlist-btn:hover i {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #e74c3c;
     color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    z-index: 5;
 }
+
 
     .related-grid {
         display: grid;

@@ -27,10 +27,10 @@ public function show($id)
         'variants.variantAttributes.attribute',
         'variants.variantAttributes.value',
         'reviews' => function ($query) {
-            $query->where('status', 'approved')->with('user');
+            // $query->where('status', 'approved')->with('user');
         },
         'questions' => function ($query) {
-            $query->with('user')->latest()->take(5);
+            $query->with('user')->where('status', 'approved')->latest()->take(5);
         }
     ])->findOrFail($id);
 
@@ -163,7 +163,7 @@ public function show($id)
                 $query->orderBy('name', 'desc');
                 break;
             case 'popularity':
-                $query->withCount(['cartdetails as total_sold' => function ($query) {
+                $query->withCount(['orderDetails as total_sold' => function ($query) {
                     $query->select(DB::raw('SUM(quantity)'));
                 }])->orderBy('total_sold', 'desc');
                 break;

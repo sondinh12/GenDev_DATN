@@ -2,31 +2,26 @@
     <div class="col-full">
         <ul id="menu-top-bar-left" class="nav menu-top-bar-left">
             <li class="menu-item animate-dropdown">
-                <a title="Giao hàng miễn phí toàn quốc" href="contact-v1.html">Giao hàng miễn phí toàn quốc</a>
+                <a title="Giao hàng miễn phí toàn quốc" href="#">Giao hàng miễn phí toàn quốc</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Đảm bảo chất lượng sản phẩm" href="shop.html">Đảm bảo chất lượng sản phẩm</a>
+                <a title="Đảm bảo chất lượng sản phẩm" href="#">Đảm bảo chất lượng sản phẩm</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Chương trình đổi trả nhanh chóng" href="track-your-order.html">Chương trình đổi trả nhanh
-                    chóng</a>
+                <a title="Chương trình đổi trả nhanh chóng" href="#">Chương trình đổi trả nhanh chóng</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Không phụ phí" href="contact-v2.html">Không phụ phí</a>
+                <a title="Không phụ phí" href="#">Không phụ phí</a>
             </li>
         </ul>
         <!-- .nav -->
         <ul id="menu-top-bar-right" class="nav menu-top-bar-right">
-            <li class="hidden-sm-down menu-item animate-dropdown">
-                <a title="Theo dõi đơn hàng" href="track-your-order.html">
-                    <i class="tm tm-order-tracking"></i>Theo dõi đơn hàng</a>
-            </li>
             <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                 <a title="VNĐ" data-toggle="dropdown" class="dropdown-toggle" href="#">
                     <i class="tm tm-dollar"></i>VNĐ
                     <span class="caret"></span>
                 </a>
-                <ul role="menu" class="dropdown-menu">
+                {{-- <ul role="menu" class="dropdown-menu">
                     <li class="menu-item animate-dropdown">
                         <a title="Đô la Úc" href="#">Đô la Úc (AUD)</a>
                     </li>
@@ -39,7 +34,7 @@
                     <li class="menu-item animate-dropdown">
                         <a title="Đô la Singapore" href="#">Đô la Singapore (SGD)</a>
                     </li>
-                </ul>
+                </ul> --}}
                 <!-- .dropdown-menu -->
             </li>
             <li class="menu-item">

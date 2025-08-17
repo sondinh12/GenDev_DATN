@@ -80,7 +80,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        // Lấy sản phẩm bán chạy (dựa trên số lượng trong giỏ hàng)
+        // Lấy sản phẩm bán chạy (dựa trên số lượng trong chi tiết đơn hàng)
         $bestSellingProducts = Product::with([
             'galleries',
             'variants.variantAttributes.attribute',
@@ -88,17 +88,20 @@ class HomeController extends Controller
             'category'
         ])
             ->withCount([
-                'cartdetails as total_sold' => function ($query) {
-                    $query->select(DB::raw('SUM(quantity)'));
+                'orderDetails as total_sold' => function ($query) {
+
+                    $query->where('created_at', '>=', now()->subDays(30))
+                        ->select(DB::raw('SUM(quantity)'));
                 }
             ])
             ->where('status', 1)
-            ->orderBy('total_sold', 'desc')
 
+            ->orderByDesc('total_sold')
             ->paginate(14);
         if ($request->ajax()) {
             return view('client.components.best_sellers', compact('bestSellingProducts'))->render();
         }
+
         $products = Product::all();
 
         return view('client.pages.home', compact(

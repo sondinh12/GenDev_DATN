@@ -39,7 +39,10 @@
                         <span class="text-danger">*</span>
                     </label>
                     <input type="text" name="name" id="name" class="form-control border-2 py-2" 
-                           value="{{ $attribute->name }}" required>
+                           value="{{ old('name', $attribute->name) }}" required>
+                    @error('name')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="py-3 mb-4">
@@ -52,7 +55,7 @@
                             <div class="input-group mb-3 value-row align-items-center">
                                 <input type="text" name="values[{{ $value->id }}]" 
                                        class="form-control border-2 py-2" 
-                                       value="{{ $value->value }}" 
+                                       value="{{ old('values.' . $value->id, $value->value) }}" 
                                        required>
                                 <button type="button" 
                                         class="btn btn-outline-danger rounded-pill ms-2 px-3"
@@ -71,7 +74,7 @@
                     </button>
                 </div>
 
-                <!-- Phần nút thao tác (đã bỏ border-top) -->
+                <!-- Phần nút thao tác -->
                 <div class="d-flex justify-content-end gap-3 mt-4">
                     <a href="{{ route('admin.attributes.index') }}" class="btn btn-light rounded-pill px-4">
                         <i class="fas fa-times me-1"></i> Hủy bỏ
@@ -84,6 +87,56 @@
         </div>
     </div>
 </div>
+
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+{{-- Hiển thị lỗi validate cho delete_values qua SweetAlert2 --}}
+@error('delete_values')
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ $message }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@enderror
 
 <script>
 // Thêm input cho giá trị mới
@@ -111,7 +164,7 @@ function addValueInput() {
 
 // Xóa giá trị cũ khỏi form và đánh dấu để xóa trên server
 function removeOldValue(btn, valueId) {
-    // Thêm 1 input ẩn để báo controller xóa value này
+    // Thêm input ẩn để báo controller xóa value này
     var form = document.getElementById('main-attr-form');
     var input = document.createElement('input');
     input.type = 'hidden';

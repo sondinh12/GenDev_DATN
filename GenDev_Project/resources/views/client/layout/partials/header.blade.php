@@ -62,7 +62,7 @@
                 <!-- /.site-branding -->
                 <!-- ============================================================= End Header Logo ============================================================= -->
                 <nav id="primary-navigation" class="primary-navigation" aria-label="Primary Navigation"
-                    data-nav="flex-menu">
+                    data-nav="flex-menu" style="padding-left: 150px">
                     <ul id="menu-primary-menu" class="nav yamm">
                         <li class="menu-item animate-dropdown">
                             <a title="Trang chủ" href="{{ asset('/') }}">Trang chủ</a>
@@ -72,9 +72,6 @@
                         </li>
                         <li class="menu-item menu-item-has-children animate-dropdown dropdown">
                             <a title="Sản phẩm" href="{{ asset('/shop') }}">Sản phẩm </a>
-                        </li>
-                        <li class="menu-item animate-dropdown">
-                            <a title="Tin tức" href="{{ asset('product-category.html') }}">Tin tức</a>
                         </li>
                         <li class="menu-item animate-dropdown">
                             <a title="Liên hệ" href="{{ asset('/contact') }}">Liên hệ</a>
@@ -207,34 +204,27 @@
                 <!-- .input-group -->
             </form>
             <!-- .navbar-search -->
-            <ul class="header-compare nav navbar-nav">
+            <ul class="header-wishlist nav navbar-nav">
                 <li class="nav-item">
-                    <a href="{{ asset('compare.html') }}" class="nav-link">
-                        <i class="tm tm-compare"></i>
-                        <span id="top-cart-compare-count" class="value">3</span>
+
+                    <a href="{{ route('client.favorites.index') }}" class="nav-link">
+                        <i class="tm tm-favorites"></i>
+                        <span id="top-cart-wishlist-count" class="value">
+                            {{ auth()->check() ? auth()->user()->favorites()->count() : 0 }}
+                        </span>
+
                     </a>
                 </li>
             </ul>
-            <!-- .header-compare -->
-           <ul class="header-wishlist nav navbar-nav">
-    <li class="nav-item">
-        <a href="{{ route('client.favorites.index') }}" class="nav-link">
-            <i class="tm tm-favorites"></i>
-            <span id="top-cart-wishlist-count" class="value">
-                {{ auth()->check() ? auth()->user()->favorites()->count() : 0 }}
-            </span>
-        </a>
-    </li>
-</ul>
 
-<ul id="site-header-cart" class="site-header-cart menu">
-    <li class="animate-dropdown dropdown">
-        <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
-            <i class="tm tm-shopping-bag"></i>
-            <span class="count">{{ $cartCount }}</span>
-        </a>
-    </li>
-</ul>
+            <ul id="site-header-cart" class="site-header-cart menu">
+                <li class="animate-dropdown dropdown">
+                    <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
+                        <i class="tm tm-shopping-bag"></i>
+                        <span class="count">{{ $cartCount }}</span>
+                    </a>
+                </li>
+            </ul>
 
             <!-- .site-header-cart -->
             <!-- .site-header-cart -->

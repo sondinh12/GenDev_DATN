@@ -8,27 +8,39 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserFirstViolationNotice;
 use App\Mail\UserTemporaryBanNotice;
+use App\Models\ProductQuestion;
 
 class ReviewController extends Controller
 {   
     // Bỏ middleware cứng, quyền sẽ kiểm soát qua middleware permission ở routes/web.php
 
-    public function index(){
-        $reviews = ProductReview::with('user','product')->latest()->paginate(10);
-        return view('admin.reviews.index',compact('reviews'));
+    public function index(Request $request){
+        $questions = ProductQuestion::with(['user', 'product'])
+        ->when($request->search, function ($query, $search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('question', 'like', "%{$search}%")
+              ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
+              ->orWhereHas('product', fn($p) => $p->where('name', 'like', "%{$search}%"));
+        });
+    })
+    ->latest()
+    ->paginate(10);
+        return view('admin.reviews.index',compact('questions'));
     }
 
-    public function show(ProductReview $review){
-        $review->load('user','product');
-        return view('admin.reviews.show',compact('review'));
+    public function show(ProductQuestion $question){
+        $question->load('user','product');
+        return view('admin.reviews.show',compact('question'));
     }
 
-    public function handleViolation(ProductReview $review){
-        $user = $review->user;
+    public function handleViolation(ProductQuestion $question){
+        $user = $question->user;
 
+        // dd($user);
         // 1. Ẩn đánh giá
-        $review->status = 'rejected';
-        $review->save();
+        $question->status = 'rejected';
+        $question->save();
+
 
         // 2. Tăng số lần vi phạm
         $user->violation_count++;

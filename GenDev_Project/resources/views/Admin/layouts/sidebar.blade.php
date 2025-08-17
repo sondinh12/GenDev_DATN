@@ -84,22 +84,21 @@
                     </li>
                 @endcan
 
-                {{-- Vai trò --}}
-                @can('Quản lý vai trò')
-                    <li>
-                        <a href="{{ url('/admin/roles') }}">
-                            <i class="fa-solid fa-users"></i>
-                            <span>Vai trò</span>
-                        </a>
-                    </li>
-                @endcan
-
                 {{-- Đơn hàng --}}
                 @can('Quản lý đơn hàng')
                     <li>
                         <a href="{{ url('/admin/orders') }}">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Danh sách đơn hàng</span>
+                        </a>
+                    </li>
+                @endcan
+                {{-- Mã giảm giá --}}
+                @can('Quản lý mã giảm giá')
+                    <li>
+                        <a href="{{ url('/admin/coupons') }}">
+                            <i class="fa-solid fa-tag"></i>
+                            <span>Mã Giảm Giá</span>
                         </a>
                     </li>
                 @endcan
@@ -124,6 +123,25 @@
                     </li>
                 @endcan
 
+                {{-- Bình luận --}}
+                @can('Quản lý bình luận')
+                    <li>
+                        <a href="{{ url('/admin/reviews') }}">
+                            <i class="fa-regular fa-comment"></i>
+                            <span>Bình luận</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- Quản lý banner --}}
+                @can('Quản lý banner')
+                    <li>
+                        <a href="{{ url('/admin/banner') }}" class="">
+                            <i class="fa-solid fa-images"></i>
+                            <span>Quản lý banner</span>
+                        </a>
+                    </li>
+                @endcan
             </ul>
         </div>
         <!-- Sidebar -->
