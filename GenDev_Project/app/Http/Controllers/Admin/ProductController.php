@@ -68,6 +68,31 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+
+        // Kiểm tra trùng tên sản phẩm (không tính sản phẩm đã xóa mềm)
+        $duplicate = Product::where('name', $request->name)
+            ->whereNull('deleted_at')
+            ->exists();
+        if ($duplicate) {
+            return redirect()->back()->withInput()->with('error', 'Tên sản phẩm đã tồn tại!');
+        }
+
+
+        // Validate giá và giá khuyến mãi cho sản phẩm đơn (không có biến thể)
+        if (!$request->has('variant_combinations')) {
+            $price = (int) $request->price;
+            $sale_price = (int) $request->sale_price;
+            if ($price < 1000) {
+                return redirect()->back()->withInput()->with('error', 'Giá sản phẩm phải lớn hơn hoặc bằng 1000.');
+            }
+            if ($sale_price < 0 || $sale_price < 100) {
+                return redirect()->back()->withInput()->with('error', 'Giá khuyến mãi phải lớn hơn hoặc bằng 100.');
+            }
+            if ($sale_price > $price) {
+                return redirect()->back()->withInput()->with('error', 'Giá khuyến mãi không được lớn hơn giá gốc.');
+            }
+        }
+
         // Lưu ảnh đại diện sản phẩm vào thư mục storage/app/public/products
         $imagePath = $request->file('image')->store('products', 'public');
 
@@ -98,18 +123,29 @@ class ProductController extends Controller
         // Nếu có biến thể sản phẩm (màu, size, ...)
         if ($request->has('variant_combinations')) {
             foreach ($request->variant_combinations as $variant) {
+                $price = isset($variant['price']) ? (int)$variant['price'] : 0;
+                $sale_price = isset($variant['sale_price']) ? (int)$variant['sale_price'] : 0;
+                // Validate giá cho từng biến thể
+                if ($price < 1000) {
+                    return redirect()->back()->withInput()->with('error', 'Giá của biến thể phải lớn hơn hoặc bằng 1000.');
+                }
+                if ($sale_price < 0 || $sale_price < 100) {
+                    return redirect()->back()->withInput()->with('error', 'Giá khuyến mãi của biến thể phải lớn hơn hoặc bằng 100.');
+                }
+                if ($sale_price > $price) {
+                    return redirect()->back()->withInput()->with('error', 'Giá khuyến mãi của biến thể không được lớn hơn giá gốc.');
+                }
                 // Tạo bản ghi biến thể sản phẩm
                 $variantModel = ProductVariant::create([
                     'product_id' => $product->id,
-                    'price' => $variant['price'],
-                    'sale_price' => $variant['sale_price'] ?? 0,
+                    'price' => $price,
+                    'sale_price' => $sale_price,
                     'quantity' => $variant['quantity'] ?? 0,
                     'status' => $variant['status']  ?? 1,
                 ]);
 
                 // Lấy danh sách value_id của các thuộc tính (màu, size, ...)
-                // $valueIds = isset($variant['value_ids']) ? $variant['value_ids'] : [];
-                $valueRaw = $variant['value_ids'] ?? [];  // có thể là chuỗi hoặc mảng
+                $valueRaw = $variant['value_ids'] ?? [];
                 $valueIds = is_array($valueRaw) ? $valueRaw : explode(',', $valueRaw);
 
                 // Lưu từng thuộc tính của biến thể vào bảng product_variant_attributes
@@ -252,8 +288,11 @@ class ProductController extends Controller
                     $price = isset($variant['price']) ? (int)$variant['price'] : 0;
                     $sale_price = isset($variant['sale_price']) ? (int)$variant['sale_price'] : 0;
                     // Validate giá
-                    if ($price < 1000 || $sale_price < 0) {
-                        return redirect()->route('products.edit', $product->id)->with('error', 'Giá và giá khuyến mãi của biến thể phải lớn hơn hoặc bằng 1000.');
+                    if ($price < 1000) {
+                        return redirect()->route('products.edit', $product->id)->with('error', 'Giá của biến thể phải lớn hơn hoặc bằng 1000.');
+                    }
+                    if ($sale_price < 0 || $sale_price < 100) {
+                        return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi của biến thể phải lớn hơn hoặc bằng 100.');
                     }
                     if ($sale_price > $price) {
                         return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi của biến thể không được lớn hơn giá gốc.');
