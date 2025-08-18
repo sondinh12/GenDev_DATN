@@ -398,7 +398,7 @@
                             <textarea name="question" class="form-control form-control-lg" rows="2" maxlength="200" placeholder="Nhập bình luận về sản phẩm..." style="border-radius: 1rem;"></textarea>
                         </div>
                         <div class="col-12 col-md-2 text-end">
-                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi câu hỏi</button>
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow">Gửi Bình Luận</button>
                         </div>
                     </form>
                 @else

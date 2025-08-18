@@ -21,8 +21,7 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Sản phẩm</th>
-                        <th scope="col">Người đánh giá</th>
-                        <th scope="col">Số sao</th>
+                        <th scope="col">Người bình luận</th>
                         <th scope="col">Bình luận</th>
                         <th scope="col">Thời gian</th>
                         <th scope="col">Trạng thái</th>
