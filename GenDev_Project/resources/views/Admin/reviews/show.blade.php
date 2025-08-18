@@ -11,12 +11,7 @@
         <div class="card-body">
             <p><strong>Sản phẩm:</strong> {{ $question->product->name }}</p>
             <p><strong>Người đánh giá:</strong> {{ $question->user->name }} ({{ $question->user->email }})</p>
-            <p><strong>Số sao:</strong>
-                @for($i = 1; $i <= 5; $i++)
-                    <i class="fas fa-star{{ $i <= $question->rating ? '' : '-o' }} text-warning"></i>
-                @endfor
-            </p>
-            <p><strong>Bình luận:</strong><br>{{ $question->comment }}</p>
+            <p><strong>Bình luận:</strong><br>{{ $question->question }}</p>
             <p><strong>Trạng thái:</strong>
                 @if($question->status === 'approved')
                     <span class="badge bg-success">Hiển thị</span>

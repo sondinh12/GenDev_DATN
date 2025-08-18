@@ -9,8 +9,7 @@
                 <h2>Quản lý vai trò</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success btn-sm mb-2" href="{{ route('roles.create') }}"><i class="fa fa-plus"></i> Thêm vai
-                    trò</a>
+                <a class="btn btn-success btn-sm mb-2" href="{{ route('roles.create') }}"><i class="fa fa-plus"></i> Thêm vai trò</a>
             </div>
         </div>
     </div>

@@ -16,6 +16,7 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $category = [
+
             ["name" => "Điện thoại", 'image' => 'categories/vn-11134207-7ra0g-m9o7ct255au2d5.webp', "status" => 1],
             ["name" => "Laptop", 'image' => 'categories/vn-11134207-7ras8-mbnzkoyssb661b.webp', "status" => 1],
             ["name" => "Phụ kiện", 'image' => 'categories/sg-11134201-7rdwv-mc8quswrinht08.webp', "status" => 1],

@@ -9,6 +9,7 @@ use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Illuminate\Validation\Rule;
 
 class CategoryMiniController extends Controller
 {
@@ -65,7 +66,17 @@ class CategoryMiniController extends Controller
         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('categories_mini', 'name')->ignore($id),
+            function ($attribute, $value, $fail) {
+                if (Category::where('name', $value)->exists()) {
+                    $fail('Tên danh mục con không được trùng với danh mục cha.');
+                }
+            }
+        ],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 

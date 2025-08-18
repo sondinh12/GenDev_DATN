@@ -9,6 +9,7 @@ use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -54,7 +55,17 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('categories', 'name')->ignore($id),
+            function ($attribute, $value, $fail) {
+                if (CategoryMini::where('name', $value)->exists()) {
+                    $fail('Tên danh mục cha không được trùng với danh mục con.');
+                }
+            }
+        ],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -96,9 +107,9 @@ class CategoryController extends Controller
         // }
 
         // Xóa file ảnh nếu có
-        if ($category->image) {
-            Storage::disk('public')->delete($category->image);
-        }
+        // if ($category->image) {
+        //     Storage::disk('public')->delete($category->image);
+        // }
         $category->delete(); // Soft delete
 
         return redirect()->route('categories.index')->with('success', 'Danh mục đã được chuyển vào thùng rác!');
