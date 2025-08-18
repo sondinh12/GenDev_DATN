@@ -168,8 +168,18 @@ class ProductController extends Controller
     public function update(ProductRequest $request, string $id)
     {
 
+
         // Lấy sản phẩm cần cập nhật
         $product = Product::findOrFail($id);
+
+        // Kiểm tra trùng tên sản phẩm (trừ chính nó)
+        $duplicate = Product::where('name', $request->name)
+            ->where('id', '!=', $id)
+            ->whereNull('deleted_at')
+            ->exists();
+        if ($duplicate) {
+            return redirect()->route('products.edit', $product->id)->with('error', 'Tên sản phẩm đã tồn tại!');
+        }
 
         // Nếu có ảnh mới thì lưu lại, không thì giữ ảnh cũ
         if ($request->hasFile('image')) {
@@ -198,7 +208,9 @@ class ProductController extends Controller
             if ($price < 1000 ) {
                 return redirect()->route('products.edit', $product->id)->with('error', 'Giá sản phẩm phải lớn hơn hoặc bằng 1000.');
             }
-            if ($sale_price < 0 && $sale_price < 100) {
+
+            if ($sale_price < 0 || $sale_price < 100) {
+
                 return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi phải lớn hơn hoặc bằng 100.');
             }
             if ($sale_price > $price) {
