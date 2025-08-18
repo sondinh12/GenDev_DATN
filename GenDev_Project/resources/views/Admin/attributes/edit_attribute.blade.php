@@ -1,13 +1,4 @@
-@extends('Admin.layouts.master')
-
-@section('title', 'Sửa thuộc tính')
-
-@section('topbar-title')
-<div class="d-flex align-items-center">
-    <i class="fas fa-tags me-2 fs-4 text-primary"></i>
-    <span>Chỉnh sửa thuộc tính</span>
-</div>
-@endsection
+@extends('Admin.layouts.master-without-page-title')
 
 @section('content')
 <div class="container-fluid px-4">
@@ -39,7 +30,7 @@
                         <span class="text-danger">*</span>
                     </label>
                     <input type="text" name="name" id="name" class="form-control border-2 py-2" 
-                           value="{{ old('name', $attribute->name) }}" required>
+                        value="{{ old('name', $attribute->name) }}" required>
                     @error('name')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror

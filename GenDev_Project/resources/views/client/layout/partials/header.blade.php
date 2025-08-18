@@ -204,7 +204,7 @@
                 <!-- .input-group -->
             </form>
             <!-- .navbar-search -->
-           <ul class="header-wishlist nav navbar-nav">
+            <ul class="header-wishlist nav navbar-nav">
                 <li class="nav-item">
 
                     <a href="{{ route('client.favorites.index') }}" class="nav-link">
@@ -217,14 +217,14 @@
                 </li>
             </ul>
 
-<ul id="site-header-cart" class="site-header-cart menu">
-    <li class="animate-dropdown dropdown">
-        <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
-            <i class="tm tm-shopping-bag"></i>
-            <span class="count">{{ $cartCount }}</span>
-        </a>
-    </li>
-</ul>
+            <ul id="site-header-cart" class="site-header-cart menu">
+                <li class="animate-dropdown dropdown">
+                    <a href="{{ route('cart') }}" class="cart-contents" title="View your shopping cart">
+                        <i class="tm tm-shopping-bag"></i>
+                        <span class="count">{{ $cartCount }}</span>
+                    </a>
+                </li>
+            </ul>
 
             <!-- .site-header-cart -->
             <!-- .site-header-cart -->

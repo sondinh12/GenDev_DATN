@@ -176,7 +176,7 @@
                             </div>
                         </div>
                         <div class="col-md-7 p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                            <div class="d-flex align-items-center justify-content-between border-bottom">
                                 <h1 class="h3 fw-bold text-primary mb-0">{{ $product->name }}</h1>
                                 @php
     $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
@@ -192,7 +192,7 @@
 </form>
 
                             </div>
-                            <div class="d-flex align-items-center mb-3 gap-2 border-bottom pb-2">
+                            <div class="d-flex align-items-center gap-2 border-bottom">
                                 @php
                                 $avgRating = round($product->reviews()->avg('rating'), 1);
                                 $reviewCount = $product->reviews()->count();
@@ -210,11 +210,11 @@
                                     <span class="text-muted ms-1">({{ $avgRating }} / {{ $reviewCount }} đánh giá)</span>
                                 </div>
                             </div>
-                            <div class="mb-3 border-bottom pb-2">
+                            <div class="mb-3 border-bottom">
                                 <span id="variant-origin-price" class="text-muted text-decoration-line-through ms-3" style="display:none; text-decoration: line-through;">
                                     {{-- Sẽ được cập nhật động bằng JS --}}
                                 </span>
-                                <span id="variant-sale-price" class="fs-2 fw-bold text-danger">
+                                <span id="variant-sale-price" class="fs-2 text-danger" style="font-weight: 500">
                                     @php
                                     $min = null; $max = null;
                                     $discountPercent = null;
@@ -251,14 +251,18 @@
                                     @endif
                                 </span>
                             </div>
-                            <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
-                                <span class="fw-semibold">Mô tả:</span>
-                                <div class="bg-light rounded-3 p-3 mt-2">{!! $product->description !!}</div>
+                            <div class="mb-2 text-secondary fs-5 border-bottom">
+                                <div class="fw-semibold">Mô tả:</div>
+                                <div class="bg-light" style="font-size: 15px">{!! $product->description !!}</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px" class="mb-3">
+                                <div>Danh mục:</div>
+                                <p style="font-size: 15px" class="pb-0 mb-0">{{ $product->category->name ?? '' }}</p>
                             </div>
                             <div class="mb-3 small text-muted border-bottom pb-2">
-                                <span>Danh mục: <b>{{ $product->category->name ?? '' }}</b></span>
-                                <br>
-                                <span class="ms-3">Tình trạng: <span id="variant-status" class="badge {{ $product->status == 1 ? 'bg-success' : 'bg-danger' }}">{{ $product->status == 1 ? 'Còn hàng' : 'Hết hàng' }}</span></span>
+                                <span class="ms-3">Tình trạng: 
+                                    <div id="variant-status" class="badge {{ $product->status == 1 ? 'bg-success p-2' : 'bg-danger' }}">{{ $product->status == 1 ? 'Còn hàng' : 'Hết hàng' }}</div>
+                                </span>
                             </div>
                             <div class="mb-3 text-secondary fs-5 border-bottom pb-2">
                                 <span class="fw-semibold">Số lượng còn lại:</span>
@@ -274,11 +278,11 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <div class="quantity-wrapper d-flex align-items-center mb-3">
-                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-center justify-content-center" tabindex="-1" disabled>
+                                    <button type="button" class="btn d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <input type="number" name="quantity" id="quantity-input" class="qty-input" value="{{ old('quantity', 1) }}" min="1" step="1" style="text-align: center;" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" disabled>
-                                    <button type="button" class="btn btn-qty btn-qty-plus d-flex align-items-center justify-content-center" tabindex="-1" disabled>
+                                    <input type="number" name="quantity" id="quantity-input" style="text-align: center;padding-left: 10px" class="qty-input" value="{{ old('quantity', 1) }}" min="1" step="1" style="text-align: center;" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" disabled>
+                                    <button type="button" style="padding: 8px 10px; color: white" class="btn btn-qty btn-qty-plus d-flex align-items-center justify-content-center" tabindex="-1" disabled>
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
@@ -331,10 +335,7 @@
                                     @endforeach
                                 </div>
                                 <div class="d-flex gap-2 mt-3">
-                                    <button id="add-to-cart-btn" class="btn btn-primary btn-lg rounded-pill px-4 fw-semibold shadow flex-grow-1" type="submit"><i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ</button>
-                                    <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-semibold shadow-sm flex-grow-1">
-                                        <i class="fas fa-arrow-left me-1"></i>Quay lại
-                                    </a>
+                                    <button id="add-to-cart-btn" class="btn btn-primary rounded-pill px-4 fw-semibold shadow flex-grow-1" type="submit"><i class="fas fa-shopping-cart me-1"></i>Thêm vào giỏ</button>
                                 </div>
                             </form>
                         </div>

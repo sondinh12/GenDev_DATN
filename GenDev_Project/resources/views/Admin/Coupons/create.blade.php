@@ -5,7 +5,7 @@
 @section('content')
 <div class="container mt-4">
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="mb-0"><i class="fas fa-tag me-2"></i>Thêm mã giảm giá mới</h4>
         </div>
         
@@ -15,14 +15,14 @@
                 <div class="col-md-6">
                     <label for="name" class="form-label fw-medium">Tên mã <span class="text-danger">*</span></label>
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                           value="{{ old('name') }}" required placeholder="Nhập tên mã giảm giá">
+                        value="{{ old('name') }}" required placeholder="Nhập tên mã giảm giá">
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 
                 <div class="col-md-6">
                     <label id="couponCodeLabel" class="form-label fw-medium">Mã code <span class="text-danger">*</span></label>
                     <input type="text" name="coupon_code" id="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" 
-                           value="{{ old('coupon_code') }}" required placeholder="Nhập mã code">
+                        value="{{ old('coupon_code') }}" required placeholder="Nhập mã code">
                     @error('coupon_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 

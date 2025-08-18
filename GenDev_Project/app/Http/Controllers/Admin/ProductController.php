@@ -21,9 +21,7 @@ use Validator;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
         $query = Product::with(['category', 'categoryMini'])
@@ -236,8 +234,8 @@ class ProductController extends Controller
                 // Xóa tất cả biến thể
                 ProductVariant::whereIn('id', $oldVariants)->delete();
             }
-    // Nếu là sản phẩm có biến thể, kiểm tra xóa biến thể khi đã có trong hóa đơn
-    // (Đoạn này áp dụng cho cả logic xóa biến thể trong phần variable bên dưới)
+            // Nếu là sản phẩm có biến thể, kiểm tra xóa biến thể khi đã có trong hóa đơn
+            // (Đoạn này áp dụng cho cả logic xóa biến thể trong phần variable bên dưới)
         } else {
             // Nếu là sản phẩm có biến thể, không cập nhật giá trị đơn
             $product->price = null;
@@ -315,12 +313,12 @@ class ProductController extends Controller
                         return redirect()->route('products.edit', $product->id)->with('error', 'Sản phẩm đã có trong hóa đơn hoặc đã từng nhập kho, chỉ được phép thêm hoặc sửa giá biến thể, không được xóa biến thể!');
                     }
                 } else {
-                foreach ($oldVariantMap as $key => $oldVariant) {
-                    if (!in_array($key, $handledKeys)) {
-                        ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
-                        $oldVariant->delete();
+                    foreach ($oldVariantMap as $key => $oldVariant) {
+                        if (!in_array($key, $handledKeys)) {
+                            ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
+                            $oldVariant->delete();
+                        }
                     }
-                }
                 }
             }
         }
@@ -384,7 +382,7 @@ class ProductController extends Controller
     /**
      * Xóa vĩnh viễn sản phẩm
      */
-    public function destroy(string $id) 
+    public function destroy(string $id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
 
@@ -453,9 +451,9 @@ class ProductController extends Controller
             $keyword = $request->input('keyword');
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%')
-                  ->orWhereHas('values', function ($q) use ($keyword) {
-                      $q->where('value', 'like', '%' . $keyword . '%');
-                  });
+                    ->orWhereHas('values', function ($q) use ($keyword) {
+                        $q->where('value', 'like', '%' . $keyword . '%');
+                    });
             });
         }
 
@@ -502,7 +500,7 @@ class ProductController extends Controller
     }
 
     // Cập nhật thuộc tính + value con cũ và thêm value con mới
-public function updateAttribute(Request $request, $id)
+    public function updateAttribute(Request $request, $id)
     {
         // Validate đầu vào
         $request->validate([
@@ -636,7 +634,7 @@ public function updateAttribute(Request $request, $id)
         return view('client.layout.partials.search', compact('products', 'categories'));
     }
 
-        public function forceDeleteAttribute($id)
+    public function forceDeleteAttribute($id)
 
     {
         $attribute = Attribute::with('values')->findOrFail($id);

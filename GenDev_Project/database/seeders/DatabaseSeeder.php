@@ -37,5 +37,6 @@ class DatabaseSeeder extends Seeder
             PostCategorySeeder::class,
             BannerSeeder::class
         ]);
+        
     }
 }

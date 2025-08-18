@@ -95,7 +95,7 @@
 /* Icons */
 
 @font-face {
-    font-family: "slick";
+    font-family: 'Arial', sans-serif;
     src: url("assets/fonts/slick/slick.html");
     src: url("assets/fonts/slick/slickd41d.html?#iefix") format("embedded-opentype"), url("assets/fonts/slick/slick-2.html") format("woff"), url("assets/fonts/slick/slick-3.html") format("truetype"), url("assets/fonts/slick/slick-4.html#slick") format("svg");
     font-weight: normal;

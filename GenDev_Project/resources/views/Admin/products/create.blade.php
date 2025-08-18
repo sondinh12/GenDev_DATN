@@ -1,19 +1,4 @@
-@extends('Admin.layouts.master')
-
-
-
-@section('topbar-title')
-Sản phẩm
-@endsection
-
-@section('css')
-    <style>
-        .hidden {
-            display: none !important;
-        }
-    </style>
-@endsection
-
+@extends('Admin.layouts.master-without-page-title')
 
 @section('content')
     <div class="container-fluid">
@@ -51,72 +36,79 @@ Sản phẩm
                 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    <div class="mb-3">
-                        <label class="form-label">Tên sản phẩm</label>
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
-                        @error('name')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tên sản phẩm<span class="text-danger">*</label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Trạng thái<span class="text-danger">*</label><br>
+                            <label class="me-3"><input type="radio" name="status" value="1" checked> Hiển thị</label>
+                            <label><input type="radio" name="status" value="0"> Ẩn</label>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
-                        <select name="category_id" id="category_id" class="form-control">
-                            <option value="">-- Chọn danh mục --</option>
-                            @foreach($categories as $cate)
-                                <option value="{{ $cate->id }}">{{ $cate->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Danh mục<span class="text-danger">*</label>
+                            <select name="category_id" id="category_id" class="form-control">
+                                <option value="">-- Chọn danh mục --</option>
+                                @foreach($categories as $cate)
+                                    <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Danh mục con<span class="text-danger">*</label>
+                            <select name="category_mini_id" id="category_mini_id" class="form-control">
+                                <option value="">-- Chọn danh mục con --</option>
+                            </select>
+                            @error('category_mini_id')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục con</label>
-                        <select name="category_mini_id" id="category_mini_id" class="form-control">
-                            <option value="">-- Chọn danh mục con --</option>
-                        </select>
-                        @error('category_mini_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ảnh đại diện<span class="text-danger">*</label>
+                            <input type="file" name="image" class="form-control" accept="image/*" id="image-input">
+                            @error('image')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <div id="image-preview" class="mt-2"></div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ảnh thư viện (có thể chọn nhiều)</label>
+                            <input type="file" name="galleries[]" class="form-control" multiple accept="image/*" id="galleries-input">
+                            @error('galleries')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <div id="galleries-preview" class="mt-2 d-flex flex-wrap gap-2"></div>
+                        </div>
                     </div>
+                    
 
                     <div class="mb-3">
-                        <label class="form-label">Ảnh đại diện</label>
-                        <input type="file" name="image" class="form-control" accept="image/*" id="image-input">
-                        @error('image')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div id="image-preview" class="mt-2"></div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Ảnh thư viện (có thể chọn nhiều)</label>
-                        <input type="file" name="galleries[]" class="form-control" multiple accept="image/*" id="galleries-input">
-                        @error('galleries')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div id="galleries-preview" class="mt-2 d-flex flex-wrap gap-2"></div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Mô tả</label>
+                        <label class="form-label">Mô tả<span class="text-danger">*</label>
                         <textarea name="description" class="form-control" rows="5">{{ old('description') }}</textarea>
                         @error('description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Trạng thái</label><br>
-                        <label class="me-3"><input type="radio" name="status" value="1" checked> Hiển thị</label>
-                        <label><input type="radio" name="status" value="0"> Ẩn</label>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Loại sản phẩm</label>
-                        <select name="product_type" id="product-type" class="form-control @error('product_type') is-invalid @enderror" onchange="toggleProductType()">
+                    <div class="mb-3 d-flex align-items-center gap-1">
+                        <label class="form-label">Loại sản phẩm:<span class="text-danger">*</label>
+                        <select name="product_type" style="width: 280px" id="product-type" class="form-control @error('product_type') is-invalid @enderror" onchange="toggleProductType()">
                             <option value="simple" {{ old('product_type', 'simple') == 'simple' ? 'selected' : '' }}>Sản phẩm không biến thể</option>
                             <option value="variable" {{ old('product_type') == 'variable' ? 'selected' : '' }}>Sản phẩm có biến thể</option>
                         </select>
@@ -125,34 +117,35 @@ Sản phẩm
                         @enderror
                     </div>
 
-                    <div id="simple-product-fields" class="{{ old('product_type', 'simple') == 'variable' ? 'hidden' : '' }}">
-                        <div class="mb-3">
-                            <label class="form-label">Giá</label>
-                            <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" step="0.01">
-                            @error('price')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Giá khuyến mãi</label>
-                            <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror" value="{{ old('sale_price') }}" step="0.01">
-                            @error('sale_price')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Số lượng</label>
-                            <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}">
-                            @error('quantity')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    <div id="simple-product-fields" class="{{ old('product_type', 'simple') == 'variable' ? 'hidden' : '' }}; ">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Giá<span class="text-danger">*</label>
+                                <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" step="0.01">
+                                @error('price')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Giá khuyến mãi<span class="text-danger">*</label>
+                                <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror" value="{{ old('sale_price') }}" step="0.01">
+                                @error('sale_price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Số lượng<span class="text-danger">*</label>
+                                <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}">
+                                @error('quantity')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
                     <div id="variant-form" class="hidden {{ old('product_type') == 'variable' ? '' : 'hidden' }}">
-                        <h5 class="mb-3">Biến thể sản phẩm</h5>
                         <div class="mb-3">
-                            <label class="form-label">Chọn thuộc tính:</label>
+                            <label class="form-label">Chọn thuộc tính<span class="text-danger">*</label>
                             <select id="attribute-selector" class="form-control">
                                 <option value="">-- Chọn thuộc tính --</option>
                                 @foreach($attributes as $attribute)
@@ -164,7 +157,7 @@ Sản phẩm
                         </div>
                         <div id="selected-attributes-container" class="mt-4"></div>
                         <div class="mb-3">
-                            <button type="button" class="btn btn-primary" id="generate-variants">Tạo tổ hợp biến thể</button>
+                            <button type="button" class="btn btn-outline-primary" id="generate-variants">Tạo tổ hợp biến thể</button>
                         </div>
                         <div id="variant-table" class="mt-4"></div>
                         <div id="attribute-values-template" style="display: none;">
@@ -172,7 +165,7 @@ Sản phẩm
                                 <div class="attribute-group border p-2 mb-2" data-attr-id="{{ $attribute->id }}">
                                     <div class="d-flex justify-content-between">
                                         <strong>{{ $attribute->name }}</strong>
-                                        <button type="button" class="btn btn-danger btn-sm remove-attribute">❌</button>
+                                        <button type="button" class="btn btn-outline-danger remove-attribute"><i class="fas fa-trash-alt"></i> Xóa</button>
                                     </div>
                                     <div class="mt-2">
                                         @foreach($attribute->values as $value)
@@ -188,10 +181,10 @@ Sản phẩm
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-outline-primary">
                             <i class="fas fa-plus"></i> Tạo sản phẩm
                         </button>
-                        <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                             <i class="fas fa-times"></i> Huỷ
                         </a>
                     </div>
@@ -200,6 +193,12 @@ Sản phẩm
         </div>
     </div>
 @endsection
+
+    <style>
+        .hidden {
+            display: none !important;
+        }
+    </style>
 
 @section('scripts')
     <script src="{{ URL::asset('build/js/app.js') }}"></script>

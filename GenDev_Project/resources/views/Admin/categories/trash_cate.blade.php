@@ -50,7 +50,7 @@
                                     <button type="submit" class="btn btn-success btn-sm">Khôi phục</button>
                                 </form>
                                 <form action="{{ route('categories.forceDelete', $category->id) }}" method="POST"
-                                    style="display:inline-block;" onsubmit="return confirm('Xóa vĩnh viễn?');">
+                                    style="display:inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn danh mục {{ $category->name }} này không?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Xóa vĩnh viễn</button>
