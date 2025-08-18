@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\SupplierController;
@@ -36,7 +35,7 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
+// Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
@@ -180,6 +179,12 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
+    // Vai trò
+    Route::middleware(['permission:Quản lý vai trò'])->group(function () {
+        Route::resource('roles', RoleController::class);
+    });
+    
     // Mã giảm giá
     Route::middleware(['permission:Quản lý mã giảm giá'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
@@ -190,12 +195,12 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
 
     // quan lý banner
     Route::middleware(['permission:Quản lý banner'])->group(function () {
-        Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
-            ->name('banner.use');
-        Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
-        Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
-        Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
-        Route::resource('banner', BannerController::class);
+     Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
+     ->name('banner.use');
+    Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
+    Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
+    Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
+    Route::resource('banner', BannerController::class);
     });
 
     // TODO: Thêm route cho các chức năng khác như banner, bình luận, bài viết, mã giảm giá, thống kê nếu có controller tương ứng

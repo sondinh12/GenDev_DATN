@@ -1,7 +1,5 @@
 @extends('Admin.layouts.master')
 
-
-
 @section('content')
 <div class="container-fluid px-4">
     <!-- Header Actions -->
@@ -11,7 +9,7 @@
                 <h5 class="mb-0">
                     <i class="fas fa-tags me-2 text-primary"></i>Quản lý thuộc tính sản phẩm
                 </h5>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 align-items-center">
                     <a href="{{ route('admin.attributes.create') }}" class="btn btn-primary btn-sm rounded-pill px-3">
                         <i class="fas fa-plus me-1"></i> Thêm thuộc tính
                     </a>
@@ -23,6 +21,15 @@
                         </span>
                         @endif
                     </a>
+                    <!-- Search Bar -->
+                    <form action="{{ route('admin.attributes.index') }}" method="GET" class="d-flex">
+                        <div class="input-group input-group-sm" style="width: 200px;">
+                            <input type="text" name="keyword" class="form-control rounded-start" placeholder="Tìm kiếm..." value="{{ request('keyword') }}" aria-label="Tìm kiếm thuộc tính">
+                            <button type="submit" class="input-group-text bg-primary text-white border-0 rounded-end">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -34,7 +41,7 @@
             <div class="accordion" id="attributesAccordion">
                 @forelse ($attributes as $attribute)
                     <div class="accordion-item mb-3 border-0 rounded-3 overflow-hidden shadow-sm">
-                       <h2 class="accordion-header" id="heading{{ $attribute->id }}">
+                        <h2 class="accordion-header" id="heading{{ $attribute->id }}">
                             <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light bg-opacity-10">
                                 <button class="accordion-button collapsed bg-transparent shadow-none flex-grow-1 me-3" type="button"
                                     data-bs-toggle="collapse"
@@ -71,7 +78,6 @@
                                 </div>
                             </div>
                         </h2>
-
 
                         <div id="collapse{{ $attribute->id }}" class="accordion-collapse collapse"
                              aria-labelledby="heading{{ $attribute->id }}" data-bs-parent="#attributesAccordion">
@@ -153,6 +159,7 @@
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
 
+        // Delete confirmation
         document.querySelectorAll('.delete-form').forEach(form => {
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -200,6 +207,14 @@
         padding: 0 !important;
         width: 36px;
         height: 32px;
+    }
+    .input-group-sm .form-control {
+        height: 32px;
+        font-size: 0.875rem;
+    }
+    .input-group-sm .input-group-text {
+        height: 32px;
+        padding: 0.25rem 0.5rem;
     }
 </style>
 @endsection

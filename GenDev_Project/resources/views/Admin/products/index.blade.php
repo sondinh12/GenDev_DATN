@@ -32,6 +32,7 @@ Quản lý
                 </div>
             </form>
 
+
     </div>
     <div class="card-body py-3 d-flex justify-content-between align-items-center">
         <a href="{{route('products.create')}}" class="btn btn-success btn-sm">

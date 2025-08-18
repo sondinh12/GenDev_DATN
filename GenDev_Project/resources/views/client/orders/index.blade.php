@@ -4,10 +4,12 @@
 
 @section('content')
 <div class="container py-5">
+
     <h3 class="mb-4 d-flex align-items-center gap-2">
         <i class="fa fa-box text-primary"></i>
         <span>Đơn hàng của tôi</span>
     </h3>
+
 
     {{-- Tabs lọc --}}
     <ul class="nav nav-tabs mb-4" role="tablist">
@@ -221,6 +223,7 @@
                         </span>
                     </div>
 
+
                     <div class="d-flex gap-2">
                         @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
                             <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
@@ -253,6 +256,7 @@
                     <h5 class="modal-title">
                         <span id="returnModalTitle">Lý do</span>
                     </h5>
+
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label=""></button> --}}
                 </div>
                 <div class="modal-body">
@@ -319,10 +323,12 @@
     .toggle-review-form { margin-top: 10px; }
     .review-display { padding: 10px; background-color: #f1f1f1; border-radius: 8px; }
 
+
     .order-customer-info {
         background-color: #f8f9fa; padding: 10px 12px;
         border-left: 3px solid #0d6efd; border-radius: 8px;
         font-size: 0.9rem; line-height: 1.6; color: #555; min-width: 220px; flex: 1;
+
     }
     @media (max-width: 576px) {
         .order-customer-info { width: 100%; min-width: 100%; }
@@ -332,7 +338,9 @@
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {{-- lưu ý: chỉ nạp 1 lần bootstrap.bundle trong layout tổng --}}
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -367,6 +375,7 @@
     $form.attr('action', actionUrl);
     ensurePutMethod($form);
     $('#returnModal').data('mode', mode);
+
 
     const modal = new bootstrap.Modal(document.getElementById('returnModal'));
     modal.show();
@@ -444,10 +453,12 @@
   });
 
   // Toggle form review
+
   $(document).on('click', '.toggle-review-form', function(){
     const productId = $(this).data('product-id');
     $(`#review-form-${productId}`).toggleClass('d-none');
   });
+
 
   // Star rating chọn đẹp
   $(document).on('click', '.star-label', function(){
@@ -483,5 +494,6 @@
   });
 
 })(jQuery);
+
 </script>
 @endpush
