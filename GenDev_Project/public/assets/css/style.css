@@ -10206,7 +10206,7 @@ article .wl-create-new.more-link:before {
     .menu-item-has-children
     .menu-item-has-children
     > a::after {
-    font-family: "FontAwesome";
+    font-family: 'Arial', sans-serif;
     border-top: none;
     content: "\f105";
     /*rtl:"\f104";*/

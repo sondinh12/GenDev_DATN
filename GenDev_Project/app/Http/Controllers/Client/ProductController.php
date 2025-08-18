@@ -220,6 +220,6 @@ public function show($id)
             'question' => $request->question,
         ]);
 
-        return redirect()->route('product.show', $product->id)->with('success', 'Câu hỏi của bạn đã được gửi!');
+        return redirect()->route('product.show', $product->id)->with('success', 'Bình luận của bạn đã được gửi!');
     }
 }

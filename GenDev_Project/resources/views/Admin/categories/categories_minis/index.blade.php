@@ -25,11 +25,11 @@
 
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="mt-3 mb-3">
-            📁 Danh mục con của: <strong class="text-primary">{{ $categories->name }}</strong>
+            📁 Danh mục con của: <strong class="text-primary" style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">{{ $categories->name }}</strong>
         </h4>
         <form method="GET" style="max-width: 300px; width: 100%;">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="🔍 Tìm kiếm..."
+                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm danh mục con..."
                     value="{{ request('search') }}">
                 <button type="submit" class="btn btn-outline-secondary">Tìm</button>
             </div>
@@ -37,12 +37,11 @@
     </div> <br>
     
 
-    <div class="card-body py-3 d-flex justify-content-between align-items-center"> {{-- Use card-body for this section --}}
-        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-success btn-sm"> {{-- Use btn-success for "Add" and btn-sm --}}
-            <i class="fas fa-plus me-1"></i> Thêm danh mục con
-        </a>
+    <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <a href="{{ route('admin.categories_minis.create',[ 'id'=>$categories->id]) }}" class="btn btn-outline-primary mb-3"><i
+                    class="fas fa-plus me-1"></i>Thêm danh mục con</a>
 
-        <a href="{{ route('categories_mini.trash', ['category_id' => $category_id]) }}" class="btn btn-outline-danger position-relative">
+        <a href="{{ route('categories_mini.trash', ['category_id' => $category_id]) }}" class="btn btn-outline-danger mb-3 float-end position-relative">
             <i class="fa fa-trash me-1"></i> Thùng rác
             @if(isset($trashedCount) && $trashedCount > 0)
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.9em;">
@@ -79,15 +78,19 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('categories_minis.edit', ['category_id' => $categories->id, 'id' => $mini->id]) }}" class="btn btn-sm btn-warning me-1"><i class="fas fa-edit"></i> Sửa</a>
+                            <a href="{{ route('categories_minis.edit', ['category_id' => $categories->id, 'id' => $mini->id]) }}" class="btn btn-sm btn-outline-primary me-1"
+                                    data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i> Sửa</a>
 
                             <form action="{{ route('categories_minis.destroy', ['category_id' => $category_id, 'id' => $mini->id]) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục con {{ addslashes($mini->name) }} này không?')">
-                                    <i class="fa fa-trash"></i> Xoá
+                                    class="btn btn-sm btn-outline-danger me-1" 
+                                        data-bs-toggle="tooltip"
+                                        title="Chuyển vào thùng rác"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục con {{ addslashes($mini->name) }} này không?')">
+                                        <i class="fas fa-trash-alt"></i> Xoá
                                 </button>
                             </form>
                             

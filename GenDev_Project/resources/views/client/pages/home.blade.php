@@ -18,20 +18,20 @@
 
                         {{-- Active banner lookup --}}
                         @php
-                            $activeBanner = \App\Models\Banner::where('status','using')->first();
+                            $activeBanner = \App\Models\Banner::where('status', 'using')->first();
                         @endphp
 
-                        @if($activeBanner)
+                        @if ($activeBanner)
                             <div class="home-v1-slider home-slider">
-                                @if($activeBanner->type === 'static')
+                                @if ($activeBanner->type === 'static')
                                     <div class="slider-1"
-                                         style="background-image: url('{{ asset('storage/' . $activeBanner->image) }}');">
+                                        style="background-image: url('{{ asset('storage/' . $activeBanner->image) }}');">
                                         {{-- Static banner slide --}}
                                     </div>
                                 @else
-                                    @foreach(json_decode($activeBanner->images, true) as $slide)
+                                    @foreach (json_decode($activeBanner->images, true) as $slide)
                                         <div class="slider-1"
-                                             style="background-image: url('{{ asset('storage/' . $slide) }}');">
+                                            style="background-image: url('{{ asset('storage/' . $slide) }}');">
                                             {{-- Dynamic banner slide --}}
                                         </div>
                                     @endforeach
@@ -41,47 +41,43 @@
                             {{-- Fallback to your original hard-coded sliders --}}
                             <div class="home-v1-slider home-slider">
                                 <div class="slider-1"
-                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                    style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-1.png" alt="">
                                     <div class="caption">
                                         <div class="title">
-                                            Turn. Click. Expand. Smart modular design simplifies adding storage
-                                            for growing media.
+                                            Xoay. Nhấp. Mở rộng. Thiết kế mô-đun thông minh giúp đơn giản hóa việc thêm bộ lưu trữ cho giá thể trồng trọt.
                                         </div>
                                         <div class="sub-title">
-                                            Powerful Six Core processor, vibrant 4KUHD display output and
-                                            fast SSD elegantly cased in a soft alloy design.
+                                            Bộ xử lý sáu nhân mạnh mẽ, màn hình 4KUHD sống động và
+                                            SSD tốc độ cao được thiết kế tinh tế trong vỏ hợp kim mềm mại.
                                         </div>
                                         <div class="button">
-                                            Get Yours now <i class="tm tm-long-arrow-right"></i>
+                                            Nhận của bạn bây giờ <i class="tm tm-long-arrow-right"></i>
                                         </div>
-                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển trên Lãnh thổ Việt Nam</div>
                                     </div>
                                 </div>
                                 <div class="slider-1 slider-2"
-                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
+                                    style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-2.png" alt="">
                                     <div class="caption">
                                         <div class="title">
-                                            The new-tech gift you<br>
-                                            are wishing for is<br>
-                                            right here
+                                            Món quà công nghệ mới dành cho bạn<br>
+                                            đang mong muốn là<br>
+                                            ngay tại đây
                                         </div>
                                         <div class="sub-title">
-                                            Big screens in incredibly slim designs<br>
-                                            that fit in your hand.
+                                            Màn hình lớn với thiết kế cực kỳ mỏng<br>
+                                            vừa vặn trong lòng bàn tay bạn.
                                         </div>
                                         <div class="button">
-                                            Browse now <i class="tm tm-long-arrow-right"></i>
+                                            Xem ngay bây giờ <i class="tm tm-long-arrow-right"></i>
                                         </div>
-                                        <div class="bottom-caption">Free shipping on US Territory</div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển trên Lãnh thổ Việt Nam</div>
                                     </div>
                                 </div>
                             </div>
                         @endif
-
-                        <!-- .home-v1-slider -->
-
                         <div class="features-list">
                             <div class="features">
                                 <div class="feature">
@@ -137,22 +133,21 @@
                                 <h2 class="section-title">Danh mục<br> sản phẩm</h2>
                                 <nav class="custom-slick-nav"></nav>
                             </header>
-                            <div class="product-categories-1 product-categories-carousel"
-                                 data-ride="tm-slick-carousel"
-                                 data-wrap=".products"
-                                 data-slick='{"slidesToShow":5,"slidesToScroll":1,"dots":false,"arrows":true,"prevArrow":"<a href=\"#\"><i class=\"tm tm-arrow-left\"></i></a>","nextArrow":"<a href=\"#\"><i class=\"tm tm-arrow-right\"></i></a>","appendArrows":"#categories-carousel-1 .custom-slick-nav","responsive":[{"breakpoint":1200,"settings":{"slidesToShow":2,"slidesToScroll":2}},{"breakpoint":1400,"settings":{"slidesToShow":4,"slidesToScroll":4}}]}'>
+                            <div class="product-categories-1 product-categories-carousel" data-ride="tm-slick-carousel"
+                                data-wrap=".products"
+                                data-slick='{"slidesToShow":5,"slidesToScroll":1,"dots":false,"arrows":true,"prevArrow":"<a href=\"#\"><i class=\"tm tm-arrow-left\"></i></a>","nextArrow":"<a href=\"#\"><i class=\"tm tm-arrow-right\"></i></a>","appendArrows":"#categories-carousel-1 .custom-slick-nav","responsive":[{"breakpoint":1200,"settings":{"slidesToShow":2,"slidesToScroll":2}},{"breakpoint":1400,"settings":{"slidesToShow":4,"slidesToScroll":4}}]}'>
                                 <div class="woocommerce columns-5">
                                     <div class="products">
                                         @foreach ($categories as $category)
                                             <div class="product-category product">
                                                 <a href="{{ route('shop', ['category' => $category->id]) }}">
                                                     <img class="category-img" width="224" height="197"
-                                                         src="{{ Str::startsWith($category->image, ['http://','https://'])
+                                                        src="{{ Str::startsWith($category->image, ['http://', 'https://'])
                                                             ? $category->image
                                                             : (file_exists(public_path($category->image))
                                                                 ? asset($category->image)
                                                                 : asset('storage/' . $category->image)) }}"
-                                                         alt="{{ $category->name }}">
+                                                        alt="{{ $category->name }}">
                                                     <h2 class="woocommerce-loop-category__title">
                                                         {{ $category->name }}
                                                     </h2>
@@ -163,7 +158,6 @@
                                 </div>
                             </div>
                         </section>
-
                         <div class="section-deals-carousel-and-products-carousel-tabs row">
                             <div id="grid-extended" class="tab-pane" role="tabpanel">
                                 <div class="woocommerce columns-7">
@@ -174,7 +168,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </main>
                 </div>
             </div>

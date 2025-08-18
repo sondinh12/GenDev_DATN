@@ -1,14 +1,9 @@
 @extends('Admin.layouts.master-without-page-title')
 
-@section('title', 'Thêm danh mục con')
-
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">➕ Thêm danh mục con mới cho {{ $categories->name }}</h4>
-        <a href="{{ route('admin.categories_minis.index',$categories->id) }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách
-        </a>
     </div>
 
     <div class="card shadow-sm">
@@ -44,21 +39,21 @@
 
                 {{-- Tên danh mục con --}}
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tên danh mục con</label>
+                    <label for="name" class="form-label">Tên danh mục con<span class="text-danger">*</label>
                     <input type="text" name="name" class="form-control" value="{{ old('name') }}" >
                 </div>
 
                 {{-- Ảnh --}}
                 <div class="mb-3">
-                    <label for="image" class="form-label">Ảnh đại diện</label>
+                    <label for="image" class="form-label">Ảnh đại diện<span class="text-danger">*</label>
                     <input type="file" name="image" class="form-control" accept="image/*">
                 </div>
 
                 {{-- Nút submit --}}
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-outline-primary me-2">
                     <i class="fas fa-plus"></i> Thêm mới
                 </button>
-                <a href="{{ route('admin.categories_minis.index',['id'=> $categories->id]) }}" class="btn btn-secondary">
+                <a href="{{ route('admin.categories_minis.index',['id'=> $categories->id]) }}" class="btn btn-outline-secondary">
                     <i class="fas fa-times"></i> Huỷ
                 </a>
             </form>

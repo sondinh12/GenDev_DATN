@@ -21,9 +21,7 @@ use Validator;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
         $query = Product::with(['category', 'categoryMini'])
@@ -168,8 +166,18 @@ class ProductController extends Controller
     public function update(ProductRequest $request, string $id)
     {
 
+
         // Lấy sản phẩm cần cập nhật
         $product = Product::findOrFail($id);
+
+        // Kiểm tra trùng tên sản phẩm (trừ chính nó)
+        $duplicate = Product::where('name', $request->name)
+            ->where('id', '!=', $id)
+            ->whereNull('deleted_at')
+            ->exists();
+        if ($duplicate) {
+            return redirect()->route('products.edit', $product->id)->with('error', 'Tên sản phẩm đã tồn tại!');
+        }
 
         // Nếu có ảnh mới thì lưu lại, không thì giữ ảnh cũ
         if ($request->hasFile('image')) {
@@ -177,6 +185,10 @@ class ProductController extends Controller
             $product->image = $imagePath;
         }
 
+        // Nếu có lỗi validate (bao gồm lỗi trùng tên), trả về view edit với lỗi
+        if ($request->validator && $request->validator->fails()) {
+            return redirect()->back()->withErrors($request->validator)->withInput();
+        }
         // Cập nhật thông tin sản phẩm chung
         $product->name = $request->name;
         $product->description = $request->description;
@@ -188,10 +200,24 @@ class ProductController extends Controller
         $productType = $request->input('product_type', $product->variants->count() ? 'variable' : 'simple');
 
         if ($productType === 'simple') {
-            // Nếu là sản phẩm đơn, cập nhật giá trị đơn
-            $product->price = $request->price;
+            // Nếu là sản phẩm đơn, validate giá và giá khuyến mãi
+            $price = (int) $request->price;
+            $sale_price = (int) $request->sale_price;
+            if ($price < 1000 ) {
+                return redirect()->route('products.edit', $product->id)->with('error', 'Giá sản phẩm phải lớn hơn hoặc bằng 1000.');
+            }
+
+            if ($sale_price < 0 || $sale_price < 100) {
+
+                return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi phải lớn hơn hoặc bằng 100.');
+            }
+            if ($sale_price > $price) {
+                return redirect()->route('products.edit', $product->id)->with('error', 'Giá khuyến mãi không được lớn hơn giá gốc.');
+            }
+            // Cập nhật giá trị đơn
+            $product->price = $price;
             $product->quantity = $request->quantity;
-            $product->sale_price = $request->sale_price;
+            $product->sale_price = $sale_price;
 
             // Kiểm tra nếu sản phẩm đã có trong hóa đơn hoặc đã từng nhập kho thì không cho xóa biến thể
             $hasOrder = method_exists($product, 'orderDetails') && $product->orderDetails()->count() > 0;
@@ -208,8 +234,8 @@ class ProductController extends Controller
                 // Xóa tất cả biến thể
                 ProductVariant::whereIn('id', $oldVariants)->delete();
             }
-    // Nếu là sản phẩm có biến thể, kiểm tra xóa biến thể khi đã có trong hóa đơn
-    // (Đoạn này áp dụng cho cả logic xóa biến thể trong phần variable bên dưới)
+            // Nếu là sản phẩm có biến thể, kiểm tra xóa biến thể khi đã có trong hóa đơn
+            // (Đoạn này áp dụng cho cả logic xóa biến thể trong phần variable bên dưới)
         } else {
             // Nếu là sản phẩm có biến thể, không cập nhật giá trị đơn
             $product->price = null;
@@ -287,12 +313,12 @@ class ProductController extends Controller
                         return redirect()->route('products.edit', $product->id)->with('error', 'Sản phẩm đã có trong hóa đơn hoặc đã từng nhập kho, chỉ được phép thêm hoặc sửa giá biến thể, không được xóa biến thể!');
                     }
                 } else {
-                foreach ($oldVariantMap as $key => $oldVariant) {
-                    if (!in_array($key, $handledKeys)) {
-                        ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
-                        $oldVariant->delete();
+                    foreach ($oldVariantMap as $key => $oldVariant) {
+                        if (!in_array($key, $handledKeys)) {
+                            ProductVariantAttribute::where('product_variant_id', $oldVariant->id)->delete();
+                            $oldVariant->delete();
+                        }
                     }
-                }
                 }
             }
         }
@@ -356,7 +382,7 @@ class ProductController extends Controller
     /**
      * Xóa vĩnh viễn sản phẩm
      */
-    public function destroy(string $id) 
+    public function destroy(string $id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
 
@@ -425,9 +451,9 @@ class ProductController extends Controller
             $keyword = $request->input('keyword');
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%')
-                  ->orWhereHas('values', function ($q) use ($keyword) {
-                      $q->where('value', 'like', '%' . $keyword . '%');
-                  });
+                    ->orWhereHas('values', function ($q) use ($keyword) {
+                        $q->where('value', 'like', '%' . $keyword . '%');
+                    });
             });
         }
 
@@ -474,7 +500,7 @@ class ProductController extends Controller
     }
 
     // Cập nhật thuộc tính + value con cũ và thêm value con mới
-public function updateAttribute(Request $request, $id)
+    public function updateAttribute(Request $request, $id)
     {
         // Validate đầu vào
         $request->validate([
@@ -608,7 +634,7 @@ public function updateAttribute(Request $request, $id)
         return view('client.layout.partials.search', compact('products', 'categories'));
     }
 
-        public function forceDeleteAttribute($id)
+    public function forceDeleteAttribute($id)
 
     {
         $attribute = Attribute::with('values')->findOrFail($id);
@@ -635,6 +661,6 @@ public function updateAttribute(Request $request, $id)
             'question' => $request->question,
         ]);
 
-        return redirect()->route('product.show', $product->id)->with('success', 'Câu hỏi của bạn đã được gửi!');
+        return redirect()->route('product.show', $product->id)->with('success', 'Bình luận của bạn đã được gửi!');
     }
 }

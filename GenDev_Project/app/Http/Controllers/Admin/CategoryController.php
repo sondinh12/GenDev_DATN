@@ -107,9 +107,9 @@ class CategoryController extends Controller
         // }
 
         // Xóa file ảnh nếu có
-        if ($category->image) {
-            Storage::disk('public')->delete($category->image);
-        }
+        // if ($category->image) {
+        //     Storage::disk('public')->delete($category->image);
+        // }
         $category->delete(); // Soft delete
 
         return redirect()->route('categories.index')->with('success', 'Danh mục đã được chuyển vào thùng rác!');

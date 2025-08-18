@@ -29,7 +29,7 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         $rules=  [
-            'name'=>'required|max:255|string',
+            'name' => 'required|max:255|string',
             'description'=>'required',
             'image' => 'file|image',
             'galleries.*'=>'nullable|image',

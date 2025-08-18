@@ -41,7 +41,7 @@
 @endpush
 
 @section('content')
-    <div class="container py-4">
+    <div class="container-12">
         <!-- Breadcrumb -->
         <nav class="woocommerce-breadcrumb mb-4">
             <a href="{{ route('home') }}">Trang chủ</a>
@@ -51,32 +51,6 @@
         <div class="row">
             <!-- Sidebar -->
             <aside class="col-lg-3 col-md-4 mb-4 mb-lg-0">
-                <div class="widget widget_product_categories">
-                    <h3 class="widget-title">Danh mục sản phẩm</h3>
-                    <ul class="product-categories">
-                        @foreach ($categories as $category)
-                            <li
-                                class="cat-item cat-item-{{ $category->id }} {{ request('category') == $category->id ? 'current-cat' : '' }}">
-                                <a
-                                    href="{{ route('shop', array_merge(request()->query(), ['category' => $category->id])) }}">{{ $category->name }}</a>
-                                {{-- Comment phần danh mục con
-                        @if ($category->categoryMinis->count())
-                        <ul class="children">
-                            @foreach ($category->categoryMinis as $mini)
-                            <li
-                                class="cat-item cat-item-{{ $mini->id }} {{ request('category_mini') == $mini->id ? 'current-cat' : '' }}">
-                                <a
-                                    href="{{ route('shop', array_merge(request()->query(), ['category_mini' => $mini->id])) }}">{{
-                                    $mini->name }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                        @endif
-                        --}}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
                 <div class="widget">
                     <h3 class="widget-title">Lọc theo giá</h3>
                     <form method="get" class="woocommerce-widget-layered-nav-form" id="priceFilterForm"

@@ -30,9 +30,10 @@
                             <div class="woocommerce">
                                 <div class="woocommerce-info">Bạn có mã giảm giá không?
                                     <a data-toggle="collapse" href="#checkoutCouponForm" aria-expanded="false" aria-controls="checkoutCouponForm" class="showlogin">
-                                        Nhấn vào đây để nhập mã
+                                        Nhấn vào đây để chọn mã
                                     </a>
                                 </div>
+                                    
 
                                 <div class="collapse" id="checkoutCouponForm">
                                     <!-- Order Coupon Form -->
