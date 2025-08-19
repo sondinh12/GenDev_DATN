@@ -24,16 +24,6 @@
                     </li>
                 @endcan
 
-                {{-- Thuộc tính --}}
-                @can('Quản lý thuộc tính')
-                    <li>
-                        <a href="{{ url('/admin/attributes') }}">
-                            <i class="fa fa-palette"></i>
-                            <span>Thuộc tính</span>
-                        </a>
-                    </li>
-                @endcan
-
                 {{-- Sản phẩm --}}
                 @can('Quản lý sản phẩm')
                     <li>
@@ -44,22 +34,12 @@
                     </li>
                 @endcan
 
-                {{-- Tài khoản --}}
-                @can('Quản lý tài khoản')
+                {{-- Thuộc tính --}}
+                @can('Quản lý thuộc tính')
                     <li>
-                        <a href="{{ url('/admin/users') }}">
-                            <i class="fa-regular fa-user"></i>
-                            <span>Tài khoản</span>
-                        </a>
-                    </li>
-                @endcan
-
-                {{-- Đơn hàng --}}
-                @can('Quản lý đơn hàng')
-                    <li>
-                        <a href="{{ url('/admin/orders') }}">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Danh sách đơn hàng</span>
+                        <a href="{{ url('/admin/attributes') }}">
+                            <i class="fa fa-palette"></i>
+                            <span>Thuộc tính</span>
                         </a>
                     </li>
                 @endcan
@@ -70,6 +50,37 @@
                         <a href="{{ url('/admin/coupons') }}">
                             <i class="fa-solid fa-tag"></i>
                             <span>Mã Giảm Giá</span>
+                        </a>
+                    </li>
+                @endcan
+
+                
+                {{-- Bình luận --}}
+                @can('Quản lý bình luận')
+                    <li>
+                        <a href="{{ url('/admin/reviews') }}">
+                            <i class="fa-regular fa-comment"></i>
+                            <span>Bình luận</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- Quản lý banner --}}
+                @can('Quản lý banner')
+                    <li>
+                        <a href="{{ url('/admin/banner') }}" class="">
+                            <i class="fa-solid fa-images"></i>
+                            <span>Quản lý banner</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- Tài khoản --}}
+                @can('Quản lý tài khoản')
+                    <li>
+                        <a href="{{ url('/admin/users') }}">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Quản lý tài khoản</span>
                         </a>
                     </li>
                 @endcan
@@ -94,22 +105,12 @@
                     </li>
                 @endcan
 
-                {{-- Bình luận --}}
-                @can('Quản lý bình luận')
+                {{-- Đơn hàng --}}
+                @can('Quản lý đơn hàng')
                     <li>
-                        <a href="{{ url('/admin/reviews') }}">
-                            <i class="fa-regular fa-comment"></i>
-                            <span>Bình luận</span>
-                        </a>
-                    </li>
-                @endcan
-
-                {{-- Quản lý banner --}}
-                @can('Quản lý banner')
-                    <li>
-                        <a href="{{ url('/admin/banner') }}" class="">
-                            <i class="fa-solid fa-images"></i>
-                            <span>Quản lý banner</span>
+                        <a href="{{ url('/admin/orders') }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Danh sách đơn hàng</span>
                         </a>
                     </li>
                 @endcan

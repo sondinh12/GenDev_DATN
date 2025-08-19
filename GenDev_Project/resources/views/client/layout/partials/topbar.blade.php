@@ -2,22 +2,22 @@
     <div class="col-full">
         <ul id="menu-top-bar-left" class="nav menu-top-bar-left">
             <li class="menu-item animate-dropdown">
-                <a title="Giao hàng miễn phí toàn quốc" href="#">Giao hàng miễn phí toàn quốc</a>
+                <a title="Giao hàng miễn phí toàn quốc" >Giao hàng miễn phí toàn quốc</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Đảm bảo chất lượng sản phẩm" href="#">Đảm bảo chất lượng sản phẩm</a>
+                <a title="Đảm bảo chất lượng sản phẩm" >Đảm bảo chất lượng sản phẩm</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Chương trình đổi trả nhanh chóng" href="#">Chương trình đổi trả nhanh chóng</a>
+                <a title="Chương trình đổi trả nhanh chóng" >Chương trình đổi trả nhanh chóng</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Không phụ phí" href="#">Không phụ phí</a>
+                <a title="Không phụ phí" >Không phụ phí</a>
             </li>
         </ul>
         <!-- .nav -->
         <ul id="menu-top-bar-right" class="nav menu-top-bar-right">
             <li class="menu-item menu-item-has-children animate-dropdown dropdown">
-                <a title="VNĐ" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                <a title="VNĐ" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="tm tm-dollar"></i>VNĐ
                     <span class="caret"></span>
                 </a>
@@ -40,7 +40,7 @@
             <li class="menu-item">
                 @if (Auth::check())
             <li class="menu-item menu-item-has-children animate-dropdown dropdown">
-                <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" >
                     <i class="tm tm-login-register"></i>{{ Auth::user()->name }}
                     <span class="caret"></span>
                 </a>
@@ -66,7 +66,7 @@
                         <a title="Logout" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
-                            {{ __('Logout') }}</a>
+                            {{ __('Đăng xuất') }}</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
