@@ -3,7 +3,6 @@
 @section('title', 'Thêm mã giảm giá')
 
 @section('content')
-<div class="container mt-4">
     <div class="card border-0 shadow-sm">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="mb-0"><i class="fas fa-tag me-2"></i>Thêm mã giảm giá mới</h4>
@@ -175,14 +174,13 @@
                     </div>
                     <small class="form-text text-muted">Áp dụng cho giảm %</small>
                 </div>
-
                 <div class="col-12 mt-4 d-flex justify-content-end gap-2">
-                    <a href="{{ route('coupons.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Tạo mã</button>
+                    <a href="{{ route('coupons.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Huỷ</a>
+                    <button type="submit" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Tạo mã</button>
                 </div>
             </form>
+            
         </div>
-    </div>
 </div>
 
 <style>
