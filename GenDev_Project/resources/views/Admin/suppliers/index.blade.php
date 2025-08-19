@@ -14,6 +14,29 @@
             {{session('error')}}
         </div>
     @endif
+    <form action="{{ route('admin.suppliers.index') }}" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control"
+                placeholder="Nhập tên nhà cung cấp..."
+                value="{{ request('keyword') }}">
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
+    <h2>Nhà cung cấp</h2>
+    <a href="{{route('admin.suppliers.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Ngày tạo</th>
+                <th>Ngày cập nhật</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
