@@ -544,7 +544,7 @@ class ProductController extends Controller
     }
 
     // Cập nhật thuộc tính + value con cũ và thêm value con mới
-    public function updateAttribute(Request $request, $id)
+public function updateAttribute(Request $request, $id)
     {
         // Validate đầu vào
         $request->validate([
