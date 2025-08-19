@@ -57,7 +57,12 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         // Lưu ảnh đại diện sản phẩm vào thư mục storage/app/public/products
-        $imagePath = $request->file('image')->store('products', 'public');
+        // $imagePath = $request->file('image')->store('products', 'public');
+         $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
 
         // Tạo bản ghi sản phẩm mới
         $product = Product::create([
