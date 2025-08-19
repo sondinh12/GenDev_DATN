@@ -24,7 +24,7 @@
     </form>
     <h2>Nhà cung cấp</h2>
     <a href="{{route('admin.suppliers.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
-    <table class="table">
+    {{-- <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -36,7 +36,7 @@
                 <th>Ngày cập nhật</th>
                 <th>Hành động</th>
             </tr>
-        </thead>
+        </thead> --}}
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
