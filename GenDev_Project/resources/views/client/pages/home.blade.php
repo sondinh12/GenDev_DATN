@@ -25,15 +25,13 @@
                             <div class="home-v1-slider home-slider">
                                 @if ($activeBanner->type === 'static')
                                     <div class="slider-1"
-                                        style="background-image: url('asset('storage/banners/home-v1-background.jpg')');">
-                                        <img src="{{ asset('storage/' . $activeBanner->image) }}" alt="">
+                                        style="background-image: url('{{ asset('storage/' . $activeBanner->image) }}');">
                                         {{-- Static banner slide --}}
                                     </div>
                                 @else
                                     @foreach (json_decode($activeBanner->images, true) as $slide)
                                         <div class="slider-1"
-                                            style="background-image: url('asset('storage/banners/home-v1-background.jpg')');">
-                                            <img src="{{ asset('storage/' . $activeBanner->image) }}" alt="">
+                                            style="background-image: url('{{ asset('storage/' . $slide) }}');">
                                             {{-- Dynamic banner slide --}}
                                         </div>
                                     @endforeach
@@ -46,36 +44,40 @@
                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-1.png" alt="">
                                     <div class="caption">
-                                        <div class="title">Xoay. Nhấn. Mở rộng. Thiết kế mô-đun thông minh giúp thêm bộ nhớ dễ
-                                            dàng cho dữ liệu ngày càng tăng.</div>
-                                        <div class="sub-title">Bộ xử lý sáu nhân mạnh mẽ, hiển thị sống động 4K UHD và SSD tốc
-                                            độ cao trong thiết kế hợp kim mềm mại.</div>
-                                        <a href="{{ route('shop') }}" class="button">Sở hữu ngay
-                                            <i class="tm tm-long-arrow-right"></i>
-                                        </a>
+                                        <div class="title">
+                                            Xoay. Nhấp. Mở rộng. Thiết kế mô-đun thông minh giúp đơn giản hóa việc thêm bộ lưu trữ cho giá thể trồng trọt.
+                                        </div>
+                                        <div class="sub-title">
+                                            Bộ xử lý sáu nhân mạnh mẽ, màn hình 4KUHD sống động và
+                                            SSD tốc độ cao được thiết kế tinh tế trong vỏ hợp kim mềm mại.
+                                        </div>
+                                        <div class="button">
+                                            Nhận của bạn bây giờ <i class="tm tm-long-arrow-right"></i>
+                                        </div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển trên Lãnh thổ Việt Nam</div>
                                     </div>
                                 </div>
                                 <div class="slider-1 slider-2"
                                     style="background-image: url(assets/images/slider/home-v1-background.jpg);">
                                     <img src="assets/images/slider/home-v1-img-2.png" alt="">
                                     <div class="caption">
-                                        <div class="title">Món quà công nghệ mới
-                                            <br> bạn đang mong chờ
-                                            <br> có ngay tại đây
+                                        <div class="title">
+                                            Món quà công nghệ mới dành cho bạn<br>
+                                            đang mong muốn là<br>
+                                            ngay tại đây
                                         </div>
-                                        <div class="sub-title">Màn hình lớn trong thiết kế siêu mỏng
-                                            <br>gọn gàng trong tay bạn.
+                                        <div class="sub-title">
+                                            Màn hình lớn với thiết kế cực kỳ mỏng<br>
+                                            vừa vặn trong lòng bàn tay bạn.
                                         </div>
-                                        <a href="{{ route('shop') }}" class="button">Khám phá ngay
-                                            <i class="tm tm-long-arrow-right"></i>
-                                        </a>
+                                        <div class="button">
+                                            Xem ngay bây giờ <i class="tm tm-long-arrow-right"></i>
+                                        </div>
+                                        <div class="bottom-caption">Miễn phí vận chuyển trên Lãnh thổ Việt Nam</div>
                                     </div>
                                 </div>
                             </div>
                         @endif
-
-                        <!-- .home-v1-slider -->
-
                         <div class="features-list">
                             <div class="features">
                                 <div class="feature">
@@ -126,10 +128,19 @@
                             </div>
                         </div>
 
-                        <section class="section-top-categories section-categories-carousel" id="categories-carousel-1">
-                            <header class="section-header">
-                                <h2 class="section-title">Danh mục<br> sản phẩm</h2>
-                                <nav class="custom-slick-nav"></nav>
+                        <section class="section-top-categories section-categories-carousel" id="categories-carousel-1" style="padding: 30px 0;">
+                            <header class="section-header d-flex flex-column align-items-start mb-5">
+                                <h2 class="section-title m-0 fw-bold position-relative pb-3" 
+                                style="font-size: 2rem; font-weight: 600; letter-spacing: 1px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                    Danh mục <br>
+                                    <span class="text-primary">sản phẩm</span>
+                                    <span class="title-underline position-absolute bottom-0 start-0 bg-primary"></span>
+                                </h2>
+                                <p class="lead text-muted" 
+                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                    Khám phá các bộ sưu tập nổi bật của chúng tôi
+                                </p>
+                                <nav class="custom-slick-nav mt-3"></nav>
                             </header>
                             <div class="product-categories-1 product-categories-carousel" data-ride="tm-slick-carousel"
                                 data-wrap=".products"
@@ -160,7 +171,9 @@
                         <div class="section-deals-carousel-and-products-carousel-tabs row">
                             <div id="grid-extended" class="tab-pane" role="tabpanel">
                                 <div class="woocommerce columns-7">
-                                    <h2 class="section-title">Sản phẩm bán chạy nhất</h2>
+                                    <h2 class="section-title" style="font-size: 2rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                        Sản phẩm của chúng tôi
+                                    </h2>
                                     <div id="best-selling-wrapper">
                                         @include('client.components.best_sellers')
                                     </div>

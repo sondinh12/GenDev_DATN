@@ -50,7 +50,7 @@
                                     <button type="submit" class="btn btn-success btn-sm">Khôi phục</button>
                                 </form>
                                 <form action="{{ route('categories_mini.forceDelete', $mini->id) }}" method="POST"
-                                    style="display:inline-block;" onsubmit="return confirm('Xóa vĩnh viễn?');">
+                                    style="display:inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục con {{ addslashes($mini->name) }} này không?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Xóa vĩnh viễn</button>
@@ -67,6 +67,7 @@
         </div>
     </div>
 @endsection
+@push('scripts')
 {{-- SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -100,3 +101,4 @@
         });
     </script>
 @endif
+@endpush

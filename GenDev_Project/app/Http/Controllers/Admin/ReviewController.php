@@ -14,8 +14,17 @@ class ReviewController extends Controller
 {   
     // Bỏ middleware cứng, quyền sẽ kiểm soát qua middleware permission ở routes/web.php
 
-    public function index(){
-        $questions = ProductQuestion::with('user','product')->latest()->paginate(10);
+    public function index(Request $request){
+        $questions = ProductQuestion::with(['user', 'product'])
+        ->when($request->search, function ($query, $search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('question', 'like', "%{$search}%")
+              ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$search}%"))
+              ->orWhereHas('product', fn($p) => $p->where('name', 'like', "%{$search}%"));
+        });
+    })
+    ->latest()
+    ->paginate(10);
         return view('admin.reviews.index',compact('questions'));
     }
 

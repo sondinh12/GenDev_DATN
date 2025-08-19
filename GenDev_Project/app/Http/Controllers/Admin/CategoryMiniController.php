@@ -9,6 +9,7 @@ use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Illuminate\Validation\Rule;
 
 class CategoryMiniController extends Controller
 {
@@ -60,12 +61,22 @@ class CategoryMiniController extends Controller
         return view('admin.categories.categories_minis.edit', compact('categories', 'categoryMini'));
     }
 
-    public function update(CategoryMiniRequest $request, $category_id ,$id)
+    public function update(Request $request, $category_id ,$id)
     {
         $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('categories_mini', 'name')->ignore($id),
+            function ($attribute, $value, $fail) {
+                if (Category::where('name', $value)->exists()) {
+                    $fail('Tên danh mục con không được trùng với danh mục cha.');
+                }
+            }
+        ],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -95,9 +106,9 @@ class CategoryMiniController extends Controller
         }
 
         // Xóa file ảnh nếu có
-        if ($categoryMini->image) {
-            Storage::disk('public')->delete($categoryMini->image);
-        }
+        // if ($categoryMini->image) {
+        //     Storage::disk('public')->delete($categoryMini->image);
+        // }
 
         $categoryMini->delete(); // Soft delete
 
@@ -109,7 +120,7 @@ class CategoryMiniController extends Controller
     {
         // Lấy id danh mục cha, ví dụ từ query string hoặc logic của bạn
         $category_id = $request->category_id; // hoặc lấy từ session, hoặc từ 1 bản ghi bất kỳ trong $trashed
-        $trashed = CategoryMini::onlyTrashed()->where('category_id', $category_id)->get();
+        $trashed = CategoryMini::onlyTrashed()->where('category_id', $category_id)->orderBy('id', 'DESC')->get();
         return view('Admin.categories.categories_minis.trash_catemini', compact('trashed', 'category_id'));
     }
 

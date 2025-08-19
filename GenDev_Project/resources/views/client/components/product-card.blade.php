@@ -4,22 +4,19 @@
     $discountPercent = ProductHelper::getFirstVariantDiscountPercent($product);
     $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
 @endphp
-
-<div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp"
-    style="min-width:0; min-height:unset;">
+<div class="product" style="border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+<div class=" w-100 h-100 product-card shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp">
 
     {{-- Hình ảnh và giảm giá --}}
     <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative"
-        style="height:140px;">
+        style="height:100%;">
 
         {{-- Badge giảm giá --}}
-        @if ($discountPercent)
-            <span class="badge bg-danger position-absolute"
-                style="top:8px; left:8px; z-index:2;">-{{ $discountPercent }}%</span>
-        @elseif($priceInfo['has_discount'])
-            <span class="badge bg-danger position-absolute"
-                style="top:8px; left:8px; z-index:2;">-{{ $priceInfo['discount_percent'] }}%</span>
-        @endif
+        {{-- @if ($discountPercent || $priceInfo['has_discount'])
+            <span class="badge bg-danger position-absolute top-0 end-0 m-2" style="z-index: 2;">
+                -{{ $discountPercent ?? $priceInfo['discount_percent'] }}%
+            </span>
+        @endif --}}
 
         {{-- Nút yêu thích --}}
         <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="wishlist-form">
@@ -54,21 +51,21 @@
             @endphp
             @if ($variant)
                 @if ($variant->sale_price && $variant->sale_price < $variant->price)
-                    <small class="text-muted text-decoration-line-through ms-1">
+                    <div class="text-muted text-decoration-line-through ms-1">
                         <del>{{ number_format($variant->price) }}đ</del>
-                    </small>
-                    <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                    </div>
+                    <ins class="text-info fw-bold">{{ number_format($variant->sale_price) }}đ</ins>
                 @else
-                    <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
+                    <ins class="text-primary fw-bold">{{ number_format($variant->price) }}đ</ins>
                 @endif
             @else
                 @if ($priceInfo['has_discount']) 
-                    <small class="text-muted text-decoration-line-through ms-1">
+                    <div class="text-muted text-decoration-line-through ms-1">
                         <del>{{ number_format($priceInfo['original_price']) }}đ</del>
-                    </small>
-                    <ins class="text-danger fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                    </div>
+                    <ins class="text-info fw-bold" style="font-size: 10px">{{ $priceInfo['display_price'] }}</ins>
                 @else
-                    <ins class="text-primary fw-bold fs-6">{{ $priceInfo['display_price'] }}</ins>
+                    <ins class="text-primary fw-bold" style="font-size: 10px">{{ $priceInfo['display_price'] }}</ins>
                 @endif
             @endif
         </div>
@@ -94,7 +91,7 @@
         </div>
 
         {{-- Mua ngay --}}
-        <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
+        <form action="{{ route('cart-detail') }}" method="POST" >
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">
@@ -111,10 +108,16 @@
                 @endforeach
             @endif
 
-            <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">Mua ngay</button>
+            <button type="submit" class="btn btn-outline-primary btn-sm w-100 rounded-pill"
+            style="padding: 10px 30px; border-radius: 50px; cursor: pointer; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+            Mua ngay
+            </button>
         </form>
     </div>
 </div>
+</div>
+
 <style>
     .wishlist-form {
         position: absolute;

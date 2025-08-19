@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\CategoryMini;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -48,12 +50,22 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(CategoryRequest $request,$id)
+    public function update(Request $request,$id)
     {
         $category = Category::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('categories', 'name')->ignore($id),
+            function ($attribute, $value, $fail) {
+                if (CategoryMini::where('name', $value)->exists()) {
+                    $fail('Tên danh mục cha không được trùng với danh mục con.');
+                }
+            }
+        ],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -73,15 +85,31 @@ class CategoryController extends Controller
         $category = Category::with('categoryMinis')->findOrFail($id);
 
         // Kiểm tra nếu có danh mục con thì không cho xóa
-        if ($category->categoryMinis->count() > 0) {
-            return redirect()->route('categories.index')
-                ->with('error', 'Không thể xóa danh mục này vì vẫn còn danh mục con!');
+        // if ($category->categoryMinis->count() > 0) {
+        //     return redirect()->route('categories.index')
+        //         ->with('error', 'Không thể xóa danh mục này vì vẫn còn danh mục con!');
+        // }
+        
+        // $categoryMini = CategoryMini::where('category_id', $category_id)->findOrFail($id);
+        
+        // Kiểm tra nếu có danh mục con chứa sản phẩm
+        foreach ($category->categoryMinis as $categoryMini) {
+            if ($categoryMini->products->count() > 0) {
+                return redirect()->route('categories.index')
+                    ->with('error', 'Không thể xóa danh mục này vì vẫn còn danh mục con chứa sản phẩm!');
+            }
         }
 
+        // Kiểm tra nếu có sản phẩm thì không cho xóa
+        // if ($categoryMini->products()->count() > 0) {
+        //     return redirect()->route('admin.categories_minis.index', ['id' => $category_id])
+        //         ->with('error', 'Không thể xóa danh mục con này vì vẫn còn sản phẩm!');
+        // }
+
         // Xóa file ảnh nếu có
-        if ($category->image) {
-            Storage::disk('public')->delete($category->image);
-        }
+        // if ($category->image) {
+        //     Storage::disk('public')->delete($category->image);
+        // }
         $category->delete(); // Soft delete
 
         return redirect()->route('categories.index')->with('success', 'Danh mục đã được chuyển vào thùng rác!');
