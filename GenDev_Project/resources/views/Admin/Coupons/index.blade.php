@@ -58,7 +58,7 @@
                 <tbody>
                     @forelse($coupons as $index => $coupon)
                         <tr>
-                            <td class="fw-medium">{{ $index + $coupons->firstItem() }}</td>
+                            <td class="fw-medium">{{ $coupon->id }}</td>
                             <td><span
                                     class="badge bg-light text-dark border fs-6 fw-medium">{{ $coupon->coupon_code ?? 'Chưa có mã' }}</span>
                             </td>
@@ -98,10 +98,10 @@
                                 </span>
                             </td>
                             <td>
-                                <span
-                                    class="badge rounded-pill px-2 py-1 fw-bold {{ $coupon->status == 1 ? 'bg-success text-white' : ($coupon->status == 0 ? 'bg-secondary text-white' : 'bg-danger text-white') }}">
-                                    {{ $coupon->status == 1 ? 'Hoạt động' : ($coupon->status == 0 ? 'Tạm dừng' : 'Đã hết hạn') }}
-                                </span>
+                            <span class="badge rounded-pill px-2 py-1 fw-bold 
+                                {{ $coupon->status == 1 ? 'bg-success text-white' : ($coupon->status == 0 ? 'bg-secondary text-white' : ($coupon->status == 2 ? 'bg-danger text-white' : '')) }}">
+                                {{ $coupon->status == 1 ? 'Hoạt động' : ($coupon->status == 0 ? 'Tạm dừng' : ($coupon->status == 2 ? 'Đã hết hạn' : '')) }}
+                            </span>
                             </td>
                             <td class="text-end">
                                 <div class="d-flex gap-2 justify-content-end">

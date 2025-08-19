@@ -28,11 +28,6 @@ class StoreCouponRequest extends FormRequest
             'discount_type' => [
                 'required',
                 'in:percent,fixed',
-                function ($attribute, $value, $fail) use ($type) {
-                    if ($type === 'shipping' && $value !== 'fixed') {
-                        $fail('Mã giảm phí ship chỉ được sử dụng kiểu giảm cố định.');
-                    }
-                },
             ],
             'discount_amount' => [
                 'required',
