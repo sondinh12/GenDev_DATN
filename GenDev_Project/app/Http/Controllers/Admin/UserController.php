@@ -38,7 +38,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(10)->appends($request->all());
-        $roles = Role::all();
+        $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
 
         // auth()->loginUsingId(1);
