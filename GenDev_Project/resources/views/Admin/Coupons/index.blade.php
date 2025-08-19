@@ -86,7 +86,7 @@
                                 {{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i') }}</td>
                             <td>
                                 <span
-                                    class="badge {{ $coupon->user_id == -1 ? 'bg-green-subtle text-green' : ($coupon->user_id == 0 ? 'bg-purple-subtle text-purple' : 'bg-secondary-subtle text-secondary') }}">
+                                    class="badge rounded-pill px-2 py-1 fw-bold {{ $coupon->user_id == -1 ? 'bg-success text-white' : ($coupon->user_id == 0 ? 'bg-purple text-white' : 'bg-secondary text-white') }}">
                                     {{ $coupon->user_id == -1 ? 'Toàn hệ thống' : ($coupon->user_id == 0 ? 'Mã tri ân' : 'ID: ' . $coupon->user_id) }}
                                 </span>
                             </td>
@@ -99,7 +99,7 @@
                             </td>
                             <td>
                                 <span
-                                    class="badge rounded-pill py-1 px-2 {{ $coupon->status == 1 ? 'bg-green' : ($coupon->status == 0 ? 'bg-secondary' : 'bg-danger') }}">
+                                    class="badge rounded-pill px-2 py-1 fw-bold {{ $coupon->status == 1 ? 'bg-success text-white' : ($coupon->status == 0 ? 'bg-secondary text-white' : 'bg-danger text-white') }}">
                                     {{ $coupon->status == 1 ? 'Hoạt động' : ($coupon->status == 0 ? 'Tạm dừng' : 'Đã hết hạn') }}
                                 </span>
                             </td>

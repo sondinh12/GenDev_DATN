@@ -92,7 +92,12 @@ class ProductController extends Controller
         }
 
         // Lưu ảnh đại diện sản phẩm vào thư mục storage/app/public/products
-        $imagePath = $request->file('image')->store('products', 'public');
+        // $imagePath = $request->file('image')->store('products', 'public');
+         $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
 
         // Tạo bản ghi sản phẩm mới
         $product = Product::create([
@@ -539,7 +544,7 @@ class ProductController extends Controller
     }
 
     // Cập nhật thuộc tính + value con cũ và thêm value con mới
-    public function updateAttribute(Request $request, $id)
+public function updateAttribute(Request $request, $id)
     {
         // Validate đầu vào
         $request->validate([
