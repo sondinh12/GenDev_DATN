@@ -36,7 +36,7 @@ class Coupon extends Model
         'end_date' => 'datetime',
         'max_coupon' => 'decimal:2',
         'min_coupon' => 'decimal:2',
-        'status' => 'boolean',
+        'status' => 'integer',
     ];
 
     /**
