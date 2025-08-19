@@ -4,63 +4,60 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\ProductVariantAttribute;
-use App\Models\AttributeValue;
-use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\CategoryMini;
 use App\Models\Order;
 use App\Models\ProductQuestion;
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-public function show($id)
-{
-    $product = Product::with([
-        'category',
-        'categoryMini',
-        'galleries',
-        'variants.variantAttributes.attribute',
-        'variants.variantAttributes.value',
-        'reviews' => function ($query) {
-            // $query->where('status', 'approved')->with('user');
-        },
-        'questions' => function ($query) {
-            $query->with('user')->where('status', 'approved')->latest()->take(5);
+    public function show($id)
+    {
+        $product = Product::with([
+            'category',
+            'categoryMini',
+            'galleries',
+            'variants.variantAttributes.attribute',
+            'variants.variantAttributes.value',
+            'reviews' => function ($query) {
+                // $query->where('status', 'approved')->with('user');
+            },
+            'questions' => function ($query) {
+                $query->with('user')->where('status', 'approved')->latest()->take(5);
+            }
+        ])->findOrFail($id);
+
+        $galleryImageUrls = [];
+        if ($product->image) {
+            $galleryImageUrls[] = asset('storage/' . $product->image);
         }
-    ])->findOrFail($id);
-
-    $galleryImageUrls = [];
-    if ($product->image) {
-        $galleryImageUrls[] = asset('storage/' . $product->image);
-    }
-    if ($product->galleries) {
-        foreach ($product->galleries as $gallery) {
-            $galleryImageUrls[] = asset('storage/' . $gallery->image);
+        if ($product->galleries) {
+            foreach ($product->galleries as $gallery) {
+                $galleryImageUrls[] = asset('storage/' . $gallery->image);
+            }
         }
+
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')
+            ->limit(8)
+            ->get();
+
+        // Example logic for $canReview
+        $canReview = Auth::check() && Order::where('user_id', Auth::id())
+            ->whereHas('orderDetails', function ($query) use ($product) {
+                $query->where('product_id', $product->id);
+            })
+            ->where('status', 'completed') // Adjust based on your order status logic
+            ->exists();
+
+        return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
     }
-
-    $relatedProducts = Product::where('category_id', $product->category_id)
-        ->where('id', '!=', $product->id)
-        ->whereNull('deleted_at')
-        ->orderBy('id', 'desc')
-        ->limit(8)
-        ->get();
-
-    // Example logic for $canReview
-    $canReview = Auth::check() && Order::where('user_id', Auth::id())
-        ->whereHas('orderDetails', function ($query) use ($product) {
-            $query->where('product_id', $product->id);
-        })
-        ->where('status', 'completed') // Adjust based on your order status logic
-        ->exists();
-
-    return view('client.product.showProduct', compact('product', 'galleryImageUrls', 'relatedProducts', 'canReview'));
-}
 
     public function shop(Request $request)
     {
@@ -138,8 +135,8 @@ public function show($id)
                     CASE 
                         WHEN EXISTS (SELECT 1 FROM product_variants pv WHERE pv.product_id = products.id) THEN
                             (SELECT MIN(COALESCE(NULLIF(pv.sale_price, 0), pv.price)) 
-                             FROM product_variants pv 
-                             WHERE pv.product_id = products.id)
+                            FROM product_variants pv 
+                            WHERE pv.product_id = products.id)
                         ELSE COALESCE(NULLIF(products.sale_price, 0), products.price)
                     END ASC
                 ");
@@ -150,8 +147,8 @@ public function show($id)
                     CASE 
                         WHEN EXISTS (SELECT 1 FROM product_variants pv WHERE pv.product_id = products.id) THEN
                             (SELECT MIN(COALESCE(NULLIF(pv.sale_price, 0), pv.price)) 
-                             FROM product_variants pv 
-                             WHERE pv.product_id = products.id)
+                            FROM product_variants pv 
+                            WHERE pv.product_id = products.id)
                         ELSE COALESCE(NULLIF(products.sale_price, 0), products.price)
                     END DESC
                 ");
@@ -202,10 +199,19 @@ public function show($id)
             ) as all_prices
         ")[0];
 
+        $attributes = Attribute::with('values')->where('status',1)->get();
+
+        if ($request->has('attribute_values')) {
+            $query->whereHas('variants.variantAttributes', function ($q) use ($request) {
+                $q->whereIn('attribute_value_id', $request->attribute_values);
+            });
+        }
+
+
         // Phân trang
         $products = $query->paginate(10)->withQueryString();
 
-        return view('client.product.shop', compact('products', 'categories', 'priceRange'));
+        return view('client.product.shop', compact('products', 'attributes', 'categories', 'priceRange'));
     }
     // New method to store questions
     public function storeQuestion(Request $request, Product $product)
@@ -222,4 +228,5 @@ public function show($id)
 
         return redirect()->route('product.show', $product->id)->with('success', 'Bình luận của bạn đã được gửi!');
     }
+
 }
