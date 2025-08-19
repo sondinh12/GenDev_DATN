@@ -21,7 +21,7 @@
             </p>
             <p><strong>Thời gian:</strong> {{ $question->created_at->format('d/m/Y H:i') }}</p>
             <p><strong>Số lần vi phạm:</strong> 
-               @if($question->user->violation_count == 0)
+                @if($question->user->violation_count == 0)
                     <span class="badge bg-success">Chưa vi phạm</span>
                 @elseif($question->user->violation_count == 1)
                     <span class="badge bg-warning">Đã cảnh cáo 1 lần</span>

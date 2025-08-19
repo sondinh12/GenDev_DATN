@@ -195,8 +195,8 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
 
     // quan lý banner
     Route::middleware(['permission:Quản lý banner'])->group(function () {
-     Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
-     ->name('banner.use');
+    Route::post('banner/{id}/use', [BannerController::class, 'useBanner'])
+    ->name('banner.use');
     Route::get('banner-trash', [BannerController::class, 'trash'])->name('admin.banner.trash');
     Route::get('banner-restore/{id}', [BannerController::class, 'restore'])->name('admin.banner.restore');
     Route::delete('banner-force-delete/{id}', [BannerController::class, 'forceDelete'])->name('admin.banner.forceDelete');
@@ -229,8 +229,7 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
         Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
-
-    });
+});
 
 Route::resource('/product', ClientProductController::class);
 Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {

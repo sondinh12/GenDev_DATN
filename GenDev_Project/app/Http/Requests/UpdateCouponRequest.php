@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
 
 class UpdateCouponRequest extends FormRequest
@@ -25,7 +24,7 @@ class UpdateCouponRequest extends FormRequest
                 'string',
                 'max:50',
             ],
-            'discount_type_hidden' => [
+            'discount_type' => [
                 'required',
                 'in:percent,fixed',
                 function ($attribute, $value, $fail) use ($type) {
@@ -37,10 +36,10 @@ class UpdateCouponRequest extends FormRequest
             'discount_amount' => [
                 'required',
                 'numeric',
-                'min:1', // Thay min:0.01 bằng min:1 để khớp với step=1
+                'min:1',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
-                    if ($this->input('discount_type_hidden') === 'percent' && $value > 100) {
+                    if ($this->input('discount_type') === 'percent' && $value > 100) {
                         $fail('Giảm giá theo phần trăm không được vượt quá 100%.');
                     }
                     if ($this->input('type') === 'shipping' && $value <= 0) {
@@ -66,26 +65,33 @@ class UpdateCouponRequest extends FormRequest
                     }
                 },
             ],
-            'usage_limit' => 'nullable|integer|min:1|max:10000',
-            'per_use_limit' => 'nullable|integer|min:1|max:10',
-            'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
-            'max_coupon' => [
+        'usage_limit'   => 'required|integer|min:1|max:10000',
+        'per_use_limit' => 'required|integer|min:1|max:10',
+        'min_coupon'    => 'required|numeric|min:0|max:99999999.99',
+        'max_coupon' => [
                 'nullable',
                 'numeric',
-                'max:99999999.99',
+                'max:99999999',
                 function ($attribute, $value, $fail) {
                     $discount = $this->input('discount_amount');
                     $min = $this->input('min_coupon');
-                    if (!is_null($min) && !is_null($value) && $value < $min) {
-                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
+                    $type = $this->input('type');
+
+
+                    if ($type === 'percent' && is_null($value)) {
+                        return $fail('Trường giảm tối đa là bắt buộc khi loại mã là giảm %.');
                     }
+
+                    if (!is_null($min) && !is_null($value) && $value < $min) {
+                        return $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
+                    }
+
                     if (!is_null($discount) && !is_null($value) && $value < $discount) {
-                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
+                        return $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
                     }
                 },
             ],
-            'status' => 'required|in:0,1',
-            'user_id' => ['required', 'integer', 'in:-1,0'],
+
         ];
     }
 
@@ -99,8 +105,8 @@ class UpdateCouponRequest extends FormRequest
             'coupon_code.required' => 'Mã giảm giá là bắt buộc.',
             'coupon_code.unique' => 'Mã giảm giá này đã tồn tại.',
             'coupon_code.max' => 'Mã giảm giá không được vượt quá 50 ký tự.',
-            'discount_type_hidden.required' => 'Vui lòng chọn loại giảm.',
-            'discount_type_hidden.in' => 'Loại giảm không hợp lệ.',
+            'discount_type.required' => 'Vui lòng chọn loại giảm.',
+            'discount_type.in' => 'Loại giảm không hợp lệ.',
             'discount_amount.required' => 'Vui lòng nhập giá trị giảm.',
             'discount_amount.numeric' => 'Giá trị giảm phải là số.',
             'discount_amount.min' => 'Giá trị giảm phải lớn hơn 0.',
@@ -115,7 +121,7 @@ class UpdateCouponRequest extends FormRequest
             'end_date.*' => 'Thời hạn mã giảm giá không được vượt quá 1 năm.',
             'usage_limit.max' => 'Giới hạn sử dụng không được vượt quá 10,000.',
             'usage_limit.integer' => 'Giới hạn tổng sử dụng phải là số nguyên.',
-            'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn 0.',
+            'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn hoặc bằng 0.',
             'per_use_limit.integer' => 'Giới hạn mỗi người dùng phải là số nguyên.',
             'per_use_limit.min' => 'Giới hạn mỗi người dùng không hợp lệ.',
             'per_use_limit.max' => 'Mỗi người chỉ được sử dụng mã này tối đa 10 lần.',
