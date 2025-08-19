@@ -8,6 +8,7 @@
 @endsection
 
 @section('content')
+@if (auth()->user()->can('Quản lý thống kê'))
     <div class="container py-4">
         <h1 class="mb-4 fw-bold">📊 Thống kê hệ thống</h1>
 
@@ -187,6 +188,52 @@
             </div>
         </div>
     </div>
+@else
+    <div class="container py-8">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h1 class="mb-3 fw-bold text-primary">👋 Xin chào, {{ auth()->user()->name }}!</h1>
+                            <p class="lead mb-4">Chào mừng bạn đến với trang quản trị dành cho nhân viên.</p>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <a href="{{ url('/admin/orders') }}" class="text-decoration-none">
+                                        <div class="card h-100 border-primary shadow-sm">
+                                            <div class="card-body text-center">
+                                                <div class="fs-1 mb-2 text-primary"><i class="fas fa-shopping-cart"></i></div>
+                                                <div class="fw-semibold">Quản lý đơn hàng</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{ url('/admin/banner') }}" class="text-decoration-none">
+                                        <div class="card h-100 border-success shadow-sm">
+                                            <div class="card-body text-center">
+                                                <div class="fs-1 mb-2 text-success"><i class="fas fa-bullhorn"></i></div>
+                                                <div class="fw-semibold">Quản lý banner</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{ url('/admin/reviews') }}" class="text-decoration-none">
+                                        <div class="card h-100 border-warning shadow-sm">
+                                            <div class="card-body text-center">
+                                                <div class="fs-1 mb-2 text-warning"><i class="fas fa-comments"></i></div>
+                                                <div class="fw-semibold">Quản lý bình luận</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+@endif
 @endsection
 
 @section('scripts')

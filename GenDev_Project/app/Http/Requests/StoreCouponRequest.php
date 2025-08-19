@@ -33,6 +33,7 @@ class StoreCouponRequest extends FormRequest
                 // //         $fail('Mã giảm phí ship chỉ được sử dụng kiểu giảm cố định.');
                 // //     }
                 // },
+
             ],
             'discount_amount' => [
                 'required',
