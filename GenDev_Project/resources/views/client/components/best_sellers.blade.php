@@ -54,8 +54,7 @@
                     </div>
                 @endif
             </span>
-
-            <b class="woocommerce-loop-product__title">{{ $product->name }}</b>
+            <h2 class="woocommerce-loop-product__title">{{ $product->name }}</h2>
 
             <div class="techmarket-product-rating">
                 @php
@@ -74,12 +73,10 @@
                     <span class="review-count" style="color: #666;">({{ $avgRating }})</span>
                 </div>
             </div>
-
             <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 <input type="hidden" name="quantity" value="1">
-
                 @if ($product->variants && $product->variants->count() > 0)
                     @foreach ($product->variants->first()->variantAttributes ?? [] as $variantAttr)
                         @php
@@ -91,7 +88,6 @@
                             value="{{ $valueId }}">
                     @endforeach
                 @endif
-
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="button product_type_simple add_to_cart_button">
                         Mua ngay
@@ -100,6 +96,9 @@
             </form>
         </div>
     @endforeach
+</div>
+<div class="mt-4 d-flex justify-content-center">
+    {{ $bestSellingProducts->links('pagination::bootstrap-4') }}
 </div>
 <style>
     .product-image-wrapper {

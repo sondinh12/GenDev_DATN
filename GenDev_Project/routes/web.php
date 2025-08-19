@@ -29,7 +29,6 @@ use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Client\FavoriteController;
 
-
 use Spatie\Permission\Models\Role;
 
 // ================= TRANG CHÍNH =================
@@ -230,7 +229,8 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
         Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
-});
+
+    });
 
 Route::resource('/product', ClientProductController::class);
 Route::middleware(['auth', 'check_ban', 'verified'])->prefix('orders')->name('client.orders.')->group(function () {

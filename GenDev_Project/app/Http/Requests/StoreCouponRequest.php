@@ -37,7 +37,7 @@ class StoreCouponRequest extends FormRequest
             'discount_amount' => [
                 'required',
                 'numeric',
-                'min:0.01',
+                'min:1',
                 'max:99999999.99',
                 function ($attribute, $value, $fail) {
                     if ($this->input('discount_type') === 'percent' && $value > 100) {
@@ -66,25 +66,29 @@ class StoreCouponRequest extends FormRequest
                     }
                 },
             ],
-            'usage_limit' => 'nullable|integer|min:1|max:10000',
-            'per_use_limit' => 'nullable|integer|min:1|max:10',
-            'min_coupon' => 'nullable|numeric|min:0|max:99999999.99',
+            'usage_limit'   => 'required|integer|min:1|max:10000',
+            'per_use_limit' => 'required|integer|min:1|max:10',
+            'min_coupon'    => 'required|numeric|min:0|max:99999999.99',
             'max_coupon' => [
                 'nullable',
                 'numeric',
-                'max:99999999.99',
+                'max:99999999',
                 function ($attribute, $value, $fail) {
                     $discount = $this->input('discount_amount');
                     $min = $this->input('min_coupon');
+                    $type = $this->input('type');
+                    if ($type === 'percent' && is_null($value)) {
+                        return $fail('Trường giảm tối đa là bắt buộc khi loại mã là giảm %.');
+                    }
                     if (!is_null($min) && !is_null($value) && $value < $min) {
-                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
+                        return $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
                     }
                     if (!is_null($discount) && !is_null($value) && $value < $discount) {
-                        $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
+                        return $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
                     }
                 },
             ],
-            'status' => 'required|in:0,1',
+            'status' => 'required|in:0,1,2',
             'user_id' => ['required', 'integer', 'in:-1,0'],
         ];
     }

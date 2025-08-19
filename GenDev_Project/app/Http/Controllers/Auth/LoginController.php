@@ -33,7 +33,6 @@ class LoginController extends Controller
         $user = Auth::user();
         $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%nhan vien%')->pluck('name')->toArray();
         if ($user && $user->hasAnyRole($adminRoles)) {
-
             return '/admin/dashboard';
         }
         return '/';

@@ -163,7 +163,7 @@ public function show($id)
                 $query->orderBy('name', 'desc');
                 break;
             case 'popularity':
-                $query->withCount(['cartdetails as total_sold' => function ($query) {
+                $query->withCount(['orderDetails as total_sold' => function ($query) {
                     $query->select(DB::raw('SUM(quantity)'));
                 }])->orderBy('total_sold', 'desc');
                 break;
@@ -220,6 +220,6 @@ public function show($id)
             'question' => $request->question,
         ]);
 
-        return redirect()->route('product.show', $product->id)->with('success', 'Câu hỏi của bạn đã được gửi!');
+        return redirect()->route('product.show', $product->id)->with('success', 'Bình luận của bạn đã được gửi!');
     }
 }

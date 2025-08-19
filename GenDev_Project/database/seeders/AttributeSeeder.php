@@ -15,8 +15,8 @@ class AttributeSeeder extends Seeder
     public function run(): void
     {
         DB::table('attributes')->insert([
-            ['id' => 1, 'name' => 'Color'],
-            ['id' => 2, 'name' => 'Capacity'],
+            ['id' => 1, 'name' => 'Màu sắc'],
+            ['id' => 2, 'name' => 'Dung lượng'],
         ]);
     }
 }

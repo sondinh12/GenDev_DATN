@@ -80,7 +80,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        // Lấy sản phẩm bán chạy (dựa trên số lượng trong giỏ hàng)
+        // Lấy sản phẩm bán chạy (dựa trên số lượng trong chi tiết đơn hàng)
         $bestSellingProducts = Product::with([
             'galleries',
             'variants.variantAttributes.attribute',
@@ -88,18 +88,20 @@ class HomeController extends Controller
             'category'
         ])
             ->withCount([
-                'cartdetails as total_sold' => function ($query) {
+                'orderDetails as total_sold' => function ($query) {
+
                     $query->where('created_at', '>=', now()->subDays(30))
                         ->select(DB::raw('SUM(quantity)'));
                 }
             ])
             ->where('status', 1)
-            ->orderBy('total_sold', 'desc')
-            ->take(14)
-            ->get();
-        // if ($request->ajax()) {
-        //     return view('client.components.best_sellers', compact('bestSellingProducts'))->render();
-        // }
+
+            ->orderByDesc('total_sold')
+            ->paginate(14);
+        if ($request->ajax()) {
+            return view('client.components.best_sellers', compact('bestSellingProducts'))->render();
+        }
+
         $products = Product::all();
 
         return view('client.pages.home', compact(
@@ -112,51 +114,4 @@ class HomeController extends Controller
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

@@ -41,7 +41,7 @@
 @endpush
 
 @section('content')
-    <div class="container py-4">
+    <div class="container-12">
         <!-- Breadcrumb -->
         <nav class="woocommerce-breadcrumb mb-4">
             <a href="{{ route('home') }}">Trang chủ</a>
@@ -51,32 +51,6 @@
         <div class="row">
             <!-- Sidebar -->
             <aside class="col-lg-3 col-md-4 mb-4 mb-lg-0">
-                <div class="widget widget_product_categories">
-                    <h3 class="widget-title">Danh mục sản phẩm</h3>
-                    <ul class="product-categories">
-                        @foreach ($categories as $category)
-                            <li
-                                class="cat-item cat-item-{{ $category->id }} {{ request('category') == $category->id ? 'current-cat' : '' }}">
-                                <a
-                                    href="{{ route('shop', array_merge(request()->query(), ['category' => $category->id])) }}">{{ $category->name }}</a>
-                                {{-- Comment phần danh mục con
-                        @if ($category->categoryMinis->count())
-                        <ul class="children">
-                            @foreach ($category->categoryMinis as $mini)
-                            <li
-                                class="cat-item cat-item-{{ $mini->id }} {{ request('category_mini') == $mini->id ? 'current-cat' : '' }}">
-                                <a
-                                    href="{{ route('shop', array_merge(request()->query(), ['category_mini' => $mini->id])) }}">{{
-                                    $mini->name }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                        @endif
-                        --}}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
                 <div class="widget">
                     <h3 class="widget-title">Lọc theo giá</h3>
                     <form method="get" class="woocommerce-widget-layered-nav-form" id="priceFilterForm"
@@ -96,8 +70,8 @@
             <main class="col-lg-9 col-md-8">
                 <div class="shop-control-bar mb-3 d-flex flex-wrap align-items-center justify-content-between">
                     <form class="woocommerce-ordering d-flex flex-wrap gap-2 align-items-center" method="get">
-                        <input type="text" name="search" class="form-control me-2" style="max-width:200px"
-                            placeholder="Tìm kiếm sản phẩm..." value="{{ request('search') }}">
+                        {{-- <input type="text" name="search" class="form-control me-2" style="max-width:200px"
+                            placeholder="Tìm kiếm sản phẩm..." value="{{ request('search') }}"> --}}
                         <select name="orderby" class="orderby form-select me-2" style="max-width:160px"
                             onchange="this.form.submit()">
                             <option value="date" {{ request('orderby') == 'date' ? 'selected' : '' }}>Mới nhất</option>
@@ -110,7 +84,7 @@
                             <option value="popularity" {{ request('orderby') == 'popularity' ? 'selected' : '' }}>Bán chạy
                             </option>
                         </select>
-                        <button type="submit" class="button btn btn-outline-primary">Lọc</button>
+                        {{-- <button type="submit" class="button btn btn-outline-primary">Lọc</button> --}}
                         <a href="{{ route('shop') }}" class="button btn btn-outline-secondary ms-2">Xóa bộ lọc</a>
                     </form>
                     <div class="woocommerce-result-count mt-2 mt-md-0">

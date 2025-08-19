@@ -1,16 +1,99 @@
 @extends('client.layout.master')
 
 @section('content')
-    <style>
-        body {
-            min-height: 100vh;
-        }
 
+    <div class="login-container">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h3 style="font-size:2.5rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);">Đăng nhập</h3>
+                        <p>Chào mừng bạn quay trở lại!</p>
+                    </div>
+                    @if ($errors->has('email'))
+                    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
+                        role="alert"
+                        id="autoDismissAlert"
+                        style="z-index:9999; min-width:300px; max-width:90vw;">
+                        <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first('email') }}
+                    </div>
+                    @endif
+                    <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
+                        @csrf
+                        <!-- Email -->
+                        <div class="form-group mb-4">
+                            <label for="email" class="form-label">Email<span class="text-danger">*</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                                name="email" value="{{ old('email') }}" placeholder="Nhập email của bạn" required
+                                autofocus>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <!-- Mật khẩu -->
+                        <div class="form-group mb-4">
+                            <label for="password" class="form-label">Mật khẩu<span class="text-danger">*</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
+                                {{-- <button type="button" class="toggle-password" tabindex="-1">
+                                    <i class="fas fa-eye"></i>
+                                </button> --}}
+                            </div>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check ps-0">
+                                <input class="form-check-input me-2" type="checkbox" name="remember" id="remember" style="margin-left: 2px"
+                                    {{ old('remember') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="remember">
+                                    Ghi nhớ đăng nhập
+                                </label>
+                            </div>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-primary text-decoration-none">
+                                    Quên mật khẩu?
+                                </a>
+                            @endif
+                        </div>
+                        <!-- Login Button -->
+                        <div class="col-12 text-center">
+                                <button type="submit" class="btn-login" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                    Đăng nhập
+                                </button>
+                            </div>
+                    </form>
+                    <!-- Register Link -->
+                    <div class="text-center mt-4 register-link">
+                        <p class="mb-0">Bạn chưa có tài khoản? <a href="{{ route('register') }}">Đăng ký ngay</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;      /* Xanh dương chủ đạo */
+            --primary-hover: #1d4ed8;     /* Xanh dương đậm hơn khi hover */
+            --secondary-color: #64748b;   /* Xám nhẹ cho chữ phụ */
+            --success-color: #10b981;     /* Xanh lá (success) */
+            --error-color: #ef4444;       /* Đỏ (error) */
+            --bg-color: #f9fafb;          /* Nền sáng giống trang chủ */
+            --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Bóng nhẹ */
+        }
         .login-container {
-            min-height: 100vh;
-            display: flex;
+            width: 1200px;
+            /* min-height: 90vh; */
+            margin: 30px auto;
             align-items: center;
             justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
         }
 
         .card {
@@ -116,83 +199,33 @@
         }
 
         .register-link a:hover {
-            color: #6a11cb;
+            color: #1b34ef;
         }
+
+        .btn-login {
+        background: var(--primary-color);
+        border: none;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 10px 35px;
+        border-radius: 50px;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-hover); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-login:active {
+            transform: scale(0.97);
+        }
+
     </style>
-
-    <div class="login-container">
-        <div class="col-md-6 col-lg-5">
-            <div class="card border-0 shadow-lg">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <h3 class="fw-bold text-primary" style="font-size:2rem;">Đăng nhập</h3>
-                        <p class="text-muted mb-0">Chào mừng bạn quay trở lại!</p>
-                    </div>
-                    @if ($errors->has('email'))
-                    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
-                        role="alert"
-                        id="autoDismissAlert"
-                        style="z-index:9999; min-width:300px; max-width:90vw;">
-                        <i class="fas fa-exclamation-triangle me-2"></i> {{ $errors->first('email') }}
-                    </div>
-                    @endif
-                    <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
-                        @csrf
-                        <!-- Email -->
-                        <div class="form-group mb-4">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                                name="email" value="{{ old('email') }}" placeholder="Nhập email của bạn" required
-                                autofocus>
-                            @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <!-- Mật khẩu -->
-                        <div class="form-group mb-4">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    id="password" name="password" placeholder="Nhập mật khẩu của bạn" required>
-                                <button type="button" class="toggle-password" tabindex="-1">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <!-- Remember Me & Forgot Password -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember" style="margin-left: 2px"
-                                    {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label" for="remember">
-                                    Ghi nhớ đăng nhập
-                                </label>
-                            </div>
-                            @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" class="text-primary text-decoration-none">
-                                    Quên mật khẩu?
-                                </a>
-                            @endif
-                        </div>
-                        <!-- Login Button -->
-                        <div class="d-grid gap-2 mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                                Đăng nhập
-                            </button>
-                        </div>
-                    </form>
-                    <!-- Register Link -->
-                    <div class="text-center mt-4 register-link">
-                        <p class="mb-0">Chưa có tài khoản? <a href="{{ route('register') }}">Đăng ký ngay</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     @push('scripts')
         <!-- Font Awesome CDN for social icons -->

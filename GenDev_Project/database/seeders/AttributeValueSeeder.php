@@ -15,15 +15,18 @@ class AttributeValueSeeder extends Seeder
     public function run(): void
     {
         DB::table('attribute_values')->insert([
-            // Color
-            ['id' => 1, 'attribute_id' => 1, 'value' => 'Red'],
-            ['id' => 2, 'attribute_id' => 1, 'value' => 'Blue'],
-            ['id' => 3, 'attribute_id' => 1, 'value' => 'Green'],
+            // Màu sắc
+            ['id' => 1, 'attribute_id' => 1, 'value' => 'Đen'],
+            ['id' => 2, 'attribute_id' => 1, 'value' => 'Trắng'],
+            ['id' => 3, 'attribute_id' => 1, 'value' => 'vàng'],
+            ['id' => 8, 'attribute_id' => 1, 'value' => 'xanh'],
+            ['id' => 9, 'attribute_id' => 1, 'value' => 'đỏ'],
 
-            // Capacity
-            ['id' => 4, 'attribute_id' => 2, 'value' => '32GB'],
-            ['id' => 5, 'attribute_id' => 2, 'value' => '64GB'],
-            ['id' => 6, 'attribute_id' => 2, 'value' => '128GB'],
+            // Dung lượng
+            ['id' => 4, 'attribute_id' => 2, 'value' => '64GB'],
+            ['id' => 5, 'attribute_id' => 2, 'value' => '128GB'],
+            ['id' => 6, 'attribute_id' => 2, 'value' => '512GB'],
+            ['id' => 7, 'attribute_id' => 2, 'value' => '1TB'],
         ]);
     }
 }

@@ -5,7 +5,7 @@
 @section('content')
 <div class="container mt-4">
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="mb-0"><i class="fas fa-tag me-2"></i>Thêm mã giảm giá mới</h4>
         </div>
         
@@ -14,127 +14,166 @@
                 @csrf
                 <div class="col-md-6">
                     <label for="name" class="form-label fw-medium">Tên mã <span class="text-danger">*</span></label>
-                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                           value="{{ old('name') }}" required placeholder="Nhập tên mã giảm giá">
-                    @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="input-group has-validation">
+                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
+                               value="{{ old('name') }}" placeholder="Nhập tên mã giảm giá">
+                        @error('name') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
+                    </div>
                 </div>
                 
                 <div class="col-md-6">
                     <label id="couponCodeLabel" class="form-label fw-medium">Mã code <span class="text-danger">*</span></label>
-                    <input type="text" name="coupon_code" id="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" 
-                           value="{{ old('coupon_code') }}" required placeholder="Nhập mã code">
-                    @error('coupon_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="input-group has-validation">
+                        <input type="text" name="coupon_code" id="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" 
+                               value="{{ old('coupon_code') }}" placeholder="Nhập mã code">
+                        @error('coupon_code') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-md-6">
                     <label for="type" class="form-label fw-medium">Loại mã <span class="text-danger">*</span></label>
-                    <select name="type" id="type" class="form-select @error('type') is-invalid @enderror" onchange="toggleDiscountType()">
-                        <option value="order" {{ old('type') == 'order' ? 'selected' : '' }}>Giảm giá đơn hàng</option>
-                        <option value="shipping" {{ old('type') == 'shipping' ? 'selected' : '' }}>Giảm giá phí ship</option>
-                    </select>
-                    @error('type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="input-group has-validation">
+                        <select name="type" id="type" class="form-select @error('type') is-invalid @enderror" onchange="toggleDiscountType()">
+                            <option value="order" {{ old('type') == 'order' ? 'selected' : '' }}>Giảm giá đơn hàng</option>
+                            <option value="shipping" {{ old('type') == 'shipping' ? 'selected' : '' }}>Giảm giá phí ship</option>
+                        </select>
+                        @error('type') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
+                    </div>
                 </div>
                 
                 <div class="col-md-6" id="discountTypeGroup">
                     <label for="discount_type" class="form-label fw-medium">Kiểu giảm giá <span class="text-danger">*</span></label>
-                    <select name="discount_type" id="discount_type" class="form-select @error('discount_type') is-invalid @enderror">
-                        <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>Phần trăm (%)</option>
-                        <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Cố định (VNĐ)</option>
-                    </select>
-                    @error('discount_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="input-group has-validation">
+                        <select name="discount_type" id="discount_type" class="form-select @error('discount_type') is-invalid @enderror" onchange="updateDiscountType()">
+                            <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>Phần trăm (%)</option>
+                            <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Cố định (VNĐ)</option>
+                        </select>
+                        <input type="hidden" name="discount_type_hidden" id="discount_type_hidden" value="{{ old('discount_type', 'fixed') }}">
+                        @error('discount_type') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-12" id="discountAmountGroup">
                     <label for="discount_amount" class="form-label fw-medium" id="discountAmountLabel">
                         {{ old('type') == 'shipping' ? 'Số tiền giảm phí ship' : 'Giá trị giảm' }} <span class="text-danger">*</span>
                     </label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-percentage" id="discountIcon"></i></span>
-                        <input type="number" step="0.01" name="discount_amount" id="discount_amount" 
+                        <input type="number" step="1" name="discount_amount" id="discount_amount" 
                                class="form-control @error('discount_amount') is-invalid @enderror" 
-                               value="{{ old('discount_amount') }}" required placeholder="Nhập giá trị giảm">
-                        @error('discount_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                               value="{{ old('discount_amount') }}" placeholder="Nhập giá trị giảm" min="1">
+                        @error('discount_amount') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <label for="user_id" class="form-label fw-medium">Người sử dụng <span class="text-danger">*</span></label>
-                    <select name="user_id" class="form-select @error('user_id') is-invalid @enderror">
-                        <option value="-1" {{ old('user_id', -1) == -1 ? 'selected' : '' }}>Toàn bộ hệ thống</option>
-                        <option value="0" {{ old('user_id', -1) == 0 ? 'selected' : '' }}>Mã tri ân</option>
-                    </select>
-                    @error('user_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="input-group has-validation">
+                        <select name="user_id" class="form-select @error('user_id') is-invalid @enderror">
+                            <option value="-1" {{ old('user_id', -1) == -1 ? 'selected' : '' }}>Toàn bộ hệ thống</option>
+                            <option value="0" {{ old('user_id', -1) == 0 ? 'selected' : '' }}>Mã tri ân</option>
+                        </select>
+                        @error('user_id') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-md-6">
                     <label for="status" class="form-label fw-medium">Trạng thái</label>
-                    <input type="text" class="form-control bg-light" value="Hoạt động" readonly>
-                    <input type="hidden" name="status" value="1">
-                    <small class="form-text text-muted">Mã mới luôn ở trạng thái hoạt động</small>
+                    <div class="input-group has-validation">
+                        <input type="text" class="form-control bg-light" value="Hoạt động" readonly>
+                        <input type="hidden" name="status" value="2">
+                        @error('status') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-md-6">
                     <label for="start_date" class="form-label fw-medium">Ngày bắt đầu <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="datetime-local" name="start_date" class="form-control @error('start_date') is-invalid @enderror" 
-                               value="{{ old('start_date') }}" required>
+                        <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror" 
+                               value="{{ old('start_date') }}">
+                        @error('start_date') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
-                    @error('start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-md-6">
                     <label for="end_date" class="form-label fw-medium">Ngày hết hạn <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                        <input type="datetime-local" name="end_date" class="form-control @error('end_date') is-invalid @enderror" 
-                               value="{{ old('end_date') }}" required>
+                        <input type="date" name="end_date" class="form-control @error('end_date') is-invalid @enderror" 
+                               value="{{ old('end_date') }}">
+                        @error('end_date') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
-                    @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-md-4">
                     <label for="usage_limit" class="form-label fw-medium">Giới hạn sử dụng <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-users"></i></span>
-                        <input type="number" name="usage_limit" class="form-control @error('usage_limit') is-invalid @enderror" 
-                               value="{{ old('usage_limit') }}" required placeholder="0">
+               <input type="number" step="1" name="usage_limit" class="form-control @error('usage_limit') is-invalid @enderror" 
+                   value="{{ old('usage_limit', 0) }}" placeholder="0">
+                        @error('usage_limit') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
                     <small class="form-text text-muted">Số lần sử dụng toàn hệ thống</small>
-                    @error('usage_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-md-4">
                     <label for="per_use_limit" class="form-label fw-medium">Giới hạn mỗi người <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="number" name="per_use_limit" class="form-control @error('per_use_limit') is-invalid @enderror" 
-                               value="{{ old('per_use_limit') }}" required placeholder="0">
+               <input type="number" step="1" name="per_use_limit" class="form-control @error('per_use_limit') is-invalid @enderror" 
+                   value="{{ old('per_use_limit', 0) }}" placeholder="0">
+                        @error('per_use_limit') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
                     <small class="form-text text-muted">Số lần mỗi người dùng</small>
-                    @error('per_use_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-md-4">
                     <label for="min_coupon" class="form-label fw-medium">Đơn tối thiểu <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                        <input type="number" name="min_coupon" class="form-control @error('min_coupon') is-invalid @enderror" 
-                               value="{{ old('min_coupon') }}" required placeholder="0">
+                        <input type="number" step="1" name="min_coupon" class="form-control @error('min_coupon') is-invalid @enderror" 
+                               value="{{ old('min_coupon', 0) }}" placeholder="0">
+                           @error('min_coupon')
+                               <div class="invalid-feedback d-block">{{ $message }}</div>
+                           @enderror
                     </div>
                     <small class="form-text text-muted">Áp dụng cho đơn từ</small>
-                    @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-md-6" id="maxCouponWrapper">
-                    <label for="max_coupon" class="form-label fw-medium">Giảm tối đa</label>
-                    <div class="input-group">
+                    <label for="max_coupon" class="form-label fw-medium">Giảm tối đa <span class="text-danger">*</span></label>
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                        <input type="number" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" 
-                               value="{{ old('max_coupon') }}" placeholder="0">
+                        <input type="number" step="1" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" 
+                               value="{{ old('max_coupon', 0) }}" placeholder="0" min="0">
+                        @error('max_coupon') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
-                    <small class="form-text text-muted">Chỉ áp dụng cho giảm % (không bắt buộc)</small>
-                    @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <small class="form-text text-muted">Áp dụng cho giảm %</small>
                 </div>
 
                 <div class="col-12 mt-4 d-flex justify-content-end gap-2">
@@ -159,8 +198,6 @@
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3); }
     .btn-secondary { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); border: none; color: #fff; }
     .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3); }
-    .btn-outline-secondary { border: 1px solid #6c757d; color: #6c757d; }
-    .btn-outline-secondary:hover { background: #6c757d; color: #fff; }
     .invalid-feedback, .form-text { font-size: 0.85rem; }
     @media (max-width: 768px) {
         .card-body { padding: 1.25rem; }
@@ -175,33 +212,71 @@ function toggleDiscountType() {
     const discountTypeGroup = document.getElementById('discountTypeGroup');
     const discountAmountLabel = document.getElementById('discountAmountLabel');
     const discountTypeSelect = document.getElementById('discount_type');
+    const discountTypeHidden = document.getElementById('discount_type_hidden');
     const couponCodeLabel = document.getElementById('couponCodeLabel');
     const discountIcon = document.getElementById('discountIcon');
+    const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+    const maxCouponInput = document.getElementById('max_coupon_input');
 
     if (type === 'shipping') {
         discountTypeGroup.style.display = 'none';
+        discountTypeHidden.value = 'fixed';
         discountTypeSelect.value = 'fixed';
-        discountTypeSelect.disabled = true;
         couponCodeLabel.textContent = 'Mã giảm phí ship';
         discountAmountLabel.textContent = 'Số tiền giảm phí ship';
         discountIcon.className = 'fas fa-money-bill-wave';
+        maxCouponWrapper.style.display = 'none';
+        maxCouponInput.disabled = true;
+        maxCouponInput.value = '';
     } else {
         discountTypeGroup.style.display = 'block';
         discountTypeSelect.disabled = false;
+        discountTypeHidden.value = discountTypeSelect.value;
         couponCodeLabel.textContent = 'Mã giảm đơn hàng';
         discountAmountLabel.textContent = 'Giá trị giảm';
-        discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+        // Set default to fixed when switching to order
+        discountTypeSelect.value = 'fixed';
+        discountTypeHidden.value = 'fixed';
+        discountIcon.className = 'fas fa-money-bill-wave';
+        maxCouponWrapper.style.display = discountTypeSelect.value === 'percent' ? 'block' : 'none';
+        maxCouponInput.disabled = discountTypeSelect.value === 'percent' ? false : true;
+        if (discountTypeSelect.value === 'fixed') {
+            maxCouponInput.value = '';
+        }
     }
 }
 
-document.getElementById('discount_type').addEventListener('change', function() {
-    document.getElementById('discountIcon').className = this.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
-});
+function updateDiscountType() {
+    const discountTypeSelect = document.getElementById('discount_type');
+    const discountTypeHidden = document.getElementById('discount_type_hidden');
+    const discountIcon = document.getElementById('discountIcon');
+    const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+    const maxCouponInput = document.getElementById('max_coupon_input');
+
+    discountTypeHidden.value = discountTypeSelect.value;
+    discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+    maxCouponWrapper.style.display = discountTypeSelect.value === 'percent' ? 'block' : 'none';
+    maxCouponInput.disabled = discountTypeSelect.value === 'percent' ? false : true;
+    if (discountTypeSelect.value === 'fixed') {
+        maxCouponInput.value = '';
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     toggleDiscountType();
-    const discountType = document.getElementById('discount_type').value;
-    document.getElementById('discountIcon').className = discountType === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+    const discountTypeSelect = document.getElementById('discount_type');
+    const discountTypeHidden = document.getElementById('discount_type_hidden');
+    const discountIcon = document.getElementById('discountIcon');
+    const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+    const maxCouponInput = document.getElementById('max_coupon_input');
+
+    discountTypeHidden.value = discountTypeSelect.value;
+    discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+    maxCouponWrapper.style.display = discountTypeSelect.value === 'percent' ? 'block' : 'none';
+    maxCouponInput.disabled = discountTypeSelect.value === 'percent' ? false : true;
+    if (discountTypeSelect.value === 'fixed') {
+        maxCouponInput.value = '';
+    }
 });
 </script>
 @endsection
