@@ -76,23 +76,13 @@
                                     @php
                                         $roleName = $user->getRoleNames()->first();
                                         $roleObj = $roles->firstWhere('name', $roleName);
-                                        $label =
-                                            $roleObj && isset($roleObj->display_name)
-                                                ? $roleObj->display_name
-                                                : ($roleObj
-                                                    ? ucfirst($roleObj->name)
-                                                    : 'Không rõ');
-                                        // Tự động sinh màu cho role nếu không có trường color
+                                        $label = $roleObj ? ucfirst($roleObj->name) : 'Không rõ';
                                         $defaultColors = [
                                             'admin' => 'danger',
                                             'nhân viên' => 'warning',
                                             'người dùng' => 'info',
                                         ];
-                                        $class =
-                                            $roleObj && isset($roleObj->color) && $roleObj->color
-                                                ? $roleObj->color
-                                                : $defaultColors[$roleName] ?? 'info';
-                                        // Lấy danh sách quyền của user (bao gồm cả theo role và riêng)
+                                        $class = $defaultColors[$roleName] ?? 'info';
                                         $userPermissions = $user->getAllPermissions()->pluck('name')->toArray();
                                     @endphp
                                     <span class="badge bg-{{ $class }}" data-bs-toggle="tooltip"
@@ -110,7 +100,6 @@
                                         {{ $label }}
                                     </span>
                                 </td>
-                                {{-- script đã được đẩy xuống cuối file qua @push('scripts') --}}
                                 <td>
                                     @if ($user->status == 1)
                                         <span class="badge bg-success">Hoạt động</span>
@@ -127,7 +116,6 @@
                                     @php $currentUser = auth()->user(); @endphp
 
                                     @if ($currentUser->hasRole('admin') && $currentUser->id !== $user->id)
-                                        <!-- Sửa vai trò -->
                                         <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal"
                                             data-bs-target="#editRoleModal-{{ $user->id }}">
                                             <i class="fas fa-edit"></i> Sửa
@@ -158,7 +146,6 @@
                                 </td>
                             </tr>
 
-                            <!-- Modal Sửa Vai Trò -->
                             <div class="modal fade" id="editRoleModal-{{ $user->id }}" tabindex="-1"
                                 aria-labelledby="editRoleModalLabel-{{ $user->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -189,14 +176,24 @@
                                                     style="display: {{ $user->hasRole('người dùng') ? 'none' : 'block' }};">
                                                     <label>Quyền riêng (Permissions)</label>
                                                     <div class="row">
+                                                        @php
+                                                            $userRoleName = $user->getRoleNames()->first();
+                                                            $userRole = $roles->firstWhere('name', $userRoleName);
+                                                        @endphp
                                                         @foreach ($permissions as $permission)
+                                                            @php
+                                                                // Kiểm tra xem quyền này có phải là quyền mặc định của vai trò người dùng không
+                                                                $isRolePermission = $userRole && $userRole->permissions->contains('name', $permission->name);
+                                                            @endphp
                                                             <div class="col-6 col-md-4">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="checkbox"
                                                                         name="permissions[]"
                                                                         value="{{ $permission->name }}"
                                                                         id="perm-{{ $user->id }}-{{ $permission->id }}"
-                                                                        {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}>
+                                                                        {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}
+                                                                        {{-- Nếu là quyền của role thì disable --}}
+                                                                        {{ $isRolePermission ? 'disabled' : '' }}> 
                                                                     <label class="form-check-label"
                                                                         for="perm-{{ $user->id }}-{{ $permission->id }}">
                                                                         {{ $permission->name }}
@@ -204,7 +201,7 @@
                                                                 </div>
                                                             </div>
                                                         @endforeach
-                                                    </div>
+                                                        </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -216,7 +213,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @empty
+                            @empty
                             <tr>
                                 <td colspan="6" class="text-center py-4 text-muted">
                                     <i class="fas fa-users fa-2x mb-2"></i>
@@ -351,25 +348,25 @@
                     var userId = this.id.replace('role-', '');
                     var roleName = this.value;
                     var permList = window.rolePermissionsMap[roleName] || [];
-                    // Ẩn/hiện phần quyền riêng
+                    
                     var permGroup = document.getElementById('permissions-group-' + userId);
                     if (permGroup) {
-                        if (roleName === 'người dùng') {
-                            permGroup.style.display = 'none';
-                        } else {
-                            permGroup.style.display = 'block';
-                        }
+                        permGroup.style.display = (roleName === 'người dùng') ? 'none' : 'block';
                     }
-                    // Bỏ tích hết
-                    document.querySelectorAll('#editRoleModal-' + userId +
-                        ' input[name="permissions[]"]').forEach(function(cb) {
+                    
+                    // Bỏ tích và BẬT LẠI TẤT CẢ checkbox trước khi xử lý
+                    document.querySelectorAll('#editRoleModal-' + userId + ' input[name="permissions[]"]').forEach(function(cb) {
                         cb.checked = false;
+                        cb.disabled = false; 
                     });
-                    // Tích các quyền của role
+                    
+                    // Tích và VÔ HIỆU HÓA các quyền của vai trò mới được chọn
                     permList.forEach(function(permName) {
-                        var cb = document.querySelector('#editRoleModal-' + userId +
-                            ' input[name="permissions[]"][value="' + permName + '"]');
-                        if (cb) cb.checked = true;
+                        var cb = document.querySelector('#editRoleModal-' + userId + ' input[name="permissions[]"][value="' + permName + '"]');
+                        if (cb) {
+                            cb.checked = true;
+                            cb.disabled = true; // <-- Vô hiệu hóa checkbox
+                        }
                     });
                 });
             });
