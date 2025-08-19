@@ -238,11 +238,12 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                    <a href="{{ route('admin.imports.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Huỷ</a>
+                    <button type="submit" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Lưu phiếu nhập</button>
+                </div>
             </form>
-            <div class="col-12 mt-4 d-flex justify-content-end gap-2">
-                <a href="{{ route('admin.imports.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Huỷ</a>
-                <button type="submit" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Lưu phiếu nhập</button>
-            </div>
+            
         </div>
     </div>
 @endsection
