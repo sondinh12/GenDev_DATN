@@ -3,7 +3,6 @@
 @section('title', 'Thêm mã giảm giá')
 
 @section('content')
-<div class="container mt-4">
     <div class="card border-0 shadow-sm">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="mb-0"><i class="fas fa-tag me-2"></i>Thêm mã giảm giá mới</h4>
@@ -51,8 +50,8 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-percentage" id="discountIcon"></i></span>
                         <input type="number" step="0.01" name="discount_amount" id="discount_amount" 
-                               class="form-control @error('discount_amount') is-invalid @enderror" 
-                               value="{{ old('discount_amount') }}" required placeholder="Nhập giá trị giảm">
+                            class="form-control @error('discount_amount') is-invalid @enderror" 
+                            value="{{ old('discount_amount') }}" required placeholder="Nhập giá trị giảm">
                         @error('discount_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
@@ -70,7 +69,7 @@
                     <label for="status" class="form-label fw-medium">Trạng thái</label>
                     <input type="text" class="form-control bg-light" value="Hoạt động" readonly>
                     <input type="hidden" name="status" value="1">
-                    <small class="form-text text-muted">Mã mới luôn ở trạng thái hoạt động</small>
+                    <small class="form-text text-muted">(*mã mới luôn ở trạng thái hoạt động)</small>
                 </div>
 
                 <div class="col-md-6">
@@ -78,7 +77,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         <input type="datetime-local" name="start_date" class="form-control @error('start_date') is-invalid @enderror" 
-                               value="{{ old('start_date') }}" required>
+                            value="{{ old('start_date') }}" required>
                     </div>
                     @error('start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
@@ -88,7 +87,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
                         <input type="datetime-local" name="end_date" class="form-control @error('end_date') is-invalid @enderror" 
-                               value="{{ old('end_date') }}" required>
+                            value="{{ old('end_date') }}" required>
                     </div>
                     @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
@@ -98,7 +97,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-users"></i></span>
                         <input type="number" name="usage_limit" class="form-control @error('usage_limit') is-invalid @enderror" 
-                               value="{{ old('usage_limit') }}" required placeholder="0">
+                            value="{{ old('usage_limit') }}" required placeholder="0">
                     </div>
                     <small class="form-text text-muted">Số lần sử dụng toàn hệ thống</small>
                     @error('usage_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -109,7 +108,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                         <input type="number" name="per_use_limit" class="form-control @error('per_use_limit') is-invalid @enderror" 
-                               value="{{ old('per_use_limit') }}" required placeholder="0">
+                            value="{{ old('per_use_limit') }}" required placeholder="0">
                     </div>
                     <small class="form-text text-muted">Số lần mỗi người dùng</small>
                     @error('per_use_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -120,7 +119,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
                         <input type="number" name="min_coupon" class="form-control @error('min_coupon') is-invalid @enderror" 
-                               value="{{ old('min_coupon') }}" required placeholder="0">
+                            value="{{ old('min_coupon') }}" required placeholder="0">
                     </div>
                     <small class="form-text text-muted">Áp dụng cho đơn từ</small>
                     @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -131,19 +130,18 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-tag"></i></span>
                         <input type="number" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" 
-                               value="{{ old('max_coupon') }}" placeholder="0">
+                            value="{{ old('max_coupon') }}" placeholder="0">
                     </div>
                     <small class="form-text text-muted">Chỉ áp dụng cho giảm % (không bắt buộc)</small>
                     @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
-
                 <div class="col-12 mt-4 d-flex justify-content-end gap-2">
-                    <a href="{{ route('coupons.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Tạo mã</button>
+                    <a href="{{ route('coupons.index') }}" class="btn btn-outline-secondary"><i class="fas fa-times"></i> Huỷ</a>
+                    <button type="submit" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Tạo mã</button>
                 </div>
             </form>
+            
         </div>
-    </div>
 </div>
 
 <style>

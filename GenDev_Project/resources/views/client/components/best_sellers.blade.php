@@ -73,6 +73,7 @@
                     <span class="review-count" style="color: #666;">({{ $avgRating }})</span>
                 </div>
             </div>
+
             <form action="{{ route('cart-detail') }}" method="POST" class="mt-3 w-100">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">

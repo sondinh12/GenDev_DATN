@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">➕ Thêm sản phẩm mới</h4>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary">
+            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
             </a>
         </div>

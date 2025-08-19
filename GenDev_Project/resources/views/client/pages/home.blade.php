@@ -128,10 +128,19 @@
                             </div>
                         </div>
 
-                        <section class="section-top-categories section-categories-carousel" id="categories-carousel-1">
-                            <header class="section-header">
-                                <h2 class="section-title">Danh mục<br> sản phẩm</h2>
-                                <nav class="custom-slick-nav"></nav>
+                        <section class="section-top-categories section-categories-carousel" id="categories-carousel-1" style="padding: 30px 0;">
+                            <header class="section-header d-flex flex-column align-items-start mb-5">
+                                <h2 class="section-title m-0 fw-bold position-relative pb-3" 
+                                style="font-size: 2rem; font-weight: 600; letter-spacing: 1px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                    Danh mục <br>
+                                    <span class="text-primary">sản phẩm</span>
+                                    <span class="title-underline position-absolute bottom-0 start-0 bg-primary"></span>
+                                </h2>
+                                <p class="lead text-muted" 
+                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                    Khám phá các bộ sưu tập nổi bật của chúng tôi
+                                </p>
+                                <nav class="custom-slick-nav mt-3"></nav>
                             </header>
                             <div class="product-categories-1 product-categories-carousel" data-ride="tm-slick-carousel"
                                 data-wrap=".products"
@@ -158,10 +167,13 @@
                                 </div>
                             </div>
                         </section>
+
                         <div class="section-deals-carousel-and-products-carousel-tabs row">
                             <div id="grid-extended" class="tab-pane" role="tabpanel">
                                 <div class="woocommerce columns-7">
-                                    <h2 class="section-title">Sản phẩm bán chạy nhất</h2>
+                                    <h2 class="section-title" style="font-size: 2rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                                        Sản phẩm của chúng tôi
+                                    </h2>
                                     <div id="best-selling-wrapper">
                                         @include('client.components.best_sellers')
                                     </div>

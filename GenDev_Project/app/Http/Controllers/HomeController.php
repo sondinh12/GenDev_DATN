@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\Attribute;
+
 
 class HomeController extends Controller
 {
@@ -25,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        // $categories = Category::all();
 
         // Lấy banner đang sử dụng, nếu không có thì lấy banner mới nhất
         $banner = Banner::where('status', 'using')->first();
@@ -33,6 +36,13 @@ class HomeController extends Controller
             $banner = Banner::latest()->first();
         }
 
+        // Lấy tất cả danh mục cha cùng với danh mục con (categories_mini)
+        $categories = Category::with('categoryMinis')
+            ->whereNull('deleted_at')
+            ->get();
+
+
         return view('client.pages.home', compact('categories', 'banner'));
     }
 }
+
