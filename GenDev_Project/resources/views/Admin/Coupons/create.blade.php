@@ -262,6 +262,5 @@ function updateDiscountType() {
 }
 
     toggleDiscountType();
-
 </script>
 @endsection

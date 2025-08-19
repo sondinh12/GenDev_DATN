@@ -95,9 +95,15 @@
                     <label for="end_date" class="form-label fw-medium">Ngày hết hạn</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
+<<<<<<< HEAD
                         <input type="datetime-local" name="end_date" id="end_date"
                             class="form-control @error('end_date') is-invalid @enderror"
                             value="{{ old('end_date', isset($coupon->end_date) ? $coupon->end_date->format('Y-m-d\TH:i') : '') }}">
+=======
+                        <input type="date" name="end_date" id="end_date"
+                            class="form-control @error('end_date') is-invalid @enderror"
+                            value="{{ old('end_date', isset($coupon->end_date) ? $coupon->end_date->format('Y-m-d') : '') }}">
+>>>>>>> dev
                         @error('end_date') 
                             <div class="invalid-feedback">{{ $message }}</div> 
                         @enderror
