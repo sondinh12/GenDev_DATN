@@ -89,7 +89,6 @@
                                 </form> trong 5<a href="#" class="next page-numbers">→</a>
                             </nav>
                         </div>
-
                         <!-- Main Content -->
                         <div class="section-deals-carousel-and-products-carousel-tabs">
                             <div id="grid-extended" class="tab-pane" role="tabpanel">

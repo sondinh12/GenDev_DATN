@@ -164,7 +164,6 @@
                         <span id="top-cart-wishlist-count" class="value">
                             {{ auth()->check() ? auth()->user()->favorites()->count() : 0 }}
                         </span>
-
                     </a>
                 </li>
             </ul>
