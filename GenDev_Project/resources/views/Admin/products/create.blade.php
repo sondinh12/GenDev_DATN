@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Tên sản phẩm<span class="text-danger">*</label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
                             @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -127,7 +127,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Giá khuyến mãi<span class="text-danger">*</label>
+                                <label class="form-label">Giá khuyến mãi</label>
                                 <input type="number" name="sale_price" class="form-control @error('sale_price') is-invalid @enderror" value="{{ old('sale_price') }}" step="0.01">
                                 @error('sale_price')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -260,14 +260,14 @@
             if (productType === 'simple') {
                 simpleFields.classList.remove('hidden');
                 variantForm.classList.add('hidden');
-                variantForm.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+                variantForm.querySelectorAll('input').forEach(input => input.removeAttribute(''));
             } else {
                 simpleFields.classList.add('hidden');
                 variantForm.classList.remove('hidden');
-                // Bỏ required cho các trường của sản phẩm không biến thể
-                simpleFields.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+                // Bỏ  cho các trường của sản phẩm không biến thể
+                simpleFields.querySelectorAll('input').forEach(input => input.removeAttribute(''));
                 // Ngược lại
-                variantForm.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+                variantForm.querySelectorAll('input').forEach(input => input.removeAttribute(''));
             }
         }
 
@@ -332,9 +332,9 @@
                             ${label}
                             <input type="hidden" name="variant_combinations[${index}][value_ids]" value="${valueIds}">
                         </td>
-                        <td><input name="variant_combinations[${index}][price]" class="form-control" type="number" step="0.01" required></td>
+                        <td><input name="variant_combinations[${index}][price]" class="form-control" type="number" step="0.01" ></td>
                         <td><input name="variant_combinations[${index}][sale_price]" class="form-control" type="number" step="0.01"></td>
-                        <td><input name="variant_combinations[${index}][quantity]" class="form-control" type="number" required></td>
+                        <td><input name="variant_combinations[${index}][quantity]" class="form-control" type="number" ></td>
                         <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">❌</button></td>
                     </tr>`;
             });

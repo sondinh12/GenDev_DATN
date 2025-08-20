@@ -32,7 +32,7 @@
                 {{-- Tên danh mục --}}
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên danh mục<span class="text-danger">*</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                    <input type="text" name="name" class="form-control" value="{{ old('name') }}" >
                 </div>
 
                 {{-- Ảnh --}}
