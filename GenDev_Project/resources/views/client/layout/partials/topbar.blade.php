@@ -2,16 +2,16 @@
     <div class="col-full">
         <ul id="menu-top-bar-left" class="nav menu-top-bar-left">
             <li class="menu-item animate-dropdown">
-                <a title="Giao hàng miễn phí toàn quốc" >Giao hàng miễn phí toàn quốc</a>
+                <a title="Giao hàng miễn phí toàn quốc">Giao hàng miễn phí toàn quốc</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Đảm bảo chất lượng sản phẩm" >Đảm bảo chất lượng sản phẩm</a>
+                <a title="Đảm bảo chất lượng sản phẩm">Đảm bảo chất lượng sản phẩm</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Chương trình đổi trả nhanh chóng" >Chương trình đổi trả nhanh chóng</a>
+                <a title="Chương trình đổi trả nhanh chóng">Chương trình đổi trả nhanh chóng</a>
             </li>
             <li class="menu-item animate-dropdown">
-                <a title="Không phụ phí" >Không phụ phí</a>
+                <a title="Không phụ phí">Không phụ phí</a>
             </li>
         </ul>
         <!-- .nav -->
@@ -40,7 +40,7 @@
             <li class="menu-item">
                 @if (Auth::check())
             <li class="menu-item menu-item-has-children animate-dropdown dropdown">
-                <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle" >
+                <a title="Dollar (US)" data-toggle="dropdown" class="dropdown-toggle">
                     <i class="tm tm-login-register"></i>{{ Auth::user()->name }}
                     <span class="caret"></span>
                 </a>
@@ -64,8 +64,7 @@
                     </li>
                     <li class="menu-item animate-dropdown">
                         <a title="Logout" href="{{ route('logout') }}"
-                            onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">
+                            onclick="event.preventDefault(); confirmLogout();">
                             {{ __('Đăng xuất') }}</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
@@ -85,3 +84,12 @@
     </div>
     <!-- .col-full -->
 </div>
+@push('scripts')
+     <script>
+          function confirmLogout() {
+                if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+                 document.getElementById('logout-form').submit();
+                }
+          }
+     </script>                           
+@endpush
