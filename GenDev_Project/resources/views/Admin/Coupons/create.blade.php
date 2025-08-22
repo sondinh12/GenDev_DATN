@@ -23,7 +23,7 @@
             </div>
             
             <div class="col-md-6">
-                <label id="couponCodeLabel" class="form-label fw-medium">Mã code <span class="text-danger">*</span></label>
+                <label for="min_coupon" class="form-label fw-medium">Mã Code <span class="text-danger">*</span></label>
                 <div class="input-group has-validation">
                     <input type="text" name="coupon_code" id="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" 
                            value="{{ old('coupon_code') }}" placeholder="Nhập mã code">
@@ -67,7 +67,7 @@
                     <span class="input-group-text"><i class="fas fa-percentage" id="discountIcon"></i></span>
                     <input type="number" step="1" name="discount_amount" id="discount_amount" 
                            class="form-control @error('discount_amount') is-invalid @enderror" 
-                           value="{{ old('discount_amount') }}" placeholder="Nhập giá trị giảm" min="1">
+                           value="{{ old('discount_amount') }}" placeholder="Nhập giá trị giảm" >
                     @error('discount_amount') 
                         <div class="invalid-feedback">{{ $message }}</div> 
                     @enderror
@@ -125,7 +125,7 @@
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="fas fa-users"></i></span>
                     <input type="number" step="1" name="usage_limit" class="form-control @error('usage_limit') is-invalid @enderror" 
-                           value="{{ old('usage_limit', 0) }}" placeholder="0" min="1">
+                           value="{{ old('usage_limit', 0) }}" placeholder="0" >
                     @error('usage_limit') 
                         <div class="invalid-feedback">{{ $message }}</div> 
                     @enderror
@@ -138,7 +138,7 @@
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                     <input type="number" step="1" name="per_use_limit" class="form-control @error('per_use_limit') is-invalid @enderror" 
-                           value="{{ old('per_use_limit', 0) }}" placeholder="0" min="1">
+                           value="{{ old('per_use_limit', 0) }}" placeholder="0" >
                     @error('per_use_limit') 
                         <div class="invalid-feedback">{{ $message }}</div> 
                     @enderror
@@ -160,7 +160,7 @@
             </div>
 
             <div class="col-md-6" id="maxCouponWrapper">
-                <label for="max_coupon" class="form-label fw-medium">Giảm tối đa</label>
+                <label for="min_coupon" class="form-label fw-medium">Giảm tối đa <span class="text-danger">*</span></label>
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="fas fa-tag"></i></span>
                     <input type="number" step="1" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" 

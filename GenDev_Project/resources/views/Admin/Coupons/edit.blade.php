@@ -54,7 +54,7 @@
                         <span class="input-group-text"><i class="fas fa-percentage" id="discountIcon"></i></span>
                         <input type="number" step="1" name="discount_amount" id="discount_amount"
                             class="form-control @error('discount_amount') is-invalid @enderror"
-                            value="{{ old('discount_amount', (int)$coupon->discount_amount) }}" placeholder="Nhập giá trị giảm" min="1">
+                            value="{{ old('discount_amount', (int)$coupon->discount_amount) }}" placeholder="Nhập giá trị giảm" >
                         @error('discount_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                         <span class="input-group-text"><i class="fas fa-users"></i></span>
                         <input type="number" step="1" name="usage_limit"
                             class="form-control @error('usage_limit') is-invalid @enderror"
-                            value="{{ old('usage_limit', (int)$coupon->usage_limit) }}" placeholder="0" min="1">
+                            value="{{ old('usage_limit', (int)$coupon->usage_limit) }}" placeholder="0" >
                         @error('usage_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <small class="form-text text-muted">Số lần sử dụng toàn hệ thống</small>
@@ -121,7 +121,7 @@
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                         <input type="number" step="1" name="per_use_limit"
                             class="form-control @error('per_use_limit') is-invalid @enderror"
-                            value="{{ old('per_use_limit', (int)$coupon->per_use_limit) }}" placeholder="0" min="1">
+                            value="{{ old('per_use_limit', (int)$coupon->per_use_limit) }}" placeholder="0" >
                         @error('per_use_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <small class="form-text text-muted">Số lần mỗi người dùng</small>
