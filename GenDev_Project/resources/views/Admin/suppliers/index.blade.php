@@ -24,6 +24,7 @@
     </form>
     <h2>Nhà cung cấp</h2>
     <a href="{{route('admin.suppliers.create')}}" class="btn btn-outline-primary mb-3">Thêm</a>
+
     {{-- <table class="table">
         <thead>
             <tr>

@@ -25,7 +25,7 @@ class SupplierRequest extends FormRequest
             'name'=>'required|max:255|string',
             'email'=>'required|email',
             'phone' => 'required|regex:/^0[0-9]{9}$/',
-            'address.*'=>'required|max:255|string',
+            'address'=>'required|max:255|string',
         ];
     }
 
