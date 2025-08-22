@@ -6,14 +6,10 @@
 
         <!-- Start Navbar-Brand -->
         <div class="navbar-logo-box">
-            <a href="{{ url('index') }}" class="logo logo-dark">
-                <span class="logo-sm">
-                    <img src="{{ URL::asset('build/images/logo-sm.png') }}" alt="logo-sm-dark" height="20">
-                </span>
-                <span class="logo-lg">
-                    <img src="{{ URL::asset('build/images/logo-dark.png') }}" alt="logo-dark" height="18">
-                </span>
-            </a>
+                         <h1
+                            style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333e48; font-size: 24px;">
+                            Tech<span style="color: #3265b0;">Store</span>
+                        </h1>
 
             <a href="{{ url('index') }}" class="logo logo-light">
                 <span class="logo-sm">
@@ -24,9 +20,9 @@
                 </span>
             </a>
 
-            <button type="button" class="btn btn-sm top-icon sidebar-btn" id="sidebar-btn">
+            {{-- <button type="button" class="btn btn-sm top-icon sidebar-btn" id="sidebar-btn">
                 <i class="mdi mdi-menu-open align-middle fs-19"></i>
-            </button>
+            </button> --}}
         </div>
         <!-- End navbar brand -->
 
