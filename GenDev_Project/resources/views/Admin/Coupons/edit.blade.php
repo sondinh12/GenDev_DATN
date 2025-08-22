@@ -16,16 +16,15 @@
                 <div class="col-md-6">
                     <label for="name" class="form-label fw-medium">Tên mã <span class="text-danger">*</span></label>
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                           value="{{ old('name', $coupon->name) }}" required placeholder="Nhập tên mã giảm giá">
+                           value="{{ old('name', $coupon->name) }}" placeholder="Nhập tên mã giảm giá">
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-               (AdapterView.java:813)
                 </div>
                 
                 <div class="col-md-6">
                     <label id="couponCodeLabel" class="form-label fw-medium">Mã code <span class="text-danger">*</span></label>
                     <input type="text" name="coupon_code" id="coupon_code" 
-                           class="form-control @error('coupon_code nouns') is-invalid @enderror" 
-                           value="{{ old('coupon_code', $coupon->coupon_code) }}" required placeholder="Nhập mã code">
+                           class="form-control @error('coupon_code') is-invalid @enderror" 
+                           value="{{ old('coupon_code', $coupon->coupon_code) }}" placeholder="Nhập mã code">
                     @error('coupon_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
@@ -40,23 +39,23 @@
                 
                 <div class="col-md-6" id="discountTypeGroup">
                     <label for="discount_type" class="form-label fw-medium">Kiểu giảm giá <span class="text-danger">*</span></label>
-                    <select name="discount_type" id="discount_type" class="form-select @error('discount_type') is-invalid @enderror">
+                    <select name="discount_type" id="discount_type" class="form-select @error('discount_type_hidden') is-invalid @enderror" onchange="updateDiscountType()">
                         <option value="percent" {{ old('discount_type', $coupon->discount_type) == 'percent' ? 'selected' : '' }}>Phần trăm (%)</option>
                         <option value="fixed" {{ old('discount_type', $coupon->discount_type) == 'fixed' ? 'selected' : '' }}>Cố định (VNĐ)</option>
                     </select>
-                    @error('discount_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     <input type="hidden" name="discount_type_hidden" id="discount_type_hidden" value="{{ old('discount_type', $coupon->discount_type) }}">
+                    @error('discount_type_hidden') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-12" id="discountAmountGroup">
                     <label for="discount_amount" class="form-label fw-medium" id="discountAmountLabel">
                         {{ old('type', $coupon->type) == 'shipping' ? 'Số tiền giảm phí ship' : 'Giá trị giảm' }} <span class="text-danger">*</span>
                     </label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-percentage" id="discountIcon"></i></span>
-                        <input type="number" step="1" name="discount_amount" id="discount_amount" 
-                               class="form-control @error('discount_amount') is-invalid @enderror" 
-                               value="{{ (int) old('discount_amount', $coupon->discount_amount) }}" required>
+                        <input type="number" step="1" name="discount_amount" id="discount_amount"
+                            class="form-control @error('discount_amount') is-invalid @enderror"
+                            value="{{ old('discount_amount', (int)$coupon->discount_amount) }}" placeholder="Nhập giá trị giảm" min="1">
                         @error('discount_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
@@ -73,81 +72,94 @@
                 <div class="col-md-6">
                     <label for="status" class="form-label fw-medium">Trạng thái <span class="text-danger">*</span></label>
                     <select name="status" class="form-select @error('status') is-invalid @enderror">
-                        <option value="0" {{ old('status', $coupon->status) == 0 ? 'selected' : '' }}>Ngừng hoạt động</option>
-                        <option value="1" {{ old('status', $coupon->status) == 1 ? 'selected' : '' }}>Hoạt động</option>
+                            <option value="1" {{ (int)old('status', $coupon->status) === 1 ? 'selected' : '' }}>Hoạt động</option>
+                            <option value="0" {{ (int)old('status', $coupon->status) === 0 ? 'selected' : '' }}>Tạm dừng</option>
                     </select>
                     @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="col-md-6">
-                    <label for="start_date" class="form-label fw-medium">Ngày bắt đầu <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <label for="start_date" class="form-label fw-medium">Ngày bắt đầu</label>
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="datetime-local" name="start_date" 
-                               class="form-control @error('start_date') is-invalid @enderror" 
-                               value="{{ old('start_date', \Carbon\Carbon::parse($coupon->start_date)->format('Y-m-d\TH:i')) }}" required>
+                        <input type="datetime-local" name="start_date" id="start_date"
+                            class="form-control @error('start_date') is-invalid @enderror"
+                            value="{{ old('start_date', isset($coupon->start_date) ? $coupon->start_date->format('Y-m-d\TH:i') : '') }}">
+                        @error('start_date') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
-                    @error('start_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 
                 <div class="col-md-6">
-                    <label for="end_date" class="form-label fw-medium">Ngày hết hạn <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <label for="end_date" class="form-label fw-medium">Ngày hết hạn</label>
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                        <input type="datetime-local" name="end_date" 
-                               class="form-control @error('end_date') is-invalid @enderror" 
-                               value="{{ old('end_date', \Carbon\Carbon::parse($coupon->end_date)->format('Y-m-d\TH:i')) }}" required>
+<<<<<<< HEAD
+                        <input type="datetime-local" name="end_date" id="end_date"
+                            class="form-control @error('end_date') is-invalid @enderror"
+                            value="{{ old('end_date', isset($coupon->end_date) ? $coupon->end_date->format('Y-m-d\TH:i') : '') }}">
+=======
+                        <input type="date" name="end_date" id="end_date"
+                            class="form-control @error('end_date') is-invalid @enderror"
+                            value="{{ old('end_date', isset($coupon->end_date) ? $coupon->end_date->format('Y-m-d') : '') }}">
+>>>>>>> dev
+                        @error('end_date') 
+                            <div class="invalid-feedback">{{ $message }}</div> 
+                        @enderror
                     </div>
-                    @error('end_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
-
                 <div class="col-md-4">
                     <label for="usage_limit" class="form-label fw-medium">Giới hạn sử dụng <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-users"></i></span>
-                        <input type="number" step="1" name="usage_limit" 
-                               class="form-control @error('usage_limit') is-invalid @enderror" 
-                               value="{{ (int) old('usage_limit', $coupon->usage_limit) }}" required>
+                        <input type="number" step="1" name="usage_limit"
+                            class="form-control @error('usage_limit') is-invalid @enderror"
+                            value="{{ old('usage_limit', (int)$coupon->usage_limit) }}" placeholder="0" min="1">
+                        @error('usage_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <small class="form-text text-muted">Số lần sử dụng toàn hệ thống</small>
-                    @error('usage_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+
                 
                 <div class="col-md-4">
                     <label for="per_use_limit" class="form-label fw-medium">Giới hạn mỗi người <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="number" step="1" name="per_use_limit" 
-                               class="form-control @error('per_use_limit') is-invalid @enderror" 
-                               value="{{ (int) old('per_use_limit', $coupon->per_use_limit) }}" required>
+                        <input type="number" step="1" name="per_use_limit"
+                            class="form-control @error('per_use_limit') is-invalid @enderror"
+                            value="{{ old('per_use_limit', (int)$coupon->per_use_limit) }}" placeholder="0" min="1">
+                        @error('per_use_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <small class="form-text text-muted">Số lần mỗi người dùng</small>
-                    @error('per_use_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+
                 
                 <div class="col-md-4">
                     <label for="min_coupon" class="form-label fw-medium">Đơn tối thiểu <span class="text-danger">*</span></label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-money-bill"></i></span>
-                        <input type="number" step="1" name="min_coupon" 
-                               class="form-control @error('min_coupon') is-invalid @enderror" 
-                               value="{{ (int) old('min_coupon', $coupon->min_coupon) }}" required>
+                        <input type="number" step="1" name="min_coupon"
+                            class="form-control @error('min_coupon') is-invalid @enderror"
+                            value="{{ old('min_coupon', (int)$coupon->min_coupon) }}" placeholder="0" min="0">
+                        @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <small class="form-text text-muted">Áp dụng cho đơn từ</small>
-                    @error('min_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+
 
                 <div class="col-md-6" id="maxCouponWrapper">
                     <label for="max_coupon" class="form-label fw-medium">Giảm tối đa</label>
-                    <div class="input-group">
+                    <div class="input-group has-validation">
                         <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                        <input type="number" step="1" name="max_coupon" id="max_coupon_input" 
-                               class="form-control @error('max_coupon') is-invalid @enderror" 
-                               value="{{ (int) old('max_coupon', $coupon->max_coupon) }}">
+                        <input type="number" step="1" name="max_coupon" id="max_coupon_input"
+                            class="form-control @error('max_coupon') is-invalid @enderror"
+                            value="{{ old('max_coupon', (int)$coupon->max_coupon) }}" placeholder="0" min="0">
+                        @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <small class="form-text text-muted">Chỉ áp dụng cho giảm %</small>
-                    @error('max_coupon') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+
 
                 <div class="col-12 mt-4 d-flex justify-content-end gap-2">
                     <a href="{{ route('coupons.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
@@ -185,37 +197,69 @@ function toggleDiscountType() {
     const discountTypeGroup = document.getElementById('discountTypeGroup');
     const discountAmountLabel = document.getElementById('discountAmountLabel');
     const discountTypeSelect = document.getElementById('discount_type');
+    const discountTypeHidden = document.getElementById('discount_type_hidden');
     const couponCodeLabel = document.getElementById('couponCodeLabel');
     const discountIcon = document.getElementById('discountIcon');
-    const discountTypeHidden = document.getElementById('discount_type_hidden');
+    const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+    const maxCouponInput = document.getElementById('max_coupon_input');
 
+    // Luôn hiển thị kiểu giảm giá cho cả đơn hàng và phí ship
+    discountTypeGroup.style.display = 'block';
+    discountTypeSelect.disabled = false;
+    discountTypeHidden.value = discountTypeSelect.value;
+
+    // Cập nhật label và icon
     if (type === 'shipping') {
-        discountTypeGroup.style.display = 'none';
-        discountTypeSelect.value = 'fixed';
-        discountTypeSelect.disabled = true;
-        discountTypeHidden.value = 'fixed';
-        discountAmountLabel.textContent = 'Số tiền giảm phí ship';
         couponCodeLabel.textContent = 'Mã giảm phí ship';
-        discountIcon.className = 'fas fa-money-bill-wave';
+        discountAmountLabel.textContent = 'Số tiền giảm phí ship';
     } else {
-        discountTypeGroup.style.display = 'block';
-        discountTypeSelect.disabled = false;
-        discountTypeHidden.value = discountTypeSelect.value;
-        discountAmountLabel.textContent = 'Giá trị giảm';
         couponCodeLabel.textContent = 'Mã giảm đơn hàng';
-        discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+        discountAmountLabel.textContent = 'Giá trị giảm';
+    }
+    discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+
+    // Hiển thị max_coupon nếu kiểu giảm là phần trăm, ẩn nếu cố định
+    if (discountTypeSelect.value === 'percent') {
+        maxCouponWrapper.style.display = 'block';
+        maxCouponInput.disabled = false;
+    } else {
+        maxCouponWrapper.style.display = 'none';
+        maxCouponInput.value = 0;
+        maxCouponInput.disabled = true;
     }
 }
 
-document.getElementById('discount_type').addEventListener('change', function() {
-    document.getElementById('discountIcon').className = this.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
-    document.getElementById('discount_type_hidden').value = this.value;
-});
+function updateDiscountType() {
+    const discountTypeSelect = document.getElementById('discount_type');
+    const discountTypeHidden = document.getElementById('discount_type_hidden');
+    const discountIcon = document.getElementById('discountIcon');
+    const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+    const maxCouponInput = document.getElementById('max_coupon_input');
 
-document.addEventListener('DOMContentLoaded', function() {
+    discountTypeHidden.value = discountTypeSelect.value;
+    discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+    maxCouponWrapper.style.display = discountTypeSelect.value === 'percent' ? 'block' : 'none';
+    maxCouponInput.disabled = discountTypeSelect.value === 'percent' ? false : true;
+    if (discountTypeSelect.value === 'fixed') {
+        maxCouponInput.value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     toggleDiscountType();
-    const discountType = document.getElementById('discount_type').value;
-    document.getElementById('discountIcon').className = discountType === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+    const discountTypeSelect = document.getElementById('discount_type');
+    const discountTypeHidden = document.getElementById('discount_type_hidden');
+    const discountIcon = document.getElementById('discountIcon');
+    const maxCouponWrapper = document.getElementById('maxCouponWrapper');
+    const maxCouponInput = document.getElementById('max_coupon_input');
+
+    discountTypeHidden.value = discountTypeSelect.value;
+    discountIcon.className = discountTypeSelect.value === 'percent' ? 'fas fa-percentage' : 'fas fa-money-bill-wave';
+    maxCouponWrapper.style.display = discountTypeSelect.value === 'percent' ? 'block' : 'none';
+    maxCouponInput.disabled = discountTypeSelect.value === 'percent' ? false : true;
+    if (discountTypeSelect.value === 'fixed') {
+        maxCouponInput.value = '';
+    }
 });
 </script>
 @endsection
