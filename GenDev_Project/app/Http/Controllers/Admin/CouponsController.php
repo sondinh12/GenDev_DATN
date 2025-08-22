@@ -8,22 +8,27 @@ use App\Http\Requests\UpdateCouponRequest;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CouponsController extends Controller
 {
-     public function index(Request $request)
+    public function index(Request $request)
     {
-        // Auto set hết hạn
         Coupon::where('status', '!=', 2)
+            ->whereNotNull('end_date')
             ->where('end_date', '<', now())
             ->update(['status' => 2]);
+//             dd(
+//     now(), // thời gian Laravel
+//     DB::select("SELECT NOW() as db_now") // thời gian DB
+// );
 
+        // Tìm kiếm
         $search = trim((string) $request->input('q'));
 
-        $couponsQuery = Coupon::with('creator')->latest();
+        $couponsQuery = Coupon::with('creator')->orderByDesc('id');
 
         if ($search !== '') {
-            // map một số từ khóa tiếng Việt sang giá trị trong DB
             $typeMap = [
                 'đơn hàng' => 'order',
                 'don hang' => 'order',
@@ -54,40 +59,26 @@ class CouponsController extends Controller
             $statusFilter = $statusMap[$normalized] ?? null;
 
             $couponsQuery->where(function ($q) use ($search, $typeFilter, $discountTypeFilter, $statusFilter) {
-                // Tìm theo mã / tên
                 $q->where('coupon_code', 'like', "%{$search}%")
                   ->orWhere('name', 'like', "%{$search}%");
-
-                // Tìm theo loại mã (order/shipping) nếu người dùng gõ "đơn hàng"/"ship"
                 if ($typeFilter) {
                     $q->orWhere('type', $typeFilter);
                 }
-
-                // Tìm theo kiểu giảm (percent/fixed) nếu người dùng gõ "phần trăm"/"cố định"
                 if ($discountTypeFilter) {
                     $q->orWhere('discount_type', $discountTypeFilter);
                 }
-
-                // Tìm theo trạng thái nếu gõ "hoạt động"/"tạm dừng"/"hết hạn"
                 if ($statusFilter !== null) {
                     $q->orWhere('status', $statusFilter);
                 }
-
-                // Nếu chuỗi là số -> tìm theo các trường số
                 if (is_numeric(str_replace(['.', ','], '', $search))) {
-                    // Chuẩn hóa về số nguyên
                     $num = (int) filter_var($search, FILTER_SANITIZE_NUMBER_INT);
                     $q->orWhere('discount_amount', $num)
                       ->orWhere('usage_limit', $num)
                       ->orWhere('total_used', $num)
                       ->orWhere('user_id', $num);
                 }
-
-                // Tìm nhanh theo ngày: người dùng gõ "dd/mm/yyyy" hoặc "yyyy-mm-dd"
-                // so khớp phần ngày của created_at / end_date
                 $dateLike = preg_replace('/[^\d\-\/]/', '', $search);
                 if ($dateLike) {
-                    // Chuẩn hóa 2 kiểu để LIKE
                     $q->orWhereDate('created_at', $dateLike)
                       ->orWhereDate('end_date', $dateLike);
                 }
@@ -110,13 +101,6 @@ class CouponsController extends Controller
         $data = $request->validated();
         $data['total_used'] = 0;
         $data['status'] = $request->input('status', 1);
-
-        // Đảm bảo discount_type là fixed cho shipping
-        if ($data['type'] === 'shipping') {
-            $data['discount_type'] = 'fixed';
-        }
-
-        // Không cần gán shipping_code, giữ coupon_code như bình thường
         Coupon::create($data);
         return redirect()->route('coupons.index')->with('success', 'Tạo mã giảm giá thành công!');
     }
@@ -177,13 +161,9 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
         $data = $request->validated();
-        $data['status'] = $request->input('status', $coupon->status);
-
-        if ($data['type'] === 'shipping') {
-            $data['discount_type'] = 'fixed';
-        }
-
+        $data['status'] = (int) $request->input('status', $coupon->status);
         $coupon->update($data);
         return redirect()->route('coupons.index')->with('success', 'Cập nhật mã giảm giá thành công!');
     }
+
 }

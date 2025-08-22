@@ -38,11 +38,10 @@ class RoleAndPermissionSeeder extends Seeder
         // Gán permission cho role
         $adminRole->syncPermissions($permissions); // admin có tất cả quyền
         $staffRole->syncPermissions([
-            'Quản lý sản phẩm',
             'Quản lý bình luận',
             'Quản lý đơn hàng',
             'Quản lý banner'
-        ]); // staff chỉ có quyền quản lý sản phẩm, bình luận, đơn hàng, banner
+        ]); // staff chỉ có quyền quản lý bình luận, đơn hàng, banner
         $userRole->syncPermissions([]); // user không có quyền đặc biệt
     }
 }
