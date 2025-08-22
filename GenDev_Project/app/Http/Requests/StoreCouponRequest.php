@@ -70,7 +70,7 @@ class StoreCouponRequest extends FormRequest
             'per_use_limit' => 'required|integer|min:1|max:10',
             'min_coupon'    => 'required|numeric|min:0|max:99999999.99',
             'max_coupon' => [
-                'required_if:type,order',
+                'required',
                 'numeric',
                 'min:0',
                 'max:99999999',
@@ -80,17 +80,9 @@ class StoreCouponRequest extends FormRequest
                     $discount_type = $this->input('discount_type');
                     $type = $this->input('type');
 
-                    // Khi type là shipping, max_coupon không được cung cấp
-                    if ($type === 'shipping' && !is_null($value)) {
-                        $fail('Vui lòng nhập giá trị giảm tối đa.');
-                    }
-
-                    // Khi type là order
+                    // Nếu là order
                     if ($type === 'order') {
-                        if ($discount_type === 'percent' && $value <= 0 || $value == 0) {
-                            $fail('Vui lòng nhập giá trị giảm tối đa.');
-                        }
-                        if ($discount_type === 'fixed' && $value <= 0 || $value == 0) {
+                        if ($value <= 0) {
                             $fail('Vui lòng nhập giá trị giảm tối đa.');
                         }
                         if ($value < $min) {
@@ -99,10 +91,17 @@ class StoreCouponRequest extends FormRequest
                         if ($discount_type === 'fixed' && $value < $discount) {
                             $fail('Giá trị giảm tối đa phải lớn hơn hoặc bằng số tiền giảm khi loại giảm là cố định.');
                         }
+                    }
 
+                    // Nếu là shipping
+                    if ($type === 'shipping') {
+                        if ($value <= 0) {
+                            $fail('Vui lòng nhập giá trị giảm tối đa.');
+                        }
                     }
                 },
             ],
+
             'status' => 'required|in:0,1,2',
             'user_id' => ['required', 'integer', 'in:-1,0'],
         ];

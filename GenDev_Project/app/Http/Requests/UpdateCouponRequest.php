@@ -69,8 +69,8 @@ class UpdateCouponRequest extends FormRequest
             'usage_limit' => 'required|integer|min:1|max:10000',
             'per_use_limit' => 'required|integer|min:1|max:10',
             'min_coupon' => 'required|numeric|min:0|max:99999999.99',
-           'max_coupon' => [
-                'required_if:type,order',
+            'max_coupon' => [
+                'required',
                 'numeric',
                 'min:0',
                 'max:99999999',
@@ -80,17 +80,9 @@ class UpdateCouponRequest extends FormRequest
                     $discount_type = $this->input('discount_type');
                     $type = $this->input('type');
 
-                    // Khi type là shipping, max_coupon không được cung cấp
-                    if ($type === 'shipping' && !is_null($value)) {
-                        $fail('Vui lòng nhập giá trị giảm tối đa.');
-                    }
-
-                    // Khi type là order
+                    // Nếu là order
                     if ($type === 'order') {
-                        if ($discount_type === 'percent' && ($value <= 0 || $value == 0)) {
-                            $fail('Vui lòng nhập giá trị giảm tối đa.');
-                        }
-                        if ($discount_type === 'fixed' && ($value <= 0 || $value == 0)) {
+                        if ($value <= 0) {
                             $fail('Vui lòng nhập giá trị giảm tối đa.');
                         }
                         if ($value < $min) {
@@ -99,7 +91,13 @@ class UpdateCouponRequest extends FormRequest
                         if ($discount_type === 'fixed' && $value < $discount) {
                             $fail('Giá trị giảm tối đa phải lớn hơn hoặc bằng số tiền giảm khi loại giảm là cố định.');
                         }
+                    }
 
+                    // Nếu là shipping
+                    if ($type === 'shipping') {
+                        if ($value <= 0) {
+                            $fail('Vui lòng nhập giá trị giảm tối đa.');
+                        }
                     }
                 },
             ],
@@ -123,11 +121,9 @@ class UpdateCouponRequest extends FormRequest
             'discount_amount.numeric' => 'Giá trị giảm phải là số.',
             'discount_amount.min' => 'Giá trị giảm phải lớn hơn 0.',
             'discount_amount.max' => 'Giá trị giảm không được vượt quá 99,999,999.99.',
-            'start_date.required' => 'Vui lòng nhập ngày bắt đầu.',
             'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
-            'start_date.after_or_equal' => 'Ngày bắt đầu phải từ ngày hiện tại trở đi.',
             'start_date.before_or_equal' => 'Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.',
-            'end_date.required' => 'Vui lòng nhập ngày kết thúc.',
+            'start_date.*' => 'Ngày bắt đầu phải từ ngày hiện tại trở đi.',
             'end_date.date' => 'Ngày kết thúc không hợp lệ.',
             'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
             'end_date.*' => 'Thời hạn mã giảm giá không được vượt quá 1 năm.',

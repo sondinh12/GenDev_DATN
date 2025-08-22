@@ -8,6 +8,10 @@
         {{ session('error') }}
     </div>
 @endif
+{{-- @php
+$orders = Order::all(); --}}
+{{--     
+@endphp --}}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
@@ -19,9 +23,12 @@
                 <p class="mb-4">
                     Rất tiếc, giao dịch của bạn không thành công. Vui lòng kiểm tra lại thông tin hoặc thử thanh toán lại sau.
                 </p>
-                <a href="{{ route('checkout') }}" class="btn btn-warning me-2">
+                {{-- @foreach ($orders as $item)
+                    <a href="{{ route('order.retry', $item->id) }}" class="btn btn-warning me-2">
                     Thử thanh toán lại
                 </a>
+                @endforeach --}}
+                
                 <a href="{{ route('home') }}" class="btn btn-secondary">
                     Quay về trang chủ
                 </a>
