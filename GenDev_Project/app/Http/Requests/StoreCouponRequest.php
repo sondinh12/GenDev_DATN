@@ -28,6 +28,11 @@ class StoreCouponRequest extends FormRequest
             'discount_type' => [
                 'required',
                 'in:percent,fixed',
+                function ($attribute, $value, $fail) use ($type) {
+                    if ($type === 'shipping' && $value !== 'fixed') {
+                        $fail('Loại giảm giá phải là cố định khi áp dụng cho phí ship.');
+                    }
+                },
             ],
             'discount_amount' => [
                 'required',
@@ -65,21 +70,36 @@ class StoreCouponRequest extends FormRequest
             'per_use_limit' => 'required|integer|min:1|max:10',
             'min_coupon'    => 'required|numeric|min:0|max:99999999.99',
             'max_coupon' => [
-                'nullable',
+                'required_if:type,order',
                 'numeric',
+                'min:0',
                 'max:99999999',
                 function ($attribute, $value, $fail) {
                     $discount = $this->input('discount_amount');
                     $min = $this->input('min_coupon');
+                    $discount_type = $this->input('discount_type');
                     $type = $this->input('type');
-                    if ($type === 'percent' && is_null($value)) {
-                        return $fail('Trường giảm tối đa là bắt buộc khi loại mã là giảm %.');
+
+                    // Khi type là shipping, max_coupon không được cung cấp
+                    if ($type === 'shipping' && !is_null($value)) {
+                        $fail('Vui lòng nhập giá trị giảm tối đa.');
                     }
-                    if (!is_null($min) && !is_null($value) && $value < $min) {
-                        return $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.');
-                    }
-                    if (!is_null($discount) && !is_null($value) && $value < $discount) {
-                        return $fail('Giá trị đơn hàng tối đa phải lớn hơn hoặc bằng số tiền giảm.');
+
+                    // Khi type là order
+                    if ($type === 'order') {
+                        if ($discount_type === 'percent' && $value <= 0 || $value == 0) {
+                            $fail('Vui lòng nhập giá trị giảm tối đa.');
+                        }
+                        if ($discount_type === 'fixed' && $value <= 0 || $value == 0) {
+                            $fail('Vui lòng nhập giá trị giảm tối đa.');
+                        }
+                        if ($value < $min) {
+                            $fail('Giá trị giảm tối đa phải lớn hơn hoặc bằng giá trị đơn hàng tối thiểu.');
+                        }
+                        if ($discount_type === 'fixed' && $value < $discount) {
+                            $fail('Giá trị giảm tối đa phải lớn hơn hoặc bằng số tiền giảm khi loại giảm là cố định.');
+                        }
+
                     }
                 },
             ],
@@ -114,15 +134,17 @@ class StoreCouponRequest extends FormRequest
             'end_date.*' => 'Thời hạn mã giảm giá không được vượt quá 1 năm.',
             'usage_limit.max' => 'Giới hạn sử dụng không được vượt quá 10,000.',
             'usage_limit.integer' => 'Giới hạn tổng sử dụng phải là số nguyên.',
-            'usage_limit.min' => 'Giới hạn sử dụng phải lớn hơn 0.',
+            'usage_limit.min' => 'Vui lòng nhập giới hạn sử dụng trong hệ thống',
             'per_use_limit.integer' => 'Giới hạn mỗi người dùng phải là số nguyên.',
-            'per_use_limit.min' => 'Giới hạn mỗi người dùng không hợp lệ.',
+            'per_use_limit.min' => 'Vui lòng nhập giới hạn sử dụng của mỗi user trong hệ thống',
             'per_use_limit.max' => 'Mỗi người chỉ được sử dụng mã này tối đa 10 lần.',
             'min_coupon.max' => 'Giá trị đơn hàng tối thiểu không được vượt quá 99,999,999.99.',
             'min_coupon.numeric' => 'Giá trị đơn hàng tối thiểu phải là số.',
             'min_coupon.min' => 'Giá trị đơn hàng tối thiểu không được âm.',
+            'max_coupon.required_if' => 'Vui lòng nhập giá trị giảm tối đa',
             'max_coupon.numeric' => 'Giá trị đơn hàng tối đa phải là số.',
-            'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.99.',
+            'max_coupon.min' => 'Giá trị đơn hàng tối đa không được nhỏ hơn 0.',
+            'max_coupon.max' => 'Giá trị đơn hàng tối đa không được vượt quá 99,999,999.',
             'status.in' => 'Trạng thái không hợp lệ.',
             'user_id.integer' => 'Giá trị phải là một số.',
         ];
