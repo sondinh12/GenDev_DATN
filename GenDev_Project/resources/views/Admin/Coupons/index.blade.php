@@ -85,10 +85,19 @@
                             <td class="text-muted">
                                 {{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i') }}</td>
                             <td>
-                                <span
-                                    class="badge rounded-pill px-2 py-1 fw-bold {{ $coupon->user_id == -1 ? 'bg-success text-white' : ($coupon->user_id == 0 ? 'bg-purple text-white' : 'bg-secondary text-white') }}">
-                                    {{ $coupon->user_id == -1 ? 'Toàn hệ thống' : ($coupon->user_id == 0 ? 'Mã tri ân' : 'ID: ' . $coupon->user_id) }}
-                                </span>
+                                @if ($coupon->user_id == -1)
+                                    <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2 py-">
+                                        Toàn hệ thống
+                                    </span>
+                                @elseif ($coupon->user_id == 0)
+                                    <span class="badge bg-info-subtle text-info border border-info rounded-pill px-2 py-1">
+                                        Mã tri ân
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary rounded-pill px-2 py-1">
+                                        ID: {{ $coupon->user_id }}
+                                    </span>
+                                @endif
                             </td>
                             <td class="fw-medium">{{ $coupon->total_used }}</td>
                             <td>
@@ -140,6 +149,19 @@
             {{ $coupons->links() }}
         </div>
     </div>
+    <style>
+        .bg-purple-subtle {
+    background-color: #f3e8ff !important; /* tím nhạt */
+    color: #6f42c1 !important;            /* tím đậm */
+}
+.text-purple {
+    color: #6f42c1 !important;
+}
+.border-purple {
+    border-color: #6f42c1 !important;
+}
+
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
