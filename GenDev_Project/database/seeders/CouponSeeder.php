@@ -305,7 +305,7 @@ class CouponSeeder extends Seeder
                 'user_id' => 0,
             ],
             [
-                'name' => 'Coupon tri ân khách hàng thân thiết',
+                'name' => 'Tri ân khách hàng thân thiết',
                 'coupon_code' => 'LOYALTY50K',
                 'discount_type' => 'fixed',
                 'discount_amount' => 50000,
