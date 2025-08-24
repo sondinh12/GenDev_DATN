@@ -5,28 +5,23 @@
     <div class="col-full">
         <div class="row">
             <nav class="woocommerce-breadcrumb">
-                <a href="home-v1.html">Home</a>
+                <a href="/">Trang chủ</a>
                 <span class="delimiter">
                     <i class="tm tm-breadcrumbs-arrow-right"></i>
                 </span>
-                Contact v2
+                Liên hệ
             </nav>
             <!-- .woocommerce-breadcrumb -->
             <div id="primary" class="content-area">
                 <main id="main" class="site-main">
                     <div class="type-page hentry">
-                        <header class="entry-header">
-                            <div class="page-header-caption">
-                                <h1 class="entry-title">Contact v2</h1>
-                            </div>
-                        </header>
                         <!-- .entry-header -->
                         <div class="entry-content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="text-block">
-                                        <h2 class="contact-page-title">Leave us a Message</h2>
-                                        <p>Aenean massa diam, viverra vitae luctus sed, gravida eget est. Etiam nec ipsum porttitor, consequat libero eu, dignissim eros. Nulla auctor lacinia enim id mollis. Curabitur luctus interdum eleifend. Ut tempor lorem a turpis fermentum,.</p>
+                                        <h2 class="contact-page-title">Gửi tin nhắn cho chúng tôi</h2>
+                                        <p>Hãy để lại lời nhắn, chúng tôi sẽ phản hồi bạn sớm nhất có thể.</p>
                                     </div>
                                     <div class="contact-form">
                                         <div role="form" class="wpcf7" id="wpcf7-f425-o1" lang="en-US" dir="ltr">
@@ -41,7 +36,7 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="col-xs-12 col-md-6">
-                                                        <label>First name
+                                                        <label>Họ
                                                             <abbr title="required" class="required">*</abbr>
                                                         </label>
                                                         <br>
@@ -51,7 +46,7 @@
                                                     </div>
                                                     <!-- .col -->
                                                     <div class="col-xs-12 col-md-6">
-                                                        <label>Last name
+                                                        <label>Tên
                                                             <abbr title="required" class="required">*</abbr>
                                                         </label>
                                                         <br>
@@ -63,7 +58,7 @@
                                                 </div>
                                                 <!-- .form-group -->
                                                 <div class="form-group">
-                                                    <label>Subject</label>
+                                                    <label>Chủ đề</label>
                                                     <br>
                                                     <span class="wpcf7-form-control-wrap subject">
                                                         <input type="text" aria-invalid="false" class="wpcf7-form-control wpcf7-text input-text" size="40" value="" name="subject">
@@ -71,7 +66,7 @@
                                                 </div>
                                                 <!-- .form-group -->
                                                 <div class="form-group">
-                                                    <label>Your Message</label>
+                                                    <label>Nội dung tin nhắn</label>
                                                     <br>
                                                     <span class="wpcf7-form-control-wrap your-message">
                                                         <textarea aria-invalid="false" class="wpcf7-form-control wpcf7-textarea" rows="10" cols="40" name="your-message"></textarea>
@@ -80,7 +75,7 @@
                                                 <!-- .form-group-->
                                                 <div class="form-group clearfix">
                                                     <p>
-                                                        <input type="submit" value="Send Message" class="wpcf7-form-control wpcf7-submit" />
+                                                        <input type="submit" value="Gửi tin nhắn" class="wpcf7-form-control wpcf7-submit" />
                                                     </p>
                                                 </div>
                                                 <!-- .form-group-->
@@ -94,22 +89,22 @@
                                 </div>
                                 <!-- .col -->
                                 <div class="col-md-6 store-info store-info-v2">
-                                    <div class="google-map">
-                                        <iframe height="288" allowfullscreen="" style="border:0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.593303940039!2d-0.15470444843858283!3d51.53901886611164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761ae62edd5771%3A0x27f2d823e2be0249!2sPrincess+Rd%2C+London+NW1+8JR%2C+UK!5e0!3m2!1sen!2s!4v1458827996435"></iframe>
+                                    <div class="google-map mb-3">
+                                        <iframe height="288" style="border:0; width: 100%" allowfullscreen="" loading="lazy"
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.013745295738!2d105.78071631540276!3d21.03292279312942!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab3d0e85ec01%3A0x3a40744d38a55826!2zMTAgxJAuIE5ndXnhu4VuIFThuqVuLCBD4buZIE5naOG7hyBQaMO6LCBUw6JuIFBoxrDGoW5nLCBIw6AgTuG7mWksIFZpZXRuYW0!5e0!3m2!1svi!2s!4v1699546178901"></iframe>
                                     </div>
-                                    <!-- .google-map -->
-                                    <div class="kc-elm kc-css-773435 kc_text_block">
-                                        <h2 class="contact-page-title">Our Address</h2>
-                                        <p>17 Princess Road London, Greater London NW1 8JR, UK
-                                            <br> Support(+800)856 800 604
-                                            <br> Email: <a href="mailto:contact@yourstore.com">info@electro.com</a>
-                                        </p>
-                                        <h3>Opening Hours</h3>
-                                        <p class="operation-hours">Monday to Friday: 9am-9pm
-                                            <br> Saturday to Sunday: 9am-11pm</p>
-                                        <h3>Careers</h3>
-                                        <p>If you’re interested in employment opportunities at Electro, please email us: <a href="mailto:contact@yourstore.com">contact@yourstore.com</a></p>
-                                    </div>
+
+                                    <h3>Địa chỉ của chúng tôi</h3>
+                                    <p>10 Nguyễn Tuân, Cầu Giấy, Hà Nội<br>
+                                        SĐT: (+84) 912 345 678<br>
+                                        Email: <a href="mailto:gendev@gmail.com">gendev@gmail.com</a></p>
+
+                                    <h3>Giờ làm việc</h3>
+                                    <p>Thứ 2 - Thứ 6: 8h - 18h<br>
+                                    Thứ 7 & Chủ nhật: 9h - 17h</p>
+
+                                    <h3>Hợp tác & Tuyển dụng</h3>
+                                    <p>Nếu bạn muốn hợp tác hoặc ứng tuyển, vui lòng gửi CV đến: <a href="mailto:gendev@gmail.com">gendev@gmail.com</a></p>
                                 </div>
                                 <!-- .col -->
                             </div>

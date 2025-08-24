@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string("name",255);
-            $table->string("image",255);
-            $table->text("description");
+            $table->string("name",255)->nullable();
+            $table->string("image",255)->nullable();
+            $table->text("description")->nullable();
             $table->tinyInteger("status")->default(1)->nullable();
-            $table->bigInteger("category_id");  
+            $table->bigInteger("category_id")->nullable();  
             $table->timestamps();
         });
     }
