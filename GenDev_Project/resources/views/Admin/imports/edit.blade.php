@@ -1,4 +1,4 @@
-@extends('Admin.layouts.master')
+@extends('Admin.layouts.master-without-page-title')
 @section('title', 'Sửa phiếu nhập hàng')
 
 @section('content')

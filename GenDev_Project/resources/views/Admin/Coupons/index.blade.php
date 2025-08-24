@@ -3,136 +3,183 @@
 @section('title', 'Danh sách mã giảm giá')
 
 @section('content')
-<div class="container mt-4">
-    <h4 class="mb-4">Danh sách mã giảm giá</h4>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Danh sách mã giảm giá</h3>
+            {{-- SEARCH: đổi sang form GET --}}
+            <form method="GET" action="{{ route('coupons.index') }}" style="max-width: 300px; width: 100%;">
+                <div class="input-group">
+                    <input type="text" name="q" value="{{ request('q') }}" class="form-control"
+                        placeholder="Tìm kiếm mã, tên, giá trị...">
+                    <button class="btn btn-outline-secondary" type="submit">Tìm</button>
+                </div>
 
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('coupons.create') }}" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Thêm mã mới
-        </a>
+                {{-- nút reset filter khi đang có q --}}
+                {{-- @if (request('q'))
+                    <a href="{{ route('coupons.index') }}" class="btn btn-outline-secondary">
+                        Xóa lọc
+                    </a>
+                @endif --}}
+            </form>
 
-        <a href="{{ route('admin.coupons.trashed') }}" class="btn btn-outline-danger position-relative">
-            <i class="fa fa-trash"></i> Thùng rác
-            @if(isset($trashedCount) && $trashedCount > 0)
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{ $trashedCount }}
-                </span>
-            @endif
-        </a>
-    </div>
+        </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Mã</th>
-                    <th>Tên</th>
-                    <th>Loại mã</th>
-                    <th>Kiểu giảm</th>
-                    <th>Giá trị</th>
-                    <th>Ngày tạo</th> 
-                    <th>Hết hạn</th>   
-                    <th>Người sử dụng</th>
-                    <th>Đã dùng</th>
-                    <th>Số lượng</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($coupons as $index => $coupon)
-                <tr>
-                    <td>{{ $index + $coupons->firstItem() }}</td>
-                    <td>
-                        {{ $coupon->coupon_code ?? 'Chưa có mã' }}
-                    </td>
-                    <td>{{ $coupon->name }}</td>
-                    <td>{{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}</td>
-                    <td>
-                        @if($coupon->discount_type == 'percent')
-                            Phần trăm
-                        @else
-                            Cố định
-                        @endif
-                    </td>
-                    <td>
-                        @if($coupon->discount_type == 'percent')
-                            {{ (int)$coupon->discount_amount }}%
-                        @else
-                            {{ number_format($coupon->discount_amount, 0, ',', '.') }}₫
-                        @endif
-                    </td>
-                    <td>{{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i:s') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i:s') }}</td>    
-                    <td>
-                        @if($coupon->user_id == -1)
-                            Toàn bộ hệ thống
-                        @elseif($coupon->user_id == 0)
-                            Mã tri ân
-                        @else
-                            ID: {{ $coupon->user_id }}
-                        @endif
-                    </td>
-                    <td>{{ $coupon->total_used }}</td>
-                    <td>
-                        @if($coupon->usage_limit == -1)
-                            Không giới hạn
-                        @else
-                            {{ number_format($coupon->usage_limit, 0, ',', '.') }}
-                        @endif
-                    </td>
-                    <td>
-                        @if($coupon->status == 1)
-                            <span class="badge bg-success">Hoạt động</span>
-                        @elseif($coupon->status == 0)
-                            <span class="badge bg-secondary">Tạm dừng</span>
-                        @elseif($coupon->status == 2)
-                            <span class="badge bg-danger">Đã hết hạn</span>
-                        @endif
-                    </td>
-                    <td class="d-flex gap-1">
-                        <a href="{{ route('coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">Sửa</a>
-
-                        <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST" class="delete-form" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-
-                @if($coupons->isEmpty())
-                    <tr>
-                        <td colspan="13" class="text-center">Không có mã nào</td>
-                    </tr>
+        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+            <a href="{{ route('coupons.create') }}" class="btn btn-outline-primary mb-3"><i
+                    class="fas fa-plus me-1"></i>Thêm mã giảm giá
+            </a>
+            <a href="{{ route('admin.coupons.trashed') }}" class="btn btn-outline-danger mb-3 float-end position-relative">
+                <i class="fa fa-trash me-1"></i>Thùng rác
+                @if (isset($trashedCount) && $trashedCount > 0)
+                    <span
+                        class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">{{ $trashedCount }}</span>
                 @endif
-            </tbody>
-        </table>
+            </a>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Mã</th>
+                        <th scope="col">Tên</th>
+                        <th scope="col">Loại mã</th>
+                        <th scope="col">Kiểu giảm</th>
+                        <th scope="col">Giá trị</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Hết hạn</th>
+                        <th scope="col">Người sử dụng</th>
+                        <th scope="col">Đã dùng</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col" class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($coupons as $index => $coupon)
+                        <tr>
+                            <td class="fw-medium">{{ $coupon->id }}</td>
+                            <td><span
+                                    class="badge bg-light text-dark border fs-6 fw-medium">{{ $coupon->coupon_code ?? 'Chưa có mã' }}</span>
+                            </td>
+                            <td class="fw-medium">{{ $coupon->name }}</td>
+                            <td>
+                                <span
+                                    class="badge
+                                    {{ $coupon->type == 'order' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning' }}">
+                                    {{ $coupon->type == 'order' ? 'Đơn hàng' : 'Phí ship' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span
+                                    class="badge {{ $coupon->discount_type == 'percent' ? 'bg-success-subtle text-success' : 'bg-info-subtle text-info' }}">
+                                    {{ $coupon->discount_type == 'percent' ? 'Phần trăm' : 'Cố định' }}
+                                </span>
+                            </td>
+                            <td class="fw-bold text-green">
+                                {{ $coupon->discount_type == 'percent' ? (int) $coupon->discount_amount . '%' : number_format($coupon->discount_amount, 0, ',', '.') . '₫' }}
+                            </td>
+                            <td class="text-muted">
+                                {{ \Carbon\Carbon::parse($coupon->created_at)->format('d/m/Y H:i') }}</td>
+                            <td class="text-muted">
+                                {{ \Carbon\Carbon::parse($coupon->end_date)->format('d/m/Y H:i') }}</td>
+                            <td>
+                                @if ($coupon->user_id == -1)
+                                    <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2 py-">
+                                        Toàn hệ thống
+                                    </span>
+                                @elseif ($coupon->user_id == 0)
+                                    <span class="badge bg-info-subtle text-info border border-info rounded-pill px-2 py-1">
+                                        Mã tri ân
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary rounded-pill px-2 py-1">
+                                        ID: {{ $coupon->user_id }}
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="fw-medium">{{ $coupon->total_used }}</td>
+                            <td>
+                                <span
+                                    class="{{ $coupon->usage_limit == -1 ? 'badge bg-dark-subtle text-dark' : 'fw-medium' }}">
+                                    {{ $coupon->usage_limit == -1 ? 'Không giới hạn' : number_format($coupon->usage_limit, 0, ',', '.') }}
+                                </span>
+                            </td>
+                            <td>
+                            <span class="badge rounded-pill px-2 py-1 fw-bold 
+                                {{ $coupon->status == 1 ? 'bg-success text-white' : ($coupon->status == 0 ? 'bg-secondary text-white' : ($coupon->status == 2 ? 'bg-danger text-white' : '')) }}">
+                                {{ $coupon->status == 1 ? 'Hoạt động' : ($coupon->status == 0 ? 'Tạm dừng' : ($coupon->status == 2 ? 'Đã hết hạn' : '')) }}
+                            </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="{{ route('coupons.edit', $coupon->id) }}"
+                                        class="btn btn-sm btn-outline-warning rounded-pill px-3 d-flex align-items-center justify-content-center"
+                                        style="height: 32px;" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST"
+                                        class="delete-form">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                            class="btn btn-sm btn-outline-danger rounded-pill px-3 d-flex align-items-center justify-content-center"
+                                            style="height: 32px;" data-bs-toggle="tooltip" title="Chuyển vào thùng rác">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="13" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center text-muted">
+                                    <i class="fas fa-tags fa-3x mb-3"></i>
+                                    <p class="mb-0 fs-5">Không có mã giảm giá nào</p>
+                                    <p class="mt-2">Hãy thêm mã giảm giá mới để bắt đầu</p>
+                                    <a href="{{ route('coupons.create') }}" class="btn btn-primary mt-3"><i
+                                            class="fa fa-plus me-1"></i>Thêm mã mới</a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            {{ $coupons->links() }}
+        </div>
     </div>
+    <style>
+        .bg-purple-subtle {
+    background-color: #f3e8ff !important; /* tím nhạt */
+    color: #6f42c1 !important;            /* tím đậm */
+}
+.text-purple {
+    color: #6f42c1 !important;
+}
+.border-purple {
+    border-color: #6f42c1 !important;
+}
 
-    <div class="d-flex justify-content-end">
-        {{ $coupons->links() }}
-    </div>
-</div>
+    </style>
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile: thêm data-label từ thead
+            const setDataLabels = () => {
+                if (window.innerWidth > 768) return;
+                const headers = [...document.querySelectorAll('thead th')].map(th => th.textContent.trim());
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    row.querySelectorAll('td').forEach((td, i) => headers[i] && td.setAttribute(
+                        'data-label', headers[i]));
+                });
+            };
+            setDataLabels();
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Khởi tạo tooltip nếu có
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-
-        // Áp dụng xác nhận trước khi xóa (chuyển vào thùng rác)
-        document.querySelectorAll('form[method="POST"]').forEach(form => {
-            form.addEventListener('submit', function (e) {
-                // Kiểm tra nếu đây là form xóa coupon
-                if (form.querySelector('button[type="submit"]').classList.contains('btn-danger')) {
+            // Xác nhận xóa (SweetAlert)
+            document.querySelectorAll('.delete-form').forEach(form => {
+                form.addEventListener('submit', e => {
                     e.preventDefault();
                     Swal.fire({
                         title: 'Xác nhận xóa',
@@ -141,46 +188,30 @@
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
                         cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Xác nhận',
+                        confirmButtonText: 'Xác nhận xóa',
                         cancelButtonText: 'Hủy bỏ',
-                        reverseButtons: true,
-                        backdrop: `rgba(0,0,0,0.2)`
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                }
+                        reverseButtons: true
+                    }).then(r => r.isConfirmed && form.submit());
+                });
             });
-        });
 
-        // Hiển thị thông báo thành công (nếu có) sau khi thực hiện các hành động khác
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công!',
-                text: '{{ session('success') }}',
+            // Toast helper
+            const toast = (icon, title, text) => Swal.fire({
+                icon,
+                title,
+                text,
                 confirmButtonColor: '#3085d6',
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 3000
             });
-        @endif
-
-        // Hiển thị thông báo lỗi (nếu có)
-        @if (session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: '{{ session('error') }}',
-                confirmButtonColor: '#d33',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        @endif
-    });
-</script>
+            @if (session('success'))
+                toast('success', 'Thành công!', '{{ session('success') }}');
+            @endif
+            @if (session('error'))
+                toast('error', 'Lỗi!', '{{ session('error') }}');
+            @endif
+        });
+    </script>
 @endsection

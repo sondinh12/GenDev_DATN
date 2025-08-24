@@ -38,7 +38,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(10)->appends($request->all());
-        $roles = Role::all();
+        $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
 
         // auth()->loginUsingId(1);
@@ -52,7 +52,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|regex:/^\\d{8,20}$/',
             'gender' => 'required|in:Nam,Nữ,Khác',
             'password' => 'required|string|min:8',
             'role' => 'required|in:' . implode(',', $roles),

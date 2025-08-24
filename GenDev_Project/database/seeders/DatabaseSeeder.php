@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ProductVariantAttributeSeeder::class,
             RoleAndPermissionSeeder::class,
             UserSeeder::class,
+            ProductQuestionSeeder::class,
             ShipSeeder::class,
             CouponSeeder::class,
             OrderSeeder::class,

@@ -33,7 +33,6 @@ class LoginController extends Controller
         $user = Auth::user();
         $adminRoles = Role::where('name', 'like', '%admin%')->orWhere('name', 'like', '%nhan vien%')->pluck('name')->toArray();
         if ($user && $user->hasAnyRole($adminRoles)) {
-
             return '/admin/dashboard';
         }
         return '/';
@@ -91,5 +90,13 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         session()->flash('success', 'Chào mừng bạn trở lại, ' . $user->name . '!');
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        // Thêm thông báo
+        return redirect('/')->with('success', 'Đăng xuất thành công!');
     }
 }

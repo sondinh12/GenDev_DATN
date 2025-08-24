@@ -1,4 +1,4 @@
-@extends('Admin.layouts.master')
+@extends('Admin.layouts.master-without-page-title')
 
 @section('title')
 Thùng Rác Thuộc Tính
@@ -57,23 +57,21 @@ Thùng Rác Thuộc Tính
                                     
                                     <div class="d-flex align-items-center gap-2" style="height: 38px;">
                                         <!-- Nút khôi phục -->
-                                        <form action="{{ route('admin.attributes.restore', $attribute->id) }}" method="POST">
+                                        <form action="{{ route('admin.attributes.restore', $attribute->id) }}" method="POST" class="restore-form">
                                             @csrf
                                             <button type="submit" 
                                                     class="btn btn-sm btn-outline-success rounded-pill px-3 d-flex align-items-center"
-                                                    onclick="return confirm('Khôi phục thuộc tính này?')"
                                                     data-bs-toggle="tooltip" title="Khôi phục">
                                                 <i class="fas fa-trash-restore me-1"></i>
                                             </button>
                                         </form>
                                         
                                         <!-- Nút xóa vĩnh viễn -->
-                                        <form action="{{ route('admin.attributes.forceDelete', $attribute->id) }}" method="POST">
+                                        <form action="{{ route('admin.attributes.forceDelete', $attribute->id) }}" method="POST" class="force-delete-form">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 
                                                     class="btn btn-sm btn-outline-danger rounded-pill px-3 d-flex align-items-center"
-                                                    onclick="return confirm('Bạn có chắc muốn xóa VĨNH VIỄN thuộc tính này?')"
                                                     data-bs-toggle="tooltip" title="Xóa vĩnh viễn">
                                                 <i class="fas fa-fire-alt me-1"></i>
                                             </button>
@@ -117,6 +115,97 @@ Thùng Rác Thuộc Tính
     </div>
 </div>
 
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{{-- Flash Message --}}
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+@endif
+
+<script>
+    // Khởi tạo tooltip và xử lý xác nhận SweetAlert2
+    document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo tooltip
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Xác nhận khôi phục
+        document.querySelectorAll('.restore-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Xác nhận khôi phục',
+                    text: 'Bạn có muốn khôi phục thuộc tính này?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    reverseButtons: true,
+                    backdrop: `rgba(0,0,0,0.2)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // Xác nhận xóa vĩnh viễn
+        document.querySelectorAll('.force-delete-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Xác nhận xóa vĩnh viễn',
+                    text: 'Bạn có chắc muốn xóa VĨNH VIỄN thuộc tính này? Hành động này không thể hoàn tác!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    reverseButtons: true,
+                    backdrop: `rgba(0,0,0,0.2)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 <style>
     .accordion-button:not(.collapsed) {
         background-color: rgba(220, 53, 69, 0.05);
@@ -137,14 +226,4 @@ Thùng Rác Thuộc Tính
         vertical-align: middle;
     }
 </style>
-
-<script>
-    // Khởi tạo tooltip
-    document.addEventListener('DOMContentLoaded', function() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    });
-</script>
 @endsection

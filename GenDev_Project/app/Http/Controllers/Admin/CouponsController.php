@@ -5,21 +5,78 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
+use Illuminate\Http\Request;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CouponsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        Coupon::where('status', '!=', 2)
-            ->where('end_date', '<', now())
-            ->update(['status' => 2]);
+        // Tìm kiếm
+        $search = trim((string) $request->input('q'));
 
-        $coupons = Coupon::with('creator')
-                    ->latest()
-                    ->paginate(10);
+        $couponsQuery = Coupon::with('creator')->orderByDesc('id');
 
+        if ($search !== '') {
+            $typeMap = [
+                'đơn hàng' => 'order',
+                'don hang' => 'order',
+                'ship' => 'shipping',
+                'phí ship' => 'shipping',
+                'phi ship' => 'shipping',
+            ];
+            $discountTypeMap = [
+                'phần trăm' => 'percent',
+                'phan tram' => 'percent',
+                '%' => 'percent',
+                'cố định' => 'fixed',
+                'co dinh' => 'fixed',
+                'đ' => 'fixed',
+            ];
+            $statusMap = [
+                'hoạt động' => 1,
+                'hoat dong' => 1,
+                'tạm dừng' => 0,
+                'tam dung' => 0,
+                'hết hạn' => 2,
+                'het han' => 2,
+            ];
+
+            $normalized = mb_strtolower($search, 'UTF-8');
+            $typeFilter = $typeMap[$normalized] ?? null;
+            $discountTypeFilter = $discountTypeMap[$normalized] ?? null;
+            $statusFilter = $statusMap[$normalized] ?? null;
+
+            $couponsQuery->where(function ($q) use ($search, $typeFilter, $discountTypeFilter, $statusFilter) {
+                $q->where('coupon_code', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%");
+                if ($typeFilter) {
+                    $q->orWhere('type', $typeFilter);
+                }
+                if ($discountTypeFilter) {
+                    $q->orWhere('discount_type', $discountTypeFilter);
+                }
+                if ($statusFilter !== null) {
+                    $q->orWhere('status', $statusFilter);
+                }
+                if (is_numeric(str_replace(['.', ','], '', $search))) {
+                    $num = (int) filter_var($search, FILTER_SANITIZE_NUMBER_INT);
+                    $q->orWhere('discount_amount', $num)
+                      ->orWhere('usage_limit', $num)
+                      ->orWhere('total_used', $num)
+                      ->orWhere('user_id', $num);
+                }
+                $dateLike = preg_replace('/[^\d\-\/]/', '', $search);
+                if ($dateLike) {
+                    $q->orWhereDate('created_at', $dateLike)
+                      ->orWhereDate('end_date', $dateLike);
+                }
+            });
+        }
+
+        $coupons = $couponsQuery->paginate(10)->appends($request->only('q'));
         $trashedCount = Coupon::onlyTrashed()->count();
 
         return view('admin.coupons.index', compact('coupons', 'trashedCount'));
@@ -35,13 +92,6 @@ class CouponsController extends Controller
         $data = $request->validated();
         $data['total_used'] = 0;
         $data['status'] = $request->input('status', 1);
-
-        // Đảm bảo discount_type là fixed cho shipping
-        if ($data['type'] === 'shipping') {
-            $data['discount_type'] = 'fixed';
-        }
-
-        // Không cần gán shipping_code, giữ coupon_code như bình thường
         Coupon::create($data);
         return redirect()->route('coupons.index')->with('success', 'Tạo mã giảm giá thành công!');
     }
@@ -102,13 +152,13 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
         $data = $request->validated();
-        $data['status'] = $request->input('status', $coupon->status);
-
-        if ($data['type'] === 'shipping') {
-            $data['discount_type'] = 'fixed';
-        }
+        $data['user_id'] = (int) $request->input('user_id', $coupon->user_id);
+        $data['status'] = (int) $request->input('status', $coupon->status);
 
         $coupon->update($data);
+
         return redirect()->route('coupons.index')->with('success', 'Cập nhật mã giảm giá thành công!');
     }
+
+
 }

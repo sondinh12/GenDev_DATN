@@ -36,7 +36,7 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-// Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
+Route::get('/best-sellers', [HomeController::class, 'paginateBestSellers'])->name('best-sellers.paginate');
 Route::get('/about', function () {
     return view('client.pages.about');
 })->name('about');
@@ -180,6 +180,12 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     });
 
+
+    // Vai trò
+    Route::middleware(['permission:Quản lý vai trò'])->group(function () {
+        Route::resource('roles', RoleController::class);
+    });
+
     // Mã giảm giá
     Route::middleware(['permission:Quản lý mã giảm giá'])->group(function () {
         Route::get('coupons/trashed', [CouponsController::class, 'trashed'])->name('admin.coupons.trashed');
@@ -224,7 +230,6 @@ Route::prefix('/admin')->middleware(['role:' . implode('|', $adminRoles)])->grou
         Route::post('admin/imports/{id}/restore', [ImportController::class, 'restore'])->name('admin.imports.restore');
         Route::delete('admin/imports/{id}/force', [ImportController::class, 'forceDelete'])->name('admin.imports.forceDelete');
     });
-
 });
 
 Route::resource('/product', ClientProductController::class);
@@ -269,18 +274,22 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetOtp'
     ->middleware('guest')
     ->name('password.email');
 
+
 // Hiển thị form nhập OTP + mật khẩu mới
 Route::get('/reset-password', function () {
     return view('auth.passwords.reset_password');
-})->middleware('guest')->name('password.reset');
+})->middleware('guest')->name('password.resetForm');
+
+// Xử lý xác minh OTP + đặt lại mật khẩu
+Route::put('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp'])
+    ->middleware('guest')
+    ->name('password.verifyOtp');
+
 Route::middleware('auth')->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('client.favorites.index');
     Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])->name('client.favorites.toggle');
 });
 // Xử lý xác minh OTP và cập nhật mật khẩu mới
-Route::post('/reset-password', [ForgotPasswordController::class, 'verifyResetOtp'])
-    ->middleware('guest')
-    ->name('password.update');
 
 Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyResetOtp'])->name('password.verify');
 Route::post('/product/{id}/review', [ProductReviewController::class, 'store'])->name('product.review.store');

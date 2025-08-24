@@ -221,6 +221,7 @@
                         </span>
                     </div>
 
+
                     <div class="d-flex gap-2">
                         @if($order->payment === 'banking' && $order->status === 'pending' && $order->payment_status === 'unpaid')
                             <a href="{{ route('order.retry', $order->id) }}" class="btn btn-sm btn-outline-primary">
@@ -253,6 +254,10 @@
                     <h5 class="modal-title">
                         <span id="returnModalTitle">Lý do</span>
                     </h5>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5f12e8162b443326417ec88b70561baa508053db
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label=""></button> --}}
                 </div>
                 <div class="modal-body">
@@ -332,7 +337,9 @@
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {{-- lưu ý: chỉ nạp 1 lần bootstrap.bundle trong layout tổng --}}
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -368,6 +375,10 @@
     ensurePutMethod($form);
     $('#returnModal').data('mode', mode);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5f12e8162b443326417ec88b70561baa508053db
     const modal = new bootstrap.Modal(document.getElementById('returnModal'));
     modal.show();
   }
@@ -444,10 +455,15 @@
   });
 
   // Toggle form review
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5f12e8162b443326417ec88b70561baa508053db
   $(document).on('click', '.toggle-review-form', function(){
     const productId = $(this).data('product-id');
     $(`#review-form-${productId}`).toggleClass('d-none');
   });
+
 
   // Star rating chọn đẹp
   $(document).on('click', '.star-label', function(){

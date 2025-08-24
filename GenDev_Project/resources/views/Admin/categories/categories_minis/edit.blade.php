@@ -6,9 +6,6 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">✏️ Sửa danh mục con cho {{ $categories->name }}</h4>
-        <a href="{{ route('admin.categories_minis.index', $categories->id) }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách
-        </a>
     </div>
 
     <div class="card shadow-sm">
@@ -36,20 +33,20 @@
                 @method('PUT')
                 {{-- Danh mục cha (hiển thị tên và lưu ID trong input ẩn) --}}
                 <div class="mb-3">
-                    <label for="parent_id" class="form-label">Danh mục cha</label>
+                    <label for="parent_id" class="form-label">Danh mục cha<span class="text-danger">*</label>
                     <input type="hidden" name="parent_id" value="{{ $categories->id }}">
                     <input type="text" class="form-control" value="{{ $categories->name }}" disabled>
                 </div>
 
                 {{-- Tên danh mục con --}}
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tên danh mục con</label>
+                    <label for="name" class="form-label">Tên danh mục con<span class="text-danger">*</label>
                     <input type="text" name="name" class="form-control" value="{{ old('name', $categoryMini->name) }}" required>
                 </div>
 
                 {{-- Ảnh --}}
                 <div class="mb-3">
-                    <label for="image" class="form-label">Ảnh đại diện</label>
+                    <label for="image" class="form-label">Ảnh đại diện<span class="text-danger">*</label>
                     <input type="file" name="image" class="form-control" accept="image/*">
                     @if($categoryMini->image)
                         <img src="{{ asset('storage/'.$categoryMini->image) }}" alt="Ảnh hiện tại" width="100" class="mt-2">
@@ -57,10 +54,10 @@
                 </div>
 
                 {{-- Nút submit --}}
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-outline-primary me-2">
                     <i class="fas fa-save"></i> Cập nhật
                 </button>
-                <a href="{{ route('admin.categories_minis.index', ['id'=> $categories->id]) }}" class="btn btn-secondary">
+                <a href="{{ route('admin.categories_minis.index', ['id'=> $categories->id]) }}" class="btn btn-outline-secondary">
                     <i class="fas fa-times"></i> Huỷ
                 </a>
             </form>

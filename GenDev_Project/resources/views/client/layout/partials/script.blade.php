@@ -45,5 +45,25 @@
             timer: 2500
         });
     @endif
+
+    @if (session('error_order_coupon') ?? session('error_shipping_coupon'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: {!! json_encode(session('error_order_coupon') ?? session('error_shipping_coupon')) !!},
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    @if (session('success_order_coupon') ?? session('success_shipping_coupon'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: {!! json_encode(session('success_order_coupon') ?? session('success_shipping_coupon')) !!},
+            showConfirmButton: false,
+            timer: 2500
+        });
+    @endif
 </script>
 @stack('scripts')

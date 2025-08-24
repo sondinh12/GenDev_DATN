@@ -8,62 +8,59 @@ use App\Models\CategoryMini;
 
 class CategoryMiniSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         // Danh sách tên danh mục con thực tế cho từng danh mục cha
         $categoryMinis = [
             'Điện thoại' => [
-                ['name' => 'iPhone', 'image' => 'https://down-vn.img.susercontent.com/file/daa08280bc4359e7f8bc00efdea89572.webp'],
-                ['name' => 'Samsung', 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m7gu8s2veq6496.webp'],
-                ['name' => 'Xiaomi', 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-manlhcrcwl3s1e.webp'],
+                ['name' => 'iPhone', 'image' => 'categories_minis/daa08280bc4359e7f8bc00efdea89572.webp'],
+                ['name' => 'Samsung', 'image' => 'categories_minis/vn-11134207-7ra0g-m7gu8s2veq6496.webp'],
+                ['name' => 'Xiaomi', 'image' => 'categories_minis/vn-11134207-7ras8-manlhcrcwl3s1e.webp'],
             ],
             'Laptop' => [
-                ['name' => 'Asus', 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-majltj5ywa6k64.webp'],
-                ['name' => 'Dell', 'image' => 'hhttps://down-vn.img.susercontent.com/file/vn-11134201-7ras8-m2m875nphj96ee.webp'],
-                ['name' => 'HP', 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-m4sqkqhgrak600.webp'],
+                ['name' => 'Asus', 'image' => 'categories_minis/vn-11134207-7ra0g-majltj5ywa6k64.webp'],
+                ['name' => 'Dell', 'image' => 'categories_minis/vn-11134201-7ras8-m2m875nphj96ee.webp'],
+                ['name' => 'HP', 'image' => 'categories_minis/vn-11134207-7ras8-m4sqkqhgrak600.webp'],
             ],
             'Phụ kiện' => [
-                ['name' => 'Tai nghe', 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m9bd5bmwgoxwe8.webp'],
-                ['name' => 'Sạc dự phòng', 'image' => 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mbnl0d05gz1c28.webp'],
-                ['name' => 'Ốp lưng', 'image' => 'https://down-vn.img.susercontent.com/file/sg-11134201-7rdy6-lzm23mc6vhnw40.webp'],
+                ['name' => 'Tai nghe', 'image' => 'categories_minis/vn-11134207-7ra0g-m9bd5bmwgoxwe8.webp'],
+                ['name' => 'Sạc dự phòng', 'image' => 'categories_minis/vn-11134207-7ras8-mbnl0d05gz1c28.webp'],
+                ['name' => 'Ốp lưng', 'image' => 'categories_minis/sg-11134201-7rdy6-lzm23mc6vhnw40.webp'],
             ],
             'Máy tính bảng' => [
-                ['name' => 'iPad', 'image' => 'https://down-vn.img.susercontent.com/file/sg-11134301-7rd5f-lv4cuu1lm5yl46.webp'],
-                ['name' => 'Samsung Tab', 'image' => 'https://down-vn.img.susercontent.com/file/sg-11134201-7rfg7-m9forlzerr1eb7.webp'],
-                ['name' => 'Lenovo Tab', 'image' => 'https://cdn.tgdd.vn/Products/Images/522/299454/lenovo-tab-p12-600x600.jpg'],
+                ['name' => 'iPad', 'image' => 'categories_minis/sg-11134301-7rd5f-lv4cuu1lm5yl46.webp'],
+                ['name' => 'Samsung Tab', 'image' => 'categories_minis/sg-11134201-7rfg7-m9forlzerr1eb7.webp'],
+                ['name' => 'Lenovo Tab', 'image' => 'categories_minis/vn-11134207-7ras8-mcei9aydxzs3ca.webp'],
             ],
             'Tivi' => [
-                ['name' => 'Sony', 'image' => 'https://cdn.tgdd.vn/Products/Images/1942/299454/sony-bravia-55-600x600.jpg'],
-                ['name' => 'LG', 'image' => 'https://cdn.tgdd.vn/Products/Images/1942/299454/lg-oled-48-600x600.jpg'],
-                ['name' => 'Samsung', 'image' => 'https://cdn.tgdd.vn/Products/Images/1942/299454/samsung-qled-65-600x600.jpg'],
+                ['name' => 'Sony', 'image' => 'categories_minis/sg-11134201-7ratr-mafoann9as7kcc@resize_w900_nl.webp'],
+                ['name' => 'LG', 'image' => 'categories_minis/sg-11134201-7rfgm-m9wuf4frhfl8fd.webp'],
+                ['name' => 'Samsung', 'image' => 'categories_minis/vn-11134207-7ras8-mbjh2k3xj2v88a.webp'],
             ],
             'Âm thanh' => [
-                ['name' => 'Loa Bluetooth', 'image' => 'https://cdn.tgdd.vn/Products/Images/2162/299454/jbl-bluetooth-600x600.jpg'],
-                ['name' => 'Tai nghe không dây', 'image' => 'https://cdn.tgdd.vn/Products/Images/2162/299454/sony-wf-1000xm4-600x600.jpg'],
-                ['name' => 'Amply', 'image' => 'https://cdn.tgdd.vn/Products/Images/2162/299454/denon-amply-600x600.jpg'],
+                ['name' => 'Loa Bluetooth', 'image' => 'categories_minis/vn-11134207-7ra0g-m78ydreo49di93.webp'],
+                ['name' => 'Tai nghe không dây', 'image' => 'categories_minis/vn-11134207-7ras8-md38m3ty3d0c29.webp'],
+                ['name' => 'Amply', 'image' => 'categories_minis/sg-11134201-7rfgs-m9tttw0yd6dr98.webp'],
             ],
             'Máy ảnh' => [
-                ['name' => 'Canon', 'image' => 'https://cdn.tgdd.vn/Products/Images/4727/299454/canon-eos-r8-600x600.jpg'],
-                ['name' => 'Nikon', 'image' => 'https://cdn.tgdd.vn/Products/Images/4727/299454/nikon-z6-ii-600x600.jpg'],
-                ['name' => 'Sony', 'image' => 'https://cdn.tgdd.vn/Products/Images/4727/299454/sony-alpha-a7-iv-600x600.jpg'],
+                ['name' => 'Canon', 'image' => 'categories_minis/vn-11134207-7ras8-mcm9wtteb09uaa.webp'],
+                ['name' => 'Nikon', 'image' => 'categories_minis/vn-11134201-7ras8-mc20daeclz9x0a.webp'],
+                ['name' => 'Sony', 'image' => 'categories_minis/vn-11134207-7ras8-m3et2rtfuoq0a6.webp'],
             ],
             'Đồng hồ' => [
-                ['name' => 'Đồng hồ thông minh', 'image' => 'https://placehold.co/100x100?text=Smartwatch'],
-                ['name' => 'Đồng hồ thời trang', 'image' => 'https://placehold.co/100x100?text=Fashion+Watch'],
-                ['name' => 'Đồng hồ trẻ em', 'image' => 'https://placehold.co/100x100?text=Kids+Watch'],
+                ['name' => 'Đồng hồ thông minh', 'image' => 'categories_minis/vn-11134207-7ras8-mclya3dnx2xu05.webp'],
+                ['name' => 'Đồng hồ thời trang', 'image' => 'categories_minis/vn-11134207-7ra0g-m9tvgmkpxwg213.webp'],
+                ['name' => 'Đồng hồ trẻ em', 'image' => 'categories_minis/vn-11134207-7ra0g-m7gc3thcgvg30f.webp'],
             ],
             'Thiết bị mạng' => [
-                ['name' => 'Router Wifi', 'image' => 'https://placehold.co/100x100?text=Router+Wifi'],
-                ['name' => 'Bộ phát sóng', 'image' => 'https://placehold.co/100x100?text=Repeater'],
-                ['name' => 'Switch mạng', 'image' => 'https://placehold.co/100x100?text=Switch'],
+                ['name' => 'Router Wifi', 'image' => 'categories_minis/vn-11134207-7ra0g-m9v9ttnzqz2y82.webp'],
+                ['name' => 'Bộ phát sóng', 'image' => 'categories_minis/vn-11134207-7ras8-mde7dg39095o32.webp'],
+                ['name' => 'Switch mạng', 'image' => 'categories_minis/sg-11134201-7ra1s-mbggme5ta5240b.webp'],
             ],
             'Máy in' => [
-                ['name' => 'Máy in laser', 'image' => 'https://placehold.co/100x100?text=Laser+Printer'],
-                ['name' => 'Máy in phun', 'image' => 'https://placehold.co/100x100?text=Inkjet+Printer'],
-                ['name' => 'Máy in đa năng', 'image' => 'https://placehold.co/100x100?text=All-in-one+Printer'],
+                ['name' => 'Máy in laser', 'image' => 'categories_minis/vn-11134207-7ras8-md1h9s1j4skte6.webp'],
+                ['name' => 'Máy in phun', 'image' => 'categories_minis/vn-11134207-7ra0g-m9pa5bl6gojo74.webp'],
+                ['name' => 'Máy in đa năng', 'image' => 'categories_minis/vn-11134207-7ras8-maryu2rfyod418.webp'],
             ],
         ];
 

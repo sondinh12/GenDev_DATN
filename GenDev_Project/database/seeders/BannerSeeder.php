@@ -18,7 +18,7 @@ class BannerSeeder extends Seeder
         DB::table('banners')->insert([
             [
                 'title' => 'Banner 1',
-                'image' => 'banners/home-v1-img-1.png',
+                'image' => 'banners/banner1.jpg',
                 'images' => null,
                 'type' => 'static',
                 'status' => 'unused',
@@ -27,13 +27,23 @@ class BannerSeeder extends Seeder
             ],
             [
                 'title' => 'Banner 2',
-                'image' => 'banners/home-v1-img-2.png',
+                'image' => 'banners/banner2.jpg',
                 'images' => null,
                 'type' => 'static',
                 'status' => 'unused',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'title' => 'Banner 3',
+                'image' => 'banners/banner3.png',
+                'images' => null,
+                'type' => 'static',
+                'status' => 'unused',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
         ]);
     }
 }
