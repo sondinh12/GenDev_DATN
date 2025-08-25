@@ -91,4 +91,12 @@ class LoginController extends Controller
     {
         session()->flash('success', 'Chào mừng bạn trở lại, ' . $user->name . '!');
     }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        // Thêm thông báo
+        return redirect('/')->with('success', 'Đăng xuất thành công!');
+    }
 }

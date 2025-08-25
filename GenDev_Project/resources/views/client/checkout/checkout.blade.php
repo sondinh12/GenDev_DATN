@@ -1,7 +1,7 @@
 @extends('client.layout.master')
 
 @section('content')
-    @if (session('error_order_coupon') || session('error_shipping_coupon'))
+    {{-- @if (session('error_order_coupon') || session('error_shipping_coupon'))
         <div class="alert alert-danger">
             {{ session('error_order_coupon') ?? session('error_shipping_coupon') }}
         </div>
@@ -11,7 +11,7 @@
         <div class="alert alert-success">
             {{ session('success_order_coupon') ?? session('success_shipping_coupon') }}
         </div>
-    @endif
+    @endif --}}
 <div id="content" class="site-content">
     <div class="col-full">
         <div class="row">

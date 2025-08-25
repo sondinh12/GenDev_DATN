@@ -23,7 +23,7 @@
             </div>
             
             <div class="col-md-6">
-                <label id="couponCodeLabel" class="form-label fw-medium">Mã code <span class="text-danger">*</span></label>
+                <label for="min_coupon" class="form-label fw-medium">Mã Code <span class="text-danger">*</span></label>
                 <div class="input-group has-validation">
                     <input type="text" name="coupon_code" id="coupon_code" class="form-control @error('coupon_code') is-invalid @enderror" 
                            value="{{ old('coupon_code') }}" placeholder="Nhập mã code">
@@ -160,7 +160,7 @@
             </div>
 
             <div class="col-md-6" id="maxCouponWrapper">
-                <label for="max_coupon" class="form-label fw-medium">Giảm tối đa</label>
+                <label for="min_coupon" class="form-label fw-medium">Giảm tối đa <span class="text-danger">*</span></label>
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="fas fa-tag"></i></span>
                     <input type="number" step="1" name="max_coupon" id="max_coupon_input" class="form-control @error('max_coupon') is-invalid @enderror" 

@@ -14,15 +14,6 @@ class CouponsController extends Controller
 {
     public function index(Request $request)
     {
-        Coupon::where('status', '!=', 2)
-            ->whereNotNull('end_date')
-            ->where('end_date', '<', now())
-            ->update(['status' => 2]);
-//             dd(
-//     now(), // thời gian Laravel
-//     DB::select("SELECT NOW() as db_now") // thời gian DB
-// );
-
         // Tìm kiếm
         $search = trim((string) $request->input('q'));
 
@@ -161,9 +152,13 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
         $data = $request->validated();
+        $data['user_id'] = (int) $request->input('user_id', $coupon->user_id);
         $data['status'] = (int) $request->input('status', $coupon->status);
+
         $coupon->update($data);
+
         return redirect()->route('coupons.index')->with('success', 'Cập nhật mã giảm giá thành công!');
     }
+
 
 }
