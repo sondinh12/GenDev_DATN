@@ -2,6 +2,38 @@
 
 @section('styles')
 <style>
+    .btn-favorite {
+    font-size: 1.3rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #bbb;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-favorite i {
+    color: #bbb;
+    transition: color 0.3s;
+}
+
+.btn-favorite:hover {
+    border-color: #e53935;
+    background: #ffeaea;
+}
+
+.btn-favorite:hover i {
+    color: #e53935;
+}
+
+.btn-favorite.active {
+    background: #e53935;
+    border-color: #e53935;
+}
+
+.btn-favorite.active i {
+    color: #fff;
+}
+
     .gallery-nav-btn {
         background: rgba(255, 255, 255, 0.9);
         border: none;
@@ -184,11 +216,9 @@
 
 <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
     @csrf
-    <button type="submit"
-        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
-        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
-        <i class="fas fa-heart"></i>
-    </button>
+    <button type="submit" class="wishlist-btn" title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                <i class="fas fa-heart {{ $isFavorited ? 'favorited' : 'not-favorited' }}"></i>
+            </button>
 </form>
 
                             </div>
@@ -260,7 +290,7 @@
                                 <p style="font-size: 15px" class="pb-0 mb-0">{{ $product->category->name ?? '' }}</p>
                             </div>
                             <div class="mb-3 small text-muted border-bottom pb-2">
-                                <span class="ms-3">Tình trạng: 
+                                <span class="ms-3">Tình trạng:
                                     <div id="variant-status" class="badge {{ $product->status == 1 ? 'bg-success p-2' : 'bg-danger' }}">{{ $product->status == 1 ? 'Còn hàng' : 'Hết hàng' }}</div>
                                 </span>
                             </div>
@@ -278,7 +308,7 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <div class="quantity-wrapper d-flex align-items-center mb-3">
-                                    <button type="button" class="btn d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
+                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
                                         <i class="fas fa-minus"></i>
                                     </button>
                                     <input type="number" name="quantity" id="quantity-input" style="text-align: center;padding-left: 10px" class="qty-input" value="{{ old('quantity', 1) }}" min="1" step="1" style="text-align: center;" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" disabled>
@@ -469,7 +499,7 @@
                                 <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
                                     @if($variant)
                                         @if($variant->sale_price && $variant->sale_price < $variant->price)
-                                            <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                                            <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins> <br>
                                             <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
                                         @else
                                             <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
@@ -496,10 +526,10 @@
                                         <i class="fas fa-shopping-cart text-primary"></i>
                                     </a>
                                    @php
-    $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
+    $isFavorited = auth()->check() && auth()->user()->favorites->contains($item->id);
 @endphp
 
- <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="wishlist-form">
+ <form action="{{ route('client.favorites.toggle', $item->id) }}" method="POST" class="wishlist-form">
             @csrf
             <button type="submit" class="wishlist-btn" title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
                 <i class="fas fa-heart {{ $isFavorited ? 'favorited' : 'not-favorited' }}"></i>

@@ -22,10 +22,10 @@ class SupplierRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|max:255|string',
+            'name'=>'required|max:50|string',
             'email'=>'required|email',
             'phone' => 'required|regex:/^0[0-9]{9}$/',
-            'address.*'=>'required|max:255|string',
+            'address'=>'required|max:255|string',
         ];
     }
 

@@ -13,7 +13,7 @@
             <h3 class="mb-0">Nguồn nhập</h3>
             <form action="{{ route('admin.imports.index') }}" method="GET" style="max-width: 300px; width: 100%;">
                 <div class="input-group">
-                    <input type="text" name="keyword" class="form-control" 
+                    <input type="text" name="keyword" class="form-control"
                     placeholder="Tìm theo tên nhà cung cấp..."
                         value="{{ request('keyword') }}">
                     <button type="submit" class="btn btn-outline-secondary">Tìm</button>
@@ -46,11 +46,11 @@
                     <td>{{$import->id}}</td>
                     <td>{{$import->supplier->name}}</td>
                     <td>{{$import->import_date}}</td>
-                    <td>{{$import->total_cost}}</td>
+                    <td>{{ number_format($import->total_cost, 0, ',', '.') }} VNĐ</td>
                     <td>{{$import->created_at}}</td>
                     <td>
                         <a href="{{route('admin.imports.show',$import->id)}}" class="btn btn-sm btn-outline-warning me-1"><i class="fas fa-eye"></i> Xem</a>
-                        @if ($import->status == 0)                          
+                        @if ($import->status == 0)
                             <a href="{{route('admin.imports.edit',$import->id)}}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i> Sửa</a>
                             <form action="{{ route('admin.imports.destroy', $import->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc muốn xóa phiếu này không?')">
                                 @csrf
