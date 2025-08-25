@@ -325,28 +325,28 @@
                                     </button>
                                 </div>
                                 @php
-                                $attributes = [];
-                                $variantMap = [];
-                                foreach ($product->variants as $variant) {
-                                $variantKey = [];
-                                foreach ($variant->variantAttributes as $variantAttr) {
-                                $attrName = $variantAttr->attribute->name;
-                                $attrValue = $variantAttr->value->value;
-                                $attrId = $variantAttr->attribute->id;
-                                $valId = $variantAttr->value->id;
-                                $attributes[$attrName]['id'] = $attrId;
-                                $attributes[$attrName]['values'][$valId] = $attrValue;
-                                $variantKey[$attrId] = $valId;
-                                }
-                                ksort($variantKey);
-                                $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
-                                $variantMap[$key] = [
-                                'price' => $variant->sale_price ?? $variant->price,
-                                'origin_price' => $variant->price,
-                                'quantity' => $variant->quantity,
-                                ];
-                                }
-                                $attributes = array_slice($attributes, 0, 2, true);
+                                    $attributes = [];
+                                    $variantMap = [];
+                                    foreach ($product->variants as $variant) {
+                                        $variantKey = [];
+                                        foreach ($variant->variantAttributes as $variantAttr) {
+                                            $attrName = $variantAttr->attribute->name;
+                                            $attrValue = $variantAttr->value->value;
+                                            $attrId = $variantAttr->attribute->id;
+                                            $valId = $variantAttr->value->id;
+                                            $attributes[$attrName]['id'] = $attrId;
+                                            $attributes[$attrName]['values'][$valId] = $attrValue;
+                                            $variantKey[$attrId] = $valId;
+                                        }
+                                        ksort($variantKey);
+                                        $key = implode('-', array_map(function($k, $v) { return $k.':'.$v; }, array_keys($variantKey), $variantKey));
+                                        $variantMap[$key] = [
+                                            'price' => $variant->sale_price ?? $variant->price,
+                                            'origin_price' => $variant->price,
+                                            'quantity' => $variant->quantity,
+                                        ];
+                                    }
+                                    // $attributes = array_slice($attributes, 0, 2, true);
                                 @endphp
                                 <div class="row">
                                     @foreach($attributes as $attrName => $attr)

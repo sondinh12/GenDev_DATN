@@ -40,13 +40,13 @@ class ProductRequest extends FormRequest
         ];  
 
         if ($this->input('product_type') === 'simple') {
-            $rules['price'] = 'required|numeric|min:0';
-            $rules['sale_price'] = ['nullable','numeric','min:0','lte:price'];
+            $rules['price'] = 'required|numeric|min:0|max:999999999';
+            $rules['sale_price'] = ['nullable','numeric','min:0','lte:price','max:999999999'];
             $rules['quantity'] = 'required|integer|min:0';
         } elseif ($this->input('product_type') === 'variable') {
             $rules['variant_combinations'] = 'required|array|min:1';
-            $rules['variant_combinations.*.price'] = 'required|numeric|min:0';
-            $rules['variant_combinations.*.sale_price'] = ['nullable','numeric','min:0','lte:variant_combinations.*.price'];
+            $rules['variant_combinations.*.price'] = 'required|numeric|min:0|max:999999999';
+            $rules['variant_combinations.*.sale_price'] = ['nullable','numeric','min:0','lte:variant_combinations.*.price','max:999999999'];
             $rules['variant_combinations.*.quantity'] = 'required|integer|min:0';
             $rules['variant_combinations.*.value_ids'] = 'required|string';
         }
@@ -64,6 +64,8 @@ class ProductRequest extends FormRequest
             'price.required'=>'Giá không được bỏ trống',
             'price.integer'=>'Giá phải là 1 số nguyên',
             'price.min'=>'Giá phải là 1 số nguyên > 0',
+            'price.max'=>'Giá không được vượt quá 999.999.999',
+            'sale_price.max'=>'Giá khuyến mãi không được vượt quá 999.999.999',
             'quantity.required'=>'Số lượng không được bỏ trống',
             'quantity.integer'=>'Số lượng phải là số nguyên',
             'quantity.min'=>'Số lượng phải là số nguyên > 0',
