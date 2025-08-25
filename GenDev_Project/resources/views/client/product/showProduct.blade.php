@@ -338,7 +338,7 @@
                                             'quantity' => $variant->quantity,
                                         ];
                                     }
-                                    $attributes = array_slice($attributes, 0, 2, true);
+                                    // $attributes = array_slice($attributes, 0, 2, true);
                                 @endphp
                                 <div class="row">
                                     @foreach($attributes as $attrName => $attr)
