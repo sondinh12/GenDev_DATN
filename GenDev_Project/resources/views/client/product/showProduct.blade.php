@@ -498,9 +498,11 @@
                                 <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
                                     @if($variant)
                                         @if($variant->sale_price && $variant->sale_price < $variant->price)
-                                        <span class="woocommerce-Price-amount amount"><del>{{ number_format($variant->price) }}đ</del></span>
-                                         <br>
-                                            <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
+                                        <div>
+                                            <del style="color: #888;">{{ number_format($variant->price) }}đ</del>
+                                             <br>
+                                                <ins class="woocommerce-Price-amount amount" style="color: #007bff;" >{{ number_format($variant->sale_price) }}đ</ins>
+                                        </div>
                                         @else
                                             <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                                         @endif
