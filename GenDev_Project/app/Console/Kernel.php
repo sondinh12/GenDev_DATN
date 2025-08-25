@@ -2,17 +2,23 @@
 
 namespace App\Http;
 
+use App\Models\Coupon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('orders:auto-complete')->everyMinute();
+        $schedule->command('coupons:update-expired')->everyMinute();
+        $schedule->command('tokens:clean-expired')->everyMinute();
+    }
     // Middleware toàn cục
     protected $middleware = [
         // ...
     ];
 
-    // ✅ Nhóm middleware
     protected $middlewareGroups = [
         'web' => [
             // \App\Http\Middleware\EncryptCookies::class,
@@ -26,8 +32,4 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('orders:auto-complete')->daily();
-    }
 }

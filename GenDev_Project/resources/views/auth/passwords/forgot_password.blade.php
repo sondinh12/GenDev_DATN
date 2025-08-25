@@ -14,15 +14,6 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
 
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
@@ -31,7 +22,7 @@
                             <label for="email" class="form-label fw-bold">📧 Địa chỉ Email</label>
                             <input type="email" id="email" name="email" class="form-control shadow-sm @error('email') is-invalid @enderror" placeholder="Nhập email của bạn"  autofocus>
                             @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback" style="color:red">{{ $message }}</div>
                             @enderror
                         </div>
 

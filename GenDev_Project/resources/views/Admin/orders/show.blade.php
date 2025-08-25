@@ -273,7 +273,8 @@
                                         <span
                                             class="badge bg-{{ $paymentBadgeClassInline }}">{{ $paymentLabelMapInline[$order->payment_status] ?? ucfirst($order->payment_status) }}</span>
                                     </div>
-                                    @if ($order->payment_status === 'paid' && in_array($order->status, ['cancelled', 'return_requested']))
+@if (in_array($order->payment_status, ['refund', 'refunded'])
+    && in_array($order->status, ['cancelled', 'return_requested']))
                                         @php
                                             $refundLog = $order
                                                 ->orderStatusLogs()
@@ -287,7 +288,7 @@
                                                 <div class="text-muted small mb-1"><i
                                                         class="fas fa-university me-1"></i>Thông tin hoàn tiền</div>
                                                 <div class="d-flex align-items-center justify-content-between">
-                                                    <code class="small">{{ $refundLog->refund_bank_account }}</code>
+                                                    <code class="small"><b>{{ $refundLog->refund_bank_account }}</b></code>
                                                     <button type="button"
                                                         class="btn btn-sm btn-outline-secondary copy-btn"
                                                         data-copy="{{ $refundLog->refund_bank_account }}">Copy</button>
