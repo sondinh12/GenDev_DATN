@@ -278,7 +278,7 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <div class="quantity-wrapper d-flex align-items-center mb-3">
-                                    <button type="button" class="btn d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
+                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
                                         <i class="fas fa-minus"></i>
                                     </button>
                                     <input type="number" name="quantity" id="quantity-input" style="text-align: center;padding-left: 10px" class="qty-input" value="{{ old('quantity', 1) }}" min="1" step="1" style="text-align: center;" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" disabled>
