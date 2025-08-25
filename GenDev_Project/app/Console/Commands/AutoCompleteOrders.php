@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class AutoCompleteOrders extends Command
 {
     protected $signature = 'orders:auto-complete';
-    protected $description = 'Tự động chuyển đơn hàng đã giao sau X ngày thành completed';
+    protected $description = 'Tự động chuyển đơn hàng đã giao sau 7 ngày thành completed';
 
     public function handle()
     {
@@ -21,10 +21,10 @@ class AutoCompleteOrders extends Command
             ->get();
 
         foreach ($orders as $order) {
-            $order->status = 'completed'; 
+            $order->status = 'completed';
             $order->save();
 
-            $this->info("Order #{$order->id} marked as completed.");
+            $this->info("Đơn hàng #{$order->id} đã được hoàn thành.");
         }
 
         return 0;

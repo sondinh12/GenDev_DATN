@@ -8,10 +8,11 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-        protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule)
     {
-        $schedule->command('orders:auto-complete')->daily();
+        $schedule->command('orders:auto-complete')->everyMinute();
         $schedule->command('coupons:update-expired')->everyMinute();
+        $schedule->command('tokens:clean-expired')->everyMinute();
     }
     // Middleware toàn cục
     protected $middleware = [
@@ -31,6 +32,4 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
-
-
 }

@@ -25,16 +25,17 @@ class DatabaseSeeder extends Seeder
             ProductVariantAttributeSeeder::class,
             RoleAndPermissionSeeder::class,
             UserSeeder::class,
+            ProductQuestionSeeder::class,
             ShipSeeder::class,
             CouponSeeder::class,
             OrderSeeder::class,
+            OrderDetailSeeder::class,
             OrderDetailAttributeSeeder::class,
             OrderStatusLogSeeder::class,
             SupplierSeeder::class,
             SupplierProductPriceSeeder::class,
             ImportSeeder::class,
             ImportDetailSeeder::class,
-            PostCategorySeeder::class,
             BannerSeeder::class
         ]);
         

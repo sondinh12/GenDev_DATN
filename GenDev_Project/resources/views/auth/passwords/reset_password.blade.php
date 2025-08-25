@@ -22,19 +22,9 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('password.update') }}">
+                    <form method="POST" action="{{ route('password.verifyOtp') }}">
                         @csrf
-
+                        @method ('PUT')
                         <div class="mb-3">
                             <label for="email" class="form-label fw-bold">📧 Email</label>
                             <input type="email" name="email" class="form-control" value="{{ session('email') ?? old('email') }}" readonly>
@@ -77,3 +67,9 @@
     </div>
 </div>
 @endsection
+@push('style')
+<style>
+    .invalid-feedback{
+        color: red
+    }
+</style>
