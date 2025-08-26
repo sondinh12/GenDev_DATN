@@ -1,14 +1,14 @@
 @extends('client.layout.master')
 
 @section('content')
-    @if (session('error'))
+    {{-- @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show fixed-top m-3 shadow" role="alert" style="z-index: 1050;">
             {{ session('error') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-    @endif
+    @endif --}}
 
     <div id="content" class="site-content">
         <div class="col-full">
@@ -130,13 +130,13 @@
 
                         <section class="section-top-categories section-categories-carousel" id="categories-carousel-1" style="padding: 30px 0;">
                             <header class="section-header d-flex flex-column align-items-start mb-5">
-                                <h2 class="section-title m-0 fw-bold position-relative pb-3" 
+                                <h2 class="section-title m-0 fw-bold position-relative pb-3"
                                 style="font-size: 2rem; font-weight: 600; letter-spacing: 1px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
                                     Danh mục <br>
                                     <span class="text-primary">sản phẩm</span>
                                     <span class="title-underline position-absolute bottom-0 start-0 bg-primary"></span>
                                 </h2>
-                                <p class="lead text-muted" 
+                                <p class="lead text-muted"
                                     style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
                                     Khám phá các bộ sưu tập nổi bật của chúng tôi
                                 </p>

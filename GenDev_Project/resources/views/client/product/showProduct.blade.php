@@ -2,6 +2,38 @@
 
 @section('styles')
 <style>
+    .btn-favorite {
+    font-size: 1.3rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #bbb;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-favorite i {
+    color: #bbb;
+    transition: color 0.3s;
+}
+
+.btn-favorite:hover {
+    border-color: #e53935;
+    background: #ffeaea;
+}
+
+.btn-favorite:hover i {
+    color: #e53935;
+}
+
+.btn-favorite.active {
+    background: #e53935;
+    border-color: #e53935;
+}
+
+.btn-favorite.active i {
+    color: #fff;
+}
+
     .gallery-nav-btn {
         background: rgba(255, 255, 255, 0.9);
         border: none;
@@ -184,11 +216,9 @@
 
 <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="d-inline">
     @csrf
-    <button type="submit"
-        class="btn btn-favorite rounded-circle p-2 ms-1 {{ $isFavorited ? 'active' : '' }}"
-        title="{{ $isFavorited ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}">
-        <i class="fas fa-heart"></i>
-    </button>
+    <button type="submit" class="wishlist-btn" title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                <i class="fas fa-heart {{ $isFavorited ? 'favorited' : 'not-favorited' }}"></i>
+            </button>
 </form>
 
                             </div>
@@ -260,7 +290,7 @@
                                 <p style="font-size: 15px" class="pb-0 mb-0">{{ $product->category->name ?? '' }}</p>
                             </div>
                             <div class="mb-3 small text-muted border-bottom pb-2">
-                                <span class="ms-3">Tình trạng: 
+                                <span class="ms-3">Tình trạng:
                                     <div id="variant-status" class="badge {{ $product->status == 1 ? 'bg-success p-2' : 'bg-danger' }}">{{ $product->status == 1 ? 'Còn hàng' : 'Hết hàng' }}</div>
                                 </span>
                             </div>
@@ -278,7 +308,7 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <div class="quantity-wrapper d-flex align-items-center mb-3">
-                                    <button type="button" class="btn d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
+                                    <button type="button" class="btn btn-qty btn-qty-minus d-flex align-items-center justify-content-center" style="padding: 8px 10px; color: white" tabindex="-1" disabled>
                                         <i class="fas fa-minus"></i>
                                     </button>
                                     <input type="number" name="quantity" id="quantity-input" style="text-align: center;padding-left: 10px" class="qty-input" value="{{ old('quantity', 1) }}" min="1" step="1" style="text-align: center;" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" disabled>
@@ -308,7 +338,7 @@
                                             'quantity' => $variant->quantity,
                                         ];
                                     }
-                                    $attributes = array_slice($attributes, 0, 2, true);
+                                    // $attributes = array_slice($attributes, 0, 2, true);
                                 @endphp
                                 <div class="row">
                                     @foreach($attributes as $attrName => $attr)
@@ -436,9 +466,8 @@
                     <div style="width:100%; max-width:270px; min-width:250px; display:flex; align-items:stretch;">
                         <div class="card h-100 product-card border-0 shadow-lg rounded-4 position-relative overflow-hidden animate__animated animate__fadeInUp" style="width:100%; min-width:0; min-height:380px; display:flex; flex-direction:column;">
                             <div class="product-image-wrapper bg-white d-flex align-items-center justify-content-center p-2 position-relative" style="height:140px; min-height:unset;">
-                                <a href="{{ route('product.show', $item->id) }}" class="d-block w-100 h-100">
-                                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">
-                                </a>
+                                <a href="{{ route('product.show', $item->id) }}" class="d-block h-100;width:100%">
+ <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid product-thumbnail transition" style="max-height:110px; object-fit:contain; margin:0 auto;">                                </a>
                                 @php
                                     $variant = $item->variants->first();
                                     $discountPercent = null;
@@ -469,37 +498,49 @@
                                 <div class="product-price mb-1 w-100 d-flex justify-content-center align-items-baseline gap-2">
                                     @if($variant)
                                         @if($variant->sale_price && $variant->sale_price < $variant->price)
-                                            <ins class="text-danger fw-bold fs-6">{{ number_format($variant->sale_price) }}đ</ins>
-                                            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($variant->price) }}đ</del></small>
+                                        <div>
+                                            <del style="color: #888;">{{ number_format($variant->price) }}đ</del>
+                                             <br>
+                                                <ins class="woocommerce-Price-amount amount" style="color: #007bff;" >{{ number_format($variant->sale_price) }}đ</ins>
+                                        </div>
                                         @else
                                             <ins class="text-primary fw-bold fs-6">{{ number_format($variant->price) }}đ</ins>
                                         @endif
                                     @else
                                         @if($item->sale_price && $item->sale_price < $item->price)
-                                            <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
-                                            <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small>
+                                        <ins class="text-danger fw-bold fs-6">{{ number_format($item->sale_price) }}đ</ins>
+                                        <small class="text-muted text-decoration-line-through ms-1"><del>{{ number_format($item->price) }}đ</del></small> <br>
                                         @else
                                             <ins class="text-primary fw-bold fs-6">{{ number_format($item->sale_price ?: $item->price) }}đ</ins>
                                         @endif
                                     @endif
                                 </div>
-                                <div class="product-rating text-warning small mb-2 w-100 d-flex justify-content-center align-items-center gap-1">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <small class="text-muted ms-1">(4.5)</small>
+
+                                @php
+                                $avgRating = round($product->reviews()->avg('rating'), 1);
+                                $reviewCount = $product->reviews()->count();
+                                @endphp
+                                <div class="product-rating text-warning small">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <=floor($avgRating))
+                                        <i class="fas fa-star"></i>
+                                        @elseif($i - $avgRating < 1)
+                                            <i class="fas fa-star-half-alt"></i>
+                                            @else
+                                            <i class="far fa-star"></i>
+                                            @endif
+                                            @endfor
+                                            <span class="text-muted ms-1">({{ $avgRating }} / {{ $reviewCount }} đánh giá)</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mt-auto gap-2">
                                     <a href="#" class="btn btn-light border-0 shadow-sm rounded-circle p-2 add-to-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $item->id }}">
                                         <i class="fas fa-shopping-cart text-primary"></i>
                                     </a>
                                    @php
-    $isFavorited = auth()->check() && auth()->user()->favorites->contains($product->id);
+    $isFavorited = auth()->check() && auth()->user()->favorites->contains($item->id);
 @endphp
 
- <form action="{{ route('client.favorites.toggle', $product->id) }}" method="POST" class="wishlist-form">
+ <form action="{{ route('client.favorites.toggle', $item->id) }}" method="POST" class="wishlist-form">
             @csrf
             <button type="submit" class="wishlist-btn" title="{{ $isFavorited ? 'Xoá khỏi yêu thích' : 'Thêm vào yêu thích' }}">
                 <i class="fas fa-heart {{ $isFavorited ? 'favorited' : 'not-favorited' }}"></i>
