@@ -65,6 +65,8 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $coupons = Coupon::where('usage_limit', '>', 0)
             ->where('status', 1)
+            ->where('min_coupon', '<=', $subtotal)
+            ->where('max_coupon', '>=', $subtotal)
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->get();
