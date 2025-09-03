@@ -53,9 +53,14 @@
                                                 <input type="text" id="coupon_code_order" placeholder="Nhập mã giảm giá đơn hàng" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list-order').style.display='block'">
                                                 <div id="coupon-list-order" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
                                                     @foreach($coupons->where('type', 'order') as $coupon)
-                                                        <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_order').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-order').style.display='none'">
-                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
-                                                        </div>
+                                                        @php
+                                                            $timesUsed = $coupon->users->find($user->id)?->pivot->times_used ?? 0;
+                                                        @endphp
+                                                        @if($coupon->usage_limit > 0 && ($coupon->per_use_limit == -1 || $timesUsed < $coupon->per_use_limit))
+                                                            <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_order').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-order').style.display='none'">
+                                                                <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
+                                                            </div>
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -86,9 +91,14 @@
                                                 <input type="text" id="coupon_code_shipping" placeholder="Nhập mã giảm giá vận chuyển" class="input-text" name="coupon_code" autocomplete="off" style="width:350px;" onfocus="document.getElementById('coupon-list-shipping').style.display='block'">
                                                 <div id="coupon-list-shipping" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; width:350px;">
                                                     @foreach($coupons->where('type', 'shipping') as $coupon)
-                                                        <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_shipping').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-shipping').style.display='none'">
-                                                            <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
-                                                        </div>
+                                                        @php
+                                                            $timesUsed = $coupon->users->find($user->id)?->pivot->times_used ?? 0;
+                                                        @endphp
+                                                        @if($coupon->usage_limit > 0 && ($coupon->per_use_limit == -1 || $timesUsed < $coupon->per_use_limit))
+                                                            <div style="padding: 5px; cursor:pointer;" onclick="document.getElementById('coupon_code_shipping').value='{{ $coupon->coupon_code }}';document.getElementById('coupon-list-shipping').style.display='none'">
+                                                                <b>{{ $coupon->coupon_code }}</b> - {{ $coupon->name }}
+                                                            </div>
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                             </div>
